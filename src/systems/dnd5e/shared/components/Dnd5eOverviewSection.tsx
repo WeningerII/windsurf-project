@@ -13,12 +13,13 @@ import {
   Weight,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import type { ContributionLedgerResult } from '../../../../types/core/contributionLedger';
 import type { PresentedDerivedQuantity } from '../../../../rules/derivation';
 import { DamageHealControl } from '../../../../components/DamageHealControl';
 import { DeathSavesTracker } from '../../../../components/DeathSavesTracker';
 import { HitDiceTracker } from '../../../../components/HitDiceTracker';
 import { RestControls } from '../../../../components/RestControls';
-import { CombatStatCard } from '../../../../components/sheet';
+import { CombatStatCard, ContributionBreakdown } from '../../../../components/sheet';
 import { SpellSlotTracker } from '../../../../components/SpellSlotTracker';
 import type {
   DeathSaves,
@@ -55,6 +56,12 @@ interface Props {
   speed: number;
   /** Render-ready derived quantities from the declarative derivation layer. */
   derivedCards: PresentedDerivedQuantity[];
+  /**
+   * Contribution ledger for the character, when one has been built. Absent
+   * while it loads (or for an unsupported system): the AC card then renders the
+   * plain number with no breakdown affordance.
+   */
+  contributionLedger?: ContributionLedgerResult;
   spellcasting?: {
     classes: Array<unknown>;
     spellSlots: SpellSlots;
@@ -91,6 +98,7 @@ export function Dnd5eOverviewSection({
   initiative,
   speed,
   derivedCards,
+  contributionLedger,
   spellcasting,
   exhaustionLevel,
   deathSaves,
@@ -113,7 +121,18 @@ export function Dnd5eOverviewSection({
   return (
     <>
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-6">
-        <CombatStatCard icon={Shield} title="Armor Class" value={armorClass} />
+        <CombatStatCard
+          icon={Shield}
+          title="Armor Class"
+          value={
+            <ContributionBreakdown
+              target="armorClass"
+              total={armorClass}
+              label="Armor Class"
+              ledger={contributionLedger}
+            />
+          }
+        />
         <CombatStatCard
           icon={Heart}
           title="Hit Points"
