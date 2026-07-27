@@ -255,17 +255,21 @@ Risk-ordered, verified against `package.json`: React 18.2→19, Tailwind 3.3→4
 
 ## 7. Dead code and hygiene — **READY, CHEAP**
 
-### 7.0 Confirmed dead — delete (verified 2026-07-26, zero non-test importers)
+### 7.0 ~~Confirmed dead — delete~~ — **DONE 2026-07-26**
 
-| File | LOC | Why it is dead |
+Three modules deleted, ~556 LOC, each re-verified to have zero non-test importers before removal:
+
+| Module | LOC | Superseded by |
 | --- | ---: | --- |
-| `src/utils/systemCatalog.ts` | 213 | Superseded duplicate. Every live consumer uses `systemCatalogMetadata.ts` / `systemCatalogShared.ts`, which export the same API under renamed symbols. |
-| `src/utils/validation.ts` | 96 | Legacy throw-based validators typed against the pre-`CharacterDocument` flat model. The live path is `registry.validateDocument` returning structured `ValidationIssue[]`. |
-| `src/components/MonsterStatBlock.tsx` | 247 | The live bestiary is `LibraryBestiaryView` → lazy `MonsterBrowser`, a different component. Not referenced by RFC 004, which would have to bless it. |
+| `utils/systemCatalog` | 213 | `systemCatalogMetadata` / `systemCatalogShared` |
+| `utils/validation` | 96 | `registry.validateDocument`, returning structured issues |
+| `components/MonsterStatBlock` | 247 | `LibraryBestiaryView` → lazy `MonsterBrowser` |
 
-None is mentioned in any doc, each has a superseded live equivalent, and all importers are tests. **All three survive `check:dead-code` today** for the reason in §0.5.
+The near-miss worth recording: `utils/validation` is trivially confusable with `src/systems/dnd5e/shared/validation.ts`, which is **live** — imported by that system's contribution ledger and by the per-system `loadValidator` dynamic imports. The deletion was verified against resolved import paths, not basenames.
 
-**Do not delete `src/systems/*/legalActions.ts`** — an automated sweep flagged it and the flag is wrong. All seven `definition.ts` files register it via lazy `loadLegalActions`, and the registry caches and calls it. It is *UI-unreachable*, which is a much weaker claim already recorded honestly in `GAPS §7` as "0 consumers". Deleting it would break a public registry API.
+**`src/constants/game-rules.ts` was checked and deliberately kept.** It is reachable only through `class-validator` → `validate-classes` → the `npm run validate` script, with no app or UI path — but `validate` is a real step in `npm run verify`, so it is a live tool dependency, not rot.
+
+**Do not delete `src/systems/*/legalActions.ts`** — an automated sweep flagged it and the flag was wrong. All seven `definition.ts` files register it via lazy `loadLegalActions`, and the registry caches and calls it. It is *UI-unreachable*, a much weaker claim already recorded honestly in `GAPS §7` as "0 consumers". Deleting it would break a public registry API.
 
 ### 7.1 Wire-ups — open defects, not seams
 

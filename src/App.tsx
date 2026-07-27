@@ -361,15 +361,28 @@ function AppContent() {
     [addDocument, openSheet]
   );
 
+  /**
+   * Persist finished system data as a character. The ONLY create path for
+   * built-from-choices characters: the guided wizard and the (default-off) AI
+   * draft surface both land here, so an accepted draft is stored exactly like a
+   * manually built character and no AI code touches storage.
+   */
+  const handleCreateFromSystemData = useCallback(
+    (systemId: GameSystemId, system: SystemDataModel, name: string) => {
+      const doc = buildNewCharacterDocument(systemId, system, name);
+      addDocument(doc);
+      openSheet(doc.id);
+    },
+    [addDocument, openSheet]
+  );
+
   const handleGuidedCreate = useCallback(
     (system: SystemDataModel, name: string) => {
       if (!creatorSystemId) return;
-      const doc = buildNewCharacterDocument(creatorSystemId, system, name);
-      addDocument(doc);
-      openSheet(doc.id);
+      handleCreateFromSystemData(creatorSystemId, system, name);
       setCreatorSystemId(null);
     },
-    [creatorSystemId, addDocument, openSheet]
+    [creatorSystemId, handleCreateFromSystemData]
   );
 
   const handleDeleteDocument = (id: string) => {
@@ -855,6 +868,7 @@ function AppContent() {
           open={newCharacterDialogOpen}
           onClose={() => setNewCharacterDialogOpen(false)}
           onCreate={handleCreateCharacter}
+          onCreateDrafted={handleCreateFromSystemData}
         />
         <GuidedCreatorDialog
           open={creatorSystemId !== null}

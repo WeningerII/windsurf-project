@@ -34,8 +34,14 @@
  * fail closed, and deterministic creation and scene building remain fully
  * available through their own surfaces.
  */
-import { draftCharacterWithAi, type DocumentValidator } from './characterDraftFlow';
+import type { DocumentValidator } from './characterDraftFlow';
 import { loadCharacterDraftPools } from './characterDraftPools';
+import {
+  draftCharacterThroughPlan,
+  resolveCharacterDraftBinding,
+  validateDraftedDocument,
+  type CharacterDraftBinding,
+} from './characterDraftSession';
 import { draftEncounterWithAi } from './encounterDraftFlow';
 import {
   createFlowBudget,
@@ -45,14 +51,7 @@ import {
   type FlowBudgetReport,
 } from './flowBudget';
 import { callAiGateway } from './gatewayClient';
-import type {
-  CharacterDraftCandidatePools,
-  CharacterDraftData,
-  EncounterDraftSelection,
-} from './contracts';
-import { buildDocumentFromPlanIds } from '../creation/draftDocument';
-import type { CreationPlan } from '../creation/types';
-import { systemRegistry } from '../registry';
+import type { CharacterDraftCandidatePools, EncounterDraftSelection } from './contracts';
 import {
   buildEncounterSceneEvents,
   summarizeEncounterParty,
@@ -136,11 +135,11 @@ export interface MakeGameResult {
   budget: FlowBudgetReport;
 }
 
-/** The registry-derived pieces the party step needs for a system. */
-export interface MakeGameSystemBinding {
-  plan: CreationPlan<SystemDataModel>;
-  createDefaultData: () => SystemDataModel;
-}
+/**
+ * The registry-derived pieces the party step needs for a system — the same
+ * binding the shipped character-draft surface resolves.
+ */
+export type MakeGameSystemBinding = CharacterDraftBinding;
 
 export interface MakeGameSeams {
   /** Gateway call. Defaults to the browser client (default-off, key-less safe). */
@@ -166,37 +165,6 @@ export interface MakeGameSeams {
 /** Cap per candidate-pool category offered to the model. */
 const DEFAULT_POOL_LIMIT = 32;
 
-/**
- * The registry validator, filtered to BLOCKING issues. Identical to the gate the
- * shipped character-draft surface uses, routed by `document.systemId`, so every
- * system's own rules decide its own drafts.
- */
-const defaultValidateDocument: DocumentValidator = async (document) => {
-  const { issues } = await systemRegistry.validateDocument(document, { reason: 'ai-draft' });
-  return issues.filter((issue) => issue.severity === 'error');
-};
-
-const defaultResolveSystem = async (
-  systemId: GameSystemId
-): Promise<MakeGameSystemBinding | undefined> => {
-  const definition = systemRegistry.get(systemId);
-  if (!definition) return undefined;
-  const plan = await systemRegistry.getCreationPlan<SystemDataModel>(systemId);
-  if (!plan) return undefined;
-  return { plan, createDefaultData: definition.createDefaultData };
-};
-
-/** Every option id a character draft chose, in a stable order. */
-function draftOptionIds(draft: CharacterDraftData): string[] {
-  return [
-    ...(draft.classId ? [draft.classId] : []),
-    ...(draft.ancestryId ? [draft.ancestryId] : []),
-    ...(draft.backgroundId ? [draft.backgroundId] : []),
-    ...(draft.featIds ?? []),
-    ...(draft.spellIds ?? []),
-  ];
-}
-
 export async function makeMeAGame(
   params: MakeGameParams,
   seams: MakeGameSeams = {}
@@ -207,8 +175,8 @@ export async function makeMeAGame(
   const limitPerPool = seams.poolLimit ?? DEFAULT_POOL_LIMIT;
   const loadPools = seams.loadPools ?? ((id) => loadCharacterDraftPools(id, { limitPerPool }));
   const loadMonsters = seams.loadMonsters ?? loadMonstersForSystem;
-  const resolveSystem = seams.resolveSystem ?? defaultResolveSystem;
-  const validateDocument = seams.validateDocument ?? defaultValidateDocument;
+  const resolveSystem = seams.resolveSystem ?? resolveCharacterDraftBinding;
+  const validateDocument = seams.validateDocument ?? validateDraftedDocument;
   const now = seams.now ?? (() => new Date());
 
   const steps: MakeGameStepOutcome[] = [];
@@ -287,37 +255,32 @@ async function draftParty(
   const party: MakeGameCharacter[] = [];
 
   for (const [index, request] of params.party.entries()) {
-    let unroutedIds: string[] = [];
-    const result = await draftCharacterWithAi(
-      { systemId, prompt: request.prompt, pools },
-      async (draft) => {
-        // Apply through the system's OWN guided-creation plan (its template
-        // applicators), exactly as the wizard does. No per-system branch here.
-        const built = await buildDocumentFromPlanIds(
-          binding.plan,
-          binding.createDefaultData,
-          draft.name,
-          draftOptionIds(draft),
-          // Same clock the scene uses: without it the envelope stamps wall time
-          // and two runs of one seed differ on createdAt/updatedAt alone.
-          ctx.now
-        );
-        unroutedIds = built.unrouted;
+    // The SAME seam the character-draft creation surface uses: propose from the
+    // pools, apply through the system's own plan, gate on its own validator.
+    const result = await draftCharacterThroughPlan(
+      {
+        systemId,
+        prompt: request.prompt,
+        pools,
+        binding,
         // Seeded, stable document id so the same seed rebuilds the same game.
-        return { ...built.document, id: `${seed}:pc:${index + 1}` };
+        documentId: `${seed}:pc:${index + 1}`,
+        // Same clock the scene uses: without it the envelope stamps wall time
+        // and two runs of one seed differ on createdAt/updatedAt alone.
+        now: ctx.now,
       },
-      ctx.validateDocument,
-      { call: ctx.call }
+      { call: ctx.call, validateDocument: ctx.validateDocument }
     );
 
     if (!result.ok) {
       ctx.errors.push(`Party member ${index + 1}: ${result.error}`);
       continue;
     }
+    const { proposal } = result;
     party.push({
-      document: result.document,
-      ...(result.rationale ? { rationale: result.rationale } : {}),
-      unroutedIds,
+      document: proposal.document,
+      ...(proposal.rationale ? { rationale: proposal.rationale } : {}),
+      unroutedIds: proposal.choices.filter((choice) => !choice.applied).map((choice) => choice.id),
     });
   }
 
