@@ -34,26 +34,71 @@ These are first because each one holds up work that is otherwise ready. They cos
 Two findings, same defect class, both remedy-is-owner's-call. The tooling has produced the evidence; the product decision is yours.
 
 - **5e-2024 backgrounds.** All four ship tagged `SRD 5.2` while carrying the *2014* model. SRD 5.1 contains exactly one background (Acolyte), so the Criminal / Sage / Soldier text is *Player's Handbook* content — not open. The name-based reverse diff cannot see this, because the names are legitimate SRD 5.2 names.
-- **M&M 3e equipment.** 79 entries have no Hero SRD counterpart. They are now honestly labelled `Original Content (not SRD)` and machine-separated from open content, so nothing is currently mislabelled — but roughly 40 are outright invented, and a handful (`Power Ring`, `Web Shooters`, `Mystic Amulet`) evoke recognisable trademarked characters. Whether they ship at all is a trade-dress judgment, not an engineering one.
+- **M&M 3e equipment.** The audit sharpened this: **64** entries (not 79) have no Hero SRD counterpart — of the original 79 suspects, 7 turned out to be duplicate rows of an SRD entry that also ships, 6 pre-built instances of a generic SRD row, and 2 too ambiguous to call. The 64 are honestly labelled `Original Content (not SRD)` and machine-separated, so **nothing is currently mislabelled**. What remains is trade dress: names like `Power Ring`, `Web Shooters`, `Mystic Amulet` and `Magic Wand` evoke recognisable characters regardless of tagging. Whether they ship is a product judgment, not an engineering one.
 
 **Unblocks:** the Phase-1 content close-out, and `p7.release` — neither should ship with an unresolved licensing question.
 **Options:** keep as-is (already honestly labelled) · replace the three backgrounds with genuine SRD 5.2 origins · remove the invented M&M items · some combination.
 
-### 0.2 Is `claude/sharp-davinci-pu40fc` live or abandoned?
+### 0.2 Which of the three unmerged shelf branches are live?
 
-An unmerged branch carries commits claiming **Phase 12 (LLM strategist)**, **Phase 13 (narration critic)**, **Phase 10 (vision automation)** and **Phase 14 (observability)**. Verified: none of its commits is an ancestor of `main`, and the symbols are absent from the tree — so the "open" markers on those phases are correct today.
+An earlier revision of this section named **one** branch. There are three, and the inventory of 2026-07-26 established that most of what looked shelved is actually dead or superseded.
 
-**Unblocks:** all of §5 (AI/scene runtime). Scheduling that work without a verdict risks rebuilding what is sitting on a shelf.
-**Cost of deciding:** one look at the branch.
+| Branch | Ahead / behind | What it holds |
+| --- | ---: | --- |
+| `claude/sharp-davinci-pu40fc` | 73 / 577 | Phases 10/12/13/14 plus Phase-0/1 content encoding |
+| `claude/hopeful-thompson-cul3X` | 156 / 597 | SRD content catalogs, narration gateway, strategist seam |
+| `claude/next-priorities-98pzof` | 2 / 544 | **Doc-only.** Removes guided creation + the LLM strategist from the plan |
+
+No commit on any of the three is an ancestor of `origin/main`. What the inventory changed:
+
+- **Phase 14 is not open.** It landed independently (`src/ai/gatewayLog.ts`, `flowBudget.ts`, `recordedGateway.ts`); only the §5.2 trace join remains, so the branch's Phase-14 commits are superseded rather than shelved.
+- **Phase 10 is half-shipped.** `src/scene/gridGeometryProposal.ts` is in-tree and is *strictly better* than the branch's validator (15 issue codes vs 5, three-way verdict vs boolean, versioned envelope, preset-vocabulary validation). Only the vision adapter is genuinely open.
+- **`hopeful-thompson` is fully superseded** — its bestiary imports are behind shipped data, its 3.5e feat data is stale and re-derivable from the pinned source, and its one code commit is beaten by main's system-agnostic `LibraryBestiaryView`.
+- **Only Phase 12 is genuinely salvageable** — roughly two hours of cherry-picking — and `next-priorities-98pzof` proposes deleting exactly that.
+
+**The real question:** does the `next-priorities` cut stand? If yes, delete all three branches. If no, salvage Phase 12 first.
+**Unblocks:** §5, and retiring 62 of 65 branches.
 
 ### 0.3 May documents publish one microtask late on cold start?
 
-`src/hooks/useDocuments.ts:22` calls `engine.prepareData(doc)` **synchronously from inside `setDocuments` updaters**, on load and on every add / update / import / cross-tab-merge / sync-merge path. It is the single eager consumer blocking lazy per-system engines. Going lazy makes it async: documents would publish unprepared for ≥1 microtask on cold start, and mutation ordering inside the updaters would change. That is a behaviour change, not code-splitting, and it fails the standing safety bar for touching engine math.
+`src/hooks/useDocuments.ts` defines `prepareDocumentWithEngine` (line 18) — the single eager consumer blocking lazy per-system engines. **The hazard is narrower than this section previously claimed**, which changes the remedy:
 
-Two further tests (`mam3eValidation.test.ts:33`, `capabilityScenarios.test.tsx:323`) read `.engine` synchronously inside sync `it()` bodies; unblocking also needs authorization to change their **call shape** — not their expectations.
+- Line 28 prepares a whole list inside a `.map()` — the load / import / cross-tab / sync-merge paths reach it here, and they compute *before* dispatching, so they can await a lazy engine without reordering anything.
+- Line 214 (`addDocument`) likewise computes before dispatch.
+- **Line 232 (`updateDocument`) is the only genuine problem.** It sits inside an `applyDocumentsUpdate((prev) => …)` updater and reads `prev` to derive the next version — deliberately, so that a stale `doc` reused across rapid successive edits cannot collide on a version and drop the later edit. Making that async changes mutation ordering.
+
+So the behaviour change is confined to `updateDocument` plus the cold-start load path, where documents would publish unprepared for ≥1 microtask. That is still a behaviour change and still fails the standing safety bar for touching engine math — but it is one call site, not six.
+
+Two tests (`mam3eValidation.test.ts:33`, `capabilityScenarios.test.tsx:323`) read `.engine` synchronously inside sync `it()` bodies; unblocking also needs authorization to change their **call shape** — not their expectations.
 
 **Unblocks:** 21.2 KiB of eager-bundle headroom (§6.1). The measured ceiling is 23.6 KiB; 2.4 KiB has been claimed.
+**Third option, now that the shape is known:** await at the sites that already compute before dispatch, and keep `updateDocument` synchronous by pre-resolving the engine *before* the updater runs. Gets the reclaim without touching mutation ordering. **This is now the recommended path** — it needs no authorization at all.
 **Alternative if the answer is no:** a preload design that guarantees resolution before `useDocuments` publishes. More work, no behaviour change.
+
+### 0.4 The contribution ledger — wire a consumer, or delete ~1,600 LOC?
+
+Five per-system ledger builders plus `src/rules/ir/ledgerView.ts` compute *"explain where this number came from"* for all seven systems. **Zero consumers**: no sheet, panel or tooltip renders a ledger; the only callers are test assertions.
+
+The accounting hides this. `GAPS §7` marks the row COMPLETE and `MASTER_PLAN` marks it 7 of 7 — both measure *builder existence*, not consumption. The legal-actions row one line below in the same table does say "0 consumers"; this row conspicuously does not.
+
+**Options:** build one tooltip/panel consumer and keep all five · keep 5e as reference and delete four · delete all five plus `ledgerView`.
+**Recommendation:** build the consumer — the math is done and correct, and provenance display is arguably this product's differentiating feature. But if no UI is on the roadmap within a quarter, deleting is the honest call and reclaims ~1,600 LOC.
+
+### 0.5 Should `knip.json` keep test files as entry points?
+
+Today `src/__tests__/**` is an entry point, so **a test import counts as a live consumer**. That is why three confirmed-dead modules pass `check:dead-code` today. The gate cannot see this class of rot at all.
+
+**Options:** leave it (accept the blind spot) · drop tests from entry points and add explicit `ignore` entries for the genuinely documented seams.
+**Recommendation:** drop them. It converts "documented seam" from a prose claim into a machine-checked one, and would have caught all three dead modules automatically. This is the same defect class as every other unfalsifiable gate this repo has already fixed.
+
+### 0.6 Phase 10 and the character-draft surface — build or formally close?
+
+Two separate features, same shape: **the expensive half is built and the cheap half is missing.**
+
+- **Phase 10** — `gridGeometryProposal.ts` (579 LOC, well tested) has had no consumer since it landed. Building the `analyze-map` task plus a MapPanel affordance is roughly a day.
+- **`character-draft`** — flow, pools, validators and fixtures all exist; only the UI entry point is missing. This is the **smallest gap between "built" and "usable" anywhere in the repo**, and it would also give `makeMeAGameFlow` its first real consumer.
+
+**Recommendation:** ship `character-draft` regardless — it is nearly free and retires RFC 002's standing caveat that counting these as shipped surfaces overstates the rollout. For Phase 10, build it if any AI-vision work is planned this year; otherwise close it formally and reclassify the validator as a permanent documented seam. **Do not delete the validator** — it is the careful half.
 
 ---
 
@@ -80,7 +125,8 @@ The content denominator is mid-migration. Read §2.2 before starting anything el
 
 All 1,045 suspects are classified with evidence and held by a gate that is a proven ratchet (all five failure modes made to fire against a control run). What remains is **not** classification work:
 
-- **31 records carry a false citation today — the live exposure number.** Not 95: of the 95 `genuine-non-open-content` records, 64 are M&M originals that §17 already relabelled honestly to `Original Content (not SRD)`. They stay in the licensing class because absence of an open-content counterpart is the *finding*, and because whether `Power Ring` / `Web Shooters` / `Mystic Amulet` ship at all is a trade-dress judgment — see §0.1, this is the same owner decision.
+- **31 records ship content with no open-content counterpart anywhere — the licensing-exposure number.** Not 95: of the 95 `genuine-non-open-content` records, 64 are M&M originals that §17 already relabelled honestly to `Original Content (not SRD)`. They stay in the licensing class because absence of a counterpart is the *finding*, and because whether `Power Ring` / `Web Shooters` / `Mystic Amulet` ship at all is a trade-dress judgment — see §0.1, same owner decision.
+- **Separately, 78 `wrong-edition-attribution` records carry a false citation over genuinely open content** (§18.5.3). No licence exposure, but the product asserts a provenance it does not have. These are re-taggable; the 31 may not be. Do not conflate the two populations — they have different remedies.
 - **Nothing was deleted or relabelled, deliberately.** `filterOpenContentBySource` drops any entry whose source leaves the allowlist, so re-tagging silently removes shipped content from the product. That is the owner's call, not a cleanup.
 - **Three measurement defects are diagnosed, not repaired** — repairing one moves published coverage percentages, so it is a deliberate, separately-scoped change.
 - **Two records are `undetermined` and say why** (§18.7): `Cap of Water Breathing` and `Captain`.
@@ -105,11 +151,11 @@ The manifests are generated *from* the loaders, so joining them against loaded i
 
 ### 2.4 5e-2024 hand-written monsters — 77 of 85 diverge — **READY**
 
-The largest single open content-integrity item. Mostly carrying SRD 5.1 values; some carry values in *neither* edition (Air Elemental `5d10+10` is invented). All 254 scalar divergences are itemised in the fidelity baseline, so this is transcription work against a pinned source, not research.
+The largest single open content-integrity item. Mostly carrying SRD 5.1 values; some carry values in *neither* edition (Air Elemental `5d10+10` is invented). `scripts/data/srd-fidelity-baseline.json` holds **254 divergent entries spanning 1,016 field-level divergences, every one of them 5e-2024** — so this is transcription work against a pinned source, not research.
 
 ### 2.5 Remaining denominator work — **READY**
 
-- `p1.wire-remaining-denominators` — 3.5e classes/feats/equipment remain unwired pending core-only sources.
+- `p1.wire-remaining-denominators` — **mostly already done, verified 2026-07-26.** 3.5e classes and feats *are* wired (`src/scripts/srd-coverage.ts`, `TARGETS.push` for both). 3.5e equipment is **closed by recorded decision, not pending**: the only clean core-only source interleaves services, lodging and mounts with items, so a scrape would poison the denominator — the script says so in place. What actually remains is closing the missing 3.5e feats, itemised in `docs/generated/srd-coverage.md`.
 - `p1.monster-denominator-fix` — 3.5e's denominator still inflated by container-like rows.
 - `p1.single-entry-gaps` — small, itemised, good filler. **CHEAP**
 
@@ -159,13 +205,21 @@ Ordered by dependency. Do not schedule any of these before the shelf-branch verd
 
 Everything else in the observability layer shipped. What remains is a single join: **a trace id does not yet reach a scene event**.
 
-### 5.3 Phase 12 — LLM strategist blackboard
+### 5.3 Phase 12 — LLM strategist blackboard — **STATUS DISPUTED, do not schedule**
 
 Async strategist writing intent/weight hints; the local executor stays authoritative. No turn may block on a model call.
+
+**An unmerged commit deletes this item.** `202d9f7` on `claude/next-priorities-98pzof` removes the LLM strategist blackboard *and* guided creation from `MASTER_PLAN.md`, citing maintainer direction. Resolve under §0.2 before scheduling anything here — the same commit also touches §5.1's scope.
+
+Note the tension worth naming: a working prototype exists **on the branch only** — a tactical strategy blackboard under `src/rules/`, a strategist flow under `src/ai/`, and a target-scoring bias hunk, roughly two hours to port — and RFC 007, **accepted 2026-07-21, the same week**, asks Phase 2 to prototype exactly this. Dropping it as a planned item while a tested prototype sits on a branch is the worst of both outcomes. Either salvage it or delete it deliberately.
+
+If salvaging: make the new `strategistBias` field **optional**. As written it is a breaking shape change for every `ScoredTarget` literal, and main has since added `offHandAttack` to the same types.
 
 ### 5.4 Phase 13 — narration critic · 5.5 Phase 10 — the vision adapter
 
 The critic is unbuilt. For Phase 10, the *deterministic geometry validator* already ships (`src/scene/gridGeometryProposal.ts`) with **no consumer** — what is missing is the vision adapter that would feed it.
+
+The shelf branch's version of that adapter is **not** salvageable: it targets a superseded validator and instructs the model to return cell-coordinate boxes, the opposite of the shipped pixel-rect + deterministic-snap design. Rebuild against `GridGeometryProposal` instead — a known 6-site checklist. One thing *is* worth taking: the branch reads the image's `naturalWidth`/`naturalHeight`, which main's `MapPanel` never learns, and the shipped validator requires `image: { widthPx, heightPx }`. That read is a hard prerequisite.
 
 ### 5.6 RFC 007 — AI-DM runtime
 
@@ -204,14 +258,33 @@ Risk-ordered, verified against `package.json`: React 18.2→19, Tailwind 3.3→4
 
 ---
 
-## 7. Code hygiene surfaced during verification — **READY, CHEAP**
+## 7. Dead code and hygiene — **READY, CHEAP**
+
+### 7.0 Confirmed dead — delete (verified 2026-07-26, zero non-test importers)
+
+| File | LOC | Why it is dead |
+| --- | ---: | --- |
+| `src/utils/systemCatalog.ts` | 213 | Superseded duplicate. Every live consumer uses `systemCatalogMetadata.ts` / `systemCatalogShared.ts`, which export the same API under renamed symbols. |
+| `src/utils/validation.ts` | 96 | Legacy throw-based validators typed against the pre-`CharacterDocument` flat model. The live path is `registry.validateDocument` returning structured `ValidationIssue[]`. |
+| `src/components/MonsterStatBlock.tsx` | 247 | The live bestiary is `LibraryBestiaryView` → lazy `MonsterBrowser`, a different component. Not referenced by RFC 004, which would have to bless it. |
+
+None is mentioned in any doc, each has a superseded live equivalent, and all importers are tests. **All three survive `check:dead-code` today** for the reason in §0.5.
+
+**Do not delete `src/systems/*/legalActions.ts`** — an automated sweep flagged it and the flag is wrong. All seven `definition.ts` files register it via lazy `loadLegalActions`, and the registry caches and calls it. It is *UI-unreachable*, which is a much weaker claim already recorded honestly in `GAPS §7` as "0 consumers". Deleting it would break a public registry API.
+
+### 7.1 Wire-ups — open defects, not seams
+
+- **`src/rules/legality/dnd5e.ts`** — asymmetric defect. PF2e, PF1e and 3.5e each bridge their legality module into `validation.ts`; **both 5e editions have no bridge**, so they silently skip build-legality checks their siblings apply. Pinned in `GAPS.md`.
+- **`src/systems/pf2e/derivedMath.ts`** (129 LOC) — its PF1e twin is live; this one has no non-test importer. An archived full-repo review prescribed "wire these in or mark them missing"; neither happened, and the finding was never carried into live `GAPS.md`. The PF1e pattern is right there to mirror.
+
+### 7.2 Small items surfaced during verification
 
 Small, real, and each found while checking something else.
 
 - **Duplicate `SceneGridRegistration`** — defined in both `src/types/core/scene.ts` and `src/scene/gridGeometryProposal.ts`. The latter's comment says it is local "until the Phase 9 map-asset record lands"; Phase 9 landed the same day and the unification never happened.
 - **The Phase-2 surfaces directory was never created.** `SurfaceStage` takes `ReactNode` slots instead, so later specs referring to "the Phase-2 `SceneSurface` stub to flesh out" point at nothing that exists.
 - **`path_ref_rule` has a blind spot** — it only matches `docs/`, `src/`, `scripts/`, `.github/`, `package.json`, `.nvmrc`, `.node-version` and the two root docs. Every `netlify/`, `supabase/` and `.env` path in the RFCs and runbooks is **ungated**, and two stale ones were found by hand this week.
-- **`src/types/core/character.ts:275`** documents `strikingRune` as "no engine consumes it yet"; the call site 29 lines below disproves it.
+- **`src/types/core/character.ts:274`** documents `strikingRune` as "no engine consumes it yet"; `src/rules/combatants/characterCombatant.ts:249` disproves it. (The "29 lines below" pointer in an earlier revision of this file was wrong — that offset lands inside `Currency`.)
 - **The graphify index is stale.** `ShellContext`, `SurfaceStage` and `SceneCanvas` return no node, so every agent this session fell back to direct file reads. `npm run graph:update` is overdue.
 
 ---
