@@ -220,9 +220,24 @@ The shelf branch's version of that adapter is **not** salvageable: it targets a 
 
 Accepted 2026-07-21, nothing landed. Verified: the RFC's proposed AI-DM module directory under `src/scene/` does not exist, and there is no `dm-*` task in the gateway allowlist.
 
-### 5.7 Scene backend sync — **READY**
+### 5.7 Scene backend sync — **A PROJECT, not a task** (scoped 2026-07-26)
 
-`syncEngine.ts` has no scenes path; scenes remain browser-local. The genuinely open deterministic-runtime gap.
+`syncEngine.ts` has no scenes path at all; scenes are browser-local via `sceneStorage.ts`. Character documents and campaigns sync — scenes do not. **So a campaign's entire event history dies with a browser profile, a cleared cache, or a new laptop.** For campaigns intended to run for years, this is the blocker behind every campaign-history ambition, and the contribution ledger (§0.4) is not a substitute — that explains *a number*, this records *what happened*.
+
+**Owner decision 2026-07-26: multiple people will be playing.** That rules out the cheap path. Durability-only would have made union-merge plus a canonical order sufficient — roughly a week. Concurrent play forces real answers on:
+
+- **`scene_events` scoping — the expensive one to get wrong.** RLS is per-`user_id` everywhere today. Shared campaigns need per-campaign scoping, and re-scoping an append-only table *after* it holds years of rows is a migration nobody wants. Decide before the first row is written.
+- **Concurrent `turn.advanced`** — the payload stores `nextTokenId` computed from authoring-time state. Two concurrent advances union into two advances: deterministic, but the fiction is wrong.
+- **Realtime fanout** — subscribing to `scene_events` fires per inserted event, not per scene. One autonomous round emits many events and would trigger a re-sync storm.
+
+**Two prerequisites are bugs, not features, and should land first and separately:**
+
+1. **`saveScenes` has no `try/catch`** (`sceneStorage.ts`). It writes every scene with its full log in one `localStorage.setItem`. A long campaign hits the ~5 MB quota and it throws on the save path. This is live data loss today, independent of sync.
+2. **Event order is not intrinsic to the data.** `sequence` is assigned as `scene.events.length + 1` — a local counter — and `foldSceneEvents` sorts on it alone. `Array#sort` is stable, so tied sequences resolve to *array insertion order*, a property of how the array was assembled rather than of the data. Two devices appending offline both mint `N+1`. RFC 006 guarantees byte-identical folds; under any merge that guarantee is currently unenforceable. The fix is a comparator — `sequence`, then `createdAt`, then `id` — and it must land alone, with a test proving existing single-device logs fold identically before and after.
+
+Note the failure mode is *order ambiguity*, not re-rolling: every random value is resolved at authoring time and seeded from the event's own id, which is sound.
+
+**Effort:** ~5–7 days for durability-only; materially more with concurrent play. Full design, schema, file plan and risk list produced 2026-07-26.
 
 ---
 
