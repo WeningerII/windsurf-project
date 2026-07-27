@@ -6,6 +6,7 @@ import {
   loadScenes,
   saveScenes,
   parseScenesSnapshot,
+  SCENES_SAVE_FAILED_MESSAGE,
   SCENES_STORAGE_KEY,
 } from '../utils/sceneStorage';
 import { sameSceneSignatures } from '../utils/documentSignature';
@@ -58,13 +59,12 @@ export const useScenes = () => {
     });
   }, []);
 
+  // `saveScenes` reports failure by returning false rather than throwing (a
+  // quota rejection from the debounced autosave must not surface as an
+  // unhandled exception); it has already logged and toasted, so this only
+  // mirrors the outcome into the surface's error banner.
   const persist = useCallback((nextScenes: SceneDocument[]) => {
-    try {
-      saveScenes(nextScenes);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save scenes');
-    }
+    setError(saveScenes(nextScenes) ? null : SCENES_SAVE_FAILED_MESSAGE);
   }, []);
 
   const persistence = useDebouncedPersistence(persist);

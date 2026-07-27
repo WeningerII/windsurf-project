@@ -1,6 +1,8 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { appendSceneEvent, createSceneDocument, resolveSceneAction } from '../../scene/runtime';
+import { ErrorCategory, ErrorSeverity, errorLogger } from '../../utils/errorLogger';
 import { createMapAsset, loadMapAsset } from '../../utils/mapAssetStorage';
+import * as notifications from '../../utils/notifications';
 import {
   clearSceneStorage,
   deleteScene,
@@ -11,6 +13,7 @@ import {
   loadScene,
   loadScenes,
   saveScenes,
+  SCENES_SAVE_FAILED_MESSAGE,
   upsertScene,
 } from '../../utils/sceneStorage';
 import type { SceneDocument } from '../../types/core/scene';
@@ -219,5 +222,91 @@ describe('sceneStorage map assets (RFC 006 Phase 9)', () => {
       storedCount: 0,
       droppedCount: 0,
     });
+  });
+});
+
+// A years-long campaign accumulates event logs until the whole-collection
+// `setItem` meets the ~5 MB quota. That rejection must not escape the save path
+// (the callers are a debounced autosave and an unload handler), and it must not
+// vanish silently either.
+describe('saveScenes under a localStorage quota rejection', () => {
+  const makeScene = (id: string): SceneDocument =>
+    createSceneDocument({
+      id,
+      name: `Scene ${id}`,
+      systemId: 'dnd-5e-2024',
+      campaignId: 'campaign-quota',
+      now: NOW,
+    });
+
+  beforeEach(() => {
+    localStorage.clear();
+    // Clear any failure streak left by a previous test: a successful save is
+    // what resets the once-per-streak toast latch.
+    saveScenes([makeScene('reset')]);
+    localStorage.clear();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('does not throw, reports through the error funnel, and toasts once per streak', () => {
+    const toastSpy = vi.spyOn(notifications, 'emitToast').mockImplementation(() => {});
+    const logSpy = vi.spyOn(errorLogger, 'log').mockImplementation(() => {});
+    // NOTE: localStorage spies survive vi.restoreAllMocks in jsdom — restore manually.
+    const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
+      throw new DOMException('exceeded the quota', 'QuotaExceededError');
+    });
+
+    const scenes = [makeScene('scene-quota-1')];
+
+    // 1. The rejection never propagates, and the caller learns it failed.
+    expect(() => saveScenes(scenes)).not.toThrow();
+    expect(saveScenes(scenes)).toBe(false);
+
+    // 2. It is reported, not swallowed: HIGH severity reaches production
+    //    monitoring, and the context carries no scene content.
+    expect(logSpy).toHaveBeenCalled();
+    const [category, severity, message, error, context] = logSpy.mock.calls[0];
+    expect(category).toBe(ErrorCategory.STORAGE);
+    expect(severity).toBe(ErrorSeverity.HIGH);
+    expect(message).toMatch(/scene save failed/i);
+    expect((error as Error).name).toBe('QuotaExceededError');
+    expect(context).toMatchObject({ key: 'rpg-scenes-v1', sceneCount: 1 });
+    expect(JSON.stringify(context)).not.toContain('Scene scene-quota-1');
+
+    // 3. The user is told once, not once per keystroke.
+    expect(toastSpy).toHaveBeenCalledTimes(1);
+    expect(toastSpy).toHaveBeenCalledWith(SCENES_SAVE_FAILED_MESSAGE, 'error');
+
+    // 4. Once storage recovers, a later failure is allowed to speak again.
+    setItemSpy.mockRestore();
+    expect(saveScenes(scenes)).toBe(true);
+    const reFailSpy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
+      throw new DOMException('exceeded the quota', 'QuotaExceededError');
+    });
+    expect(saveScenes(scenes)).toBe(false);
+    expect(toastSpy).toHaveBeenCalledTimes(2);
+    reFailSpy.mockRestore();
+  });
+
+  it('leaves the previously stored collection intact rather than truncating it', () => {
+    vi.spyOn(notifications, 'emitToast').mockImplementation(() => {});
+    vi.spyOn(errorLogger, 'log').mockImplementation(() => {});
+
+    expect(saveScenes([makeScene('durable')])).toBe(true);
+    const before = localStorage.getItem('rpg-scenes-v1');
+
+    const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
+      throw new DOMException('exceeded the quota', 'QuotaExceededError');
+    });
+    expect(saveScenes([makeScene('durable'), makeScene('too-big')])).toBe(false);
+    setItemSpy.mockRestore();
+
+    // setItem is all-or-nothing per key: the stored payload is STALE (the new
+    // scene is missing), never a torn half-write.
+    expect(localStorage.getItem('rpg-scenes-v1')).toBe(before);
+    expect(loadScenes().map((scene) => scene.id)).toEqual(['durable']);
   });
 });

@@ -1,5 +1,6 @@
 import type { SceneDocument, SceneEvent } from '../types/core/scene';
 import { parseSceneDocument } from './boundaryValidation';
+import { ErrorCategory, ErrorSeverity, errorLogger } from './errorLogger';
 import {
   isMapAssetShape,
   loadMapAsset,
@@ -7,12 +8,20 @@ import {
   verifyMapAssetHash,
   type SceneMapAsset,
 } from './mapAssetStorage';
+import { emitToast } from './notifications';
 import { canUseLocalStorage } from './safeStorage';
 
 const STORAGE_KEY = 'rpg-scenes-v1';
 /** Exported for cross-tab `storage` event filtering in useScenes. */
 export const SCENES_STORAGE_KEY = STORAGE_KEY;
 const STORAGE_VERSION = '1.0';
+
+/**
+ * User-facing message for a rejected scene save. Exported so the hook that
+ * renders the error banner and the tests assert against one string.
+ */
+export const SCENES_SAVE_FAILED_MESSAGE =
+  'Scene changes could not be saved: browser storage is unavailable or full. Export your scenes to a file before closing this tab.';
 
 interface SceneStorageData {
   version: typeof STORAGE_VERSION;
@@ -83,9 +92,46 @@ export function loadScenes(): SceneDocument[] {
   return parseScenesSnapshot(raw) ?? [];
 }
 
-export function saveScenes(scenes: SceneDocument[]): void {
+/**
+ * A scene save is one `setItem` of the WHOLE collection, event logs included,
+ * so a long-running campaign eventually meets the ~5 MB localStorage quota.
+ * `setItem` is all-or-nothing per key: on rejection the previously stored
+ * payload is left intact, so the collection cannot be torn — it goes STALE,
+ * not corrupt. Stale is still data loss on the next reload, so the failure is
+ * never swallowed: it is logged HIGH through the shared error funnel (which
+ * forwards to production monitoring) and toasted once per failure streak, the
+ * same treatment `documentStorage` gives an unpersistable write.
+ *
+ * Reset once per streak rather than per call so a campaign that is over quota
+ * on every keystroke raises one toast, not one per edit.
+ */
+let hasShownSceneSaveFailureToast = false;
+
+function noteSceneSaveFailure(error: unknown, sceneCount: number, payloadLength: number): void {
+  errorLogger.log(
+    ErrorCategory.STORAGE,
+    ErrorSeverity.HIGH,
+    'Scene save failed; the scenes snapshot was rejected by localStorage',
+    error instanceof Error ? error : undefined,
+    // Non-identifying metadata only — scene names, notes, and event logs are
+    // user content and must not reach monitoring.
+    { key: STORAGE_KEY, sceneCount, payloadLength }
+  );
+  if (!hasShownSceneSaveFailureToast) {
+    hasShownSceneSaveFailureToast = true;
+    emitToast(SCENES_SAVE_FAILED_MESSAGE, 'error');
+  }
+}
+
+/**
+ * Persist the whole scene collection. Returns true when the snapshot landed,
+ * false when it did not — this NEVER throws, because the callers are debounced
+ * autosaves and unload handlers where an exception would take down the surface
+ * (and, on unload, take the user's session with it).
+ */
+export function saveScenes(scenes: SceneDocument[]): boolean {
   if (!canUseLocalStorage()) {
-    return;
+    return false;
   }
 
   const payload: SceneStorageData = {
@@ -93,13 +139,36 @@ export function saveScenes(scenes: SceneDocument[]): void {
     scenes,
     lastModified: new Date().toISOString(),
   };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+
+  let serialized: string;
+  try {
+    serialized = JSON.stringify(payload);
+  } catch (error) {
+    // Serialization itself can fail (over the engine's max string length once
+    // the event logs are large enough) — the same data-loss signal applies.
+    noteSceneSaveFailure(error, scenes.length, -1);
+    return false;
+  }
+
+  try {
+    localStorage.setItem(STORAGE_KEY, serialized);
+  } catch (error) {
+    noteSceneSaveFailure(error, scenes.length, serialized.length);
+    return false;
+  }
+
+  hasShownSceneSaveFailureToast = false;
+  return true;
 }
 
 export function loadScene(id: string): SceneDocument | undefined {
   return loadScenes().find((scene) => scene.id === id);
 }
 
+/**
+ * Returns the next collection whether or not the write landed — check
+ * {@link saveScenes} directly when the caller needs the persistence outcome.
+ */
 export function upsertScene(scene: SceneDocument): SceneDocument[] {
   const scenes = loadScenes();
   const nextScene = hydrateScene(scene);
