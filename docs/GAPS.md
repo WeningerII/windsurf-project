@@ -2078,9 +2078,30 @@ established either). Both keep their current class pending evidence.
 written. §3's residual asked for M&M 3e adversary data so that RFC 004's
 "reference adversaries for the others" stops being half-delivered (Daggerheart
 ships them; M&M does not). This section is the search for something to encode
-that data *from*, and its result: **no open-content M&M 3e adversary catalog
-exists in a form this repo's provenance rules can accept.** Writing one anyway is
-how §17 and §18 happened.
+that data *from*, and its result: **no open-content M&M 3e adversary catalog is
+reachable from this environment.** Writing one anyway is how §17 and §18
+happened.
+
+**Correction 2026-07-28, prompted by the owner.** An earlier revision of this
+section, and the summary given for it, said "no open-content source exists".
+That was wrong and materially so:
+
+- **`d20herosrd.com` IS the M&M 3e SRD.** `docs/srd-sources.md` names it as the
+  Hypertext M&M 3e SRD under OGL 1.0a, and it is the cited source in the header
+  of every file in `src/data/mutants-and-masterminds/3e/archetypes/`. Its
+  GM-section generic NPCs are open content this product may use.
+- **The blocker is environmental, not licensing.** Re-verified twice on
+  2026-07-28: every request from this sandbox fails at the agent proxy with
+  `CONNECT tunnel failed, response 403`, on the root and the NPC page alike. A
+  developer on an ordinary connection can reach it today. This distinction
+  changes the owner's options — see 19.4(d), which the original section lacked.
+- **M&M is not empty.** 16 archetypes ship and are fully wired (`dataLoader`,
+  `getMam3eSheetState`, `MamArchetypeBrowser`, `MamArchetypesTab`, `validation`).
+  They are **build templates, not adversaries**: their fields are `description`,
+  `features`, `suggestedSkills` and `sourceBook` — no ability scores, defenses or
+  power ranks. They cannot be promoted to adversaries without inventing the stat
+  data, which is precisely the prohibited move. The gap is real; "no catalog at
+  all" overstated it.
 
 ### 19.1 What was searched, and what each candidate actually contains
 
@@ -2190,6 +2211,16 @@ independent reasons.
 Ranked by how much each asks of the owner. None was taken here; taking one is an
 owner decision.
 
+- **(d) Fetch the SRD from an environment that can reach it — RECOMMENDED, and
+  newly available since this section was written.** The content is open, the
+  source is already cited by this repo, and the only obstacle is that CI and this
+  sandbox are proxy-blocked from `d20herosrd.com`. Someone on an ordinary
+  connection can pull the GM-section NPCs once; the encoder then runs offline
+  against a pinned local copy, exactly as `scripts/encode-mam-equipment.mjs`
+  already does against a pinned upstream. This makes (b) unnecessary and is
+  strictly better than (a): it closes §3's residual with genuinely open content
+  rather than by recording an absence. The pinned-copy pattern also means the
+  proxy block never has to be solved in CI.
 - **(a) Ship nothing, by recorded decision.** Close §3's residual the way 3.5e
   equipment was closed for a structurally identical reason
   (`src/scripts/srd-coverage.ts:722` — no clean source, and honest absence beats

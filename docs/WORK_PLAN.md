@@ -159,17 +159,19 @@ The manifests are generated *from* the loaders, so joining them against loaded i
 
 **Unblocks:** every content% number in the repo becoming meaningful.
 
-### 2.3 M&M 3e adversaries — ~~READY~~ **BLOCKED ON AN OWNER DECISION (investigated 2026-07-28)**
+### 2.3 M&M 3e adversaries — **BLOCKED ON A DECISION, and the blocker is network access, not licensing** (corrected 2026-07-28)
 
-`loadMonstersForSystem` returns `[]` for `mam3e`; there is no adversary data directory. This is a seven-systems-equal hole — 5 of 7 have loader-backed creature catalogs.
+`loadMonstersForSystem` returns `[]` for `mam3e`. 5 of 7 systems have loader-backed creature catalogs; M&M has none.
 
-**It cannot be closed by encoding, because no open-content source exists.** Searched and recorded in `GAPS.md` §19: the Hero SRD upstream this repo already cites publishes a character-building component list with no NPC/adversary/archetype array at all; the one HTML generic-NPC section is unreachable from this environment and CI, so encoding it would mean transcribing from recall — the exact §15/§18 failure mode; three Foundry M&M systems ship no NPC compendium and their licences exclude pack content; and the one machine-readable superhero NPC catalog found is a CC BY-SA fork whose licence does not match this product's posture.
+**Corrected after an owner challenge.** An earlier revision of this entry said no open-content source exists. Wrong, and the distinction matters:
 
-**Nothing was invented, which was the point.** A well-evidenced negative is the correct outcome here — inventing adversaries would manufacture exactly the problem §0.1 is still unresolved about.
+- **`d20herosrd.com` IS the M&M 3e SRD** (OGL 1.0a), already named in `docs/srd-sources.md` and already cited in the header of every shipped archetype file. Its GM-section NPCs are open content this product may use.
+- **This sandbox and CI are proxy-blocked from it** — verified twice, `CONNECT tunnel failed, response 403`. A developer on an ordinary connection can reach it today.
+- **M&M is not empty.** 16 archetypes ship and are fully wired. But they are **build templates, not adversaries** — `description`, `features`, `suggestedSkills`, no ability scores or defenses. Promoting them to adversaries would mean inventing stat data, which is the prohibited move that created §17 and §18.
 
-**Owner decision, per `GAPS.md` §19.4:** ship nothing and record the category closed · ship clearly-labelled original content the way §17 did for equipment · close by recorded decision the way 3.5e equipment was.
+**Recommended path (`GAPS.md` §19.4(d)):** pull the GM-section NPCs once from an unblocked connection, pin the copy, and let an encoder run offline against it — exactly the pattern `scripts/encode-mam-equipment.mjs` already uses. That closes the gap with genuinely open content and never requires solving the proxy block in CI.
 
-**Two further findings that lane surfaced, both left deliberately unedited:** §19.2 records a licensing statement in `src/utils/openContentPolicy.ts` and `src/legal/attributions.ts` that is wrong as written — the lane declined to edit a published legal attribution unilaterally, correctly, and it is the same class of question as §0.1 one level broader. §19.3 records an archetype defect that is the cheapest real work in the section but depends on which §19.4 option is chosen.
+**Separate live defect, found by the same challenge:** every shipped archetype's `source:` field holds the archetype's *own name* (`source: 'Battlesuit'`) instead of a source book, while a `sourceBook` field also exists. That is mislabelled provenance in shipped data — cheap to fix and owed regardless of which §19.4 option is chosen.
 
 ### 2.4 5e-2024 hand-written monsters diverge from SRD 5.2 — **DONE for every gated field (2026-07-28)**
 
@@ -207,7 +209,7 @@ Every new verified entry must land with its Tier-B mutation anchor.
 
 ### 4.1 `p4.parity-matrix` — close the 7×N matrix — **BLOCKED on 0.1-class decision, not on work**
 
-Cannot be honestly closed while one system has no creature catalog — and §2.3 established that closing that hole is **not an engineering task**: no open-content M&M adversary source exists. The matrix waits on the owner picking one of the three options in `GAPS.md` §19.4, after which parity is either closable or honestly recorded as permanently asymmetric with a stated reason.
+Cannot be honestly closed while one system has no creature catalog. §2.3 (corrected 2026-07-28) establishes that the source **does** exist and is open — the obstacle is that CI cannot reach it, not that it is unavailable. So this is closable work, gated on the owner picking `GAPS.md` §19.4(d) (fetch once from an unblocked connection, pin, encode offline) or one of the fallbacks.
 
 ### 4.2 ~~PF2e carries zero exclusion entries~~ — **DONE 2026-07-27**
 
