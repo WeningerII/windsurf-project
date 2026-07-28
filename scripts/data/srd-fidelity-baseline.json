@@ -190,24 +190,6 @@
       "encoded": 18,
       "source": 27
     },
-    "dnd-5e-2024/monsters/blackbear|abilities.dex": {
-      "name": "Black Bear",
-      "taggedSource": "SRD 5.2",
-      "encoded": 10,
-      "source": 12
-    },
-    "dnd-5e-2024/monsters/blackbear|speed.swim": {
-      "name": "Black Bear",
-      "taggedSource": "SRD 5.2",
-      "encoded": 0,
-      "source": 30
-    },
-    "dnd-5e-2024/monsters/blackbear|speed.walk": {
-      "name": "Black Bear",
-      "taggedSource": "SRD 5.2",
-      "encoded": 40,
-      "source": 30
-    },
     "dnd-5e-2024/monsters/blackpudding|hitPoints.count": {
       "name": "Black Pudding",
       "taggedSource": "SRD 5.2",
@@ -219,48 +201,6 @@
       "taggedSource": "SRD 5.2",
       "encoded": 33,
       "source": 24
-    },
-    "dnd-5e-2024/monsters/boar|abilities.con": {
-      "name": "Boar",
-      "taggedSource": "SRD 5.2",
-      "encoded": 12,
-      "source": 14
-    },
-    "dnd-5e-2024/monsters/boar|hitPoints.modifier": {
-      "name": "Boar",
-      "taggedSource": "SRD 5.2",
-      "encoded": 2,
-      "source": 4
-    },
-    "dnd-5e-2024/monsters/brownbear|abilities.con": {
-      "name": "Brown Bear",
-      "taggedSource": "SRD 5.2",
-      "encoded": 16,
-      "source": 15
-    },
-    "dnd-5e-2024/monsters/brownbear|abilities.dex": {
-      "name": "Brown Bear",
-      "taggedSource": "SRD 5.2",
-      "encoded": 10,
-      "source": 12
-    },
-    "dnd-5e-2024/monsters/brownbear|abilities.str": {
-      "name": "Brown Bear",
-      "taggedSource": "SRD 5.2",
-      "encoded": 19,
-      "source": 17
-    },
-    "dnd-5e-2024/monsters/brownbear|hitPoints.count": {
-      "name": "Brown Bear",
-      "taggedSource": "SRD 5.2",
-      "encoded": 4,
-      "source": 3
-    },
-    "dnd-5e-2024/monsters/brownbear|hitPoints.modifier": {
-      "name": "Brown Bear",
-      "taggedSource": "SRD 5.2",
-      "encoded": 12,
-      "source": 6
     },
     "dnd-5e-2024/monsters/chuul|abilities.cha": {
       "name": "Chuul",
@@ -322,24 +262,6 @@
       "encoded": 20,
       "source": 30
     },
-    "dnd-5e-2024/monsters/constrictorsnake|armorClass": {
-      "name": "Constrictor Snake",
-      "taggedSource": "SRD 5.2",
-      "encoded": 12,
-      "source": 13
-    },
-    "dnd-5e-2024/monsters/crocodile|hitPoints.count": {
-      "name": "Crocodile",
-      "taggedSource": "SRD 5.2",
-      "encoded": 3,
-      "source": 2
-    },
-    "dnd-5e-2024/monsters/crocodile|hitPoints.modifier": {
-      "name": "Crocodile",
-      "taggedSource": "SRD 5.2",
-      "encoded": 3,
-      "source": 2
-    },
     "dnd-5e-2024/monsters/deva|abilities.cha": {
       "name": "Deva",
       "taggedSource": "SRD 5.2",
@@ -387,18 +309,6 @@
       "taggedSource": "SRD 5.2",
       "encoded": 24,
       "source": 108
-    },
-    "dnd-5e-2024/monsters/direwolf|hitPoints.count": {
-      "name": "Dire Wolf",
-      "taggedSource": "SRD 5.2",
-      "encoded": 5,
-      "source": 3
-    },
-    "dnd-5e-2024/monsters/direwolf|hitPoints.modifier": {
-      "name": "Dire Wolf",
-      "taggedSource": "SRD 5.2",
-      "encoded": 10,
-      "source": 6
     },
     "dnd-5e-2024/monsters/druid|abilities.wis": {
       "name": "Druid",
@@ -454,12 +364,6 @@
       "encoded": 16,
       "source": 0
     },
-    "dnd-5e-2024/monsters/eagle|abilities.con": {
-      "name": "Eagle",
-      "taggedSource": "SRD 5.2",
-      "encoded": 10,
-      "source": 12
-    },
     "dnd-5e-2024/monsters/earthelemental|abilities.cha": {
       "name": "Earth Elemental",
       "taggedSource": "SRD 5.2",
@@ -508,18 +412,6 @@
       "encoded": 60,
       "source": 30
     },
-    "dnd-5e-2024/monsters/elk|abilities.con": {
-      "name": "Elk",
-      "taggedSource": "SRD 5.2",
-      "encoded": 12,
-      "source": 11
-    },
-    "dnd-5e-2024/monsters/elk|hitPoints.modifier": {
-      "name": "Elk",
-      "taggedSource": "SRD 5.2",
-      "encoded": 2,
-      "source": 0
-    },
     "dnd-5e-2024/monsters/fireelemental|armorClass": {
       "name": "Fire Elemental",
       "taggedSource": "SRD 5.2",
@@ -561,102 +453,6 @@
       "taggedSource": "SRD 5.2",
       "encoded": 20,
       "source": 30
-    },
-    "dnd-5e-2024/monsters/giantape|abilities.int": {
-      "name": "Giant Ape",
-      "taggedSource": "SRD 5.2",
-      "encoded": 7,
-      "source": 5
-    },
-    "dnd-5e-2024/monsters/giantape|hitPoints.count": {
-      "name": "Giant Ape",
-      "taggedSource": "SRD 5.2",
-      "encoded": 19,
-      "source": 16
-    },
-    "dnd-5e-2024/monsters/giantape|hitPoints.modifier": {
-      "name": "Giant Ape",
-      "taggedSource": "SRD 5.2",
-      "encoded": 76,
-      "source": 64
-    },
-    "dnd-5e-2024/monsters/giantbat|hitPoints.modifier": {
-      "name": "Giant Bat",
-      "taggedSource": "SRD 5.2",
-      "encoded": 4,
-      "source": 0
-    },
-    "dnd-5e-2024/monsters/giantcentipede|armorClass": {
-      "name": "Giant Centipede",
-      "taggedSource": "SRD 5.2",
-      "encoded": 13,
-      "source": 14
-    },
-    "dnd-5e-2024/monsters/giantcentipede|hitPoints.count": {
-      "name": "Giant Centipede",
-      "taggedSource": "SRD 5.2",
-      "encoded": 1,
-      "source": 2
-    },
-    "dnd-5e-2024/monsters/giantcentipede|hitPoints.modifier": {
-      "name": "Giant Centipede",
-      "taggedSource": "SRD 5.2",
-      "encoded": 1,
-      "source": 2
-    },
-    "dnd-5e-2024/monsters/giantelk|abilities.dex": {
-      "name": "Giant Elk",
-      "taggedSource": "SRD 5.2",
-      "encoded": 16,
-      "source": 18
-    },
-    "dnd-5e-2024/monsters/giantelk|hitPoints.count": {
-      "name": "Giant Elk",
-      "taggedSource": "SRD 5.2",
-      "encoded": 8,
-      "source": 5
-    },
-    "dnd-5e-2024/monsters/giantelk|hitPoints.modifier": {
-      "name": "Giant Elk",
-      "taggedSource": "SRD 5.2",
-      "encoded": 24,
-      "source": 10
-    },
-    "dnd-5e-2024/monsters/giantrat|abilities.dex": {
-      "name": "Giant Rat",
-      "taggedSource": "SRD 5.2",
-      "encoded": 15,
-      "source": 16
-    },
-    "dnd-5e-2024/monsters/giantrat|armorClass": {
-      "name": "Giant Rat",
-      "taggedSource": "SRD 5.2",
-      "encoded": 12,
-      "source": 13
-    },
-    "dnd-5e-2024/monsters/giantrat|speed.climb": {
-      "name": "Giant Rat",
-      "taggedSource": "SRD 5.2",
-      "encoded": 0,
-      "source": 30
-    },
-    "dnd-5e-2024/monsters/giantwasp|armorClass": {
-      "name": "Giant Wasp",
-      "taggedSource": "SRD 5.2",
-      "encoded": 12,
-      "source": 13
-    },
-    "dnd-5e-2024/monsters/giantwasp|hitPoints.count": {
-      "name": "Giant Wasp",
-      "taggedSource": "SRD 5.2",
-      "encoded": 4,
-      "source": 5
-    },
-    "dnd-5e-2024/monsters/giantwasp|hitPoints.modifier": {
-      "name": "Giant Wasp",
-      "taggedSource": "SRD 5.2",
-      "encoded": 4,
-      "source": 0
     },
     "dnd-5e-2024/monsters/gladiator|hitPoints.modifier": {
       "name": "Gladiator",
@@ -717,18 +513,6 @@
       "taggedSource": "SRD 5.2",
       "encoded": 4,
       "source": 2
-    },
-    "dnd-5e-2024/monsters/huntershark|abilities.dex": {
-      "name": "Hunter Shark",
-      "taggedSource": "SRD 5.2",
-      "encoded": 13,
-      "source": 14
-    },
-    "dnd-5e-2024/monsters/huntershark|speed.walk": {
-      "name": "Hunter Shark",
-      "taggedSource": "SRD 5.2",
-      "encoded": 0,
-      "source": 5
     },
     "dnd-5e-2024/monsters/hydra|abilities.con": {
       "name": "Hydra",
@@ -832,18 +616,6 @@
       "encoded": 72,
       "source": 126
     },
-    "dnd-5e-2024/monsters/lion|abilities.con": {
-      "name": "Lion",
-      "taggedSource": "SRD 5.2",
-      "encoded": 13,
-      "source": 11
-    },
-    "dnd-5e-2024/monsters/lion|hitPoints.modifier": {
-      "name": "Lion",
-      "taggedSource": "SRD 5.2",
-      "encoded": 4,
-      "source": 0
-    },
     "dnd-5e-2024/monsters/mage|abilities.con": {
       "name": "Mage",
       "taggedSource": "SRD 5.2",
@@ -879,24 +651,6 @@
       "taggedSource": "SRD 5.2",
       "encoded": 6,
       "source": 0
-    },
-    "dnd-5e-2024/monsters/mammoth|hitPoints.count": {
-      "name": "Mammoth",
-      "taggedSource": "SRD 5.2",
-      "encoded": 15,
-      "source": 11
-    },
-    "dnd-5e-2024/monsters/mammoth|hitPoints.modifier": {
-      "name": "Mammoth",
-      "taggedSource": "SRD 5.2",
-      "encoded": 60,
-      "source": 55
-    },
-    "dnd-5e-2024/monsters/mammoth|speed.walk": {
-      "name": "Mammoth",
-      "taggedSource": "SRD 5.2",
-      "encoded": 40,
-      "source": 50
     },
     "dnd-5e-2024/monsters/manticore|abilities.cha": {
       "name": "Manticore",
@@ -988,24 +742,6 @@
       "encoded": 12,
       "source": 44
     },
-    "dnd-5e-2024/monsters/panther|abilities.dex": {
-      "name": "Panther",
-      "taggedSource": "SRD 5.2",
-      "encoded": 15,
-      "source": 16
-    },
-    "dnd-5e-2024/monsters/panther|armorClass": {
-      "name": "Panther",
-      "taggedSource": "SRD 5.2",
-      "encoded": 12,
-      "source": 13
-    },
-    "dnd-5e-2024/monsters/panther|hitPoints.modifier": {
-      "name": "Panther",
-      "taggedSource": "SRD 5.2",
-      "encoded": 3,
-      "source": 0
-    },
     "dnd-5e-2024/monsters/planetar|abilities.cha": {
       "name": "Planetar",
       "taggedSource": "SRD 5.2",
@@ -1035,18 +771,6 @@
       "taggedSource": "SRD 5.2",
       "encoded": 80,
       "source": 147
-    },
-    "dnd-5e-2024/monsters/polarbear|abilities.dex": {
-      "name": "Polar Bear",
-      "taggedSource": "SRD 5.2",
-      "encoded": 10,
-      "source": 14
-    },
-    "dnd-5e-2024/monsters/polarbear|speed.swim": {
-      "name": "Polar Bear",
-      "taggedSource": "SRD 5.2",
-      "encoded": 30,
-      "source": 40
     },
     "dnd-5e-2024/monsters/priest|abilities.str": {
       "name": "Priest",
@@ -1143,42 +867,6 @@
       "taggedSource": "SRD 5.2",
       "encoded": 0,
       "source": 30
-    },
-    "dnd-5e-2024/monsters/reefshark|abilities.dex": {
-      "name": "Reef Shark",
-      "taggedSource": "SRD 5.2",
-      "encoded": 13,
-      "source": 15
-    },
-    "dnd-5e-2024/monsters/reefshark|speed.swim": {
-      "name": "Reef Shark",
-      "taggedSource": "SRD 5.2",
-      "encoded": 40,
-      "source": 30
-    },
-    "dnd-5e-2024/monsters/reefshark|speed.walk": {
-      "name": "Reef Shark",
-      "taggedSource": "SRD 5.2",
-      "encoded": 0,
-      "source": 5
-    },
-    "dnd-5e-2024/monsters/rhinoceros|armorClass": {
-      "name": "Rhinoceros",
-      "taggedSource": "SRD 5.2",
-      "encoded": 11,
-      "source": 13
-    },
-    "dnd-5e-2024/monsters/sabertoothedtiger|abilities.dex": {
-      "name": "Saber-Toothed Tiger",
-      "taggedSource": "SRD 5.2",
-      "encoded": 14,
-      "source": 17
-    },
-    "dnd-5e-2024/monsters/sabertoothedtiger|armorClass": {
-      "name": "Saber-Toothed Tiger",
-      "taggedSource": "SRD 5.2",
-      "encoded": 12,
-      "source": 13
     },
     "dnd-5e-2024/monsters/shadow|hitPoints.count": {
       "name": "Shadow",
@@ -1324,24 +1012,6 @@
       "encoded": 39,
       "source": 60
     },
-    "dnd-5e-2024/monsters/tyrannosaurusrex|abilities.con": {
-      "name": "Tyrannosaurus Rex",
-      "taggedSource": "SRD 5.2",
-      "encoded": 21,
-      "source": 19
-    },
-    "dnd-5e-2024/monsters/tyrannosaurusrex|hitPoints.count": {
-      "name": "Tyrannosaurus Rex",
-      "taggedSource": "SRD 5.2",
-      "encoded": 18,
-      "source": 13
-    },
-    "dnd-5e-2024/monsters/tyrannosaurusrex|hitPoints.modifier": {
-      "name": "Tyrannosaurus Rex",
-      "taggedSource": "SRD 5.2",
-      "encoded": 90,
-      "source": 52
-    },
     "dnd-5e-2024/monsters/vampire|hitPoints.count": {
       "name": "Vampire",
       "taggedSource": "SRD 5.2",
@@ -1443,18 +1113,6 @@
       "taggedSource": "SRD 5.2",
       "encoded": 0,
       "source": 30
-    },
-    "dnd-5e-2024/monsters/wolf|abilities.str": {
-      "name": "Wolf",
-      "taggedSource": "SRD 5.2",
-      "encoded": 12,
-      "source": 14
-    },
-    "dnd-5e-2024/monsters/wolf|armorClass": {
-      "name": "Wolf",
-      "taggedSource": "SRD 5.2",
-      "encoded": 13,
-      "source": 12
     },
     "dnd-5e-2024/monsters/wraith|hitPoints.count": {
       "name": "Wraith",
