@@ -46,14 +46,11 @@ An unmerged branch carries commits claiming **Phase 12 (LLM strategist)**, **Pha
 **Unblocks:** all of §5 (AI/scene runtime). Scheduling that work without a verdict risks rebuilding what is sitting on a shelf.
 **Cost of deciding:** one look at the branch.
 
-### 0.3 May documents publish one microtask late on cold start?
+### 0.3 May documents publish one microtask late on cold start? — ~~DECIDE~~ **MOOT 2026-07-28**
 
-`src/hooks/useDocuments.ts:22` calls `engine.prepareData(doc)` **synchronously from inside `setDocuments` updaters**, on load and on every add / update / import / cross-tab-merge / sync-merge path. It is the single eager consumer blocking lazy per-system engines. Going lazy makes it async: documents would publish unprepared for ≥1 microtask on cold start, and mutation ordering inside the updaters would change. That is a behaviour change, not code-splitting, and it fails the standing safety bar for touching engine math.
+The question never had to be answered: the recorded alternative — a preload design that guarantees resolution before `useDocuments` publishes — was built instead, so documents still never publish unprepared and the version derivation inside `updateDocument` never moved. See `docs/GAPS.md` §16.5 for the shape of the seam and the measured result. Only the two named test files' **call shape** changed (plus `src/__tests__/hooks/applyMergedCollections.test.tsx`, for the same reason); no expectation did.
 
-Two further tests (`mam3eValidation.test.ts:33`, `capabilityScenarios.test.tsx:323`) read `.engine` synchronously inside sync `it()` bodies; unblocking also needs authorization to change their **call shape** — not their expectations.
-
-**Unblocks:** 21.2 KiB of eager-bundle headroom (§6.1). The measured ceiling is 23.6 KiB; 2.4 KiB has been claimed.
-**Alternative if the answer is no:** a preload design that guarantees resolution before `useDocuments` publishes. More work, no behaviour change.
+**Unblocked:** §6.1, which is now closed.
 
 ---
 
@@ -179,9 +176,9 @@ Accepted 2026-07-21, nothing landed. Verified: the RFC's proposed AI-DM module d
 
 ## 6. Infrastructure and hardening
 
-### 6.1 Finish the eager-bundle reclaim — **BLOCKED on 0.3**
+### 6.1 Finish the eager-bundle reclaim — ~~BLOCKED on 0.3~~ **DONE 2026-07-28**
 
-2.4 KiB claimed of a measured 23.6 KiB ceiling; headroom is now ~2,658 bytes against the 85 KiB budget. Rejected alternatives are recorded so they are not re-proposed: an engine-internal `rollCheck` split (only 2.5 KiB, and it introduces a *second* engine-loading mechanism), and awaiting engines in `main.tsx` before `render()` (shrinks the measured chunk without shrinking first paint — that games the gate rather than paying it).
+Per-system engines now load through the registry's `loadEngine`/`peekEngine`/`preloadEngines` seam (`src/registry/index.ts`), with `useDocuments` pre-resolving before it publishes or dispatches. Measured against a clean build of the base commit: eager `index-*.js` 84,280 B -> 61,037 B gzip, eager shell 187.8 -> 165.1 KiB, `appChunkGzipBytes` unchanged at 85 KiB — headroom against that budget goes from 2,760 B to 26,003 B. Evidence and the design rationale: `docs/GAPS.md` §16.5. The rejected alternatives recorded there still stand as rejected.
 
 ### 6.2 UI shell Phases 6 and 7 — **partly BLOCKED**
 
