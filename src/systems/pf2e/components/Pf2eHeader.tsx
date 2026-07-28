@@ -6,7 +6,11 @@ import type { CharacterClass } from '../../../types/character-options/classes';
 import type { Species } from '../../../types/character-options/species';
 import type { Pf2eBackgroundDefinition } from '../../../data/pathfinder/2e/backgrounds';
 import type { Pf2eDataModel } from '../data-model';
+import { PF2E_HERO_POINTS_MAX } from '../derivedMath';
 import { clampCount } from '../../../utils/resourcePool';
+
+/** Pip indices for the Hero Point track — CRB caps the pool at 3 held at once. */
+const HERO_POINT_PIPS = Array.from({ length: PF2E_HERO_POINTS_MAX }, (_, index) => index);
 
 interface Props {
   document: CharacterDocument<Pf2eDataModel>;
@@ -171,7 +175,7 @@ export const Pf2eHeader: React.FC<Props> = ({
         <div className="text-center">
           <div className="text-xs font-medium text-muted-foreground mb-1">Hero Points</div>
           <div className="flex gap-1">
-            {[0, 1, 2].map((index) => (
+            {HERO_POINT_PIPS.map((index) => (
               <button
                 key={index}
                 type="button"
@@ -182,7 +186,7 @@ export const Pf2eHeader: React.FC<Props> = ({
                     ? 'bg-amber-400 border-amber-500 text-amber-900'
                     : 'border-input hover:border-amber-400'
                 }`}
-                title={`${data.heroPoints}/3 Hero Points`}
+                title={`${data.heroPoints}/${PF2E_HERO_POINTS_MAX} Hero Points`}
               >
                 <Star className="w-3 h-3 mx-auto" />
               </button>

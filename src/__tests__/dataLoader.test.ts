@@ -246,11 +246,16 @@ describe('Data Loader Integration Tests', () => {
     it('should load only SRD-cited 3.5e feats with unique ids', async () => {
       const feats = await loadFeatsForSystem('dnd-3.5e');
       // The fabricated feat corpus (~450 invented entries labeled 'PHB') was
-      // purged; only SRD 3.5-verifiable feats remain.
-      expect(feats.length).toBe(80);
+      // purged; only SRD 3.5-verifiable feats remain: 80 curated by hand plus
+      // the 38 the encoder (scripts/encode-35e-feats.mjs) transcribed from the
+      // olimot feats chapter to close the SRD 3.5 feat list.
+      expect(feats.length).toBe(118);
       expect(new Set(feats.map((feat) => feat.id)).size).toBe(feats.length);
       expect(feats.every((feat) => feat.source === 'SRD 3.5')).toBe(true);
       expect(feats.some((feat) => feat.id === 'power-attack-35e')).toBe(true);
+      // Encoder-supplied entries, absent before the SRD feats chapter was encoded.
+      expect(feats.some((feat) => feat.id === 'whirlwind-attack-35e')).toBe(true);
+      expect(feats.some((feat) => feat.id === 'spell-mastery-35e')).toBe(true);
       expect(feats.some((feat) => feat.id === 'backstab-35e')).toBe(false);
       expect(feats.some((feat) => feat.id === 'intimidating-35e')).toBe(false);
     });
