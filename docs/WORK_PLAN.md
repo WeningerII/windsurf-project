@@ -248,16 +248,20 @@ Six of the ten in-sheet browser wrappers are deleted and every affected tab grid
 - Finishing the remaining four is **Dock capability work, not deletion work**: Advantage and Power-Modifier tabs, and a seam letting a sheet publish a catalog filter the Dock applies. That is the natural successor item.
 - Phase 5's toast + count-badge micro-feedback on the click-add path is still unbuilt; adds land silently.
 
-**Two things the eviction left for the owner, both small and both unanswered:**
+**What the eviction left, one still open:**
 
 1. **DECIDE — the four kept wrappers need ratification.** The Phase-5 spec assumed the Dock covered every catalog and it does not (the three capability gaps above). Keeping the wrappers was the right call *given* that, but it was made by the lane, not by you, and it leaves the product with two browse routes indefinitely. Either ratify the split as the shipped design or fund the Dock capability work that would close it.
-2. **DECIDE — one string of user-facing copy is now orphaned.** `"Feat automation applies ability score increases and proficiencies"` in `src/utils/documentationCopy.ts` had exactly one renderer, `Dnd5eFeatBrowserTab`, which this eviction deleted. Nothing renders it today, so the eviction quietly dropped an explanation users used to see. Either wire it into the Dock's Feats tab or delete it as dead copy — but it should not sit in a copy module with no consumer, which is how it escaped review in the first place. Found by `e2e/system-smoke.spec.ts`, which records it.
+2. ~~**DECIDE — one string of user-facing copy is now orphaned.**~~ **RESOLVED 2026-07-28: deleted, not re-homed.** `DND5E_FEAT_COPY.browserSupport` is gone from `src/utils/documentationCopy.ts`.
+
+   Re-homing it in the Dock's Feats tab was the obvious move and is wrong on inspection. That tab is shared-layer and browses **all seven** systems' feat catalogs, so a blanket caption about ability score increases and proficiencies — a 5e concept — would be false on the 3.5e, PF1e, PF2e and M&M catalogs shown by the same surface. And the information is already delivered better: the Dock stamps a per-feat **"Manual"** badge through `shouldShowDnd5eManualFeatBadge` (`src/dock/Dock.tsx`), marking the individual feats whose riders the engine cannot apply rather than asserting it across a whole catalog.
+
+   `DND5E_FEAT_COPY.selectedSupport` stays — it is live in `Dnd5eSelectedFeatsSection`, on the 5e sheet, where a 5e-specific statement is correct. The eviction did drop user-facing explanation, but the replacement surface had already re-provided it in a more precise form; what was left behind was a string, not a capability.
 
 ---
 
-## 5. AI and scene runtime — **all BLOCKED on 0.2**
+## 5. AI and scene runtime — ~~all BLOCKED on 0.2~~ **UNBLOCKED since 2026-07-26**
 
-Ordered by dependency. Do not schedule any of these before the shelf-branch verdict.
+Ordered by dependency. The gate was the shelf-branch verdict (§0.2), and that came on 2026-07-26 — delete deliberately, Phase 12 cut. This header still said "do not schedule any of these before the shelf-branch verdict" two days after the verdict; corrected 2026-07-28. Nothing here is waiting on §0.2 any more.
 
 ### 5.1 Give the shipped AI flows a surface — **HALF DONE 2026-07-27**
 
@@ -265,9 +269,20 @@ Ordered by dependency. Do not schedule any of these before the shelf-branch verd
 
 It is now reachable *through* the character-draft seam rather than being the only caller of it, which removes the "dead-rooted" problem but not the missing surface. Worth knowing before scoping it: `makeMeAGameFlow` is the **only** non-test caller of `systemRegistry.validateDocument`, which is why no user surface invokes build legality anywhere.
 
-### 5.2 Phase 14's one remaining join
+### 5.2 Phase 14's one remaining join — **NOT CHEAP; it is a schema change (re-scoped 2026-07-28)**
 
-Everything else in the observability layer shipped. What remains is a single join: **a trace id does not yet reach a scene event**.
+Everything else in the observability layer shipped. What remains is described accurately as a single join — **a trace id does not yet reach a scene event** — but the description undersells the work, and it was pulled into a cheap batch on that basis and put back.
+
+**Why it is not small.** `SceneEvent` (`src/types/core/scene.ts`) carries no trace, provenance or origin field, so this is an addition to the **append-only event type** whose fold RFC 006 guarantees replays byte-identically. That reaches:
+
+- persistence in both tiers (`sceneStorage.ts` — IndexedDB and the localStorage snapshot),
+- scene import/export, which must accept events written before the field existed,
+- the fold in `src/scene/runtime.ts`, which must be proven to produce identical output with and without it,
+- and the cross-tab/merge path, where an unknown field must not change the signature comparison.
+
+The gateway side is genuinely ready — `traceId` already exists on `AiGatewayLogRecord` (`src/ai/gatewayLog.ts:17`) and on both the request and response contracts in `src/ai/contracts.ts`. It is the scene side that has no seat for it.
+
+**What the lane needs, whoever takes it:** a decision on whether the trace rides *on the event* (replay-visible, needs the byte-identical proof) or *beside it* in a side table keyed by event id (replay-invisible, no schema change, but does not survive export). That choice is the actual work; the plumbing after it is small either way. Do not start this without picking one.
 
 ### 5.3 Phase 12 — LLM strategist blackboard — **CUT 2026-07-26**
 
@@ -407,7 +422,9 @@ The near-miss worth recording: `utils/validation` is trivially confusable with `
 ### 7.1 Wire-ups — open defects, not seams
 
 - ~~**`src/rules/legality/dnd5e.ts`**~~ — **DONE 2026-07-27.** The module was **dead at runtime**: PF2e, PF1e and 3.5e each bridged their legality module into validation and 5e did not, so both editions silently skipped four build caps their siblings enforce. One bridge covers both editions — they already share `createDnd5eValidator(systemId)` and `validateDnd5eBuild` branches on that same id, so each keeps its own compute-register rule prefix. Note one user-visible rename: `dnd5e-class-total-mismatch` → `dnd5e-class-total-shortfall`, narrowed to the shortfall direction so it stops double-reporting against the class-level-sum cap — matching what PF1e and 3.5e already did.
-- **`src/systems/pf2e/derivedMath.ts`** (129 LOC) — its PF1e twin is live; this one has no non-test importer. An archived full-repo review prescribed "wire these in or mark them missing"; neither happened, and the finding was never carried into live `GAPS.md`. The PF1e pattern is right there to mirror.
+- ~~**`src/systems/pf2e/derivedMath.ts`**~~ — **ALREADY DONE; this bullet was stale and contradicted §7.2 below.** It claimed the module "has no non-test importer" and that "neither happened". Both are false as of 2026-07-28: `Pf2eHeader.tsx` imports `PF2E_HERO_POINTS_MAX`, `Pf2eSpellsTab.tsx` imports `pf2eAttackModifier`, `usePf2eMutationHandlers.ts` imports `PF2E_HERO_POINTS_AT_SESSION_START`, and `derivedQuantities.ts` imports the death-track helpers. §7.2's last bullet already recorded the wire-up in detail, including which helpers stay test-only and *why* — so this file asserted a thing and its own refutation, two sections apart.
+
+  Corrected rather than deleted, because the failure mode is the point: a plan that contradicts itself sends the next lane to do work that is finished, and this one survived several passes because nobody read the two sections together.
 
 ### 7.2 Small items surfaced during verification
 

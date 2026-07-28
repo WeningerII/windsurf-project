@@ -16,7 +16,20 @@ export type DocDriftRuleType =
   | 'path_ref_rule'
   | 'historical_banner_rule'
   | 'runtime_copy_rule'
-  | 'capability_phrase_rule';
+  | 'capability_phrase_rule'
+  // Added 2026-07-28. `MASTER_PLAN.md` already states the rule these two
+  // enforce — "Narrative docs do not own counts … counts live in
+  // docs/generated/ and are cited" — but it was only ever applied to COUNTS.
+  // The same defect in STATUS went unchecked and rotted four times in three
+  // days: a section still marked BLOCKED on a decision made two days earlier,
+  // a bullet asserting a module had no importers while another section in the
+  // same file described wiring it in, a ledger item marked `missing` whose own
+  // cited evidence reported it complete, and a section marked READY containing
+  // no dispatchable work.
+  //
+  // Prose does not own status either.
+  | 'blocked_ref_rule'
+  | 'ledger_status_rule';
 
 export interface DocDriftSurface {
   path: string;
@@ -71,7 +84,11 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     path: 'docs/WORK_PLAN.md',
     kind: 'plan',
     owner: 'work-queue',
-    rules: ['path_ref_rule'],
+    // blocked_ref_rule: this file's whole job is sequencing, so a "BLOCKED on
+    // §X" that outlives §X's resolution is the failure mode that costs most —
+    // it parks work that is already free to start. §5 carried exactly that for
+    // two days after §0.2 was decided.
+    rules: ['path_ref_rule', 'blocked_ref_rule'],
   },
   {
     path: 'docs/MASTER_PLAN.md',
@@ -208,7 +225,10 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     path: 'docs/generated/master-gap-ledger.md',
     kind: 'generated',
     owner: 'master-gap-ledger',
-    rules: ['path_ref_rule'],
+    // ledger_status_rule reads docs/master-gap-ledger.source.ts (the hand-kept
+    // input this file is generated from) — the status lives there, so that is
+    // where a contradiction has to be caught.
+    rules: ['path_ref_rule', 'ledger_status_rule'],
   },
   {
     path: 'docs/generated/master-gap-ledger.json',

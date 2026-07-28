@@ -182,10 +182,11 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     track: 'A-content',
     title: 'Single-entry content gaps',
     detail:
-      "5e-2014 Net; 5e-2024 Will-o'-Wisp (upstream source table defective — verify, do not guess); PF1e Teleport (Greater) [naming]; 3.5e Shadow Evocation (Greater) [naming]; verify the naming variants against the SRD before adding.",
-    status: 'missing',
+      "CLOSED 2026-07-28 — all four ship, and the independent denominator agrees. Verified against the loaders: 5e-2014 'Net'; 5e-2024 \"Will-o'-Wisp\" at STR 1 (the value re-transcribed for the §13 upstream source-table defect, so the 'verify, do not guess' instruction was already honoured); PF1e 'Greater Teleport'; 3.5e 'Greater Shadow Evocation'. The two flagged [naming] items were never missing content — the ledger listed them index-sort style as 'Teleport (Greater)' / 'Shadow Evocation (Greater)' while the SRD, and the loaders, name them 'Greater X'. srd-coverage.md reports 0 missing for all four owning categories (5e-2014/equipment, 5e-2024/monsters, pf1e/spells, dnd-3.5e/spells), so this is confirmed by a denominator fetched from outside the repo, not just by reading the data. NOTE: the 30 remaining 3.5e/monsters misses are container-like rows and belong to p1.monster-denominator-fix, not here.",
+    status: 'done',
     tags: ['engineering'],
-    evidence: 'docs/generated/srd-coverage.md (Missing entries)',
+    evidence:
+      'docs/generated/srd-coverage.md (Missing entries: 5e-2014/equipment, 5e-2024/monsters, pf1e/spells, dnd-3.5e/spells all "complete (0 missing)"); loader probe over loadEquipmentForSystem/loadMonstersForSystem/loadSpellsForSystem',
   },
   {
     id: 'p1.pf1e-equipment',

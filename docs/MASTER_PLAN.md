@@ -17,6 +17,16 @@ Status lines here are **verified against code, not carried forward from prose**.
 
 Two habits caused the drift, and both are now rules rather than advice. **Narrative docs do not own counts** — a number restated in prose is wrong within a week, so counts live in `docs/generated/` and are cited. **Do not claim a guard you have not proven can fail** — several "enforced" and "cannot be gamed" claims here described mechanisms structurally incapable of going red.
 
+**A third rule, added 2026-07-28: when you fix a class of defect, grep for its siblings before you close it.** Three separate defects that week were each a lesson learned correctly in one place and applied nowhere else — and in every case the sibling was one `grep` away:
+
+| the lesson, correctly recorded | where it was not applied |
+| --- | --- |
+| exclude `.claude/worktrees` from tree walks (`vitest.config.ts`, with a comment explaining why) | `eslint.config.js` and `knip.jsonc`, which left `npm run verify` unable to finish locally |
+| a budget gate must count operations, not wall-clock (`check:keepalive-budget`, and this document's own §7 note) | `gateBudget.test.tsx`, which flaked 1 run in 3 under parallel workers |
+| **the two rules above**, applied to counts | **status** — four stale labels in three days, now gated by `blocked_ref_rule` and `ledger_status_rule` |
+
+The failure mode is not carelessness. It is that a careful write-up of a fix *feels* like completion, and the write-up itself becomes the reason nobody looks for the next instance. The remedy is mechanical: before closing, search for the pattern, not the symptom.
+
 | Section | What it answers |
 | --- | --- |
 | [Product North Star](#product-north-star) | What the product is for, and the all-seven-equal bar |
