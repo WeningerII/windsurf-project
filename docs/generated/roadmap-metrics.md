@@ -1,4 +1,4 @@
-_Generated: 2026-07-28T00:04:58.440Z_
+_Generated: 2026-07-28T00:16:36.711Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -117,7 +117,7 @@ _Measured 2026-07-28T00:04:51.558Z by `npm run srd:coverage`; republished here, 
 | Pathfinder 2e | 29 | 29 | 100% |
 | Daggerheart | 26 | 26 | 100% |
 
-_Denominators: the independent SRD reverse diff in docs/generated/srd-coverage.md (content) and the cited registers in docs/compute-register/ (compute). Enumerated manual boundaries excluded from both: 10, registered in `docs/srd-manifest/_exclusions.ts`._
+_Denominators: the independent SRD reverse diff in docs/generated/srd-coverage.md (content) and the cited registers in docs/compute-register/ (compute). Enumerated manual boundaries excluded from both: 13, registered in `docs/srd-manifest/_exclusions.ts`._
 
 ### Content Integrity (Denominator A — provenance + policy)
 _Share of each system's **open-content** loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant) and is a PROVENANCE measure, not a denominator: it says nothing about which SRD entries are MISSING. That is what the Content Coverage section above measures, against the external indexes in `docs/generated/srd-coverage.md`. A 100% here is compatible with a low coverage figure there._
