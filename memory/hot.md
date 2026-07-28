@@ -4,16 +4,56 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-28 — **PR #105 merged to `main` (`62ac50a`)**. That PR
-carried the whole "master plan unfinished" tranche and is the first branch run to
-execute the *entire* `npm run verify` chain green in CI (run `30341196839`).
-Earlier runs never got that far: `2fd3380` died at `check:bundle-size`, `3daff1f`
-was cancelled mid-e2e at the 30-min job timeout, `60c3745` failed the last e2e
-test. Twelve gates had therefore never executed on the branch — all twelve passed.
+**Last updated:** 2026-07-28 — **PR #105 and #106 both merged** (`main` at
+`3941a7e`). #105 carried the "master plan unfinished" tranche; #106 was the CI
+performance work.
+
+## CI performance — measured, not projected (PR #106)
+
+**Verify: 721s -> 510s on the PR run.** On `main`, like for like against the
+previous push, the verify STEP went 741s -> 501s. Four causes, all work that
+produced nothing:
+- **Coverage was forced fully serial** (`fileParallelism:false` + `maxWorkers:1`
+  in vitest.config.ts, plus a redundant `--maxWorkers=1` in `verify`), with no
+  recorded reason. 253.8 -> 159.6s. **1.59x on CI, NOT the 2.65x measured
+  locally** — the runner is 4 vCPU so worker contention eats most of it. Do not
+  quote the local number.
+- **The app was built twice**: Playwright's webServer rebuilt it after
+  check:bundle-size had gated the first dist. `PLAYWRIGHT_PREBUILT=1` now skips
+  it. e2e dead time before the first test: 44.2s -> 4.7s.
+- **check:compute-register re-ran the suite** one cold `npx vitest` per file.
+  39.3 -> 11.4s, batched into one spawn.
+- **The a11y test scanned 8,235 DOM nodes** with axe. 45.6 -> 11.2s across both
+  browser projects.
+
+**`--with-deps` is the sleeper.** It apt-installs 9 packages, all fonts. Cost is
+wildly variable: 18.4s on one runner, **566s (9m26s)** on the `62ac50a` main
+run — the single largest cost in that entire job. Removing it is worth far more
+than the 18s figure suggests.
+
+**The browser cache was broken and I wrote it.** It cached `~/.ms-playwright`;
+Playwright installs to `$XDG_CACHE_HOME/ms-playwright` on Linux. Silent both
+ways — restore could not hit, save had nothing to write (0s post step) — so two
+runs re-downloaded 380 MiB while looking cached. Fixed on branch
+`claude/master-plan-unfinished-s1lsya` (`1c39df3`, NOT yet merged, no PR): the
+job pins `PLAYWRIGHT_BROWSERS_PATH` and caches that same variable, plus an
+assertion that fails if the path is empty after install. **The 510s result did
+NOT depend on the cache** — it never worked, so the fix is upside on top.
+
+**Restoring parallelism exposed one latent test race** (`682b228`):
+creationWizard.a11y.test.tsx mounted the wizard twice without settling between
+renders. Expect more of this class if the job is ever split further.
+
+**Biggest CI win still on the table:** split the single 22-step job into five
+parallel ones — the critical path becomes the slowest job instead of the sum,
+~2m30s-3m30s. NOT done deliberately: CI would stop literally invoking
+`npm run verify`, so a step added to package.json could silently never run in
+CI, which is this repo's documented failure mode. Needs a `check:ci-parity`
+gate asserting the ci.yml `npm run` multiset equals the verify chain. Owner call.
 
 **Read `docs/WORK_PLAN.md` first** — it is the forward-looking queue and was
 refreshed against `main` on 2026-07-28. `docs/MASTER_PLAN.md` holds decisions and
-status; `docs/GAPS.md` §20 holds this session's evidence.
+status; `docs/GAPS.md` §20 holds the #105 evidence.
 
 **What landed in #105:**
 - The rescued **1,069-entry over-inclusion audit** (now 1,045 suspects) plus its
