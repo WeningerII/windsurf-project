@@ -107,6 +107,44 @@ export const MANUAL_EXCLUSIONS: ManualExclusion[] = [
       'A cleric trades a prepared spell for a cure/inflict spell at the moment of casting; this is a cast-time play choice, surfaced as a reference list rather than auto-applied.',
     masterPlanRef: 'MASTER_PLAN.md: Pathfinder 1e support — spontaneous conversion reference',
   },
+  // PF2e, enumerated 2026-07-27. PF2e declared supportLevel 'full' while carrying
+  // no entry here, even though its own support row names a manual focus-spell
+  // surface — so the "only residual gaps live in this registry" rule did not hold
+  // for it. The three entries below are its accepted boundaries, each with a
+  // code-level citation.
+  //
+  // Deliberately NOT listed, because they are unfinished automation rather than
+  // boundaries: the agile multiple-attack penalty (−4/−8) and PF2e weapon
+  // specialization (+2/+3/+4), both recorded as pending wiring in the notes on
+  // docs/compute-register/pf2e.ts (pf2e.L3.map, pf2e.L3.striking-runes). Those
+  // stay open work in docs/GAPS.md, not exclusions.
+  {
+    id: 'pf2e.spellcasting.focus-spells',
+    systemId: 'pf2e',
+    subject: 'Focus-spell list and effects',
+    reason:
+      'The focus pool itself is automated and register-verified (pf2e.L5.focus-points caps it at 3 Focus Points), but focus spells are granted by class feats and class features that the product does not ship as grant data. The list is therefore hand-entered: the validator deliberately does not check `spellcasting.focusSpells` ids against the spell catalog and only annotates the fact (src/systems/pf2e/validation.ts, issue code `pf2e-focus-spells-manual`), and the sheet labels the section Manual (Pf2eSpellsTab.tsx).',
+    masterPlanRef:
+      'MASTER_PLAN.md: Pathfinder 2e — "Cantrips, focus spells, and unsupported preparation edges remain manual"',
+  },
+  {
+    id: 'pf2e.spellcasting.manual-prepared-slots',
+    systemId: 'pf2e',
+    subject: 'Prepared-slot assignment and cantrip selection',
+    reason:
+      'Slot counts per rank are auto-resolved from the class spell-slot progression (pf2e.L5.spell-slots), and prepared ranks are validated against it. Which spell a prepared caster puts in each slot each day, and which cantrips are selected, are play choices: the product persists and round-trips them but never chooses them.',
+    masterPlanRef:
+      'MASTER_PLAN.md: Pathfinder 2e — native prepared-slot state by rank; unsupported preparation edges remain manual',
+  },
+  {
+    id: 'pf2e.spellcasting.rank-10-slots',
+    systemId: 'pf2e',
+    subject: 'Rank-10 spell slots from 10th-rank class features',
+    reason:
+      "Class SpellSlotProgression tables are RAW only for ranks 1-9. A rank-10 slot comes from a 10th-rank class feature (e.g. Archwizard's Spellcraft), not from the progression table, so rank 10 is exempt from class-progression consistency checking (src/systems/pf2e/validation.ts, CLASS_PROGRESSION_RANKS) and is tracked by hand. Rank-10 spells themselves are catalog content and are browsed like any other rank.",
+    masterPlanRef:
+      'MASTER_PLAN.md: Pathfinder 2e — unsupported preparation edges remain manual; PF2e rank-10 browser support',
+  },
 ];
 
 export function exclusionsForSystem(systemId: ManifestSystemId): ManualExclusion[] {

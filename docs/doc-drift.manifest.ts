@@ -175,6 +175,24 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    // Machine-readable sidecar of the coverage report, written by the same
+    // networked run. It exists so the offline metrics generator can republish
+    // Denominator A without re-measuring it.
+    path: 'docs/generated/srd-coverage.json',
+    kind: 'generated',
+    owner: 'srd-coverage',
+    rules: [],
+  },
+  {
+    // Warning label on the retired Denominator A mechanism. Names real repo
+    // paths (the surviving hand-authored files and the report that replaced
+    // it), so path_ref_rule applies.
+    path: 'docs/srd-manifest/README.md',
+    kind: 'live',
+    owner: 'srd-coverage',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/generated/roadmap-metrics.md',
     kind: 'generated',
     owner: 'generated-reporting',
@@ -432,12 +450,6 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     path: 'src/systems/dnd5e/shared/components/Dnd5eSelectedFeatsSection.tsx',
     kind: 'runtime-copy',
     owner: 'shared-5e-feat-boundaries',
-    rules: ['runtime_copy_rule'],
-  },
-  {
-    path: 'src/systems/dnd5e/shared/components/Dnd5eFeatBrowserTab.tsx',
-    kind: 'runtime-copy',
-    owner: 'shared-5e-feat-browser-boundaries',
     rules: ['runtime_copy_rule'],
   },
   {

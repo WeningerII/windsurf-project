@@ -1,6 +1,5 @@
 import { SystemDefinition } from '../../registry/types';
 import { Dnd35eDataModel, createDefaultDnd35eData } from './data-model';
-import { Dnd35eEngine } from './engine';
 import { makeD20LegacySheet } from '../d20-legacy/wrapper';
 import { SYSTEM_SUPPORT_NOTES } from '../../utils/documentationCopy';
 
@@ -51,7 +50,11 @@ export const Dnd35eSystemDef: SystemDefinition<Dnd35eDataModel> = {
     { id: 'use-rope', name: 'Use Rope', attribute: 'dex' },
   ],
   createDefaultData: createDefaultDnd35eData,
-  engine: new Dnd35eEngine(),
+  // Lazy engine: the dynamic import keeps this system's engine — and the shared
+  // rules-IR surface it pulls in — out of the eager registry bootstrap chunk,
+  // matching how the validator, legal-actions and creation-plan seams already
+  // load. The registry resolves it once and caches the instance.
+  loadEngine: () => import('./engine').then((m) => new m.Dnd35eEngine()),
   loadValidator: () => import('./validation').then((m) => m.createDnd35eValidator()),
   loadLegalActions: () =>
     import('../d20-legacy/legalActions').then((m) =>

@@ -4,12 +4,10 @@ import type { Item } from '../../types/equipment/items';
 import type { Spell } from '../../types/magic/spells';
 import { useSheetDispatchRegister } from '../../contexts/sheet-dispatch-context';
 import type { Pf2eDataModel } from './data-model';
-import { Shield, Zap, User, BookOpen, Backpack, StickyNote, Sparkles, Sword } from 'lucide-react';
+import { Shield, Zap, User, BookOpen, Backpack, StickyNote, Sparkles } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { Badge } from '../../components/ui/Badge';
-import { Pf2eEquipmentBrowserTab } from './components/Pf2eEquipmentBrowserTab';
 import { EquippedArmorSection } from '../../components/EquippedArmorSection';
-import { Pf2eFeatBrowserTab } from './components/Pf2eFeatBrowserTab';
 import { Pf2eArchetypesTab } from './components/Pf2eArchetypesTab';
 import { Pf2eSpellsTab } from './components/Pf2eSpellsTab';
 import { Pf2eHeader } from './components/Pf2eHeader';
@@ -88,8 +86,12 @@ export const Pf2eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
       <Pf2eHeader {...controller.headerProps} />
       <Pf2eOverview {...controller.overviewProps} />
       <Pf2eDerivedStats derivedCards={derivedCards} />
+      {/* Eight tabs. The Feats *browser* and the Equipment *browser* were
+          evicted in Phase 5 — the shared Dock is the single catalog home — and
+          the equipped-armour controls they sat beside moved onto Inventory,
+          next to the items they equip. */}
       <Tabs defaultValue="abilities">
-        <TabsList className="w-full grid grid-cols-10">
+        <TabsList className="w-full grid grid-cols-8">
           <TabsTrigger value="abilities" className="flex items-center gap-1.5">
             <User className="w-4 h-4" /> Abilities
           </TabsTrigger>
@@ -111,15 +113,6 @@ export const Pf2eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
                 {controller.data.feats.length}
               </Badge>
             )}
-          </TabsTrigger>
-          <TabsTrigger
-            value="feat-browser"
-            className="flex items-center gap-1.5"
-            onClick={controller.warmFeatBrowser}
-            onFocus={controller.warmFeatBrowser}
-            onPointerEnter={controller.warmFeatBrowser}
-          >
-            <BookOpen className="w-4 h-4" /> Browse
           </TabsTrigger>
           <TabsTrigger
             value="archetypes"
@@ -145,15 +138,12 @@ export const Pf2eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
             <Sparkles className="w-4 h-4" /> Spells
           </TabsTrigger>
           <TabsTrigger
-            value="equipment-browser"
+            value="inventory"
             className="flex items-center gap-1.5"
-            onClick={controller.warmEquipmentBrowser}
-            onFocus={controller.warmEquipmentBrowser}
-            onPointerEnter={controller.warmEquipmentBrowser}
+            onClick={controller.warmEquipment}
+            onFocus={controller.warmEquipment}
+            onPointerEnter={controller.warmEquipment}
           >
-            <Sword className="w-4 h-4" /> Equipment
-          </TabsTrigger>
-          <TabsTrigger value="inventory" className="flex items-center gap-1.5">
             <Backpack className="w-4 h-4" /> Inventory
             {controller.data.inventory.length > 0 && (
               <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">
@@ -182,10 +172,6 @@ export const Pf2eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
           <Pf2eFeatsConditionsTab {...controller.featsConditionsTabProps} />
         </TabsContent>
 
-        <TabsContent value="feat-browser">
-          <Pf2eFeatBrowserTab {...controller.featBrowserProps} />
-        </TabsContent>
-
         <TabsContent value="archetypes">
           <Pf2eArchetypesTab {...controller.archetypesTabProps} />
         </TabsContent>
@@ -194,12 +180,8 @@ export const Pf2eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
           <Pf2eSpellsTab {...controller.spellsTabProps} />
         </TabsContent>
 
-        <TabsContent value="equipment-browser">
-          <EquippedArmorSection {...controller.equippedArmorSectionProps} shieldRequiresRaise />
-          <Pf2eEquipmentBrowserTab {...controller.equipmentBrowserTabProps} />
-        </TabsContent>
-
         <TabsContent value="inventory">
+          <EquippedArmorSection {...controller.equippedArmorSectionProps} shieldRequiresRaise />
           <Pf2eInventoryTab {...controller.inventoryTabProps} />
         </TabsContent>
 

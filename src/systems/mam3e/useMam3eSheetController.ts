@@ -17,9 +17,6 @@ export function useMam3eSheetController({ document, onUpdate }: UseMam3eSheetCon
   const canUpdate = Boolean(onUpdate);
   const { powerPoints } = data;
   const {
-    equipmentItems,
-    equipmentLoaded,
-    equipmentError,
     powers,
     powersLoaded,
     powersError,
@@ -39,7 +36,6 @@ export function useMam3eSheetController({ document, onUpdate }: UseMam3eSheetCon
     warmPowers,
     warmPowerBrowser,
     warmAdvantages,
-    warmEquipmentBrowser,
     warmComplications,
   } = useMam3eSheetResources({
     systemId: document.systemId as GameSystemId,
@@ -72,7 +68,6 @@ export function useMam3eSheetController({ document, onUpdate }: UseMam3eSheetCon
     warmPowers,
     warmPowerBrowser,
     warmAdvantages,
-    warmEquipmentBrowser,
     warmComplications,
     headerProps: {
       document,
@@ -174,12 +169,6 @@ export function useMam3eSheetController({ document, onUpdate }: UseMam3eSheetCon
       advantages,
       characterAdvantageNames: new Set(data.advantages.map((advantage) => advantage.name)),
       onAddAdvantage: onUpdate ? mutationHandlers.addAdvantageFromCatalog : undefined,
-    },
-    equipmentBrowserTabProps: {
-      equipmentLoaded,
-      equipmentError,
-      onRetryEquipment: warmEquipmentBrowser,
-      equipmentItems,
     },
     notesTabProps: {
       notes: data.notes || '',

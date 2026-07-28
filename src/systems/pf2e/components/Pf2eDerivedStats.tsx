@@ -3,7 +3,7 @@
 // derivation layer (src/rules/derivation). Adding a surfaced quantity in
 // derivedQuantities.ts renders here with no edit to this component.
 import React from 'react';
-import { Gauge, Sparkles, Weight } from 'lucide-react';
+import { Gauge, HeartPulse, Skull, Sparkles, Weight } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { PresentedDerivedQuantity } from '../../../rules/derivation';
 import { CombatStatCard } from '../../../components/sheet';
@@ -11,7 +11,12 @@ import { CombatStatCard } from '../../../components/sheet';
 // Icons the declarative derived quantities may name (spec.display.icon). Unknown
 // names fall back to a neutral gauge, so a new quantity renders without editing
 // this component.
-const DERIVED_ICON_BY_NAME: Record<string, LucideIcon> = { Weight, Sparkles };
+const DERIVED_ICON_BY_NAME: Record<string, LucideIcon> = {
+  Weight,
+  Sparkles,
+  Skull,
+  HeartPulse,
+};
 function derivedIcon(name?: string): LucideIcon {
   return (name && DERIVED_ICON_BY_NAME[name]) || Gauge;
 }

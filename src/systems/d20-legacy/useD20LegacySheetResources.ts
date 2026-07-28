@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import type { FeatDefinition } from '../../types/character-options/feats';
 import type { Item } from '../../types/equipment/items';
 import type { GameSystemId } from '../../types/game-systems';
 import type { Spell } from '../../types/magic/spells';
@@ -7,7 +6,6 @@ import type { Pf1eTrait } from '../pf1e/data-model';
 import { useLazyResource, useSystemOptions } from '../../hooks/useLazyResource';
 import {
   loadEquipmentForSystem,
-  loadFeatsForSystem,
   loadSpellsForSystem,
   loadTraitsForSystem,
 } from '../../utils/dataLoader';
@@ -18,11 +16,9 @@ interface UseD20LegacySheetResourcesProps {
 }
 
 export function useD20LegacySheetResources({ systemId, isPf1e }: UseD20LegacySheetResourcesProps) {
-  const {
-    data: featDefs,
-    loaded: featsLoaded,
-    load: loadFeatDefs,
-  } = useLazyResource<FeatDefinition>(systemId, loadFeatsForSystem);
+  // No feat-definition catalog here: 3.5e/PF1e browse feats in the shared Dock
+  // (Phase-5 eviction). The sheet only ever renders the character's OWN feats,
+  // which ride on the document.
   const {
     data: spells,
     loaded: spellsLoaded,
@@ -50,9 +46,6 @@ export function useD20LegacySheetResources({ systemId, isPf1e }: UseD20LegacyShe
   }, [loadOptions]);
 
   return {
-    featDefs,
-    featsLoaded,
-    loadFeatDefs,
     spells,
     spellsLoaded,
     loadSpells,

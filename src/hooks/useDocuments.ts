@@ -15,17 +15,62 @@ import { useDebouncedPersistence } from './useDebouncedPersistence';
 
 const MAX_HISTORY = 50;
 
+// Engines are lazily imported (`SystemDefinition.loadEngine`), so every path
+// below resolves a system's engine BEFORE preparing a document and then runs the
+// same synchronous `prepareData` call it always did. Nothing is ever dispatched
+// to React unprepared: when an engine is already resolved the whole path stays
+// synchronous, and when it is not the dispatch waits for the chunk.
+
 function prepareDocumentWithEngine(
   doc: CharacterDocument<SystemDataModel>
 ): CharacterDocument<SystemDataModel> {
-  const sysDef = systemRegistry.get(doc.systemId);
-  return sysDef ? sysDef.engine.prepareData(doc) : doc;
+  const engine = systemRegistry.peekEngine(doc.systemId);
+  return engine ? engine.prepareData(doc) : doc;
 }
 
 function prepareDocumentsWithEngines(
   docs: CharacterDocument<SystemDataModel>[]
 ): CharacterDocument<SystemDataModel>[] {
   return docs.map((doc) => prepareDocumentWithEngine(doc));
+}
+
+/**
+ * The systems in `docs` that are registered but whose engine is not resolved —
+ * i.e. the documents `prepareDocumentWithEngine` would pass through unprepared.
+ * Empty in every normal case; non-empty only when an engine chunk failed to
+ * download (stale deploy, offline).
+ */
+function unresolvedEngineSystemIds(docs: CharacterDocument<SystemDataModel>[]): string[] {
+  const missing = new Set<string>();
+  for (const doc of docs) {
+    if (!systemRegistry.peekEngine(doc.systemId) && systemRegistry.get(doc.systemId)) {
+      missing.add(doc.systemId);
+    }
+  }
+  return [...missing];
+}
+
+function engineLoadErrorMessage(systemIds: string[]): string {
+  return `Could not load the rules engine for ${systemIds.join(', ')}. Derived values may be out of date — reload to retry.`;
+}
+
+/**
+ * Run `dispatch` with engine-prepared documents. Stays fully synchronous — same
+ * call ordering as before engines went lazy — whenever every system involved is
+ * already resolved, which is the case for anything already in the collection.
+ */
+function withPreparedDocuments(
+  docs: CharacterDocument<SystemDataModel>[],
+  dispatch: (prepared: CharacterDocument<SystemDataModel>[]) => void
+): void {
+  if (unresolvedEngineSystemIds(docs).length === 0) {
+    dispatch(prepareDocumentsWithEngines(docs));
+    return;
+  }
+
+  void systemRegistry.preloadEngines(docs.map((doc) => doc.systemId)).then(() => {
+    dispatch(prepareDocumentsWithEngines(docs));
+  });
 }
 
 function documentsChanged(
@@ -86,40 +131,78 @@ export const useDocuments = () => {
   const persistence = useDebouncedPersistence(persist);
 
   useEffect(() => {
-    // Fast synchronous load from localStorage first
-    try {
-      const loaded = loadDocuments();
-      const prepared = prepareDocumentsWithEngines(loaded);
-      setDocuments(prepared);
-      if (documentsChanged(loaded, prepared)) {
-        persist(prepared);
+    let cancelled = false;
+
+    // Start the IndexedDB read immediately so it still overlaps the localStorage
+    // read and the engine-chunk fetch. Its result is only APPLIED after the
+    // localStorage branch has published (see the `Promise.all` below), which
+    // preserves the old ordering where the synchronous snapshot always lands
+    // first and IndexedDB only ever reconciles on top of it.
+    const asyncLoad = loadDocumentsAsync().catch(() => null);
+
+    // Fast synchronous load from localStorage first. When no engine chunk is
+    // outstanding — an empty store, or every system already resolved — this
+    // whole block still runs SYNCHRONOUSLY inside the effect, exactly as it did
+    // before engines went lazy (an async IIFE that never awaits completes
+    // synchronously). Otherwise the only thing awaited is the engine
+    // resolution, with `isLoading` held true meanwhile: documents are never
+    // published to React unprepared, they are published once the engines for
+    // the systems actually present are in.
+    const publishLocal = (async () => {
+      try {
+        const loaded = loadDocuments();
+        if (unresolvedEngineSystemIds(loaded).length > 0) {
+          await systemRegistry.preloadEngines(loaded.map((doc) => doc.systemId));
+          if (cancelled) return;
+        }
+
+        const prepared = prepareDocumentsWithEngines(loaded);
+        const unresolved = unresolvedEngineSystemIds(loaded);
+        setDocuments(prepared);
+        if (unresolved.length > 0) {
+          // Surfaced rather than swallowed: without an engine these documents
+          // carry whatever derived values were last stored, and writing them
+          // back would make that stale math authoritative.
+          setError(engineLoadErrorMessage(unresolved));
+        } else if (documentsChanged(loaded, prepared)) {
+          persist(prepared);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : 'Failed to load documents');
+        }
+      } finally {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load documents');
-    } finally {
-      setIsLoading(false);
-    }
+    })();
 
     // Then reconcile with IndexedDB. `loadDocumentsAsync` merges the two
     // stores per-document (version/updatedAt-aware), so a stale IndexedDB
     // mirror can no longer wholesale-revert newer localStorage edits.
-    loadDocumentsAsync()
-      .then((asyncDocs) => {
-        if (
-          asyncDocs.length > 0 &&
-          historyPastRef.current.length === 0 &&
-          !hasLocalEditsRef.current
-        ) {
-          const prepared = prepareDocumentsWithEngines(asyncDocs);
-          setDocuments(prepared);
-          if (documentsChanged(asyncDocs, prepared)) {
-            persist(prepared);
-          }
-        }
-      })
-      .catch(() => {
-        // IndexedDB load failed; synchronous localStorage data is already set
-      });
+    void Promise.all([publishLocal, asyncLoad]).then(async ([, asyncDocs]) => {
+      if (cancelled || !asyncDocs || asyncDocs.length === 0) return;
+      if (historyPastRef.current.length !== 0 || hasLocalEditsRef.current) return;
+
+      await systemRegistry.preloadEngines(asyncDocs.map((doc) => doc.systemId));
+      // Re-checked after the await: an edit landing while the engine chunk was
+      // in flight must not be clobbered by the reconciled snapshot.
+      if (cancelled || historyPastRef.current.length !== 0 || hasLocalEditsRef.current) return;
+
+      const prepared = prepareDocumentsWithEngines(asyncDocs);
+      const unresolved = unresolvedEngineSystemIds(asyncDocs);
+      setDocuments(prepared);
+      if (unresolved.length > 0) {
+        setError(engineLoadErrorMessage(unresolved));
+      } else if (documentsChanged(asyncDocs, prepared)) {
+        persist(prepared);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [persist]);
 
   const pushHistorySnapshot = useCallback((snapshot: CharacterDocument<SystemDataModel>[]) => {
@@ -211,31 +294,44 @@ export const useDocuments = () => {
 
   const addDocument = useCallback(
     (doc: CharacterDocument<SystemDataModel>) => {
-      const prepared = prepareDocumentWithEngine({
-        ...doc,
-        version: doc.version ?? 1,
-      });
+      const seeded = { ...doc, version: doc.version ?? 1 };
 
-      applyDocumentsUpdate((prev) => [...prev, prepared]);
+      withPreparedDocuments([seeded], ([prepared]) => {
+        applyDocumentsUpdate((prev) => [...prev, prepared]);
+      });
     },
     [applyDocumentsUpdate]
   );
 
   const updateDocument = useCallback(
     (doc: CharacterDocument<SystemDataModel>) => {
-      applyDocumentsUpdate((prev) => {
-        // Read the current version from in-memory state, not from the caller's
-        // input. A stale `doc` reused across rapid successive updates would
-        // otherwise collide on the same version and drop the later edit.
-        const existing = prev.find((d) => d.id === doc.id);
-        const nextVersion = (existing?.version ?? doc.version ?? 1) + 1;
-        const prepared = prepareDocumentWithEngine({
-          ...doc,
-          updatedAt: new Date(),
-          version: nextVersion,
+      const runUpdate = () => {
+        applyDocumentsUpdate((prev) => {
+          // Read the current version from in-memory state, not from the caller's
+          // input. A stale `doc` reused across rapid successive updates would
+          // otherwise collide on the same version and drop the later edit.
+          const existing = prev.find((d) => d.id === doc.id);
+          const nextVersion = (existing?.version ?? doc.version ?? 1) + 1;
+          const prepared = prepareDocumentWithEngine({
+            ...doc,
+            updatedAt: new Date(),
+            version: nextVersion,
+          });
+          return prev.map((d) => (d.id === prepared.id ? prepared : d));
         });
-        return prev.map((d) => (d.id === prepared.id ? prepared : d));
-      });
+      };
+
+      // The engine is PRE-RESOLVED here, outside the updater, so the version
+      // derivation above stays exactly where it is: inside the updater, reading
+      // `prev`. Every document already in the collection arrived through a path
+      // that resolved its engine first, so this is the synchronous branch in
+      // practice and the call ordering is unchanged.
+      if (systemRegistry.peekEngine(doc.systemId) || !systemRegistry.get(doc.systemId)) {
+        runUpdate();
+        return;
+      }
+
+      void systemRegistry.loadEngine(doc.systemId).then(runUpdate);
     },
     [applyDocumentsUpdate]
   );
@@ -250,14 +346,11 @@ export const useDocuments = () => {
 
   const addDocuments = useCallback(
     (docs: CharacterDocument<SystemDataModel>[]) => {
-      const prepared = prepareDocumentsWithEngines(
-        docs.map((doc) => ({
-          ...doc,
-          version: doc.version ?? 1,
-        }))
-      );
+      const seeded = docs.map((doc) => ({ ...doc, version: doc.version ?? 1 }));
 
-      applyDocumentsUpdate((prev) => mergeDocumentCollections(prev, prepared));
+      withPreparedDocuments(seeded, (prepared) => {
+        applyDocumentsUpdate((prev) => mergeDocumentCollections(prev, prepared));
+      });
     },
     [applyDocumentsUpdate]
   );
@@ -288,14 +381,11 @@ export const useDocuments = () => {
   // locally. History and debounced persistence behave as for any mutation.
   const applyMergedDocuments = useCallback(
     (merged: CharacterDocument<SystemDataModel>[]) => {
-      const prepared = prepareDocumentsWithEngines(
-        merged.map((doc) => ({
-          ...doc,
-          version: doc.version ?? 1,
-        }))
-      );
+      const seeded = merged.map((doc) => ({ ...doc, version: doc.version ?? 1 }));
 
-      applyDocumentsUpdate(() => prepared);
+      withPreparedDocuments(seeded, (prepared) => {
+        applyDocumentsUpdate(() => prepared);
+      });
     },
     [applyDocumentsUpdate]
   );

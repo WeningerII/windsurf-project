@@ -102,9 +102,10 @@ const LAZY_SURFACE_MODULES = ['src/components/SceneManager.tsx', 'src/components
  * lives in that system's directory, not because that system bootstraps eagerly.
  * Attributing this debt per system needs symbol-level analysis this gate does not
  * do. What is certain: 755.0 KiB rides first paint, and it must not grow.
- * Reducing it is the STRUCTURAL reclaim already named in the app-chunk budget
- * note (lazy-loading the per-system engines behind the registry) — a larger
- * async-boundary change tracked separately, NOT something Phase 7 should smuggle in.
+ * Reducing it is a separate, larger async-boundary change, NOT something Phase 7
+ * should smuggle in. (The engine reclaim that the app-chunk budget note below
+ * once named landed on 2026-07-28 — see docs/GAPS.md §16.5 — but it moved the
+ * shell's OWN code, not this per-system SRD data debt, which is untouched.)
  *
  * What IS hard-gated here: the list may only ever SHRINK. Any per-system data
  * chunk that newly joins the eager closure fails the build, so the debt cannot
@@ -140,7 +141,15 @@ const budgets = {
   // Bumped 1536 -> 1664 KiB for the PF1e Core Rulebook equipment + magic-items
   // corpus (243 + 347 SRD items, code-split into its own pf1e-equipment-data
   // chunk that stays well under the per-data-chunk budget).
-  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1664 * 1024,
+  // Bumped 1664 -> 1680 KiB (2026-07-28) for the lazy per-system engine split.
+  // This raise is PAID FOR, not absorbed: splitting seven engines out of the
+  // eager shell costs +6,246 B in total JS (per-chunk overhead and a little
+  // duplicated glue) and buys -24,167 B off first paint. Measured on this build:
+  // total 1,710,182 B against the old 1,703,936 B ceiling. The trade is only
+  // legitimate if the gain is captured, so `eagerShellGzipBytes` is ratcheted
+  // DOWN in the same change — raising this number alone would grow the bundle
+  // and guard nothing. Budget leaves ~10.1 KiB of headroom.
+  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1680 * 1024,
   // 80 -> 84 KiB (2026-07-24) for the RFC-003 rules-IR spine now carried in the
   // eager shell: the shared resolver + per-system effect/condition compilers +
   // contribution-ledger seam + legal-actions registry surface are exercised by
@@ -159,6 +168,13 @@ const budgets = {
   // STRUCTURAL reclaim — lazy-loading the per-system engines behind the registry
   // (a larger async-boundary change, tracked separately) — not another bump.
   // The budget still catches a large jump — it is +1 KiB, with ~0.9 KiB headroom.
+  //
+  // 2026-07-28: that reclaim LANDED (docs/GAPS.md §16.5). Engines resolve through
+  // the registry's loadEngine/peekEngine seam, taking the seven engines and the
+  // rules-IR surface they pull out of the eager closure: 84,280 -> 61,037 B gzip.
+  // The ceiling is deliberately NOT ratcheted down — buying headroom for the next
+  // climb was the point of the reclaim, and this is that headroom being banked.
+  // What it is NOT is a licence to re-add eagerly what was just made lazy.
   appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 85 * 1024,
   // UI-shell Phase 7 (2026-07-24): the FIRST-PAINT budget for the shell's own
   // code — every eager chunk except the grandfathered per-system SRD data above
@@ -177,8 +193,17 @@ const budgets = {
   // patch bump is a few hundred B). A genuinely new eager dependency costs KiB,
   // not hundreds of bytes, so it trips this gate. Like the app-chunk budget, the
   // next real climb must be paid by the structural reclaim, not a bump.
+  //
+  // RATCHETED DOWN 192 -> 176 KiB (2026-07-28). The structural reclaim this
+  // comment demanded has now happened: per-system engines load lazily behind
+  // `loadEngine`, and the eager shell measures 172,441 B — 24,167 B under the
+  // old ceiling. Holding the budget at 192 KiB would leave that entire win
+  // unguarded and re-spendable by the next eager import, which is exactly how
+  // the previous ceiling was reached. 176 KiB (180,224 B) keeps ~7.8 KiB of
+  // headroom for vendor/icon churn while making the reclaim permanent. This is
+  // the counterpart to the total-JS raise above; the two move together.
   eagerShellGzipBytes:
-    parseInt(process.env.BUNDLE_BUDGET_EAGER_SHELL_GZIP_BYTES || '', 10) || 192 * 1024,
+    parseInt(process.env.BUNDLE_BUDGET_EAGER_SHELL_GZIP_BYTES || '', 10) || 176 * 1024,
   vendorChunkGzipBytes:
     parseInt(process.env.BUNDLE_BUDGET_VENDOR_GZIP_BYTES || '', 10) || 200 * 1024,
   largestDataChunkGzipBytes:

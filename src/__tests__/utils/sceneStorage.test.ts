@@ -22,7 +22,7 @@ describe('sceneStorage', () => {
     localStorage.clear();
   });
 
-  it('saves, loads, updates, and deletes scene documents', () => {
+  it('saves, loads, updates, and deletes scene documents', async () => {
     let scene = createSceneDocument({
       id: 'scene-1',
       name: 'Stored Scene',
@@ -47,19 +47,19 @@ describe('sceneStorage', () => {
     );
     scene = appendSceneEvent(scene, result.event!);
 
-    saveScenes([scene]);
+    await saveScenes([scene]);
 
-    const loaded = loadScene('scene-1');
+    const loaded = await loadScene('scene-1');
     expect(loaded?.createdAt).toBeInstanceOf(Date);
     expect(loaded?.events[0].createdAt).toBeInstanceOf(Date);
     expect(loaded?.events).toHaveLength(1);
 
     const renamed = { ...scene, name: 'Renamed Scene', updatedAt: new Date(NOW.getTime() + 1) };
-    upsertScene(renamed);
-    expect(loadScene('scene-1')?.name).toBe('Renamed Scene');
+    await upsertScene(renamed);
+    expect((await loadScene('scene-1'))?.name).toBe('Renamed Scene');
 
-    deleteScene('scene-1');
-    expect(loadScenes()).toEqual([]);
+    await deleteScene('scene-1');
+    expect(await loadScenes()).toEqual([]);
   });
 
   it('round-trips scene exports through import', () => {
@@ -106,18 +106,18 @@ describe('sceneStorage', () => {
     );
   });
 
-  it('clears scene storage', () => {
+  it('clears scene storage', async () => {
     const scene = createSceneDocument({
       id: 'scene-3',
       name: 'Temporary Scene',
       systemId: 'dnd-5e-2024',
       now: NOW,
     });
-    saveScenes([scene]);
+    await saveScenes([scene]);
 
-    clearSceneStorage();
+    await clearSceneStorage();
 
-    expect(loadScenes()).toEqual([]);
+    expect(await loadScenes()).toEqual([]);
   });
 });
 

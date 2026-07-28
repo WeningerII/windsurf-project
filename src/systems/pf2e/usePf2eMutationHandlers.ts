@@ -7,6 +7,7 @@ import {
   nextPf2eTier,
   shortRestPf2eSpellcasting,
 } from './pf2eSheetShared';
+import { PF2E_HERO_POINTS_AT_SESSION_START } from './derivedMath';
 import { consume, poolFromRemaining, remainingOf } from '../../utils/resourcePool';
 import { parseWeaponDamageDice } from '../../utils/derivedCombatMath';
 
@@ -209,7 +210,8 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
             current: data.hitPoints.max,
             temp: 0,
           },
-          heroPoints: Math.max(1, data.heroPoints),
+          // CRB: Hero Points — a session starts with 1; a longer-held pool is kept.
+          heroPoints: Math.max(PF2E_HERO_POINTS_AT_SESSION_START, data.heroPoints),
           spellcasting: longRestPf2eSpellcasting(data.spellcasting),
         });
       }
@@ -277,7 +279,8 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
   );
 
   const rollCheck = useCallback(
-    (checkId: string) => systemRegistry.get(document.systemId)!.engine.rollCheck(document, checkId),
+    async (checkId: string) =>
+      (await systemRegistry.loadEngine(document.systemId))!.rollCheck(document, checkId),
     [document]
   );
 

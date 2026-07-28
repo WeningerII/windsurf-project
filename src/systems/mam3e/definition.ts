@@ -1,6 +1,5 @@
 import { SystemDefinition } from '../../registry/types';
 import { Mam3eDataModel, createDefaultMam3eData } from './data-model';
-import { Mam3eEngine } from './engine';
 import { lazyWithPreload } from '../../utils/lazyWithPreload';
 
 export const Mam3eSystemDef: SystemDefinition<Mam3eDataModel> = {
@@ -52,7 +51,11 @@ export const Mam3eSystemDef: SystemDefinition<Mam3eDataModel> = {
     { id: 'vehicles', name: 'Vehicles', attribute: 'dex' },
   ],
   createDefaultData: createDefaultMam3eData,
-  engine: new Mam3eEngine(),
+  // Lazy engine: the dynamic import keeps this system's engine — and the shared
+  // rules-IR surface it pulls in — out of the eager registry bootstrap chunk,
+  // matching how the validator, legal-actions and creation-plan seams already
+  // load. The registry resolves it once and caches the instance.
+  loadEngine: () => import('./engine').then((m) => new m.Mam3eEngine()),
   // Point-buy validator derived from the engine's own M&M math (PL caps,
   // budgets, cost arithmetic, catalogs). Warns/annotates only — never blocks.
   loadValidator: () => import('./validation').then((m) => m.createMam3eValidator()),

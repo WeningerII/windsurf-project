@@ -4,6 +4,7 @@ import type { SceneDocument, SceneEvent } from '../types/core/scene';
 import {
   clearSceneStorage,
   loadScenes,
+  loadScenesFromLocalStorage,
   saveScenes,
   parseScenesSnapshot,
   SCENES_STORAGE_KEY,
@@ -11,60 +12,92 @@ import {
 import { sameSceneSignatures } from '../utils/documentSignature';
 import { useDebouncedPersistence } from './useDebouncedPersistence';
 
+/**
+ * `updatedAt`-aware merge of a persisted snapshot into the live collection.
+ * Shared by the mount reconcile, `reloadScenes`, and (via `addScenes`) the
+ * cross-tab listener so all three agree on precedence. Returns the SAME
+ * reference when nothing changed, which is what keeps the reconcile loop-safe
+ * and stops the keepalive Scene canvas re-rendering for nothing.
+ */
+function mergeLoadedScenes(current: SceneDocument[], loaded: SceneDocument[]): SceneDocument[] {
+  if (loaded.length === 0) return current;
+  const byId = new Map(current.map((scene) => [scene.id, scene] as const));
+  loaded.forEach((scene) => {
+    const existing = byId.get(scene.id);
+    if (!existing || scene.updatedAt >= existing.updatedAt) {
+      byId.set(scene.id, scene);
+    }
+  });
+  const next = Array.from(byId.values());
+  return sameSceneSignatures(current, next) ? current : next;
+}
+
 export const useScenes = () => {
   const [scenes, setScenes] = useState<SceneDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Two-stage load. The localStorage snapshot is read synchronously so the
+  // first paint has scenes, then the durable IndexedDB tier is merged in when
+  // it resolves (that async pass also runs the one-time localStorage ->
+  // IndexedDB migration). A campaign too large for the ~5 MB localStorage
+  // quota lives ONLY in IndexedDB, so stage two is not an optimization — it is
+  // the only path that returns the full collection.
   useEffect(() => {
-    setScenes(loadScenes());
+    let cancelled = false;
+    setScenes(loadScenesFromLocalStorage());
     setIsLoading(false);
+
+    void loadScenes()
+      .then((loaded) => {
+        if (cancelled) return;
+        setScenes((current) => mergeLoadedScenes(current, loaded));
+      })
+      .catch(() => {
+        // The synchronous snapshot above is already rendered; a failed
+        // IndexedDB read must not blank it.
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Reconcile the persisted snapshot into the live collection on demand. The
   // Scene surface calls this on its hidden->visible transition (Phase 2
-  // keepalive): the L86-98 cross-tab storage listener stays UNGATED, but a tab
+  // keepalive): the cross-tab storage listener below stays UNGATED, but a tab
   // that never received a storage event while the Scene surface was hidden
   // (e.g. it was backgrounded) picks up other tabs' edits on return.
   //
-  // This MERGES rather than raw-replaces (`setScenes(loadScenes())`). A raw
-  // replace drops any scene whose debounced save has not yet flushed — notably
-  // a scene JUST created or imported on the Library Scenes segment, whose
-  // onSelectScene flips to the Scene surface (triggering this very
-  // reactivation) in the same tick, BEFORE the debounce fires. loadScenes()
-  // then returns a stale snapshot without that scene, and a replace clobbers
-  // it out of memory so its canvas never renders. The updatedAt-aware upsert
-  // below (identical to the cross-tab listener's merge) keeps those unsaved
-  // local additions while still surfacing edits other tabs wrote to storage
-  // while this surface was hidden. An empty snapshot leaves the live
-  // collection untouched.
-  const reloadScenes = useCallback(() => {
+  // This MERGES rather than raw-replaces. A raw replace drops any scene whose
+  // debounced save has not yet flushed — notably a scene JUST created or
+  // imported on the Library Scenes segment, whose onSelectScene flips to the
+  // Scene surface (triggering this very reactivation) in the same tick, BEFORE
+  // the debounce fires. loadScenes() then returns a stale snapshot without that
+  // scene, and a replace clobbers it out of memory so its canvas never renders.
+  // The updatedAt-aware upsert keeps those unsaved local additions while still
+  // surfacing edits other tabs wrote to storage while this surface was hidden.
+  // An empty snapshot leaves the live collection untouched.
+  //
+  // Async because the durable tier is: awaitable so callers (and tests) can
+  // sequence on the reconcile actually having landed.
+  const reloadScenes = useCallback(async () => {
     setIsLoading(false);
-    setScenes((current) => {
-      const loaded = loadScenes();
-      if (loaded.length === 0) return current;
-      const byId = new Map(current.map((scene) => [scene.id, scene] as const));
-      loaded.forEach((scene) => {
-        const existing = byId.get(scene.id);
-        if (!existing || scene.updatedAt >= existing.updatedAt) {
-          byId.set(scene.id, scene);
-        }
-      });
-      const next = Array.from(byId.values());
-      // Signature-compare so an idempotent re-read stays a true no-op (same
-      // reference), matching addScenes and keeping React from re-rendering the
-      // keepalive canvas needlessly.
-      return sameSceneSignatures(current, next) ? current : next;
-    });
+    const loaded = await loadScenes();
+    setScenes((current) => mergeLoadedScenes(current, loaded));
   }, []);
 
   const persist = useCallback((nextScenes: SceneDocument[]) => {
-    try {
-      saveScenes(nextScenes);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save scenes');
-    }
+    // saveScenes resolves with which tiers are current instead of throwing, so
+    // a full disk becomes a visible error rather than an exception raised
+    // inside a debounce timer with nobody to catch it.
+    void saveScenes(nextScenes)
+      .then((result) => {
+        setError(result.ok ? null : (result.error ?? 'Failed to save scenes'));
+      })
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : 'Failed to save scenes');
+      });
   }, []);
 
   const persistence = useDebouncedPersistence(persist);
@@ -184,8 +217,13 @@ export const useScenes = () => {
     persistence.beginVersion();
     persistence.cancel();
     setScenes([]);
-    clearSceneStorage();
     setError(null);
+    // The localStorage key is dropped synchronously inside clearSceneStorage;
+    // only the IndexedDB clear is awaited, and a failure there must surface —
+    // otherwise the next load resurrects the "cleared" collection.
+    void clearSceneStorage().catch((err: unknown) => {
+      setError(err instanceof Error ? err.message : 'Failed to clear scenes');
+    });
   }, [persistence]);
 
   const clearError = useCallback(() => {

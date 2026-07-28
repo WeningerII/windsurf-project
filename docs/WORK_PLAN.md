@@ -25,9 +25,22 @@ Effort is given in lanes (one focused agent-or-session unit), not hours.
 
 ---
 
-## 0. Decisions that gate everything else — **DECIDE**
+## 0. Decisions that gate everything else
 
-These are first because each one holds up work that is otherwise ready. They cost minutes to answer and days to leave open.
+These are first because each one holds up work that is otherwise ready.
+
+**Status as of 2026-07-27 — four of six are resolved:**
+
+| | Decision | State |
+| --- | --- | --- |
+| 0.1 | Open-content licensing | **OPEN — owner** · the only genuine licensing exposure left |
+| 0.2 | Shelf branches | Decided: delete deliberately · Phase 12 cut · *remote deletions still pending* |
+| 0.3 | Cold-start microtask | Dissolved — the hazard was one call site, not six, so a third path needs no authorization |
+| 0.4 | Contribution ledger | Decided and shipped: it has a consumer |
+| 0.5 | knip test entry points | Decided and shipped · unverified locally, needs CI |
+| 0.6 | Phase 10 / character-draft | `character-draft` shipped · **Phase 10 still OPEN — owner** |
+
+So two questions actually remain: **§0.1** (licensing) and the Phase-10 half of **§0.6**.
 
 ### 0.1 Open-content licensing: two populations shipping under source tags they do not have
 
@@ -54,37 +67,39 @@ What the inventory established, kept here because it explains *why* deleting was
 
 **Remaining action:** the branch deletions themselves still need to be run against `origin` — they were blocked here as a destructive remote operation.
 
-### 0.3 May documents publish one microtask late on cold start?
+### 0.3 May documents publish one microtask late on cold start? — ~~DECIDE~~ **MOOT 2026-07-28**
 
-`src/hooks/useDocuments.ts` defines `prepareDocumentWithEngine` (line 18) — the single eager consumer blocking lazy per-system engines. **The hazard is narrower than this section previously claimed**, which changes the remedy:
+**The question never had to be answered.** The recorded alternative — a preload design guaranteeing engine resolution *before* `useDocuments` publishes — was built instead, so documents still never publish unprepared and the version derivation inside `updateDocument` never moved.
 
-- Line 28 prepares a whole list inside a `.map()` — the load / import / cross-tab / sync-merge paths reach it here, and they compute *before* dispatching, so they can await a lazy engine without reordering anything.
-- Line 214 (`addDocument`) likewise computes before dispatch.
-- **Line 232 (`updateDocument`) is the only genuine problem.** It sits inside an `applyDocumentsUpdate((prev) => …)` updater and reads `prev` to derive the next version — deliberately, so that a stale `doc` reused across rapid successive edits cannot collide on a version and drop the later edit. Making that async changes mutation ordering.
+Why it was avoidable, kept because it is the transferable part: the hazard was narrower than this section originally claimed. `prepareDocumentWithEngine` has two direct call sites plus a list `.map()`, not six. The load / import / cross-tab / sync-merge paths all compute *before* dispatching, so they can await a lazy engine without reordering anything. Only `updateDocument` sat inside an `applyDocumentsUpdate((prev) => …)` updater, reading `prev` to derive the next version — deliberately, so a stale doc reused across rapid successive edits cannot collide on a version and drop the later edit.
 
-So the behaviour change is confined to `updateDocument` plus the cold-start load path, where documents would publish unprepared for ≥1 microtask. That is still a behaviour change and still fails the standing safety bar for touching engine math — but it is one call site, not six.
+Once that was established, pre-resolving the engine *outside* the updater made the whole authorization question moot. **A decision that looks like it needs owner sign-off is sometimes a decision resting on an unverified premise** — checking the premise cost less than asking.
 
-Two tests (`mam3eValidation.test.ts:33`, `capabilityScenarios.test.tsx:323`) read `.engine` synchronously inside sync `it()` bodies; unblocking also needs authorization to change their **call shape** — not their expectations.
+Only the two named test files' **call shape** changed, plus `applyMergedCollections.test.tsx` for the same reason. No expectation changed.
 
-**Unblocks:** 21.2 KiB of eager-bundle headroom (§6.1). The measured ceiling is 23.6 KiB; 2.4 KiB has been claimed.
-**Third option, now that the shape is known:** await at the sites that already compute before dispatch, and keep `updateDocument` synchronous by pre-resolving the engine *before* the updater runs. Gets the reclaim without touching mutation ordering. **This is now the recommended path** — it needs no authorization at all.
-**Alternative if the answer is no:** a preload design that guarantees resolution before `useDocuments` publishes. More work, no behaviour change.
+**Unblocked:** §6.1, now closed.
 
-### 0.4 The contribution ledger — wire a consumer, or delete ~1,600 LOC?
+### 0.4 ~~The contribution ledger — wire a consumer, or delete ~1,600 LOC?~~ — **DECIDED AND DONE 2026-07-27**
 
-Five per-system ledger builders plus `src/rules/ir/ledgerView.ts` compute *"explain where this number came from"* for all seven systems. **Zero consumers**: no sheet, panel or tooltip renders a ledger; the only callers are test assertions.
+Five per-system ledger builders plus `src/rules/ir/ledgerView.ts` compute *"explain where this number came from"* for all seven systems, and until 2026-07-27 **nothing rendered any of them** — the only callers were test assertions.
 
-The accounting hides this. `GAPS §7` marks the row COMPLETE and `MASTER_PLAN` marks it 7 of 7 — both measure *builder existence*, not consumption. The legal-actions row one line below in the same table does say "0 consumers"; this row conspicuously does not.
+The accounting had hidden that: `GAPS §7` marked the row COMPLETE and `MASTER_PLAN` marked it 7 of 7, both measuring *builder existence* rather than consumption. The legal-actions row one line below in the same table says "0 consumers" out loud; this row conspicuously did not.
 
-**Options:** build one tooltip/panel consumer and keep all five · keep 5e as reference and delete four · delete all five plus `ledgerView`.
-**Recommendation:** build the consumer — the math is done and correct, and provenance display is arguably this product's differentiating feature. But if no UI is on the roadmap within a quarter, deleting is the honest call and reclaims ~1,600 LOC.
+**DECIDED AND DONE 2026-07-27: build the consumer.** The 5e Armor Class card now explains itself — *"17 = 10 Unarmored defense + 4 Chain Shirt + 2 Dexterity modifier + 1 Ring of Protection"* — via a shared `ContributionBreakdown` component that degrades to the plain number whenever no ledger explains the value.
+
+AC was chosen on evidence, not convenience: its ledger population is complete, ordered, and documented to sum to the number the sheet already displays. Ability modifiers and saves were rejected because their ledger rows cover only feat automation and would not sum to the displayed value — a breakdown that does not add up is worse than none.
+
+**Still one surface, not a provenance UI.** Four systems' builders remain unrendered, and the ledger rebuilds on every character edit to power a tooltip — cheap today, but the first thing to revisit if more surfaces subscribe.
+
+**Note for the campaign-history ambition:** this explains *a number*. It is not a chronicle and cannot become one — see §5.7.
 
 ### 0.5 Should `knip.json` keep test files as entry points?
 
 Today `src/__tests__/**` is an entry point, so **a test import counts as a live consumer**. That is why three confirmed-dead modules pass `check:dead-code` today. The gate cannot see this class of rot at all.
 
-**Options:** leave it (accept the blind spot) · drop tests from entry points and add explicit `ignore` entries for the genuinely documented seams.
-**Recommendation:** drop them. It converts "documented seam" from a prose claim into a machine-checked one, and would have caught all three dead modules automatically. This is the same defect class as every other unfalsifiable gate this repo has already fixed.
+**DECIDED AND DONE 2026-07-27: dropped.** `knip.json` became `knip.jsonc` (strict JSON cannot carry the per-entry doc citations), the test entry pattern is gone, and the three genuinely documented seams carry explicit `ignore` entries naming their doc. `legalActions.ts` deliberately does **not** — it is registered by all seven `definition.ts` files and called by the registry, so it is UI-unreachable rather than dead.
+
+**Unverified locally, needs CI.** knip OOMs in this container, so the config change is reasoned rather than run. Two specific risks to watch on the first CI run: knip 5 auto-enables its vitest plugin, whose entry patterns are *additive* to the root `entry` array — if that re-admits test files the blind spot is still open, and the fix is `"vitest": { "entry": [] }`. And the `.json` → `.jsonc` rename means that run also proves config discovery; a silent fallback to defaults would produce a flood of false positives.
 
 ### 0.6 Phase 10 and the character-draft surface — build or formally close?
 
@@ -93,7 +108,9 @@ Two separate features, same shape: **the expensive half is built and the cheap h
 - **Phase 10** — `gridGeometryProposal.ts` (579 LOC, well tested) has had no consumer since it landed. Building the `analyze-map` task plus a MapPanel affordance is roughly a day.
 - **`character-draft`** — flow, pools, validators and fixtures all exist; only the UI entry point is missing. This is the **smallest gap between "built" and "usable" anywhere in the repo**, and it would also give `makeMeAGameFlow` its first real consumer.
 
-**Recommendation:** ship `character-draft` regardless — it is nearly free and retires RFC 002's standing caveat that counting these as shipped surfaces overstates the rollout. For Phase 10, build it if any AI-vision work is planned this year; otherwise close it formally and reclassify the validator as a permanent documented seam. **Do not delete the validator** — it is the careful half.
+**`character-draft` — DONE 2026-07-27.** Reachable from the new-character dialog's "Draft with AI" mode, rendered only when `isAiEnabled()`, loaded by dynamic import so the AI-off eager chunk is unchanged. The draft applies through the system's *own* creation plan and is gated on its own `registry.validateDocument`, and the proposal is shown before anything is created — model proposes, validators decide. It also gave `makeMeAGameFlow` a shared seam instead of a second inline copy of that logic.
+
+**Phase 10 — still open, and this is the decision that remains.** Build the `analyze-map` task plus a MapPanel affordance (~1 day), or close Phase 10 formally and reclassify the validator as a permanent documented seam. **Do not delete the validator** — it is the careful half, and the retired shelf branch's version was strictly worse. One prerequisite for whoever builds it: `MapPanel` never learns the image's pixel dimensions, and the shipped validator requires `image: { widthPx, heightPx }`.
 
 ---
 
@@ -142,19 +159,33 @@ The manifests are generated *from* the loaders, so joining them against loaded i
 
 **Unblocks:** every content% number in the repo becoming meaningful.
 
-### 2.3 M&M 3e adversaries — the system has none — **READY**
+### 2.3 M&M 3e adversaries — **BLOCKED ON A DECISION, and the blocker is network access, not licensing** (corrected 2026-07-28)
 
-`loadMonstersForSystem` returns `[]` for `mam3e`; there is no adversary data directory. RFC 004's "reference adversaries for the others" is half delivered (Daggerheart ships them). This is a **seven-systems-equal hole**: 5 of 7 have loader-backed creature catalogs and cited encounter budgets; M&M and Daggerheart do not participate in encounter budgets, and M&M has no catalog at all.
+`loadMonstersForSystem` returns `[]` for `mam3e`. 5 of 7 systems have loader-backed creature catalogs; M&M has none.
 
-**Serves:** the all-seven-equal thesis directly. **Also blocks:** `p4.parity-matrix` from being honestly closable.
+**Corrected after an owner challenge.** An earlier revision of this entry said no open-content source exists. Wrong, and the distinction matters:
 
-### 2.4 5e-2024 hand-written monsters — 77 of 85 diverge — **READY**
+- **`d20herosrd.com` IS the M&M 3e SRD** (OGL 1.0a), already named in `docs/srd-sources.md` and already cited in the header of every shipped archetype file. Its GM-section NPCs are open content this product may use.
+- **This sandbox and CI are proxy-blocked from it** — verified twice, `CONNECT tunnel failed, response 403`. A developer on an ordinary connection can reach it today.
+- **M&M is not empty.** 16 archetypes ship and are fully wired. But they are **build templates, not adversaries** — `description`, `features`, `suggestedSkills`, no ability scores or defenses. Promoting them to adversaries would mean inventing stat data, which is the prohibited move that created §17 and §18.
 
-The largest single open content-integrity item. Mostly carrying SRD 5.1 values; some carry values in *neither* edition (Air Elemental `5d10+10` is invented). `scripts/data/srd-fidelity-baseline.json` holds **254 divergent entries spanning 1,016 field-level divergences, every one of them 5e-2024** — so this is transcription work against a pinned source, not research.
+**Recommended path (`GAPS.md` §19.4(d)):** pull the GM-section NPCs once from an unblocked connection, pin the copy, and let an encoder run offline against it — exactly the pattern `scripts/encode-mam-equipment.mjs` already uses. That closes the gap with genuinely open content and never requires solving the proxy block in CI.
+
+**Separate live defect, found by the same challenge:** every shipped archetype's `source:` field holds the archetype's *own name* (`source: 'Battlesuit'`) instead of a source book, while a `sourceBook` field also exists. That is mislabelled provenance in shipped data — cheap to fix and owed regardless of which §19.4 option is chosen.
+
+### 2.4 5e-2024 hand-written monsters diverge from SRD 5.2 — **DONE for every gated field (2026-07-28)**
+
+Every scalar divergence the fidelity baseline itemised has been re-transcribed from the pinned SRD 5.2.1 source: 71 hand-written monsters and the 4 backgrounds. `scripts/data/srd-fidelity-baseline.json` now records an empty `divergences` block, and `npm run check:srd-fidelity` passes with nothing baselined but two `upstreamDefects` (Basilisk AC, Soldier gaming set — both cases where the shipped value is right and the pinned denominator is not). See GAPS §15.3(b).
+
+**What did NOT get fixed, and is the follow-on:**
+
+- **Prose and derived numbers on those same entries.** The gate pins scalars only, so traits, actions, `savingThrows`, `skills` and attack/damage strings on the repaired stat blocks are still whatever they were. An entry can now hold a 5.2 ability score next to a 5.1-derived save. GAPS §15.4.
+- **The 5e-2024 backgrounds' open-content exposure (GAPS §15(c)) is untouched.** Their proficiency sets are now SRD 5.2, but the 2014 structural model — `suggestedCharacteristics`, background `feature`, language grants — is still shipped under an `SRD 5.2` tag, and three of the four bodies of text are PHB content. This needs a `Background` type that can express the 2024 model, and it is a licensing item, not a tidiness one.
+- **Bucket placement.** Seven entries had a wrong `challengeRating`; they were corrected in place and now sit in CR-bucket files named for their old CR. Nothing enforces the correspondence.
 
 ### 2.5 Remaining denominator work — **READY**
 
-- `p1.wire-remaining-denominators` — **mostly already done, verified 2026-07-26.** 3.5e classes and feats *are* wired (`src/scripts/srd-coverage.ts`, `TARGETS.push` for both). 3.5e equipment is **closed by recorded decision, not pending**: the only clean core-only source interleaves services, lodging and mounts with items, so a scrape would poison the denominator — the script says so in place. What actually remains is closing the missing 3.5e feats, itemised in `docs/generated/srd-coverage.md`.
+- `p1.wire-remaining-denominators` — 3.5e classes and feats are wired against the core-only olimot chapters and the feat list is now **closed**: `scripts/encode-35e-feats.mjs` transcribes the feats chapter (hand-written entries keep winning), so the gap the coverage report used to itemise is gone. 3.5e **equipment** stays closed-by-no-source — the olimot equipment tables interleave services/lodging/mounts outside the loader's scope, and a scrape would poison the denominator. Current numbers live in `docs/generated/srd-coverage.md`.
 - `p1.monster-denominator-fix` — 3.5e's denominator still inflated by container-like rows.
 - `p1.single-entry-gaps` — small, itemised, good filler. **CHEAP**
 
@@ -176,19 +207,33 @@ Every new verified entry must land with its Tier-B mutation anchor.
 
 ## 4. Parity — the all-seven-equal spine
 
-### 4.1 `p4.parity-matrix` — close the 7×N matrix — **BLOCKED on 2.3**
+### 4.1 `p4.parity-matrix` — close the 7×N matrix — **BLOCKED on 0.1-class decision, not on work**
 
-Cannot be honestly closed while one system has no creature catalog.
+Cannot be honestly closed while one system has no creature catalog. §2.3 (corrected 2026-07-28) establishes that the source **does** exist and is open — the obstacle is that CI cannot reach it, not that it is unavailable. So this is closable work, gated on the owner picking `GAPS.md` §19.4(d) (fetch once from an unblocked connection, pin, encode offline) or one of the fallbacks.
 
-### 4.2 PF2e carries zero exclusion entries — **READY, CHEAP**
+### 4.2 ~~PF2e carries zero exclusion entries~~ — **DONE 2026-07-27**
 
-`_exclusions.ts` holds 10 entries and **none for PF2e**, yet PF2e reads `Full` and names a manual focus-spell surface in its own support row. By the plan's own rule — a system reads `Full` when its only residual gaps live in that registry — PF2e does not currently qualify. Either enumerate its boundaries or correct the label.
+PF2e read `Full` with zero entries while naming a manual focus-spell surface in its own support row. **Enumerated rather than relabelled**, because the gaps turned out real and findable and of genuine boundary shape: focus spells (no catalog automation — the list is a manual surface whose ids are deliberately not validated), prepared-slot assignment and cantrip selection, and rank-10 slots (class progression tables stop at rank 9; a rank-10 slot comes from a 10th-rank class feature).
 
-### 4.3 Sheet eviction — the dual-home is not transient — **READY**
+**Deliberately kept out:** agile MAP and PF2e weapon specialization. Those are *unfinished automation*, and the registry header forbids parking unfinished work there — enumerating them would have converted a to-do into a permanent boundary.
 
-Phase 5's *dispatch* half is complete at 7 of 7. The *eviction* half never happened: all ten in-sheet browser wrappers are still imported and rendered across the PF2e, 5e, d20-legacy and M&M sheets. The shell plan capped this dual-home at "one chapter"; it has outlived that. Every affected system browses the same catalog from two places today.
+The label was not downgraded to `Partial`, and the reason matters: PF2e's remaining non-boundary debt is content fidelity, which four of seven systems share and which `docs/generated/srd-coverage.md` already measures. Singling PF2e out would have swapped one mislabel for another. Now gated by `src/__tests__/manualExclusionRegistry.test.ts`.
 
-**Deliverable:** delete the in-sheet browser wrappers, collapse the tab grids, all seven.
+### 4.3 Sheet eviction — ~~the dual-home is not transient~~ **DONE, four wrappers kept with reasons**
+
+Six of the ten in-sheet browser wrappers are deleted and every affected tab grid is collapsed: `Dnd5eFeatBrowserTab`, `Pf2eFeatBrowserTab`, `Pf2eEquipmentBrowserTab`, `D20FeatBrowserTab`, `D20EquipmentBrowserTab`, `MamEquipmentBrowserTab`. Each re-hosted the same shared browser over the same loader the Dock already calls for that system, so the sheet copy was a true duplicate. The equipped-armour controls that shared the PF2e and d20-legacy equipment-browser tab moved onto Inventory instead of dying with it.
+
+**Four are kept, and this is the finding the lane owes.** They are not duplication; they are capability the Dock does not have:
+
+- `Pf2eSpellBrowserPanel` / `D20SpellBrowserPanel` browse a **class/tradition-filtered** spell list. The Dock's spell tab is the whole system catalog and cannot filter — it is shared-layer and cannot see the open character's class list.
+- `MamAdvantageBrowserTab` is the only advantage browse-and-add surface in the product. `loadFeatsForSystem('mam3e')` returns `[]`, so the Dock's Feats tab is empty for M&M and there is no Advantage tab for its add verb to route through.
+- `MamPowerBrowserTab` also hosts the power-modifier catalog, which has no Dock tab at all.
+
+**What this unblocks / what it left open:**
+
+- Making the Dock the only catalog route exposed three defects a sheet-side copy had been masking — the Dock pinned its catalog to the system open at *first* render (a PF2e sheet browsed the 5e catalog and click-add would have written 5e ids into it), printed M&M Equipment-Point costs as `undefined undefined`, and captioned PF2e Bulk as pounds. All three are fixed; the per-system cost/weight normalisations the wrappers each carried locally are now one shared `formatItemCost` plus a per-system weight-unit map.
+- Finishing the remaining four is **Dock capability work, not deletion work**: Advantage and Power-Modifier tabs, and a seam letting a sheet publish a catalog filter the Dock applies. That is the natural successor item.
+- Phase 5's toast + count-badge micro-feedback on the click-add path is still unbuilt; adds land silently.
 
 ---
 
@@ -196,9 +241,11 @@ Phase 5's *dispatch* half is complete at 7 of 7. The *eviction* half never happe
 
 Ordered by dependency. Do not schedule any of these before the shelf-branch verdict.
 
-### 5.1 Give the shipped AI flows a surface — **READY once 0.2 answers**
+### 5.1 Give the shipped AI flows a surface — **HALF DONE 2026-07-27**
 
-`character-draft` and the `make-me-a-game` composition flow are **complete, validator-gated, fixture-covered modules with no UI entry point** — their only importers are each other and their tests. This is the cheapest real user-facing AI win available: the hard part is built.
+`character-draft` now has its affordance (§0.6). **`make-me-a-game` still has none** — it remains a complete, validator-gated, fixture-covered composition flow (party → encounter → ready scene, one seeded path parameterized over the registry with no per-system branch) with no UI and no persistence.
+
+It is now reachable *through* the character-draft seam rather than being the only caller of it, which removes the "dead-rooted" problem but not the missing surface. Worth knowing before scoping it: `makeMeAGameFlow` is the **only** non-test caller of `systemRegistry.validateDocument`, which is why no user surface invokes build legality anywhere.
 
 ### 5.2 Phase 14's one remaining join
 
@@ -243,9 +290,9 @@ Note the failure mode is *order ambiguity*, not re-rolling: every random value i
 
 ## 6. Infrastructure and hardening
 
-### 6.1 Finish the eager-bundle reclaim — **BLOCKED on 0.3**
+### 6.1 Finish the eager-bundle reclaim — ~~BLOCKED on 0.3~~ **DONE 2026-07-28**
 
-2.4 KiB claimed of a measured 23.6 KiB ceiling; headroom is now ~2,658 bytes against the 85 KiB budget. Rejected alternatives are recorded so they are not re-proposed: an engine-internal `rollCheck` split (only 2.5 KiB, and it introduces a *second* engine-loading mechanism), and awaiting engines in `main.tsx` before `render()` (shrinks the measured chunk without shrinking first paint — that games the gate rather than paying it).
+Per-system engines now load through the registry's `loadEngine`/`peekEngine`/`preloadEngines` seam (`src/registry/index.ts`), with `useDocuments` pre-resolving before it publishes or dispatches. Measured against a clean build of the base commit: eager `index-*.js` 84,280 B -> 61,037 B gzip, eager shell 187.8 -> 165.1 KiB, `appChunkGzipBytes` unchanged at 85 KiB — headroom against that budget goes from 2,760 B to 26,003 B. Evidence and the design rationale: `docs/GAPS.md` §16.5. The rejected alternatives recorded there still stand as rejected.
 
 ### 6.2 UI shell Phases 6 and 7 — **partly BLOCKED**
 
@@ -288,18 +335,19 @@ The near-miss worth recording: `utils/validation` is trivially confusable with `
 
 ### 7.1 Wire-ups — open defects, not seams
 
-- **`src/rules/legality/dnd5e.ts`** — asymmetric defect. PF2e, PF1e and 3.5e each bridge their legality module into `validation.ts`; **both 5e editions have no bridge**, so they silently skip build-legality checks their siblings apply. Pinned in `GAPS.md`.
+- ~~**`src/rules/legality/dnd5e.ts`**~~ — **DONE 2026-07-27.** The module was **dead at runtime**: PF2e, PF1e and 3.5e each bridged their legality module into validation and 5e did not, so both editions silently skipped four build caps their siblings enforce. One bridge covers both editions — they already share `createDnd5eValidator(systemId)` and `validateDnd5eBuild` branches on that same id, so each keeps its own compute-register rule prefix. Note one user-visible rename: `dnd5e-class-total-mismatch` → `dnd5e-class-total-shortfall`, narrowed to the shortfall direction so it stops double-reporting against the class-level-sum cap — matching what PF1e and 3.5e already did.
 - **`src/systems/pf2e/derivedMath.ts`** (129 LOC) — its PF1e twin is live; this one has no non-test importer. An archived full-repo review prescribed "wire these in or mark them missing"; neither happened, and the finding was never carried into live `GAPS.md`. The PF1e pattern is right there to mirror.
 
 ### 7.2 Small items surfaced during verification
 
 Small, real, and each found while checking something else.
 
-- **Duplicate `SceneGridRegistration`** — defined in both `src/types/core/scene.ts` and `src/scene/gridGeometryProposal.ts`. The latter's comment says it is local "until the Phase 9 map-asset record lands"; Phase 9 landed the same day and the unification never happened.
+- **Duplicate `SceneGridRegistration`** — **INVESTIGATED, NOT A CLEANUP.** The name is shared by `src/types/core/scene.ts` and `src/scene/gridGeometryProposal.ts`, but the shapes are not one type wearing two hats. The `types/core` one is manual map-asset registration — pure presentation geometry held deliberately outside `SceneState` so replay stays byte-identical with or without a map. The `gridGeometryProposal` one is the vision-proposal acceptance output: it renames the offsets, adds the source image dimensions the validator bounds-checks boxes against, and carries a derived `grid` that **is** scene state. Only `cellSizePx` is genuinely common. Collapsing them would either push scene state into the presentation type or drop the validator's image bounds, so both now carry comments stating the split. Re-open only if something needs one shape for both jobs.
 - **The Phase-2 surfaces directory was never created.** `SurfaceStage` takes `ReactNode` slots instead, so later specs referring to "the Phase-2 `SceneSurface` stub to flesh out" point at nothing that exists.
-- **`path_ref_rule` has a blind spot** — it only matches `docs/`, `src/`, `scripts/`, `.github/`, `package.json`, `.nvmrc`, `.node-version` and the two root docs. Every `netlify/`, `supabase/` and `.env` path in the RFCs and runbooks is **ungated**, and two stale ones were found by hand this week.
-- **`src/types/core/character.ts:274`** documents `strikingRune` as "no engine consumes it yet"; `src/rules/combatants/characterCombatant.ts:249` disproves it. (The "29 lines below" pointer in an earlier revision of this file was wrong — that offset lands inside `Currency`.)
+- **`path_ref_rule` blind spot** — **CLOSED for the deploy surfaces.** The matcher now accepts `netlify/` and `supabase/` paths, so gateway, adapter and migration references are checked on every `check:doc-drift` run instead of by hand. It brought 12 references under the gate and found **0 stale** — the two spotted by hand this week were already fixed, so the value is prospective: the next one fails CI rather than surviving to a reader. `.env` stays ungated deliberately, since only `.env.example` is tracked and gating bare `.env` mentions would fail on a correctly-absent file.
+- **`strikingRune` comment was stale** — **FIXED.** `src/types/core/character.ts` claimed no engine consumed it; `src/rules/combatants/characterCombatant.ts` does, gated on the system profile's `supportsStrikingRunes`. The comment now names the consumer and the gate.
 - **The graphify index is stale.** `ShellContext`, `SurfaceStage` and `SceneCanvas` return no node, so every agent this session fell back to direct file reads. `npm run graph:update` is overdue.
+- **`src/systems/pf2e/derivedMath.ts` had no non-test importer** while its PF1e twin was live. **Done:** the death-track helpers are declared in `PF2E_DERIVED_QUANTITIES` (dying-on-knockout, recovery DC, wounded-track) so the engine computes them into `system.derived` and the sheet surfaces the first two while on the death track; `pf2eAttackModifier` now backs the sheet's spell-attack readout and the hero-point constants back the header pip track and the long-rest handler. All substitutions are value-identical — no computed output moved. **Still test-only, for structural reasons recorded on their compute-register rows:** `pf2eDyingAfterRecovery` / `pf2eIsDead` (transitions and a predicate, not standing numeric scalars), `pf2eShieldBlockDamage` (needs a shield Hardness the equipment model does not carry), and `pf2eCreatureXP` / `pf2eEncounterBudget` (party-scoped GM math owned by `src/scene/`, which the lint-enforced layer boundary forbids from value-importing `src/systems/**`).
 
 ---
 

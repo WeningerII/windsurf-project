@@ -1,4 +1,5 @@
 import type { SystemValidator, ValidationContext, ValidationIssue } from '../../../registry/types';
+import { validateDnd5eBuild } from '../../../rules/legality/dnd5e';
 import type { CharacterClass } from '../../../types/character-options/classes';
 import type { Dnd5eFeatureOptionDefinition } from '../../../types/character-options/feature-options';
 import type { ClassLevel, Feat, SpellcastingInfo, SpellSlots } from '../../../types/core/character';
@@ -67,6 +68,7 @@ async function validateDnd5eDocument<T extends Dnd5eValidationDataModel>(
   validateCharacterOptions(issues, context, system, validationData);
   validateAbilityScores(issues, context, system.baseAttributes);
   validateSpellcasting(issues, context, system.spellcasting, system.classLevels, validationData);
+  appendBuildLegalityIssues(issues, context, system, expectedSystemId);
 
   return { issues };
 }
@@ -183,12 +185,16 @@ function validateClassLevels(
     validateSubclass(issues, context, classLevel, classesById.get(classLevel.classId), path);
   });
 
+  // Only annotate the shortfall direction here: the exceed direction is the
+  // build-legality rule dnd5e{2014,2024}.L9.class-level-sum, consumed in
+  // appendBuildLegalityIssues, and double-reporting it would be noise. Mirrors
+  // pf1e-class-total-shortfall and dnd35e-class-levels-incomplete.
   if (
     isIntegerInRange(characterLevel, MIN_CHARACTER_LEVEL, MAX_CHARACTER_LEVEL) &&
-    totalClassLevel !== characterLevel
+    totalClassLevel < characterLevel
   ) {
     addIssue(issues, context, {
-      code: 'dnd5e-class-total-mismatch',
+      code: 'dnd5e-class-total-shortfall',
       severity: 'warning',
       path: 'system.classLevels',
       message: `Class levels total ${totalClassLevel}, but character level is ${characterLevel}.`,
@@ -432,6 +438,56 @@ function validateAbilityScores(
       });
     }
   });
+}
+
+/**
+ * Surface the shared build-legality caps (src/rules/legality/dnd5e) as
+ * warning-severity issues: ability scores above the ASI ceiling of 20, class
+ * levels summing past the character level, unmet multiclass ability
+ * prerequisites, and feats outnumbering the granted ASI slots.
+ *
+ * One bridge serves BOTH editions, because both editions already share this
+ * validator: `createDnd5eValidator` is stamped with the edition's systemId and
+ * that same id is handed to `validateDnd5eBuild`, which picks the matching
+ * `dnd5e2014.*` / `dnd5e2024.*` rule ids. The issue `code` stays edition-neutral
+ * (`dnd5e-build-legality`, like every other `dnd5e-*` code this shared validator
+ * emits); `details.rule` carries the edition-specific compute-register row.
+ *
+ * Legality findings annotate, they never block — mirroring the PF2e, PF1e and
+ * 3.5e bridges.
+ */
+function appendBuildLegalityIssues(
+  issues: ValidationIssue[],
+  context: ValidationContext,
+  system: Dnd5eValidationDataModel,
+  systemId: Dnd5eValidationSystemId
+) {
+  const legality = validateDnd5eBuild(system, systemId);
+
+  legality.violations.forEach((violation) => {
+    addIssue(issues, context, {
+      code: 'dnd5e-build-legality',
+      severity: 'warning',
+      path: legalityRulePath(violation.rule),
+      message: `${violation.label} is ${violation.value}, above the legal limit of ${violation.limit}.`,
+      recoverable: true,
+      details: { ...violation },
+    });
+  });
+}
+
+/** Anchor each legality rule id to the document path its violation lives on. */
+function legalityRulePath(rule: string): string {
+  if (rule.endsWith('class-level-sum')) {
+    return 'system.classLevels';
+  }
+  if (rule.endsWith('ability-score-cap') || rule.endsWith('multiclass-prereq')) {
+    return 'system.baseAttributes';
+  }
+  if (rule.endsWith('asi-feat-cadence')) {
+    return 'system.feats';
+  }
+  return 'system';
 }
 
 function validateSpellcasting(

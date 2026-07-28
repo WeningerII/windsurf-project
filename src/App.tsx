@@ -207,7 +207,10 @@ function AppContent() {
     const wasActive = prevSceneSurfaceRef.current;
     prevSceneSurfaceRef.current = isSceneSurface;
     if (!wasActive && isSceneSurface) {
-      reloadScenes();
+      // Fire-and-forget: the reconcile merges into state when it resolves, and
+      // a failed re-read leaves the live collection untouched rather than
+      // surfacing as an unhandled rejection.
+      void reloadScenes().catch(() => undefined);
     }
   }, [isSceneSurface, reloadScenes]);
 
@@ -473,7 +476,14 @@ function AppContent() {
     });
   }, [addDocuments, openSheet, toast]);
 
-  const openNewCharacterDialog = useCallback(() => setNewCharacterDialogOpen(true), []);
+  const openNewCharacterDialog = useCallback(() => {
+    // Warm the (lazily imported) engines on create INTENT, so the pick that
+    // follows can prepare and dispatch the new document synchronously — the
+    // dialog is the only surface that can reach a system with no document yet.
+    // Engines only; sheet chunks and SRD metadata still prefetch per system.
+    void systemRegistry.preloadEngines(systemRegistry.getAll().map((def) => def.id));
+    setNewCharacterDialogOpen(true);
+  }, []);
 
   // Keyboard shortcuts
   useKeyboardNavigation([
@@ -895,7 +905,7 @@ function AppContent() {
           it is reachable identically from the Library, Sheet and Scene
           surfaces. Its spell/feat/equipment click-add dispatches into the
           active sheet via SheetDispatchContext. */}
-        <Dock documents={documents} initialSystemId={currentDoc?.systemId} />
+        <Dock documents={documents} activeSystemId={currentDoc?.systemId} />
       </DragRoot>
     </div>
   );

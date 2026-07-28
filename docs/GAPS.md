@@ -53,9 +53,9 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 
 | § | Finding |
 | --- | --- |
-| [6](#6-reconsider-artifact--decided-2026-07-21-execution-not-yet-run) | `docs/srd-manifest/` demotion decided, **not executed** |
 | [11](#11-provenance-over-inclusion-outside-srcdata-added-2026-07-25) | OC-1 awaits an owner decision; the gate's honest residual is unclosed |
 | [12](#12-unresolved-a11y-contrast-finding-on-the-creation-surface-added-2026-07-25) | Quarantined `color-contrast` violation, needs a live browser |
+| [19](#19-mm-3e-adversaries--the-source-search-and-why-nothing-was-encoded-added-2026-07-28) | No encodable open-content M&M adversary source exists; options recorded, owner decides |
 
 **Partly closed — evidence for what shipped, residual named inside:**
 
@@ -63,13 +63,13 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | --- | --- | --- |
 | [1](#1-content-denominator-a--independent-srd-coverage) | Independent SRD coverage | unwired categories; 3.5e monster misses |
 | [2](#2-compute-denominator-b--register-completeness--engine-wiring) | Register completeness + engine wiring | L8 typed damage; legality layer unreached by any UI |
-| [3](#3-bestiaries--rfc-004) | Bestiaries / RFC 004 | M&M 3e adversary data |
+| [3](#3-bestiaries--rfc-004) | Bestiaries / RFC 004 | M&M 3e adversary data — source search done, see §19 |
 | [4](#4-global-done-criteria-still-outstanding) | GLOBAL DONE criteria | `Full` measures automation depth, not content completeness |
 | [7](#7-rules-ir-parity-debt--per-system-accounting-added-2026-07-21) | Rules-IR parity debt | nothing outside tests consumes the legal-actions seam |
 | [10](#10-ai-gateway-provider-agnosticism--what-is-proven-and-what-is-not-added-2026-07-25) | AI gateway provider-agnosticism | no live-API proof; no failover; no pricing |
 | [14](#14-p5infra-gaps--inventory-what-was-closed-and-what-is-deliberately-not-built-added-2026-07-25) | `p5.infra-gaps` | 14.4 — Sentry release/env, server 5xx, durable rate-limit store |
-| [15](#15-field-level-srd-fidelity--audit-result--the-gate-that-now-guards-it-added-2026-07-25) | Field-level SRD fidelity | **(b)** and **(c)** unfixed — the largest open content-integrity item |
-| [16](#16-lazy-per-system-engines--what-was-reclaimed-and-exactly-what-blocks-the-rest-added-2026-07-25) | Lazy per-system engines | engine reclaim blocked, needs authorization |
+| [15](#15-field-level-srd-fidelity--audit-result--the-gate-that-now-guards-it-added-2026-07-25) | Field-level SRD fidelity | **(b)** fixed 2026-07-28 for every gated scalar; **(c)** still an open-content exposure |
+| [16](#16-lazy-per-system-engines--what-was-reclaimed-and-exactly-what-blocks-the-rest-added-2026-07-25) | Lazy per-system engines | CLOSED 2026-07-28 — reclaimed via the preload design, so the authorization question never had to be answered (16.5) |
 | [18](#18-provenance-over-inclusion--the-audit-result-and-the-gate-that-now-bounds-it-added-2026-07-25) | Provenance over-inclusion — 1,045 classified + gated | 31 records carry a false citation (owner decision); 3 measurement defects diagnosed, not repaired |
 
 **Closed, decided, or standing reference — kept for the evidence trail:**
@@ -77,6 +77,7 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | § | Finding | What closed it |
 | --- | --- | --- |
 | [5](#5-review-item--a-shipped-behavior-change-ratified-2026-07-20) | 5e-2024 exhaustion −2/level | human ratification 2026-07-20 |
+| [6](#6-reconsider-artifact--decided-2026-07-21-executed-2026-07-27) | `docs/srd-manifest/` demotion | executed 2026-07-27; Denominator A is `docs/generated/srd-coverage.md` |
 | [8](#8-w6-executable-activity-contract--close-by-rule-under-constraint-5-added-2026-07-24) | W6 executable-activity contract | close-by-rule: one consumer, not graduated |
 | [9](#9-make-me-a-game-flow--what-it-composes-and-what-it-deliberately-does-not-added-2026-07-24) | Make-me-a-game flow scope | scope record; nothing stubbed |
 | [13](#13-srd-521-will-o-wisp--upstream-str-score-defect-added-2026-07-25) | Will-o'-Wisp STR-score defect | re-transcription; superseded by §15 |
@@ -101,7 +102,9 @@ Node `fetch()` does not). Verified independent sources for all 7 systems are in
 `docs/srd-sources.md`. `npm run srd:coverage` builds the genuine coverage report at
 `docs/generated/srd-coverage.md` (independent SRD lists diffed against the loaders
 by normalized name, each scoped to the policy's `allowedSources`) — real coverage,
-unlike the loader-derived `docs/srd-manifest/`.
+unlike the loader-derived `docs/srd-manifest/`. **Since 2026-07-27 that file is
+Denominator A outright** (§6), and the metrics report republishes its per-system
+rollup.
 
 **Measured — `docs/generated/srd-coverage.md` is authoritative for live counts (do not restate them here; they drift):**
 - The earlier deep gaps (PF2e spells "24%", PF1e "21%", 5e-2014 "67%") were a stale
@@ -203,10 +206,10 @@ unlike the loader-derived `docs/srd-manifest/`.
   earlier "all monsters" phrasing here was stale.
 - Remediate under-covered categories (encode missing SRD entries — e.g. PF2e/PF1e/5e
   spells) and the provenance over-inclusion (re-source or re-scope mislabeled entries).
-- Fold genuine coverage into the headline metric in place of the loader-mirror
-  `docs/srd-manifest/` numbers. **This is no longer an open question** — the
-  decision was taken on 2026-07-21 and is recorded in §6; what remains is its
-  execution, tracked there, not here.
+- ~~Fold genuine coverage into the headline metric in place of the loader-mirror
+  `docs/srd-manifest/` numbers.~~ **DONE 2026-07-27** — decided 2026-07-21,
+  executed and recorded in §6. `docs/generated/roadmap-metrics.md` now publishes
+  the reverse diff's per-system rollup as Denominator A.
 
 ## 2. Compute (Denominator B) — register completeness + engine wiring
 
@@ -450,7 +453,11 @@ product-reachable through the scene encounter flow
 in `docs/generated/roadmap-metrics.md` and `docs/generated/srd-coverage.md`, not
 here. **The residual, still open:** M&M 3e adversary (reference) data — confirmed
 2026-07-26, `src/data/mutants-and-masterminds/3e/` has no adversary or monster
-directory, and `src/utils/dataLoader.ts` exposes no M&M creature loader.
+directory, and `src/utils/dataLoader.ts` exposes no M&M creature loader. **§19
+(added 2026-07-28) is the search for a source to close this from, and its
+result** — no open-content M&M 3e adversary catalog exists that this repo's
+provenance rules can accept, so the residual is now blocked on an owner decision
+rather than on effort.
 Daggerheart, by contrast, ships loader-backed SRD adversaries
 (`loadDaggerheartAdversariesForSystem`, `src/utils/dataLoader.ts:807`), fieldable
 as monster-kind scene tokens since 2026-06-12 — the earlier claim here that
@@ -482,15 +489,33 @@ the *claim they were taken to license* is not, and that is the open part.
   `docs/srd-manifest/_exclusions.ts` — d20 Vancian prepared-slot assignment +
   spontaneous conversion, Daggerheart triggered/narrative card resolution, M&M
   freeform descriptors — and therefore "never unfinished automation". Those
-  boundaries are real, but the registry holds only 10 entries and does not
-  enumerate every residual gap: measured content shortfalls exist that are
-  neither automated nor recorded there, and PF2e carries **no** exclusion entry
-  at all. So the rule ("a system reads `Full` when its only residual gaps live in
+  boundaries are real, but the registry does not enumerate every residual gap:
+  measured content shortfalls exist that are neither automated nor recorded
+  there. So the rule ("a system reads `Full` when its only residual gaps live in
   that registry") is right while the conclusion has outrun it. Restoring the
   invariant means closing those gaps or enumerating them, with reasons, in
   `_exclusions.ts`. Live shortfalls: `docs/generated/srd-coverage.md`; tracked as
   per-system debt in §1, and — for content that is *named* correctly but
   *transcribed* from the wrong source — in §15.
+- **PARTLY CLOSED 2026-07-27 — the PF2e half of the paragraph above.** PF2e used
+  to carry **no** exclusion entry at all while declaring `Full` and naming a
+  manual focus-spell surface in its own support row, so the rule did not hold for
+  it on automation depth either. Its boundaries are now enumerated in
+  `docs/srd-manifest/_exclusions.ts` with code citations: focus-spell list and
+  effects (`src/systems/pf2e/validation.ts` deliberately does not check
+  `spellcasting.focusSpells` against the catalog and raises
+  `pf2e-focus-spells-manual`; the sheet badges the section Manual), prepared-slot
+  assignment and cantrip selection (slot *counts* are register-verified as
+  `pf2e.L5.spell-slots`; the daily choice is not), and rank-10 slots granted by
+  10th-rank class features rather than the class progression table (hence
+  `CLASS_PROGRESSION_RANKS` stopping at 9). Every system that ships a content
+  denominator now has at least one entry, gated by
+  `src/__tests__/manualExclusionRegistry.test.ts`. **Deliberately left out of the
+  registry**, because they are unfinished automation rather than boundaries: the
+  PF2e agile multiple-attack penalty (−4/−8, blocked on weapon-trait data) and
+  PF2e weapon specialization (+2/+3/+4, formula-only pending wiring), both noted
+  on `docs/compute-register/pf2e.ts`. Still open for PF2e: the content-fidelity
+  debt in §15/§18.5.1, which no exclusion entry may absorb.
 - MASTER_PLAN.md now mirrors the two-denominator completion goal and adopts
   this file as the completion-tracking doc (2026-07-14). README.md cites both
   denominators under Quality Metrics ("Completion methodology", 2026-07-17),
@@ -521,46 +546,63 @@ Exhaustion level"; the −1/level figure matched only the One D&D playtest draft
 `Dnd5e2024Engine.getExhaustionD20Penalty` is settled and test-pinned. No open
 action remains.
 
-## 6. Reconsider artifact — DECIDED 2026-07-21, execution not yet run
+## 6. Reconsider artifact — DECIDED 2026-07-21, EXECUTED 2026-07-27
 
-**Status: OPEN.** The decision is recorded and unchanged. **The execution has
-NOT happened — verified 2026-07-26, not assumed from the earlier "scheduled
-Wave 2" note.** Three independent checks, any one of which would have gone the
-other way had the demotion landed:
+**Status: CLOSED.** The decision below was taken on 2026-07-21 and sat unexecuted
+through two verification passes. It is now executed. The three checks that
+established non-execution on 2026-07-26 all now go the other way:
 
-- The manifests are still **committed**: `git ls-files docs/srd-manifest/`
-  returns 10 tracked TypeScript modules, one per system plus `_exclusions.ts`,
-  `index.ts` and `types.ts`.
-- They are still **doing denominator duty**: the metrics generator imports them
-  directly — `SRD_MANIFESTS` and `ManifestCategory` at
-  `src/scripts/generate-roadmap-metrics.ts:45-46`, `MANUAL_EXCLUSIONS` at `:48`.
-- The move to on-demand generation has no vehicle:
-  `src/scripts/generate-srd-manifests.ts` still writes into `docs/srd-manifest/`
-  (`:189-194`) and **no `package.json` script invokes it**, which is also why
-  the drift below has never been regenerated away.
+- The per-system manifests are **no longer committed.** `git ls-files
+  docs/srd-manifest/` returns the hand-authored `types.ts`, `_exclusions.ts` and
+  a `README.md` warning label. The seven generated modules are gitignored and
+  `index.ts` — which existed only to aggregate them for the metric — is deleted.
+- They no longer do **denominator duty.** `src/scripts/generate-roadmap-metrics.ts`
+  imports neither `SRD_MANIFESTS` nor `ManifestCategory`; it keeps
+  `MANUAL_EXCLUSIONS` only, which is hand-authored and was never part of the
+  circularity. `categoryProgress` — the helper that returned
+  `{denominator, numerator}` per category — is deleted from `types.ts`.
+- On-demand generation **has a vehicle**: `npm run srd:manifests`.
 
-The loader-mirror manifests are honest on catalog and provenance but BADLY
-diverged from the loaders they mirror, unregenerated since ~2026-06-17: one
-system's manifest lists a monster and equipment count roughly a tenth of what
-its loader currently ships. (An entry total previously cited here as "4,053"
-matched nothing committed and was corrected 2026-07-21; the current totals live
-in `docs/generated/roadmap-metrics.md` and are not restated here.) Because
-manifest ids serve as both numerator and denominator, that drift can only ever
-read as 100% — the structural reason for the decision below.
+**What replaced it.** `docs/generated/srd-coverage.md` is Denominator A. The
+metrics report publishes a per-system rollup of it under **Content Coverage
+(Denominator A — independent SRD reverse diff)**, read offline from a new
+`docs/generated/srd-coverage.json` sidecar written by the same networked
+`npm run srd:coverage` run — so `roadmap-metrics.md` can be regenerated inside
+`check:generated-docs` without the network, and the two reports cannot disagree.
+When the sidecar is absent the section says so and publishes nothing, rather than
+falling back to a substitute denominator.
 
-**Decision (user, 2026-07-21):** `docs/srd-manifest/` moves to **on-demand
-generation** (no longer committed) and is **demoted from denominator duty** —
-`docs/generated/srd-coverage.md` becomes the **sole content denominator**
-(Denominator A). Nothing is deleted until the demotion executes; the committed
-manifests and the docs/metrics that cite them (the two-denominator completion
-goal in `docs/MASTER_PLAN.md`, `docs/generated/roadmap-metrics.md`,
-`_exclusions.ts`) remain in place and accurate as-is. **Do not "fix" the drift by
-gating the manifests** — that would entrench a mechanism already scheduled for
-retirement.
+**Published numbers moved, which is the point.** The retired table read 100% on
+all 44 of its rows. The replacement, measured against external indexes on the
+same tree, reads: D&D 5e (2014) 100%, D&D 5e (2024) 100%, D&D 3.5e 92.8%,
+Pathfinder 1e 100%, Pathfinder 2e 48.6%, M&M 3e 100%, Daggerheart 99.5%. No
+content changed — only the denominator did. Per-category figures and the named
+missing entries are in `docs/generated/srd-coverage.md` and are not restated
+here; they drift.
 
-Note for whoever executes this: §17 has since added a `ManifestEntryStatus` of
-`original` to `docs/srd-manifest/`, so the demotion now has one more consumer to
-re-home than it did when the decision was taken.
+**Why the old form could not work** (kept, because the failure mode is reusable):
+the manifests are generated *from* the loaders, so manifest ids served as both
+numerator and denominator. Any drift shrank both sides together and the ratio
+still read 100% — which is how one system's manifest came to list a monster and
+equipment count roughly a tenth of what its loader ships while printing green.
+Unregenerated since ~2026-06-17. (An entry total previously cited here as "4,053"
+matched nothing committed and was corrected 2026-07-21.) **The lesson is not
+"regenerate more often."** A denominator the product can move is not a
+denominator; the fix had to come from outside the repo.
+
+**Decision (user, 2026-07-21), as executed:** `docs/srd-manifest/` moves to
+**on-demand generation** (no longer committed) and is **demoted from denominator
+duty** — `docs/generated/srd-coverage.md` becomes the **sole content denominator**
+(Denominator A). **Do not "fix" the drift by gating the manifests** — that would
+entrench a retired mechanism. That instruction outlives the demotion: it now
+lives in `docs/srd-manifest/README.md`, where the next person to notice the
+staleness will find it.
+
+The `ManifestEntryStatus` of `original` added by §17 needed no re-homing: it is a
+provenance distinction, and provenance is exactly what the manifests were kept
+for. The open-content/original split that §17 relies on is published
+independently in the metrics report's Content Integrity table, which was not
+manifest-derived.
 
 ## 7. Rules-IR parity debt — per-system accounting (added 2026-07-21)
 
@@ -575,7 +617,7 @@ separately) so edition ambiguity cannot hide debt.
 
 | Parity debt | Done | Owed | State |
 | --- | --- | --- | --- |
-| Ledger re-backed on resolver | 7 | 0 | **COMPLETE (corrected 2026-07-26).** Five builders cover the seven systems, each projecting resolver output through `toContributionLedger`: `src/systems/dnd5e/shared/contributionLedger.ts` (both 5e editions), `src/systems/d20-legacy/contributionLedger.ts` (3.5e + PF1e), `src/systems/pf2e/contributionLedger.ts:28`, `src/systems/mam3e/contributionLedger.ts:47`, `src/systems/daggerheart/contributionLedger.ts:82`. The old row read `4 | 3` and named PF2e as having *no builder*; it has one. Two value shapes stay explicit rather than faked through the IR, annotated at their sites — list-valued proficiency rows and an object-valued unarmored-defense override, neither of which the published `EffectValue` can carry |
+| Ledger re-backed on resolver | 7 | 0 | **COMPLETE (corrected 2026-07-26).** Five builders cover the seven systems, each projecting resolver output through `toContributionLedger`: `src/systems/dnd5e/shared/contributionLedger.ts` (both 5e editions), `src/systems/d20-legacy/contributionLedger.ts` (3.5e + PF1e), `src/systems/pf2e/contributionLedger.ts:28`, `src/systems/mam3e/contributionLedger.ts:47`, `src/systems/daggerheart/contributionLedger.ts:82`. The old row read `4 | 3` and named PF2e as having *no builder*; it has one. Two value shapes stay explicit rather than faked through the IR, annotated at their sites — list-valued proficiency rows and an object-valued unarmored-defense override, neither of which the published `EffectValue` can carry **Consumption added 2026-07-27:** this row, like the plan's W4, counted BUILDERS. Nothing rendered any ledger until 2026-07-27 — the only callers were test assertions — so COMPLETE described math that existed rather than provenance a user could see. The 5e Armor Class card is now the first consumer (`src/components/sheet/ContributionBreakdown.tsx`, degrading to the plain number when no ledger explains the value); the other six builders remain unrendered. Read this row as **7 of 7 built, 1 of 7 rendered**. |
 | Condition effects through the resolver fold | 7 | 0 | **COMPLETE (corrected 2026-07-26).** The old row read `0 | 7` — "shipped and engine-consumed as helper reads; fold-through open everywhere". Every engine now feeds its own catalog collector into the shared fold: `src/systems/dnd5e/shared/engine.ts:346` (both editions), `src/systems/dnd35e/engine.ts:238`, `src/systems/pf1e/engine.ts:248`, `src/systems/pf2e/engine.ts:18-32`, `src/systems/mam3e/engine.ts:320`, `src/systems/daggerheart/engine.ts:133`. Scene combat folds the same way via `collectSceneConditionEffects` (`src/rules/combat/sceneCombat.ts:141,353`), so conditions share the resolver's stacking and reach the ledgers as provenance |
 | AI-seam validators | 7 | 0 | **COMPLETE.** All seven registered *and* lazily loaded — every `src/systems/*/definition.ts` supplies `loadValidator`, none the eager `validator:` field (verified 2026-07-26; the last two migrated in §16.2). Each derives checks from its own RAW/loaders and consumes its `src/rules/legality/` build validator as warnings where present |
 | Legal-actions enumeration seam | 7 | 0 registered / **0 consumers** | **Registered by all seven** (`loadLegalActions` in every `src/systems/*/definition.ts`, cached by the registry, with a per-system test). Five provider modules serve them: `src/systems/{dnd5e/shared,d20-legacy,pf2e,mam3e,daggerheart}/legalActions.ts`. **Renamed 2026-07-26 from "Resolver legal-actions seam", which misdescribed it:** the seam is deliberately enumeration-only — descriptors name and cost an action but never resolve it (§8) — so it is *not* a resolver seam and must not be scheduled as one. **The open part:** nothing outside tests calls it |
@@ -1076,10 +1118,11 @@ sink should treat this section as the review that must be re-opened first.
 
 - **Sentry `release` + separate preview/production environments.** Both are
   one-line additions to `Sentry.init` in `src/main.tsx`, and both would genuinely
-  improve regression grouping (`sentry-alerts.md` §5). Not taken because
-  `main.tsx` is in the eager first-paint chunk, which is at **84.8 / 85.0 KiB
-  gzip**. The documented reclaim (lazy-loading per-system engines) is a separate
-  piece of work; these two should land immediately after it, not before.
+  improve regression grouping (`sentry-alerts.md` §5). Not taken at the time
+  because `main.tsx` is in the eager first-paint chunk, which was then at 84.8 /
+  85.0 KiB gzip. **That constraint is gone**: the lazy-engine reclaim landed
+  (§16.5) and the app chunk now sits well under its budget, so these two are
+  free to take.
 - **AI-gateway server-side 5xx in Sentry.** The function already emits one
   structured JSON line per request to the Netlify function log, and its
   `traceId` joins to the client-side events wired in 14.2 — so a client alert is
@@ -1095,14 +1138,18 @@ sink should treat this section as the review that must be re-opened first.
 
 ## 15. Field-level SRD fidelity — audit result + the gate that now guards it (added 2026-07-25)
 
-**Status: PARTLY CLOSED — and this section holds the largest open item in the
-file.** The gate shipped and the audit is done (`scripts/check-srd-fidelity.mjs`
-plus its pinned manifest and ratchet baseline, all present and inside `verify`;
-re-verified 2026-07-26). **Findings (b) and (c) are NOT fixed**: 5e-2024
-hand-written monsters diverging from SRD 5.2.1, and 5e-2024 backgrounds carrying
-non-open 2014 content under an SRD tag. (c) is the same defect class as §11's
-OC-1 and is a licensing exposure, not a tidiness one. 15.4 is the itemized
-residual risk.
+**Status: PARTLY CLOSED.** The gate shipped and the audit is done
+(`scripts/check-srd-fidelity.mjs` plus its pinned manifest and ratchet baseline,
+all present and inside `verify`; re-verified 2026-07-26). **Finding (b) is now
+FIXED for every field the gate measures** (2026-07-28): the baseline's
+`divergences` block is empty and `check:srd-fidelity` passes with nothing
+baselined but the two `upstreamDefects`. **Finding (c) is still open** — the
+scalar proficiency sets were corrected alongside (b), but the 5e-2024 backgrounds
+still carry the 2014 structural model (`suggestedCharacteristics`, a background
+`feature`, language grants) under an SRD 5.2 tag, and three of those four bodies
+of text are *Player's Handbook* content, not open content. That is the same
+defect class as §11's OC-1 and is a licensing exposure, not a tidiness one; it is
+what remains of this section. 15.4 is the itemized residual risk.
 
 §13 recorded that nothing checks whether an entry's CONTENT matches the source it
 cites. This section records what a systematic audit found, and the check now wired
@@ -1189,31 +1236,59 @@ The last row is a structural bug, not a transcription one: consumers reading the
 typed `modifier` field got HP totals that disagreed with the entry's own notation
 string.
 
-**(b) 5e-2024 hand-written monsters — 77 of 85 diverge from SRD 5.2.1. NOT FIXED.**
+**(b) 5e-2024 hand-written monsters diverged from SRD 5.2.1 — FIXED for every
+gate-measured field (2026-07-28).**
 The Will-o'-Wisp (§13) was not an isolated case; it was one instance of a
 systemic pattern. The 5e-2024 loader ships ~96 hand-written monsters that override
-the encoder on name match, tagged `source: 'SRD 5.2'`. Of the 85 whose SRD 5.2.1
-stat block is machine-readable, **77 diverge** — mostly carrying the SRD 5.1 (2014)
-values (Wolf AC 13 vs 12; Skeleton AC 13 vs 14; Vampire 16d8+64 vs 23d8+92;
-Lich AC 17/18d8+72 vs 20/42d8+126; Deva CR 5 vs 10; Manticore CR 7 vs 3), and some
-carrying values found in **neither** edition (Air Elemental 5d10+10 is neither
-5.1's 12d10+24 nor 5.2's — an invented or placeholder line). All 254 scalar
-divergences are itemized field-by-field in
-`scripts/data/srd-fidelity-baseline.json`.
-Not fixed here: correct remediation is re-transcription of ~77 full stat blocks
-(prose, traits and actions included, which this lane's scalar gate does not even
-measure), or deleting the hand-written overrides so the encoder's verbatim 5.2.1
-output wins. Both have a blast radius well beyond an audit lane. **This is the
-single largest open content-integrity item in the repo.**
+the encoder on name match, tagged `source: 'SRD 5.2'`. The baseline recorded the
+divergence field-by-field, and every one of those fields has now been
+re-transcribed from the pinned SRD 5.2.1 markdown the entries already cite —
+mostly replacing carried-over SRD 5.1 (2014) values (Wolf AC 13 → 12; Skeleton
+AC 13 → 14; Vampire 16d8+64 → 23d8+92; Lich AC 17/18d8+72 → 20/42d8+126; Deva
+CR 5 → 10; Manticore CR 7 → 3).
 
-**(c) 5e-2024 backgrounds — all 4 carry 2014 content, and 3 are NOT open content.**
+Two things the remediation confirmed that the original audit did not separate:
+
+- **Most of the divergence was not stale-edition carry-over at all.** Comparing
+  every divergent field against the repo's own pinned SRD 5.1 manifest values,
+  the majority held a number found in **neither** edition — invented or
+  placeholder lines, of which Air Elemental `5d10+10` (neither 5.1's 12d10+24 nor
+  5.2's) was one of many, spread across roughly as many entries as the genuine
+  5.1 carry-overs. "Copied from the wrong edition" understates it.
+- **The stat-block count quoted above ("77 of 85") never matched the baseline it
+  cited.** The baseline itemized 71 monsters, not 77. The baseline is the
+  authority; the prose figure was wrong and is not restated here.
+
+Two derived fields the gate does not pin were corrected with the same source:
+`hitPoints.notation` (rebuilt from the corrected dice) and `experiencePoints`
+(re-read from the same stat block for the seven entries whose `challengeRating`
+was wrong).
+
+**Residual, unmeasured:** the gate pins scalars only. Prose, traits, actions,
+`savingThrows`, `skills`, attack bonuses and damage strings on these entries were
+NOT re-transcribed and are not compared by anything — an entry whose ability
+scores are now 5.2 may still carry a 5.1-derived save or attack line. The
+hand-written entries also still sit in CR-bucket files chosen under their old
+(wrong) CR, which nothing enforces. Deleting the hand-written overrides so the
+encoder's verbatim 5.2.1 output wins remains the durable fix.
+
+**(c) 5e-2024 backgrounds — all 4 carry 2014 content, and 3 are NOT open content.
+Proficiencies corrected 2026-07-28; the licensing exposure is STILL OPEN.**
 Acolyte, Criminal, Sage and Soldier all ship tagged `source: 'SRD 5.2'` carrying
 the 2014 model: `suggestedCharacteristics` tables, a background `feature`
 ("Shelter of the Faithful", "Criminal Contact", "Researcher", "Military Rank") and
 language grants — none of which exist in SRD 5.2, which instead grants ability
-scores, an origin feat and a tool proficiency. Acolyte is byte-identical to the
-repo's own 5e-2014 Acolyte. Criminal's skills are the 2014 Deception/Stealth, not
-5.2's Sleight of Hand/Stealth.
+scores, an origin feat and a tool proficiency. Acolyte was byte-identical to the
+repo's own 5e-2014 Acolyte.
+The **proficiency sets** — the only part of a background this section's gate
+measures — have since been re-transcribed from SRD 5.2: Acolyte and Sage gained
+the Calligrapher's Supplies tool proficiency, Criminal's skills moved from the
+2014 Deception/Stealth to 5.2's Sleight of Hand/Stealth and it lost the gaming
+set 5.2 does not grant, and Soldier lost Land Vehicles (a 5.1-only tool). **This
+does not close (c).** The structural 2014 model and the non-open PHB prose are
+untouched, and the fix still requires a `Background` type that can express the
+2024 model (ability scores + origin feat), so it stays recorded rather than
+papered over.
 **Open-content risk:** SRD 5.1 contains exactly ONE background (Acolyte). The 2014
 Criminal / Sage / Soldier text is *Player's Handbook* content, which is not open.
 So three shipped entries carry non-open content under an SRD tag. The name-based
@@ -1228,6 +1303,16 @@ the source tag.**
   'natural', value: 12}]`. SRD 5.1 prints **AC 15**, corroborated by the SRD 5.2.1
   markdown (`**AC** 15`, block otherwise identical). The shipped 15 is correct and
   the denominator is wrong; recorded under `upstreamDefects` in the baseline.
+- **Soldier gaming-set proficiency (added 2026-07-28).** SRD 5.2 grants the
+  Soldier one Gaming Set of the player's choice. `5e-bits/5e-database` 2024 does
+  carry it — but under `proficiency_choices`, not the flat `proficiencies` array
+  that `srdBackground()` in `scripts/check-srd-fidelity.mjs` reads, so the pinned
+  manifest records an empty tool set. The shipped `['one-gaming-set']` is correct
+  and the denominator is incomplete; recorded under `upstreamDefects` in the
+  baseline. Soldier is the only SRD 5.2 background whose tool proficiency is a
+  choice, which is why no other entry trips it. Clearing it properly means
+  teaching `srdBackground()` to read `proficiency_choices`, which re-pins the
+  manifest for every system.
 - **Malformed SRD 5.2.1 ability tables.** Three blocks merge the MOD and SAVE
   cells (`<td>13 +1</td>`): **Ancient Red Dragon**, **Remorhaz**, and the
   **Will-o'-Wisp** (§13's known STR-score defect). The fidelity check's parser
@@ -1253,6 +1338,23 @@ monsters.
   encoder-regeneration sweep proves the *generated* portions are faithful; it says
   nothing about the hand-written ones.
 - **Prose fidelity is unaudited everywhere.** Every finding above is scalar.
+  This bites hardest on the 5e-2024 hand-written monsters repaired under (b):
+  their scalars are now SRD 5.2, but their traits, actions, `savingThrows`,
+  `skills` and attack/damage strings were not re-transcribed and nothing compares
+  them, so an entry can be internally inconsistent (5.2 ability score, 5.1-derived
+  save). Deleting the overrides in favour of the encoder's verbatim output is the
+  durable fix.
+- **Alignment on the repaired 5e-2024 monsters — measured, not fixed.** The gate
+  does not pin `alignment` (it is modelled, not transcribed), so it was left
+  alone. Checking it against the same pinned SRD 5.2.1 markdown afterwards:
+  **17 of the 71 repaired entries disagree** — Aboleth, Air Elemental, Archmage,
+  Assassin, Awakened Shrub, Berserker, Earth Elemental, Fire Elemental, Giant Elk,
+  Lich, Manticore, Noble, Succubus, Vampire, Vampire Spawn, Water Elemental,
+  Wraith. Mostly the 2024 edition's move away from "Unaligned"/chaotic labels
+  (Lich is Neutral Evil in 5.2, shipped Chaotic Evil; the four elementals are
+  Neutral, shipped Unaligned). Listed so the follow-on lane does not have to
+  re-derive it. Left unfixed here because nothing gates it and this lane's
+  mandate was the itemized baseline.
 - **M&M 3e and Daggerheart** have no scalar gate at all; only the
   encoder-regeneration sweep covered them.
 
@@ -1260,14 +1362,12 @@ monsters.
 
 ## 16. Lazy per-system engines — what was reclaimed, and exactly what blocks the rest (added 2026-07-25)
 
-**Status: PARTLY CLOSED.** 16.2 landed and is verifiable: all seven
-`src/systems/*/definition.ts` now supply the lazy `loadValidator`, none the eager
-`validator:` field (2026-07-26). **The engine reclaim itself is blocked and needs
-an explicit authorization**, not more investigation — `SystemDefinition.engine`
-is still a required synchronous property (`src/registry/types.ts:250`) and
-`prepareDocumentWithEngine` still calls `.engine.prepareData` synchronously
-inside `setDocuments` updaters (`src/hooks/useDocuments.ts:18-23`). 16.4 states
-what unblocking needs; 16.4's second bullet is the decision to make.
+**Status: CLOSED (2026-07-28).** 16.2 landed first (all seven
+`src/systems/*/definition.ts` on the lazy `loadValidator`), and the engine
+reclaim itself has now landed too — via the preload design 16.4 named as the
+alternative, so the decision 16.4 asked for was never needed. 16.5 records what
+shipped and what it measured. 16.1–16.4 are kept verbatim as the investigation
+record; read them as history, not as the current state of the tree.
 
 The eager app chunk budget note in `scripts/check-bundle-size.mjs` names ONE
 structural reclaim as the thing that must pay for the next climb: **lazy-loading
@@ -1356,6 +1456,54 @@ alongside the registry seam); awaiting the engine chunk in `main.tsx` before
 it makes the fetch serial, so it games the gate rather than paying it); and any
 environment-divergent arrangement that keeps engines eager under test and lazy
 in the browser.
+
+### 16.5 What shipped (2026-07-28)
+
+The preload design, not the behaviour change. `SystemDefinition.engine` became
+optional and paired with `loadEngine`, exactly as `validator`/`loadValidator`
+already were. `SystemRegistry` gained three methods: `loadEngine` (resolve +
+cache the dynamic import; it never rejects, because engine resolution now sits
+on the document load and mutation paths where a rejected promise would take out
+the collection rather than one optional feature), `preloadEngines` (resolve a
+set at once), and `peekEngine` — a SYNCHRONOUS read of an already-resolved
+engine. `peekEngine` is what keeps the reclaim a pure code-splitting change: a
+caller pre-resolves, then runs exactly the synchronous code it ran before.
+
+Against the two things 16.3(2) said were observable:
+
+- **Documents are never published unprepared.** `useDocuments` resolves the
+  engines for the systems present in the loaded collection BEFORE publishing,
+  holding `isLoading` true meanwhile. When nothing is outstanding — an empty
+  store, or engines already resolved — the load block still runs synchronously
+  inside the effect, as it always did. The IndexedDB reconcile still starts in
+  parallel with the localStorage read and is only APPLIED after the localStorage
+  branch publishes, so the old ordering holds; its local-edit guard is
+  re-checked after the await.
+- **Mutation ordering inside the updaters is unchanged.** `updateDocument`
+  pre-resolves the engine OUTSIDE the updater; the version derivation still
+  reads `prev` from inside it, untouched. Add / import / cross-tab / sync-merge
+  pre-resolve then dispatch, and stay synchronous whenever the systems involved
+  are already resolved — which is every document already in the collection. The
+  one path that can reach a system with no document yet is creation, so opening
+  the New Character dialog warms the engines (engines only, not sheet chunks or
+  SRD metadata).
+
+One behaviour that is genuinely new, and deliberate: a failed engine chunk no
+longer yields silently stale derived values. The affected system ids surface
+through the hook's `error`, and the unprepared collection is not persisted, so
+stale math cannot be written back as authoritative.
+
+16.3(3)'s two test files were adapted as authorized — call shape only, no
+expectation touched. `applyMergedCollections.test.tsx` needed the same treatment
+for a different reason: its first add of a system is now the call that resolves
+that engine chunk, which a synchronous `act()` cannot settle.
+
+Measured on a clean build of the base commit versus the change: eager
+`index-*.js` **84,280 B -> 61,037 B gzip (-23,243 B)**, eager shell 187.8 ->
+165.1 KiB, `appChunkGzipBytes` unchanged at 85 KiB. Budget headroom against that
+ceiling goes from 2,760 B to 26,003 B. That is 23.2 KiB of the 23.6 KiB ceiling
+16.1 measured — the residue is the engine classes' own construction sites, which
+the throwaway stub also elided.
 
 ---
 
@@ -1923,6 +2071,184 @@ a PF1e counterpart — not present in the pinned `pf1e/magic-items` denominator,
 unconfirmed) and `Captain` (5e-2024; the existing disproof rests on a one-point AC
 difference, which cannot establish absence under any name, but no counterpart was
 established either). Both keep their current class pending evidence.
+
+## 19. M&M 3e adversaries — the source search, and why nothing was encoded (added 2026-07-28)
+
+**Status: OPEN — a recorded finding, not a repair.** No adversary data was
+written. §3's residual asked for M&M 3e adversary data so that RFC 004's
+"reference adversaries for the others" stops being half-delivered (Daggerheart
+ships them; M&M does not). This section is the search for something to encode
+that data *from*, and its result: **no open-content M&M 3e adversary catalog is
+reachable from this environment.** Writing one anyway is how §17 and §18
+happened.
+
+**Correction 2026-07-28, prompted by the owner.** An earlier revision of this
+section, and the summary given for it, said "no open-content source exists".
+That was wrong and materially so:
+
+- **`d20herosrd.com` IS the M&M 3e SRD.** `docs/srd-sources.md` names it as the
+  Hypertext M&M 3e SRD under OGL 1.0a, and it is the cited source in the header
+  of every file in `src/data/mutants-and-masterminds/3e/archetypes/`. Its
+  GM-section generic NPCs are open content this product may use.
+- **The blocker is environmental, not licensing.** Re-verified twice on
+  2026-07-28: every request from this sandbox fails at the agent proxy with
+  `CONNECT tunnel failed, response 403`, on the root and the NPC page alike. A
+  developer on an ordinary connection can reach it today. This distinction
+  changes the owner's options — see 19.4(d), which the original section lacked.
+- **M&M is not empty.** 16 archetypes ship and are fully wired (`dataLoader`,
+  `getMam3eSheetState`, `MamArchetypeBrowser`, `MamArchetypesTab`, `validation`).
+  They are **build templates, not adversaries**: their fields are `description`,
+  `features`, `suggestedSkills` and `sourceBook` — no ability scores, defenses or
+  power ranks. They cannot be promoted to adversaries without inventing the stat
+  data, which is precisely the prohibited move. The gap is real; "no catalog at
+  all" overstated it.
+
+### 19.1 What was searched, and what each candidate actually contains
+
+**The upstream this repo already cites.** `frnprt/mm3e-character-creator`
+`js/data.js` (`src/scripts/srd-coverage.ts:733`), fetched 2026-07-28. Its
+complete set of top-level exports is `ABILITIES`, `ABILITY_COST`, `ADVANTAGES`,
+`ADVANTAGE_CATEGORIES`, `AFFLICTION_CONDITIONS`, `COMPLICATION_TYPES`,
+`COMPREHEND_TYPES`, `CONDITIONS`, `DEFENSES`, `DEFENSE_COST`, `EQUIPMENT_LIST`,
+`IMMUNITY_EXAMPLES`, `IMMUNITY_OPTIONS`, `INSUBSTANTIAL_TYPES`,
+`MEASUREMENT_TABLE`, `MOVEMENT_TYPES`, `POWER_DESCRIPTORS`, `POWER_EFFECTS`,
+`POWER_EFFECT_TYPES`, `POWER_EXTRAS`, `POWER_FLAWS`, `SENSES_TYPES`, `SKILLS`,
+`SKILL_COST`. **There is no NPC, adversary, villain, minion or archetype array
+in it.** It is a character-building component list; no stat block can be derived
+from it without inventing one.
+
+**d20HeroSRD.** The human-readable Hero SRD already cited at
+`docs/srd-sources.md:50` does publish an NPCs section (`/9-gamemastering/npcs/`,
+generic entries such as Criminal Minion, Mob Boss, Bruiser). Two things
+disqualify it as an encoder input, before the licensing question in 19.2 is even
+reached. It is HTML-only with no machine-readable mirror. And **it is not
+reachable** — every request to `d20herosrd.com` from this environment fails at
+the network proxy with `CONNECT tunnel failed, response 403`, so `curl` and the
+fetch tooling both fail before touching the site. Every encoder under `scripts/`
+reads a source verified fetchable at encode time. Encoding an unreachable HTML
+site means transcribing from recall, which is the precise failure mode §15 and
+§18 exist to stop.
+
+**Foundry VTT M&M 3e systems**, cloned and inspected 2026-07-28.
+`Deyzeria/foundrymnm3e` declares `"packs": []` in `system.json` and ships only
+advantage and power data under `json/`. `jonnyguio/foundryvtt-mutants-and-masterminds`
+has no packs directory at all. `Ikaguia/mnm3e` ships `packs/advantages.db` and
+`packs/power-effects.db` and nothing else. **None ships an NPC or adversary
+compendium**, and the MIT licence in each explicitly excludes pack content from
+its grant — so even where pack data exists it carries no usable licence.
+
+**`SkySpiral7/Humans-and-Heroes`** is the one machine-readable superhero-RPG NPC
+catalog the search found (37 character JSON files under
+`examples/characters/*/js/`, grouped animals / civilians / constructs /
+public-servants / super-heroes / trained-combatants / underworld-archetypes). It
+is **not M&M 3e**. It is a CC BY-SA 3.0 *fork* with divergent rules — its stat
+blocks carry a `transcendence` field M&M has no concept of — so shipping it as
+`mam3e` data under a Hero's Handbook citation would be committing §17's
+false-citation defect deliberately, and shipping it as faithful M&M content would
+be §15's. It is also not clean on its own terms: `other-works/js/Mewtwo.js` is a
+third-party IP character sitting inside the same catalog. Adopting it would
+further import a **ShareAlike** obligation that no other source in this repo
+carries.
+
+### 19.2 What the M&M licence actually permits — a correction owed
+
+`src/utils/openContentPolicy.ts:70-80` and `src/legal/attributions.ts:196` both
+state that the **sole** Product Identity in M&M 3e is the branded resource terms
+"Hero Points" and "Power Points". That is incomplete, and the omitted clause is
+the one that governs this section. Green Ronin's designation, as printed in the
+M&M books and reproduced consistently across editions, also declares Product
+Identity: *all characters and their associated images, descriptions, backgrounds,
+and related information.*
+
+An adversary catalog is a set of characters with descriptions and backgrounds.
+The *mechanics* a published NPC is built from — effect ranks, modifier maths,
+the cost tables — stay Open Game Content and are already shipped. The NPC **as a
+character** is on the other side of the line. d20HeroSRD's maintainer publishes
+the generic NPCs anyway; that is a fan site's reading, not the publisher's grant,
+and it is not a reading to adopt silently while §11 OC-1 and §18's 31 records are
+still waiting on an owner decision about a narrower question.
+
+A corroborating signal is already in the tree: `docs/srd-sources.md:50` records
+that d20HeroSRD renames "Hero Points" to "Victory Points" and "Power Points" to
+"Character Points". The site does scrub Product Identity where scrubbing is
+possible. It does not scrub the character write-ups, because scrubbing a
+character is deleting it.
+
+**Owed, not done here:** those two comments should be corrected to state the
+character clause, whether or not any adversary work ever proceeds. This lane
+wrote no code, and editing a published legal attribution is an owner-visible
+change rather than an audit's to make.
+
+### 19.3 The data set someone will reach for next — and why it does not close this
+
+`src/data/mutants-and-masterminds/3e/archetypes/` ships 15 archetype modules,
+loader-wired at `src/utils/dataLoader.ts:752`, counted at
+`src/scripts/generate-roadmap-metrics.ts:741`, each citing a real per-archetype
+d20HeroSRD URL (`.../archetypes/battlesuit.ts:23`). The Hero's Handbook's own
+archetypes chapter says the archetypes double as ready-made villains, so this
+looks like the shortest path to closing §3's residual. It is not, for two
+independent reasons.
+
+- **They are not stat blocks, and the type forbids them from becoming one.**
+  `Mam3eArchetype` (`src/types/mam/archetypes.ts:14`) carries `id`, `name`,
+  `source`, `description`, `suggestedSkills` and `features` — no abilities, no
+  defenses, no power level, no attack. That narrowness is deliberate and
+  recorded (`docs/srd-manifest/_exclusions.ts:47`,
+  `mam3e.archetypes.reference-only`). Nothing typed this way can be fielded as a
+  scene combatant the way `DaggerheartAdversary` (`src/types/daggerheart.ts:257`)
+  is.
+- **Their content does not come from the URL they cite.** Every one of the 15
+  files is roughly 46 lines. `battlesuit.ts` claims `sourceBook.page: 1` and
+  carries a one-line description plus two features ("Powered Armor", "Weapons
+  Array") that read as authored, not transcribed; the published archetype is a
+  full PL10 build. This is §18's defect class — a genuine citation attached to
+  content that did not come from it — in a data set the provenance audit did not
+  cover (§17.2 names archetypes among the untreated M&M sets). **It is a live
+  defect regardless of what is decided about adversaries.**
+
+### 19.4 The honest options
+
+Ranked by how much each asks of the owner. None was taken here; taking one is an
+owner decision.
+
+- **(d) Fetch the SRD from an environment that can reach it — RECOMMENDED, and
+  newly available since this section was written.** The content is open, the
+  source is already cited by this repo, and the only obstacle is that CI and this
+  sandbox are proxy-blocked from `d20herosrd.com`. Someone on an ordinary
+  connection can pull the GM-section NPCs once; the encoder then runs offline
+  against a pinned local copy, exactly as `scripts/encode-mam-equipment.mjs`
+  already does against a pinned upstream. This makes (b) unnecessary and is
+  strictly better than (a): it closes §3's residual with genuinely open content
+  rather than by recording an absence. The pinned-copy pattern also means the
+  proxy block never has to be solved in CI.
+- **(a) Ship nothing, by recorded decision.** Close §3's residual the way 3.5e
+  equipment was closed for a structurally identical reason
+  (`src/scripts/srd-coverage.ts:722` — no clean source, and honest absence beats
+  a poisoned denominator, so no target was wired). Cost: M&M 3e stays the one
+  system with no fieldable opposition, and §3 never reaches CLOSED on content.
+  Reversible the day a source appears.
+- **(b) Ship clearly-labelled original content, the way §17 did for equipment.**
+  The machinery exists and is proven: the `originalContentSources` channel
+  (`src/utils/openContentPolicy.ts:94`), the `Original Content (not SRD)` label,
+  the `original` manifest status that keeps such entries out of the open-content
+  denominator, and the NOTICE/attribution split. Adversaries authored against
+  the *rules* — which are Open Game Content — rather than transcribed from any
+  book would be legitimate on the same footing as the 79 original equipment
+  entries. §17.2 already states that footing's cost, though:
+  `original-not-srd.ts` is hand-written and unaudited with no upstream to check
+  it against, and whether it should ship at all is explicitly the owner's call.
+  Option (b) doubles that surface rather than shrinking it.
+- **(c) Repair 19.3 first, independently.** The 15 archetypes should stop citing
+  per-page d20HeroSRD URLs for content that is not on those pages — either
+  re-sourced (blocked by 19.1's reachability finding) or relabelled through
+  (b)'s original-content channel. This is owed whichever of (a) or (b) is chosen,
+  and it is the smallest piece of real work named in this section.
+
+What is **not** an option: encoding from `Humans-and-Heroes`, from a Hero's
+Handbook PDF, or from recall. Each of those produces exactly the artifact §15 and
+§18 were opened to remove, and this time it would be produced knowingly.
+
+---
 
 ## Where the largest open work is
 

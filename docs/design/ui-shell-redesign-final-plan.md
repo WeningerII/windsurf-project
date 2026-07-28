@@ -32,7 +32,7 @@ Read the phase sections below as *what was specified and why*. Each carries an
 | 2 — structural substrate | Shipped, all three parts (reducer, keepalive stage, sync pause/resume-with-reconcile) |
 | 3 — five-tab dock + bestiary off the sheet | Shipped |
 | 4 — pointer-drag keystone | **Shipped behind a default-off flag, not end-to-end gated.** No user sees it |
-| 5 — sheet eviction | **Half shipped.** The dispatch half is complete at 7 of 7 systems; the eviction half — deleting the in-sheet browser wrappers and collapsing the tab grids — did not happen. The dual-home the plan capped at "one chapter" is still live |
+| 5 — sheet eviction | **Shipped, with four wrappers deliberately kept.** Dispatch is complete at 7 of 7 systems; six of the ten in-sheet browser wrappers are deleted and every affected tab grid is collapsed. Four are kept because the Dock does not cover what they do — see the as-built note below |
 | 6 — scene canvas | **Roughly 1 of 5 slices.** The transform render landed as an opt-in alternative behind a default-off flag; 5a, 5b, 5d and 5e are open |
 | 7 — hardening/budgets | **1 of 5 deliverables** (budgets). Chrome-dominance is blocked on Phase 6's unshipped right-rail tray, not merely undone |
 
@@ -53,8 +53,10 @@ gated" and mean it.
   practice and cannot be turned on together to preview the destination.
 - The canvas render also does not carry the map-image layer the DOM grid renders,
   which is a second reason its flag is off.
-- Phase 5's eviction half is a *precondition the plan set for itself* — the "transient
-  dual-home capped to one chapter" risk below is no longer transient.
+- Phase 5's eviction half has now landed for every wrapper that was genuinely a
+  duplicate. The "transient dual-home capped to one chapter" risk below is closed for
+  spell/feat/equipment browsing wherever the Dock actually reaches; what remains is
+  not a dual home but four surfaces the Dock has no equivalent for.
 - Phase 7's chrome-dominance gate is blocked on Phase 6 slice 5b, exactly as Finding
   20 predicted. That prediction held; the work did not follow.
 
@@ -253,22 +255,40 @@ wall-clock problem the Phase-7 budgets doc analyses at length.
 
 ## Phase 5 — Sheet eviction (click-to-add ONLY) + tab-grid collapse + felt micro-feedback + full runtime-copy guard discipline
 
-**As built: the dispatch half shipped at 7 of 7; the eviction half did not ship.**
-Every system now publishes whatever add-handlers it actually has into the Dock's
+**As built: the dispatch half shipped at 7 of 7; the eviction half shipped for six of
+the ten wrappers, and the other four are kept on the record below.**
+Every system publishes whatever add-handlers it actually has into the Dock's
 dispatch registry, and the resolved capability matrix is asserted system by system —
 honestly asymmetric, because two systems carry no shared Spell/Feat/Item concept and
-correctly publish nothing. That part is done and gated.
+correctly publish nothing.
 
-The phase's *name* is not done. The in-sheet browser wrappers this phase exists to
-delete are all still present and still rendered: `Dnd5eFeatBrowserTab`,
-`Pf2eFeatBrowserTab`, `Pf2eEquipmentBrowserTab`, `Pf2eSpellBrowserPanel`,
-`D20FeatBrowserTab`, `D20EquipmentBrowserTab`, `D20SpellBrowserPanel`,
-`MamPowerBrowserTab`, `MamAdvantageBrowserTab`, `MamEquipmentBrowserTab`. The tab grids
-were not collapsed. Consequently the "transient dual-home for spell/feat/equipment,
-capped to one chapter" in the Risk note below is **not transient** — every affected
-system browses the same catalog from two places today, which is the exact condition
-this phase was scheduled to end. Treat that as the live gap, not as an accepted
-boundary; nothing on record says it was consciously deferred.
+**Deleted (the genuine duplicates):** `Dnd5eFeatBrowserTab`, `Pf2eFeatBrowserTab`,
+`Pf2eEquipmentBrowserTab`, `D20FeatBrowserTab`, `D20EquipmentBrowserTab`,
+`MamEquipmentBrowserTab`. Each re-hosted the same shared browser over the same
+loader the Dock already calls for that system, so the sheet copy added nothing.
+Their tab-strip triggers went with them and every affected grid literal was
+recomputed: 5e 8/9 → 7/8 columns, PF2e 10 → 8, d20-legacy 9 → 7, M&M 10 → 9
+triggers. The equipped-armour controls that shared the PF2e and d20-legacy
+equipment-browser tab moved onto Inventory rather than dying with it.
+
+**Kept, with reasons — these are capability the shell does not yet cover, not
+duplication:**
+
+- `Pf2eSpellBrowserPanel` and `D20SpellBrowserPanel` browse a **class/tradition
+  filtered** spell list and learn from it. The Dock's spell tab is the whole system
+  catalog and cannot filter — it is shared-layer and has no access to the open
+  character's class list. Evicting these would replace a targeted surface with an
+  untargeted one.
+- `MamAdvantageBrowserTab` is the **only** advantage browse-and-add surface in the
+  product: `loadFeatsForSystem('mam3e')` returns `[]`, so the Dock's Feats tab is
+  empty for M&M, and advantages have their own loader the Dock never calls.
+- `MamPowerBrowserTab` also hosts the **power-modifier catalog** (extras/flaws), for
+  which the Dock has no tab at all, and it relabels the shared browser into M&M
+  vocabulary (Rank/Type/Action rather than Level/School/Casting Time).
+
+Closing those four properly is a Dock capability task — advantage and
+power-modifier tabs, and a way for a sheet to publish a catalog filter — not a
+deletion. Until then the split is deliberate and recorded here.
 
 **Goal:** Make the character sheet only the character: evict the src/systems/** catalog browser wrappers, collapse the tab bars, and add content via click-to-add + kept inline controls — the sheet has NO drop targets (Finding 8) — one system per atomic PR, with host additions kept near-zero via sibling extraction AND every DELETE OR EDIT of a RUNTIME_COPY_RULES-guarded file paired with its doc-drift.rules.ts + manifest.ts edit (Finding 19).
 
@@ -389,12 +409,21 @@ where reality diverged from what the list assumed.
   faked default allegiance. But the gesture ships behind a default-off flag with a
   skipped acceptance spec, so no user and no CI run has ever exercised it end to end.
   A unit-gated engine is not a proven interaction. This is still a bet.
-- ⚠️ **The dual-home is no longer transient — this is the list's biggest miss.**
-  The original risk was "dock + sheet copies of spell/feat/equipment between Phase 3 and
-  Phase 5, capped to one chapter." Phase 5's eviction half did not ship, so the cap did
-  not hold: every affected system still browses the same catalog from both the dock and
-  its own in-sheet wrapper. Monsters remain exempt (the sheet tab was deleted in Phase
-  3) and the party tab remains exempt (App-documents-sourced, never a sheet tab).
+- ✅ **The dual-home is closed where it was real.** The original risk was "dock +
+  sheet copies of spell/feat/equipment between Phase 3 and Phase 5, capped to one
+  chapter." The cap held late rather than never: the six wrappers that duplicated a
+  catalog the Dock already loads are deleted. What is left is not a second copy of
+  the same surface — it is filtered spell browsing and two M&M catalogs the Dock does
+  not carry, enumerated in the Phase-5 as-built note. Monsters remain exempt (the
+  sheet tab was deleted in Phase 3) and the party tab remains exempt
+  (App-documents-sourced, never a sheet tab).
+- ⚠️ **The Dock had to become correct before it could be the only route.** Making it
+  the single home surfaced three defects that were invisible while a sheet copy
+  existed: it pinned its catalog to whatever system was open at FIRST render (so a
+  PF2e sheet browsed — and would have click-added from — the 5e catalog), it printed
+  M&M Equipment-Point prices as "undefined undefined", and it captioned PF2e Bulk as
+  pounds. All three are fixed and covered. The lesson generalises: a duplicate
+  surface hides bugs in the surface that is meant to replace it.
 - ⚠️ **Placement still has two affordances for the uncovered kinds, and the machine
   is intact.** Finding 21's per-kind mutual exclusion shipped and keys off the same
   single predicate as the drag path, so the invariant holds in every flag state. But

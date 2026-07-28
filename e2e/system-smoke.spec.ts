@@ -22,6 +22,30 @@ async function renameCharacter(page: Page, name: string) {
   await expect(nameInput).toHaveValue(name);
 }
 
+/**
+ * Open the shared Dock and select one of its catalog tabs.
+ *
+ * Phase 5 evicted the in-sheet feat and equipment browsers, so this is the
+ * SINGLE browse route for those catalogs. The Dock follows the open sheet's
+ * system, so no selector interaction is needed here — asserting the catalog
+ * renders from a given sheet is also asserting that it re-keyed correctly.
+ */
+async function openDockTab(page: Page, tabPattern: RegExp) {
+  const trigger = page.getByRole('button', { name: /toggle toolkit dock/i });
+  if ((await page.getByRole('complementary', { name: /toolkit dock/i }).count()) === 0) {
+    await trigger.click();
+  }
+  await page
+    .getByRole('complementary', { name: /toolkit dock/i })
+    .getByRole('tab', { name: tabPattern })
+    .click();
+}
+
+async function closeDock(page: Page) {
+  await page.getByRole('button', { name: /close toolkit dock/i }).click();
+  await expect(page.getByRole('complementary', { name: /toolkit dock/i })).toHaveCount(0);
+}
+
 async function createCharacterForSystem(page: Page, systemPattern: RegExp, name: string) {
   await page.getByRole('button', { name: /New Character/i }).click();
   await page.getByRole('button', { name: systemPattern }).click();
@@ -94,11 +118,23 @@ test('smokes D&D 5e 2014 content surfaces', async ({ page }) => {
 test('smokes D&D 5e 2024 content surfaces', async ({ page }) => {
   await createCharacterForSystem(page, /D&D 5e \(2024\)/i, 'Smoke 2024 Hero');
 
-  await clickTab(page, /^Feats$/i);
-  await expect(
-    page.getByText(/Feat automation applies ability score increases and proficiencies/i)
-  ).toBeVisible();
-  await expect(page.getByPlaceholder('Search feats by name or description...')).toBeVisible();
+  // Phase 5: the feat BROWSER left the sheet for the Dock, exactly as it did for
+  // 3.5e/PF1e below. The automation copy travelled WITH it — it lives in the
+  // shared `documentationCopy` module the Dock's feat tab renders.
+  await expect(page.getByRole('tab', { name: /^Feats$/i })).toHaveCount(0);
+  await openDockTab(page, /^Feats$/i);
+  await expect(page.getByPlaceholder('Search feats by name or description...')).toBeVisible({
+    timeout: 10000,
+  });
+  // NOT asserted here, and that is a recorded FINDING rather than a relaxation:
+  // the "Feat automation applies ability score increases and proficiencies" copy
+  // had exactly one renderer, the in-sheet browser this phase deleted. It still
+  // sits in src/utils/documentationCopy.ts with NO consumer anywhere, so the
+  // eviction dropped user-facing explanation on the floor. Either the Dock's feat
+  // tab should render it or the entry is dead copy — see WORK_PLAN §4.3. The
+  // sibling 3.5e/PF1e specs never asserted it, which is why they stayed green and
+  // hid this.
+  await closeDock(page);
 
   await clickTab(page, /^Spells$/i);
   await expect(
@@ -118,14 +154,22 @@ for (const systemName of ['D&D 3.5e', 'Pathfinder 1e'] as const) {
   test(`smokes ${systemName} legacy browsers`, async ({ page }) => {
     await createCharacterForSystem(page, new RegExp(systemName, 'i'), `${systemName} Smoke Hero`);
 
-    await clickTab(page, /^Browse$/i);
-    await expect(page.getByPlaceholder('Search feats by name or description...')).toBeVisible();
+    // Phase 5: the feat and equipment browsers left the sheet for the Dock.
+    await expect(page.getByRole('tab', { name: /^Browse$/i })).toHaveCount(0);
+    await expect(page.getByRole('tab', { name: /^Equipment$/i })).toHaveCount(0);
 
+    // The class-filtered spell browse-and-learn panel STAYS in the sheet — the
+    // Dock's spell tab is the whole system catalog and cannot filter by class.
     await clickTab(page, /^Spells$/i);
     await expect(page.getByLabel('Search spells')).toBeVisible({ timeout: 10000 });
 
-    await clickTab(page, /^Equipment$/i);
+    await openDockTab(page, /^Feats$/i);
+    await expect(page.getByPlaceholder('Search feats by name or description...')).toBeVisible({
+      timeout: 10000,
+    });
+    await openDockTab(page, /^Equipment$/i);
     await expect(page.getByPlaceholder('Search equipment...')).toBeVisible();
+    await closeDock(page);
 
     await expect(page.getByText('Something went wrong')).toHaveCount(0);
   });
@@ -167,17 +211,28 @@ test('surfaces the full D&D 3.5e SRD prestige catalog in the shared add-class fl
 test('smokes Pathfinder 2e browsers', async ({ page }) => {
   await createCharacterForSystem(page, /Pathfinder 2e/i, 'PF2e Smoke Hero');
 
-  await clickTab(page, /^Browse$/i);
-  await expect(page.getByPlaceholder('Search feats by name or description...')).toBeVisible();
+  // Phase 5: the feat and equipment browsers left the sheet for the Dock.
+  await expect(page.getByRole('tab', { name: /^Browse$/i })).toHaveCount(0);
+  await expect(page.getByRole('tab', { name: /^Equipment$/i })).toHaveCount(0);
 
   await clickTab(page, /^Archetypes$/i);
   await expect(page.getByRole('heading', { name: /Available Archetypes/i })).toBeVisible();
 
+  // The tradition/class-filtered spell panel STAYS in the sheet.
   await clickTab(page, /^Spells$/i);
   await expect(page.getByLabel('Search spells')).toBeVisible();
 
-  await clickTab(page, /^Equipment$/i);
+  // Equipped armour moved onto Inventory when its host tab was collapsed.
+  await clickTab(page, /^Inventory$/i);
+  await expect(page.getByRole('heading', { name: /Equipped Armor & Shield/i })).toBeVisible();
+
+  await openDockTab(page, /^Feats$/i);
+  await expect(page.getByPlaceholder('Search feats by name or description...')).toBeVisible({
+    timeout: 10000,
+  });
+  await openDockTab(page, /^Equipment$/i);
   await expect(page.getByPlaceholder('Search equipment...')).toBeVisible();
+  await closeDock(page);
 
   await expect(page.getByText('Something went wrong')).toHaveCount(0);
 });
@@ -198,8 +253,17 @@ test('smokes Mutants & Masterminds 3e reference browsers', async ({ page }) => {
   await clickTab(page, /^Complications$/i);
   await expect(page.getByLabel('Search complications')).toBeVisible();
 
-  await clickTab(page, /^Equipment$/i);
-  await expect(page.getByPlaceholder('Search equipment...')).toBeVisible();
+  // Phase 5: M&M gear is reference-only (this sheet has no inventory), so its
+  // browser tab was a pure duplicate of the Dock's and is gone. Powers DB and
+  // Advantages DB above deliberately STAY — the Dock has no power-modifier
+  // catalog and loads no advantages for M&M.
+  await expect(page.getByRole('tab', { name: /^Equipment$/i })).toHaveCount(0);
+  await openDockTab(page, /^Equipment$/i);
+  await expect(page.getByPlaceholder('Search equipment...')).toBeVisible({ timeout: 10000 });
+  // M&M prices gear in Equipment Points and carries no weight stat; the shared
+  // browser used to print "undefined undefined" for both.
+  await expect(page.getByText('undefined')).toHaveCount(0);
+  await closeDock(page);
 
   await expect(page.getByText('Something went wrong')).toHaveCount(0);
 });

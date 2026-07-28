@@ -12,7 +12,7 @@ export const ironGolem: Monster = {
   type: 'construct',
   alignment: 'unaligned',
   armorClass: 20,
-  hitPoints: { count: 20, die: 'd10', modifier: 100, notation: '20d10+100' },
+  hitPoints: { count: 24, die: 'd10', modifier: 120, notation: '24d10+120' },
   speed: { walk: 30 },
   abilities: { str: 24, dex: 9, con: 20, int: 3, wis: 11, cha: 1 },
   damageImmunities: ['fire', 'poison', 'psychic', 'bludgeoning', 'piercing', 'slashing'],

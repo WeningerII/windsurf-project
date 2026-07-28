@@ -1,6 +1,5 @@
 import { SystemDefinition } from '../../registry/types';
 import { Dnd5e2024DataModel, createDefaultDnd5e2024Data } from './data-model';
-import { Dnd5e2024Engine } from './engine';
 import { lazyWithPreload } from '../../utils/lazyWithPreload';
 
 export const Dnd5e2024SystemDef: SystemDefinition<Dnd5e2024DataModel> = {
@@ -62,7 +61,11 @@ export const Dnd5e2024SystemDef: SystemDefinition<Dnd5e2024DataModel> = {
     { id: 'survival', name: 'Survival', attribute: 'wis' },
   ],
   createDefaultData: createDefaultDnd5e2024Data,
-  engine: new Dnd5e2024Engine(),
+  // Lazy engine: the dynamic import keeps this system's engine — and the shared
+  // rules-IR surface it pulls in — out of the eager registry bootstrap chunk,
+  // matching how the validator, legal-actions and creation-plan seams already
+  // load. The registry resolves it once and caches the instance.
+  loadEngine: () => import('./engine').then((m) => new m.Dnd5e2024Engine()),
   // Shared 5e validation, stamped with the 2024 systemId and code-split out of
   // the eager bootstrap chunk like every other system's validator.
   loadValidator: () =>

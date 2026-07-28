@@ -1,9 +1,11 @@
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { Dock } from '../Dock';
+import * as dataLoader from '../../utils/dataLoader';
 import type { CharacterDocument } from '../../types/core/document';
+import type { Item } from '../../types/equipment/items';
 
 // The four SRD tabs are browse-only in this structural test (party is the
 // default active tab), but useDockResources still fires the loaders — stub them
@@ -29,6 +31,12 @@ function makeDoc(id: string, name: string): CharacterDocument {
 describe('Dock', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // clearAllMocks keeps implementations, so per-test mockResolvedValue calls
+    // would leak into later tests without this reset to the empty default.
+    vi.mocked(dataLoader.loadSpellsForSystem).mockResolvedValue([]);
+    vi.mocked(dataLoader.loadFeatsForSystem).mockResolvedValue([]);
+    vi.mocked(dataLoader.loadEquipmentForSystem).mockResolvedValue([]);
+    vi.mocked(dataLoader.loadMonstersForSystem).mockResolvedValue([]);
   });
 
   it('is collapsed to a summon control by default, with no dock tabs shown', () => {
@@ -145,6 +153,81 @@ describe('Dock', () => {
 
       expect(screen.queryByRole('tab')).not.toBeInTheDocument();
       expect(shellEscape).not.toHaveBeenCalled();
+    });
+  });
+
+  // With the in-sheet browsers evicted (Phase 5) the Dock is the ONLY catalog
+  // route, so these three behaviours stopped being cosmetic: a Dock pinned to
+  // the wrong system would click-add foreign content into the open sheet, and
+  // the per-system price/weight shapes the deleted wrappers each normalised
+  // locally now have to be handled once, here.
+  describe('single-catalog-home obligations', () => {
+    it('follows the open sheet system rather than pinning to the boot value', async () => {
+      const user = userEvent.setup();
+      // Boot with no sheet open: the Dock falls back to the first known system.
+      const { rerender } = render(<Dock documents={[]} />);
+      await user.click(screen.getByRole('button', { name: /toggle toolkit dock/i }));
+
+      const selector = screen.getByRole('combobox', { name: /select game system/i });
+      expect((selector as HTMLSelectElement).value).not.toBe('pf2e');
+
+      // Opening a PF2e sheet must re-key the catalogs. Before this, the Dock
+      // stayed on the boot system and its click-add would have pushed a 5e
+      // spell id into the PF2e sheet.
+      rerender(<Dock documents={[]} activeSystemId="pf2e" />);
+      await waitFor(() => {
+        expect((selector as HTMLSelectElement).value).toBe('pf2e');
+      });
+      await waitFor(() => {
+        expect(dataLoader.loadSpellsForSystem).toHaveBeenCalledWith('pf2e');
+      });
+    });
+
+    it('prints M&M Equipment-Point prices and hides their absent weight', async () => {
+      const user = userEvent.setup();
+      vi.mocked(dataLoader.loadEquipmentForSystem).mockResolvedValue([
+        // M&M gear carries a bare EP number and no weight at all; a template
+        // over the declared {amount, currency} shape printed "undefined undefined".
+        {
+          id: 'utility-belt',
+          name: 'Utility Belt',
+          type: 'gear',
+          cost: 1,
+          description: 'Pouches.',
+        },
+      ] as unknown as Item[]);
+
+      render(<Dock documents={[]} activeSystemId="mam3e" />);
+      await user.click(screen.getByRole('button', { name: /toggle toolkit dock/i }));
+      await user.click(screen.getByRole('tab', { name: /equipment/i }));
+
+      expect(await screen.findByText('Utility Belt')).toBeInTheDocument();
+      expect(screen.getByText('1 ep')).toBeInTheDocument();
+      expect(screen.queryByText(/undefined/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/lbs/)).not.toBeInTheDocument();
+    });
+
+    it('captions PF2e item weight as Bulk, not pounds', async () => {
+      const user = userEvent.setup();
+      vi.mocked(dataLoader.loadEquipmentForSystem).mockResolvedValue([
+        {
+          id: 'explorers-clothing',
+          name: "Explorer's Clothing",
+          type: 'armor',
+          rarity: 'common',
+          cost: { amount: 1, currency: 'gp' },
+          weight: 1,
+          description: 'Travel clothes.',
+        },
+      ] as unknown as Item[]);
+
+      render(<Dock documents={[]} activeSystemId="pf2e" />);
+      await user.click(screen.getByRole('button', { name: /toggle toolkit dock/i }));
+      await user.click(screen.getByRole('tab', { name: /equipment/i }));
+
+      expect(await screen.findByText("Explorer's Clothing")).toBeInTheDocument();
+      expect(screen.getByText(/1 Bulk/)).toBeInTheDocument();
+      expect(screen.queryByText(/lbs/)).not.toBeInTheDocument();
     });
   });
 });

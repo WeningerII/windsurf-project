@@ -8,7 +8,11 @@ export const soldier: Background = {
 
   skillProficiencies: ['athletics', 'intimidation'],
 
-  toolProficiencies: ['one-gaming-set', 'vehicles-land'],
+  // SRD 5.2 grants one Gaming Set only. Land Vehicles is the SRD 5.1 Soldier's
+  // second tool and does not appear in the 2024 background; see the
+  // "backgrounds/soldier|toolProficiencies" upstreamDefects note in
+  // scripts/data/srd-fidelity-baseline.json for why the pinned source reads ''.
+  toolProficiencies: ['one-gaming-set'],
 
   equipment: [
     'insignia-of-rank',

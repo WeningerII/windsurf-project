@@ -1,29 +1,17 @@
 import React from 'react';
-import {
-  Shield,
-  Target,
-  User,
-  BookOpen,
-  Backpack,
-  StickyNote,
-  Sparkles,
-  Sword,
-} from 'lucide-react';
+import { Shield, Target, User, BookOpen, Backpack, StickyNote, Sparkles } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/Tabs';
 import { Badge } from '../../../components/ui/Badge';
-import type { FeatDefinition } from '../../../types/character-options/feats';
 import type { Feature } from '../../../types/core/character';
 import type { CharacterDocument } from '../../../types/core/document';
 import type { Item } from '../../../types/equipment/items';
-import type { GameSystemId, Skill } from '../../../types/game-systems';
+import type { Skill } from '../../../types/game-systems';
 import type { Spell } from '../../../types/magic/spells';
 import { Dnd35eDataModel } from '../../dnd35e/data-model';
 import type { Pf1eTrait } from '../../pf1e/data-model';
 import { Pf1eDataModel } from '../../pf1e/data-model';
 import { D20AbilitiesTab } from './D20AbilitiesTab';
-import { D20EquipmentBrowserTab } from './D20EquipmentBrowserTab';
 import { EquippedArmorSection } from '../../../components/EquippedArmorSection';
-import { D20FeatBrowserTab } from './D20FeatBrowserTab';
 import { D20FeatsTab } from './D20FeatsTab';
 import { D20InventoryTab } from './D20InventoryTab';
 import { D20NotesTab } from './D20NotesTab';
@@ -50,7 +38,6 @@ type D20InventoryItem = {
 
 interface Props {
   document: CharacterDocument<D20LegacyData>;
-  systemId: GameSystemId;
   isPf1e: boolean;
   canUpdate: boolean;
   baseAttributes: Record<string, number>;
@@ -69,9 +56,6 @@ interface Props {
   traitOptions: Pf1eTrait[];
   traitsLoaded: boolean;
   selectedTraitId: string;
-  featDefs: FeatDefinition[];
-  featsLoaded: boolean;
-  onLoadFeatDefs: () => void | Promise<void>;
   spellsLoaded: boolean;
   spells: Spell[];
   spellListIds: string[];
@@ -83,7 +67,6 @@ interface Props {
   manualSpellcastingExtras?: D20LegacyData['manualSpellcastingExtras'];
   arcaneSpecialtySchool?: string;
   onLoadSpells: () => void | Promise<void>;
-  equipmentLoaded: boolean;
   equipmentItems: Item[];
   onLoadEquipment: () => void | Promise<void>;
   onEquipArmor: (item: {
@@ -141,7 +124,6 @@ function countTrainedSkills(skillRanks: Record<string, number>): number {
 
 export const D20LegacyTabs: React.FC<Props> = ({
   document,
-  systemId,
   isPf1e,
   canUpdate,
   baseAttributes,
@@ -160,9 +142,6 @@ export const D20LegacyTabs: React.FC<Props> = ({
   traitOptions,
   traitsLoaded,
   selectedTraitId,
-  featDefs,
-  featsLoaded,
-  onLoadFeatDefs,
   spellsLoaded,
   spells,
   spellListIds,
@@ -174,7 +153,6 @@ export const D20LegacyTabs: React.FC<Props> = ({
   manualSpellcastingExtras,
   arcaneSpecialtySchool,
   onLoadSpells,
-  equipmentLoaded,
   equipmentItems,
   onLoadEquipment,
   onEquipArmor,
@@ -212,24 +190,24 @@ export const D20LegacyTabs: React.FC<Props> = ({
 }) => {
   const trainedSkillCount = countTrainedSkills(skillRanks);
 
-  const warmFeatBrowser = () => {
-    void onLoadFeatDefs();
-    void D20FeatBrowserTab.preload();
-  };
-
   const warmSpellsTab = () => {
     void onLoadSpells();
     void D20SpellBrowserPanel.preload();
   };
 
-  const warmEquipmentBrowser = () => {
+  // The equipment CATALOG still loads for the Inventory tab's
+  // EquippedArmorSection, which resolves armour/shield/weapon stats out of it.
+  // Browsing that catalog is the shared Dock's job since the Phase-5 eviction.
+  const warmEquipment = () => {
     void onLoadEquipment();
-    void D20EquipmentBrowserTab.preload();
   };
 
+  // Seven tabs: the Feats *browser* and the Equipment *browser* were evicted in
+  // Phase 5 (the shared Dock is the single catalog home), and the equipped-armour
+  // controls that sat beside the latter moved onto Inventory.
   return (
     <Tabs defaultValue="abilities">
-      <TabsList className="w-full grid grid-cols-9">
+      <TabsList className="w-full grid grid-cols-7">
         <TabsTrigger value="abilities" className="flex items-center gap-1.5">
           <User className="w-4 h-4" /> Abilities
         </TabsTrigger>
@@ -253,15 +231,6 @@ export const D20LegacyTabs: React.FC<Props> = ({
           )}
         </TabsTrigger>
         <TabsTrigger
-          value="feat-browser"
-          className="flex items-center gap-1.5"
-          onClick={warmFeatBrowser}
-          onFocus={warmFeatBrowser}
-          onPointerEnter={warmFeatBrowser}
-        >
-          <BookOpen className="w-4 h-4" /> Browse
-        </TabsTrigger>
-        <TabsTrigger
           value="spells"
           className="flex items-center gap-1.5"
           onClick={warmSpellsTab}
@@ -271,15 +240,12 @@ export const D20LegacyTabs: React.FC<Props> = ({
           <Sparkles className="w-4 h-4" /> Spells
         </TabsTrigger>
         <TabsTrigger
-          value="equipment-browser"
+          value="inventory"
           className="flex items-center gap-1.5"
-          onClick={warmEquipmentBrowser}
-          onFocus={warmEquipmentBrowser}
-          onPointerEnter={warmEquipmentBrowser}
+          onClick={warmEquipment}
+          onFocus={warmEquipment}
+          onPointerEnter={warmEquipment}
         >
-          <Sword className="w-4 h-4" /> Equipment
-        </TabsTrigger>
-        <TabsTrigger value="inventory" className="flex items-center gap-1.5">
           <Backpack className="w-4 h-4" /> Inventory
           {inventory.length > 0 && (
             <Badge variant="secondary" className="ml-1 text-[10px] px-1.5 py-0">
@@ -351,10 +317,6 @@ export const D20LegacyTabs: React.FC<Props> = ({
         />
       </TabsContent>
 
-      <TabsContent value="feat-browser">
-        <D20FeatBrowserTab systemId={systemId} featsLoaded={featsLoaded} featDefs={featDefs} />
-      </TabsContent>
-
       <TabsContent value="spells">
         <D20SpellsTab
           spellsLoaded={spellsLoaded}
@@ -380,7 +342,7 @@ export const D20LegacyTabs: React.FC<Props> = ({
         />
       </TabsContent>
 
-      <TabsContent value="equipment-browser">
+      <TabsContent value="inventory">
         <EquippedArmorSection
           equipmentItems={equipmentItems}
           equipment={document.system.equipment}
@@ -390,10 +352,6 @@ export const D20LegacyTabs: React.FC<Props> = ({
           onUnequipArmor={onUnequipArmor}
           onUnequipShield={onUnequipShield}
         />
-        <D20EquipmentBrowserTab equipmentLoaded={equipmentLoaded} equipmentItems={equipmentItems} />
-      </TabsContent>
-
-      <TabsContent value="inventory">
         <D20InventoryTab
           currency={currency}
           inventory={inventory}

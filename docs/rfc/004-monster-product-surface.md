@@ -6,6 +6,14 @@
 **Supersedes:** the `no monster product surface` boundary previously stated in
 `docs/MASTER_PLAN.md`
 **Implementation status lives in:** `docs/MASTER_PLAN.md`
+**Amended 2026-07-27:** every reference below to authoring a monster denominator
+in `docs/srd-manifest/` is superseded. Those catalogs were demoted to
+provenance-only because they are generated *from* the loaders, making the
+measurement circular (`docs/GAPS.md` §6). The monster denominator this RFC calls
+for is now the independent reverse diff in `docs/generated/srd-coverage.md`,
+where `monsters` is a wired target for the in-scope systems. The requirement is
+unchanged — a cited denominator, measured like every other category — only its
+home moved.
 
 > An RFC records a decision — its context, the options weighed, the choice, and
 > the constraints that choice imposes. It does not own rollout status. Where this

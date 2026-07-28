@@ -8,6 +8,8 @@ export const acolyte: Background = {
 
   skillProficiencies: ['insight', 'religion'],
 
+  toolProficiencies: ['calligraphers-supplies'],
+
   languageProficiencies: {
     count: 2,
     options: ['any'],

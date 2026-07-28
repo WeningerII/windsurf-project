@@ -30,6 +30,8 @@ import { createDefaultMam3eData } from '../../systems/mam3e/data-model';
 import { DaggerheartSheet } from '../../systems/daggerheart/sheet';
 import { createDefaultDaggerheartData } from '../../systems/daggerheart/data-model';
 import { applyDnd5eFeatTemplate } from '../../systems/dnd5e/shared/featTemplate';
+import { SheetDispatchProvider } from '../../contexts/SheetDispatchContext';
+import { useSheetDispatch } from '../../contexts/sheet-dispatch-context';
 import { acolyte as acolyteBackground } from '../../data/dnd/5e-2014/backgrounds/acolyte';
 import { ranger as rangerClass2024 } from '../../data/dnd/5e-2024/classes/ranger';
 import { battlesuitArchetype } from '../../data/mutants-and-masterminds/3e/archetypes/battlesuit';
@@ -651,7 +653,7 @@ describe('System Sheets', () => {
     );
   });
 
-  it('shows the feats tab but no bestiary tab for 5e-2014 (bestiary evicted to the Dock)', () => {
+  it('shows neither a bestiary nor a feat-browser tab for 5e-2014 (both evicted to the Dock)', () => {
     const doc = makeDoc('dnd-5e-2014', createDefaultDnd5eData());
 
     render(
@@ -661,10 +663,14 @@ describe('System Sheets', () => {
       />
     );
 
-    expect(screen.getByRole('tab', { name: /^feats$/i })).toBeInTheDocument();
     // Phase 3: the read-only bestiary moved out of the sheet into the shared
     // Dock / Library Bestiary route, so the sheet tab strip has no Monsters tab.
     expect(screen.queryByRole('tab', { name: /monsters/i })).not.toBeInTheDocument();
+    // Phase 5: the feat BROWSER tab followed it. Browsing and click-adding feats
+    // is the Dock's single home now (SheetDispatchParity covers the add path);
+    // the sheet keeps only the character's own selected feats, on Features.
+    expect(screen.queryByRole('tab', { name: /^feats$/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /^features$/i })).toBeInTheDocument();
   });
 
   it('persists 5e-2014 feature options through shared sheet rerenders', async () => {
@@ -775,32 +781,49 @@ describe('System Sheets', () => {
     ).toBe(false);
   });
 
-  it('warms and renders the extracted shared 5e feat browser tab', async () => {
-    const user = userEvent.setup();
+  // Phase-5 eviction: the shared 5e feat BROWSER tab is gone. What the sheet
+  // must still do is load feat DEFINITIONS for a character that carries feats,
+  // because the Features tab resolves each selected feat's automation against
+  // them — that load used to ride on the browser tab's existence.
+  it('hosts no feat browser tab, and loads feat definitions only for a character with feats', async () => {
     vi.spyOn(dataLoader, 'loadClassesForSystem').mockResolvedValue([]);
     vi.spyOn(dataLoader, 'loadSpeciesForSystem').mockResolvedValue([]);
     vi.spyOn(dataLoader, 'loadBackgroundsForSystem').mockResolvedValue([]);
     const loadFeatsSpy = vi.spyOn(dataLoader, 'loadFeatsForSystem').mockResolvedValue([resilient]);
-    const doc = makeDoc('dnd-5e-2024', createDefaultDnd5e2024Data());
+    const featlessDoc = makeDoc('dnd-5e-2024', createDefaultDnd5e2024Data());
 
-    render(
+    const { unmount } = render(
       <Dnd5e2024Sheet
-        document={doc as CharacterDocument<ReturnType<typeof createDefaultDnd5e2024Data>>}
+        document={featlessDoc as CharacterDocument<ReturnType<typeof createDefaultDnd5e2024Data>>}
         onUpdate={vi.fn()}
       />
     );
 
-    const featsTab = screen.getByRole('tab', { name: /^feats$/i });
-    fireEvent.focus(featsTab);
-    fireEvent.pointerEnter(featsTab);
-    fireEvent.focus(featsTab);
+    expect(screen.queryByRole('tab', { name: /^feats$/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Select Resilient' })).not.toBeInTheDocument();
+    expect(loadFeatsSpy).not.toHaveBeenCalled();
+    unmount();
+
+    const withFeats = createDefaultDnd5e2024Data();
+    withFeats.feats = [
+      {
+        id: resilient.id,
+        name: resilient.name,
+        description: resilient.description,
+        source: resilient.source,
+      },
+    ];
+    const featedDoc = makeDoc('dnd-5e-2024', withFeats);
+
+    render(
+      <Dnd5e2024Sheet
+        document={featedDoc as CharacterDocument<ReturnType<typeof createDefaultDnd5e2024Data>>}
+        onUpdate={vi.fn()}
+      />
+    );
+
     await waitFor(() => {
       expect(loadFeatsSpy).toHaveBeenCalledWith('dnd-5e-2024');
-    });
-    await user.click(featsTab);
-    expect(await screen.findByRole('button', { name: 'Select Resilient' })).toBeInTheDocument();
-    await waitFor(() => {
-      expect(loadFeatsSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -966,34 +989,52 @@ describe('System Sheets', () => {
         onUpdate={onUpdate}
       />
     );
-    expect(screen.getByRole('tab', { name: /^feats$/i })).toBeInTheDocument();
     // Phase 3: bestiary evicted from the sheet into the shared Dock / Library.
     expect(screen.queryByRole('tab', { name: /monsters/i })).not.toBeInTheDocument();
+    // Phase 5: the feat browser followed it.
+    expect(screen.queryByRole('tab', { name: /^feats$/i })).not.toBeInTheDocument();
     await user.click(screen.getByRole('tab', { name: /masteries/i }));
     expect(screen.getByText('Weapon Masteries')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Cleave' }));
     expect(onUpdate).toHaveBeenCalled();
   });
 
-  it('applies feat automation from the Dnd5e2024Sheet feat browser', async () => {
+  // The in-sheet feat browser was the old add route; the Dock is the single one
+  // now. This asserts the SAME automation outcome through the surviving route:
+  // Dock -> SheetDispatchContext -> the sheet's existing handleFeatSelect.
+  it('applies feat automation when the Dock dispatches a feat into the 2024 sheet', async () => {
     const user = userEvent.setup();
     const onUpdate = vi.fn();
-    vi.spyOn(dataLoader, 'loadFeatsForSystem').mockResolvedValue([resilient]);
     const doc = makeDoc('dnd-5e-2024', createDefaultDnd5e2024Data());
 
+    function AddFeatProbe() {
+      const dispatch = useSheetDispatch();
+      return (
+        <button
+          type="button"
+          disabled={!dispatch.canAddFeat}
+          onClick={() => dispatch.addFeat(resilient)}
+        >
+          dock-add-feat
+        </button>
+      );
+    }
+
     render(
-      <Dnd5e2024Sheet
-        document={doc as CharacterDocument<ReturnType<typeof createDefaultDnd5e2024Data>>}
-        onUpdate={onUpdate}
-      />
+      <SheetDispatchProvider>
+        <Dnd5e2024Sheet
+          document={doc as CharacterDocument<ReturnType<typeof createDefaultDnd5e2024Data>>}
+          onUpdate={onUpdate}
+        />
+        <AddFeatProbe />
+      </SheetDispatchProvider>
     );
 
-    await user.click(screen.getByRole('tab', { name: /^feats$/i }));
+    const addButton = await screen.findByRole('button', { name: 'dock-add-feat' });
     await waitFor(() => {
-      expect(dataLoader.loadFeatsForSystem).toHaveBeenCalledWith('dnd-5e-2024');
+      expect(addButton).toBeEnabled();
     });
-
-    await user.click(await screen.findByRole('button', { name: 'Select Resilient' }));
+    await user.click(addButton);
 
     await waitFor(() => {
       expect(onUpdate).toHaveBeenCalled();
@@ -1451,8 +1492,13 @@ describe('System Sheets', () => {
     expect(screen.getByRole('option', { name: 'Wizard' })).toBeInTheDocument();
   });
 
+  // Phase-5 eviction: 3.5e/PF1e lost their in-sheet feat and equipment BROWSER
+  // tabs (both were browse-only duplicates of the Dock's). What survives in the
+  // sheet is the class-filtered spell browse-and-learn panel — the Dock's spell
+  // tab is unfiltered and cannot know the character's class list — and the
+  // equipped-armour controls, which moved onto Inventory.
   it(
-    'warms and renders the extracted shared D20 browser tabs',
+    'keeps the class-filtered spell panel, and hosts no feat or equipment browser tab',
     async () => {
       const user = userEvent.setup();
       const loadFeatsSpy = vi.spyOn(dataLoader, 'loadFeatsForSystem').mockResolvedValue([
@@ -1492,30 +1538,11 @@ describe('System Sheets', () => {
 
       render(<D20LegacySheet document={doc} onUpdate={vi.fn()} />);
 
-      const browseTab = screen.getByRole('tab', { name: /^browse$/i });
-      fireEvent.focus(browseTab);
-      fireEvent.pointerEnter(browseTab);
-      fireEvent.focus(browseTab);
-      await waitFor(
-        () => {
-          expect(loadFeatsSpy).toHaveBeenCalledWith('dnd-3.5e');
-        },
-        { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
-      );
-      await user.click(browseTab);
-      expect(
-        await screen.findByRole(
-          'button',
-          { name: 'Select Power Attack' },
-          { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
-        )
-      ).toBeInTheDocument();
-      await waitFor(
-        () => {
-          expect(loadFeatsSpy).toHaveBeenCalledTimes(1);
-        },
-        { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
-      );
+      // Both evicted tabs are gone from the strip, and nothing loads the feat
+      // catalog into the sheet any more.
+      expect(screen.queryByRole('tab', { name: /^browse$/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole('tab', { name: /^equipment$/i })).not.toBeInTheDocument();
+      expect(loadFeatsSpy).not.toHaveBeenCalled();
 
       const spellsTab = screen.getByRole('tab', { name: /^spells$/i });
       fireEvent.focus(spellsTab);
@@ -1541,32 +1568,23 @@ describe('System Sheets', () => {
         { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
       );
 
-      const equipmentTab = screen.getByRole('tab', { name: /^equipment$/i });
-      fireEvent.focus(equipmentTab);
-      fireEvent.pointerEnter(equipmentTab);
+      // The equipment CATALOG is still loaded — the equipped-armour controls
+      // resolve armour stats out of it — but from the Inventory tab, which is
+      // where those controls now live. No equipment BROWSER is rendered.
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i });
+      fireEvent.focus(inventoryTab);
+      fireEvent.pointerEnter(inventoryTab);
       await waitFor(
         () => {
           expect(loadEquipmentSpy).toHaveBeenCalledWith('dnd-3.5e');
         },
         { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
       );
-      await user.click(equipmentTab);
+      await user.click(inventoryTab);
       expect(
-        await screen.findByPlaceholderText(
-          /search equipment/i,
-          {},
-          { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
-        )
+        await screen.findByText(/equipped armor/i, {}, { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS })
       ).toBeInTheDocument();
-      expect(
-        await screen.findByText('Chain Shirt', {}, { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS })
-      ).toBeInTheDocument();
-      await waitFor(
-        () => {
-          expect(loadEquipmentSpy).toHaveBeenCalledTimes(1);
-        },
-        { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
-      );
+      expect(screen.queryByPlaceholderText(/search equipment/i)).not.toBeInTheDocument();
     },
     HEAVY_SHEET_TEST_TIMEOUT_MS
   );
@@ -1688,7 +1706,7 @@ describe('System Sheets', () => {
   });
 
   it(
-    'warms and renders the extracted PF2e browser tabs',
+    'warms archetypes and the class-filtered spell panel, with no PF2e browser tabs left',
     async () => {
       const user = userEvent.setup();
       const loadFeatsSpy = vi.spyOn(dataLoader, 'loadFeatsForSystem').mockResolvedValue([
@@ -1750,30 +1768,12 @@ describe('System Sheets', () => {
         />
       );
 
-      const browseTab = screen.getByRole('tab', { name: /^browse$/i });
-      fireEvent.focus(browseTab);
-      fireEvent.pointerEnter(browseTab);
-      fireEvent.focus(browseTab);
-      await waitFor(
-        () => {
-          expect(loadFeatsSpy).toHaveBeenCalledWith('pf2e');
-        },
-        { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
-      );
-      await user.click(browseTab);
-      expect(
-        await screen.findByRole(
-          'button',
-          { name: 'Select Reactive Shield' },
-          { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
-        )
-      ).toBeInTheDocument();
-      await waitFor(
-        () => {
-          expect(loadFeatsSpy).toHaveBeenCalledTimes(1);
-        },
-        { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
-      );
+      // Phase-5 eviction: PF2e's feat and equipment BROWSER tabs are gone (both
+      // were browse-only duplicates of the Dock's), so nothing in the sheet
+      // loads the feat catalog any more.
+      expect(screen.queryByRole('tab', { name: /^browse$/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole('tab', { name: /^equipment$/i })).not.toBeInTheDocument();
+      expect(loadFeatsSpy).not.toHaveBeenCalled();
 
       const archetypesTab = screen.getByRole('tab', { name: /archetypes/i });
       fireEvent.focus(archetypesTab);
@@ -1819,32 +1819,22 @@ describe('System Sheets', () => {
         { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
       );
 
-      const equipmentTab = screen.getByRole('tab', { name: /^equipment$/i });
-      fireEvent.focus(equipmentTab);
-      fireEvent.pointerEnter(equipmentTab);
+      // The equipment CATALOG still loads — the equipped-armour controls resolve
+      // Bulk/AC out of it — but from Inventory, where those controls now live.
+      const inventoryTab = screen.getByRole('tab', { name: /^inventory$/i });
+      fireEvent.focus(inventoryTab);
+      fireEvent.pointerEnter(inventoryTab);
       await waitFor(
         () => {
           expect(loadEquipmentSpy).toHaveBeenCalledWith('pf2e');
         },
         { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
       );
-      await user.click(equipmentTab);
+      await user.click(inventoryTab);
       expect(
-        await screen.findByPlaceholderText(
-          /search equipment/i,
-          {},
-          { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
-        )
+        await screen.findByText(/equipped armor/i, {}, { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS })
       ).toBeInTheDocument();
-      expect(
-        await screen.findByText("Explorer's Clothing", {}, { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS })
-      ).toBeInTheDocument();
-      await waitFor(
-        () => {
-          expect(loadEquipmentSpy).toHaveBeenCalledTimes(1);
-        },
-        { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
-      );
+      expect(screen.queryByPlaceholderText(/search equipment/i)).not.toBeInTheDocument();
     },
     HEAVY_SHEET_TEST_TIMEOUT_MS
   );
@@ -2634,18 +2624,13 @@ describe('System Sheets', () => {
       expect(loadAdvantagesSpy).toHaveBeenCalledTimes(1);
     });
 
-    const equipmentTab = screen.getByRole('tab', { name: /^equipment$/i });
-    fireEvent.focus(equipmentTab);
-    fireEvent.pointerEnter(equipmentTab);
-    await waitFor(() => {
-      expect(loadEquipmentSpy).toHaveBeenCalledWith('mam3e');
-    });
-    await user.click(equipmentTab);
-    expect(await screen.findByPlaceholderText(/search equipment/i)).toBeInTheDocument();
-    expect(await screen.findByText('Utility Belt')).toBeInTheDocument();
-    await waitFor(() => {
-      expect(loadEquipmentSpy).toHaveBeenCalledTimes(1);
-    });
+    // Phase-5 eviction: M&M gear is reference-only (this sheet has no inventory
+    // or equipped-item surface), so its browser tab was a pure duplicate of the
+    // Dock's Equipment tab and is gone. The Powers DB and Advantages DB tabs
+    // above deliberately STAY — the Dock has no power-modifier catalog and
+    // loads no advantages for M&M, so those are capability, not duplication.
+    expect(screen.queryByRole('tab', { name: /^equipment$/i })).not.toBeInTheDocument();
+    expect(loadEquipmentSpy).not.toHaveBeenCalled();
   });
 
   it(

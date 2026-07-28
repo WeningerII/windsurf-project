@@ -38,7 +38,6 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
   const systemId = document.systemId as GameSystemId;
   const profBonus = engineProfBonus(d.level);
   const canUpdate = Boolean(onUpdate);
-  const showFeatBrowser = true;
   const showFeatureOptionBrowser = systemId === 'dnd-5e-2014';
 
   const {
@@ -55,13 +54,11 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
     spells,
     spellsLoaded,
     warmEquipmentTab,
-    warmFeatBrowser,
     warmFeaturesTab,
     warmSpellsTab,
   } = useDnd5eSheetResources({
     systemId,
     featCount: d.feats.length,
-    showFeatBrowser,
     showFeatureOptionBrowser,
   });
 
@@ -188,7 +185,6 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
     d,
     canUpdate,
     profBonus,
-    showFeatBrowser,
     showFeatureOptionBrowser,
     pendingClassId: templateHandlers.pendingClassId,
     setPendingClassId: templateHandlers.setPendingClassId,
@@ -234,7 +230,6 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
     replaceSystem,
     onNameChange,
     warmEquipmentTab,
-    warmFeatBrowser,
     warmFeaturesTab,
     warmSpellsTab,
     handleClassRowChange: templateHandlers.handleClassRowChange,

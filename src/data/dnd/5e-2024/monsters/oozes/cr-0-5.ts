@@ -12,14 +12,14 @@ export const gelatinousCube: Monster = {
   type: 'ooze',
   alignment: 'unaligned',
   armorClass: 6,
-  hitPoints: { count: 10, die: 'd10', modifier: 20, notation: '10d10+20' },
+  hitPoints: { count: 6, die: 'd10', modifier: 30, notation: '6d10+30' },
   speed: { walk: 15 },
-  abilities: { str: 14, dex: 3, con: 16, int: 1, wis: 6, cha: 1 },
+  abilities: { str: 14, dex: 3, con: 20, int: 1, wis: 6, cha: 1 },
   conditionImmunities: ['blinded', 'charmed', 'deafened', 'exhaustion', 'frightened', 'prone'],
   senses: ['blindsight 60 ft.', 'passive Perception 8'],
   languages: [],
-  challengeRating: 3,
-  experiencePoints: 700,
+  challengeRating: 2,
+  experiencePoints: 450,
   specialAbilities: [
     {
       name: 'Engulfing Movement',

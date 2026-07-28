@@ -43,8 +43,35 @@ A scene is a persisted `SceneDocument` (`src/types/core/scene.ts`,
 
 The **current** scene is never stored; it is the pure fold of
 `initialState + events` (see below). Persistence lives in
-`src/utils/sceneStorage.ts` under the browser-local key **`rpg-scenes-v1`**
-(`SCENES_STORAGE_KEY`), wrapped as `{ version, scenes, lastModified }`.
+`src/utils/sceneStorage.ts` and is **two-tier**, the same shape character
+documents use (`src/utils/documentStorage.ts`, `src/utils/indexedDBAdapter.ts`):
+
+- **IndexedDB** (`scenes` object store, keyed by scene `id`) is the durable
+  tier. It is what makes an append-only event log viable across a multi-year
+  campaign — the browser grants it storage measured in a percentage of free
+  disk, not a fixed few megabytes.
+- **localStorage** (key **`rpg-scenes-v1`**, `SCENES_STORAGE_KEY`, wrapped as
+  `{ version, scenes, lastModified }`) is the fallback for engines without
+  IndexedDB (private browsing, older browsers), the synchronous fast path for
+  first paint, and the cross-tab `storage` channel.
+
+`loadScenes()` is async: it reads both tiers and merges them by `updatedAt`
+(the localStorage copy wins exact ties, being the synchronously-committed one),
+and on first contact promotes a localStorage-only collection into IndexedDB.
+That migration is idempotent — a meta flag short-circuits repeats and the store
+is keyed by scene `id`, so a repeat run replaces rather than duplicates.
+`loadScenesFromLocalStorage()` is the sync fallback read, named for exactly
+what it returns.
+
+`saveScenes()` is async and writes localStorage first, synchronously, before it
+awaits IndexedDB, so an unload-time flush still commits. It resolves with which
+tiers are current instead of throwing. When a collection outgrows the
+localStorage quota the write there is rejected, IndexedDB keeps the whole
+collection, and the now-stale localStorage snapshot is **removed** rather than
+left to be merged back on the next load. Cross-tab reconciliation degrades with
+it: past the localStorage ceiling, tabs no longer see each other's scene edits
+live.
+
 `exportScenes`/`importScenes` round-trip the documents as JSON; `useScenes`
 (`src/hooks/useScenes.ts`) owns the React lifecycle and merges cross-tab
 `storage` events by `updatedAt`. There is **no Supabase requirement** — backend
@@ -59,7 +86,7 @@ referenced sheet can change without rewriting history.
 ## Event sourcing and the fold
 
 `foldSceneEvents(scene)` (`src/scene/runtime.ts`) is a **pure** function: it
-clones `initialState`, sorts events by `sequence`, validates each
+clones `initialState`, orders events with `compareSceneEvents`, validates each
 (`validateSceneEvent`), and applies the valid ones (`applySceneEvent`). It never
 mutates its input and returns `{ state, issues }`. Two validation layers are kept
 distinct on purpose:
@@ -82,6 +109,33 @@ so a corrupt event (missing/wrong-shaped payload) becomes a recorded
 `scene-event-malformed` issue and is skipped — a single bad event can never
 crash the fold or the sidebar that folds every scene. App-built events never hit
 that net, so it contains malformed data without masking real logic.
+
+### Replay order is intrinsic to the data
+
+`compareSceneEvents(a, b)` (`src/scene/runtime.ts`) is the fold's total order:
+`sequence`, then `createdAt`, then event `id` (codepoint compare — production ids
+are UUIDs). `sequence` alone is **not** a total order. It is minted from a local
+counter (`scene.events.length + 1`), so two devices appending offline both mint
+the same number, and `Array#sort` is stable — a bare `a.sequence - b.sequence`
+would resolve the tie to array insertion order, which is a property of how the
+merge assembled the array rather than of the log. The extra tiebreaks make the
+byte-identical-fold guarantee below hold under merge as well as locally.
+
+Two deliberate non-decisions:
+
+- **Merge never renumbers `sequence`.** Rewriting history to repair ordering
+  would break the append-only contract; the comparator resolves the collision
+  instead.
+- **A duplicate `sequence` is a `warning`, not an `error`.** The fold *skips*
+  events whose validation produced an error, so reporting a merge collision as
+  an error would delete history in order to describe it. The
+  `scene-event-sequence-duplicate` issue surfaces the collision while every
+  event still folds.
+
+Event ids therefore carry weight beyond identity: check and oracle RNG is seeded
+from them, so callers must supply globally unique ids.
+`buildEncounterSceneEvents` (`src/scene/encounterBuilder.ts`) requires an
+`eventIdFactory` for exactly this reason — there is no count-derived fallback.
 
 ## Seeded replay
 
@@ -220,6 +274,14 @@ phase status and sequencing.
   manual rebalance ergonomics (the encounter panel's per-monster +/- controls) —
   built.
 - **Backend sync for scenes** (RFC 001) — **not built.** Scenes remain
-  browser-local under `rpg-scenes-v1`; only documents and campaigns sync. The
-  event log is sync-friendly by construction (compare last sequence); conflict
-  policy is out of scope here and belongs to `docs/rfc/001-backend-sync.md`.
+  browser-local (IndexedDB, falling back to `rpg-scenes-v1` in localStorage);
+  only documents and campaigns sync. **Correction 2026-07-28:** an earlier
+  revision called the log "sync-friendly by construction (compare last
+  sequence)". Comparing last sequence is precisely the primitive that FAILS —
+  `sequence` is a local counter (`events.length + 1`), so two devices appending
+  offline both mint the same value, and `Array#sort` being stable resolved the
+  tie by array insertion order, a property of how the array was assembled rather
+  than of the events. The log is sync-friendly because every random value is
+  resolved at authoring time and seeded from the event's own id, and because
+  `compareSceneEvents` (sequence, then `createdAt`, then id) now gives a total,
+  device-independent order. Conflict

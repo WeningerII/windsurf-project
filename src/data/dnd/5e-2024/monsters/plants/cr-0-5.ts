@@ -12,7 +12,7 @@ export const awakenedShrub: Monster = {
   type: 'plant',
   alignment: 'chaotic good',
   armorClass: 9,
-  hitPoints: { count: 1, die: 'd6', notation: '1d6' },
+  hitPoints: { count: 3, die: 'd6', notation: '3d6' },
   speed: { walk: 20 },
   abilities: { str: 3, dex: 8, con: 11, int: 10, wis: 10, cha: 6 },
   damageVulnerabilities: ['fire'],

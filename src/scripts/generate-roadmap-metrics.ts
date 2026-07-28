@@ -42,8 +42,6 @@ import { mm3eArchetypes } from '../data/mutants-and-masterminds/3e/archetypes';
 import { complications as mam3eComplications } from '../data/mutants-and-masterminds/3e/complications';
 import { powerModifiers as mam3ePowerModifiers } from '../data/mutants-and-masterminds/3e/modifiers';
 import { allPf2eArchetypes } from '../data/pathfinder/2e/archetypes';
-import { SRD_MANIFESTS } from '../../docs/srd-manifest';
-import type { ManifestCategory } from '../../docs/srd-manifest';
 import { COMPUTE_REGISTERS } from '../../docs/compute-register';
 import { MANUAL_EXCLUSIONS } from '../../docs/srd-manifest/_exclusions';
 
@@ -276,13 +274,38 @@ function markdownTableRow(cells: Array<string | number>): string {
   return `| ${cells.join(' | ')} |`;
 }
 
-type ContentCompletionRow = {
+/**
+ * One measured (system × category) row of Denominator A, as
+ * `docs/generated/srd-coverage.json` records it.
+ */
+type SrdCoverageRow = {
   systemId: string;
   systemLabel: string;
-  category: ManifestCategory;
-  encoded: number;
-  target: number;
+  category: string;
+  srdSource: string;
+  covered: number;
+  srdTotal: number;
+  pct: number;
+  missingCount: number;
+  loaderCount: number;
+  overInclusionCount: number;
+};
+
+type SrdCoverageReport = {
+  generatedAt: string;
+  rows: SrdCoverageRow[];
+  absent: Array<{ systemLabel: string; category: string }>;
+};
+
+/** Per-system rollup of Denominator A, as this report publishes it. */
+type ContentCoverageRow = {
+  systemId: string;
+  systemLabel: string;
+  categories: number;
+  covered: number;
+  srdTotal: number;
   percent: number;
+  shortfallCategories: number;
 };
 
 type ComputeCompletionRow = {
@@ -294,23 +317,6 @@ type ComputeCompletionRow = {
   byLayer: Record<string, { verified: number; inScope: number }>;
 };
 
-/** Manifest categories that map directly to a loader, enabling an id-join. */
-const MANIFEST_LOADER_KEY: Partial<Record<ManifestCategory, LoaderCategory>> = {
-  spells: 'spells',
-  classes: 'classes',
-  species: 'species',
-  backgrounds: 'backgrounds',
-  traits: 'traits',
-  featureOptions: 'featureOptions',
-  archetypes: 'archetypes',
-  complications: 'complications',
-  monsters: 'monsters',
-  equipment: 'equipment',
-  feats: 'feats',
-  advantages: 'advantages',
-  powerModifiers: 'powerModifiers',
-};
-
 function systemLabelFor(systemId: string): string {
   return systems.find((system) => system.id === systemId)?.label ?? systemId;
 }
@@ -320,33 +326,52 @@ function toPercent(numerator: number, denominator: number): number {
 }
 
 /**
- * Content completeness (Denominator A). Where a manifest category maps to a
- * loader, completeness is the JOIN of manifest ids with actually-loaded ids, so
- * a wrong/absent id surfaces as a real gap rather than a self-asserted 100%.
+ * Denominator A, read from the independent reverse diff.
+ *
+ * This report used to compute content completeness by joining the ids in
+ * `docs/srd-manifest/` against actually-loaded ids. That was circular: those
+ * manifests are GENERATED FROM the loaders, so the same population sat on both
+ * sides of the ratio and every category could only ever read 100% — including
+ * categories whose denominator had drifted to roughly a tenth of what the
+ * loader ships. Per the decision in `docs/GAPS.md` §6, Denominator A is now
+ * `docs/generated/srd-coverage.md`, whose denominators are fetched from
+ * open-content SRD indexes OUTSIDE this repo and therefore cannot be moved by
+ * changing the product.
+ *
+ * That measurement needs the network, so it is not recomputed here (this script
+ * runs inside `check:generated-docs` on every CI pass). It is read from the
+ * committed `srd-coverage.json` sidecar written by the same `npm run
+ * srd:coverage` run, so the two reports cannot disagree.
  */
-function buildContentCompletion(idsByKey: Map<string, Set<string>>): ContentCompletionRow[] {
-  const rows: ContentCompletionRow[] = [];
-  for (const manifest of SRD_MANIFESTS) {
-    const inScope = manifest.entries.filter(
-      (entry) => entry.status === 'encoded' || entry.status === 'missing'
-    );
-    const categories = [...new Set(inScope.map((entry) => entry.category))];
-    for (const category of categories) {
-      const entries = inScope.filter((entry) => entry.category === category);
-      const loaderKey = MANIFEST_LOADER_KEY[category];
-      const loadedIds = loaderKey ? idsByKey.get(`${manifest.systemId}:${loaderKey}`) : undefined;
-      const encoded = loadedIds
-        ? entries.filter((entry) => loadedIds.has(entry.id)).length
-        : entries.filter((entry) => entry.status === 'encoded').length;
-      rows.push({
-        systemId: manifest.systemId,
-        systemLabel: systemLabelFor(manifest.systemId),
-        category,
-        encoded,
-        target: entries.length,
-        percent: toPercent(encoded, entries.length),
-      });
-    }
+async function readSrdCoverage(rootDir: string): Promise<SrdCoverageReport | null> {
+  try {
+    const raw = await fs.readFile(path.join(rootDir, 'docs/generated/srd-coverage.json'), 'utf8');
+    return JSON.parse(raw) as SrdCoverageReport;
+  } catch {
+    // Absent sidecar is reported honestly in the rendered section rather than
+    // silently substituting a fabricated (or loader-derived) denominator.
+    return null;
+  }
+}
+
+/** Per-system rollup of the measured (system × category) coverage rows. */
+function buildContentCoverage(report: SrdCoverageReport | null): ContentCoverageRow[] {
+  if (!report) return [];
+  const rows: ContentCoverageRow[] = [];
+  for (const system of systems) {
+    const measured = report.rows.filter((row) => row.systemId === system.id);
+    if (measured.length === 0) continue;
+    const covered = measured.reduce((sum, row) => sum + row.covered, 0);
+    const srdTotal = measured.reduce((sum, row) => sum + row.srdTotal, 0);
+    rows.push({
+      systemId: system.id,
+      systemLabel: system.label,
+      categories: measured.length,
+      covered,
+      srdTotal,
+      percent: toPercent(covered, srdTotal),
+      shortfallCategories: measured.filter((row) => row.missingCount > 0).length,
+    });
   }
   return rows;
 }
@@ -454,7 +479,8 @@ function buildMarkdownReport(
   generatedAtIso: string,
   loaderRows: LoaderAuditRow[],
   moduleRows: ModuleAuditRow[],
-  contentCompletion: ContentCompletionRow[],
+  contentCoverage: ContentCoverageRow[],
+  contentCoverageMeasuredAt: string | null,
   computeCompletion: ComputeCompletionRow[]
 ): string {
   const loaderBySystem = createSummaryBySystem(loaderRows);
@@ -607,25 +633,41 @@ function buildMarkdownReport(
   );
   lines.push('');
 
+  lines.push('### Content Coverage (Denominator A — independent SRD reverse diff)');
   lines.push(
-    '### Content Catalog Parity (Denominator A — provenance; loader-derived, NOT independent SRD parity)'
+    '_Per-system rollup of `docs/generated/srd-coverage.md`, which is the sole content denominator. Denominators are open-content SRD entry indexes fetched from OUTSIDE this repo and diffed against the loaders by normalized name, so `Covered / SRD Total` is genuine coverage — how much of each measured SRD category the product actually ships — and changing the product cannot move the denominator. Only wired (system × category) targets are counted; unwired and closed-by-no-source categories are listed in that file rather than folded in at an assumed 100%, so these percentages describe what is MEASURED, not the whole SRD._'
   );
   lines.push(
-    '_The manifests in docs/srd-manifest/ are generated from the loaders, so this measures CATALOG PARITY + provenance (every shipped open-content entry is encoded, loader-backed, and cited) — it is NOT independent data-parity against the full published SRD. Genuine SRD parity (comparing the shipped product to an external authoritative SRD index to detect omitted entries) requires that external index, which is unavailable in this environment and is flagged unresolved per the "cite, never invent" policy. A 100% here does not assert published-SRD coverage._'
+    '_Superseded the loader-derived `docs/srd-manifest/` catalogs (decision 2026-07-21, executed 2026-07-27 — `docs/GAPS.md` §6). Those manifests are generated FROM the loaders, so joining their ids against loaded ids put the same population on both sides of the ratio and could only ever read 100%. They are now provenance-only and no longer published as a denominator here; per-category coverage and the named missing entries live in `docs/generated/srd-coverage.md`._'
   );
-  if (contentCompletion.length === 0) {
-    lines.push('_No content denominators authored yet._');
+  if (contentCoverage.length === 0) {
+    lines.push(
+      '_Denominator A unavailable: `docs/generated/srd-coverage.json` is missing. Run `npm run srd:coverage` (requires network) to measure it. No substitute figure is published here._'
+    );
   } else {
-    lines.push(markdownTableRow(['System', 'Category', 'Encoded', 'Target', 'Complete']));
-    lines.push(markdownTableRow(['---', '---', '---:', '---:', '---:']));
-    contentCompletion.forEach((row) => {
+    lines.push(
+      `_Measured ${contentCoverageMeasuredAt ?? 'unknown'} by \`npm run srd:coverage\`; republished here, never recomputed._`
+    );
+    lines.push(
+      markdownTableRow([
+        'System',
+        'Categories Measured',
+        'Covered',
+        'SRD Total',
+        'Coverage',
+        'Categories With Gaps',
+      ])
+    );
+    lines.push(markdownTableRow(['---', '---:', '---:', '---:', '---:', '---:']));
+    contentCoverage.forEach((row) => {
       lines.push(
         markdownTableRow([
           row.systemLabel,
-          row.category,
-          row.encoded,
-          row.target,
+          row.categories,
+          row.covered,
+          row.srdTotal,
           `${row.percent}%`,
+          row.shortfallCategories,
         ])
       );
     });
@@ -644,13 +686,13 @@ function buildMarkdownReport(
   }
   lines.push('');
   lines.push(
-    `_Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compute-register/. Enumerated manual boundaries excluded from both: ${MANUAL_EXCLUSIONS.length}._`
+    `_Denominators: the independent SRD reverse diff in docs/generated/srd-coverage.md (content) and the cited registers in docs/compute-register/ (compute). Enumerated manual boundaries excluded from both: ${MANUAL_EXCLUSIONS.length}, registered in \`docs/srd-manifest/_exclusions.ts\`._`
   );
   lines.push('');
 
   lines.push('### Content Integrity (Denominator A — provenance + policy)');
   lines.push(
-    "_Share of each system's **open-content** loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant). It is NOT coverage vs the full published SRD: measuring which SRD entries are MISSING requires an external authoritative SRD index that is unavailable in this environment, so that coverage dimension is flagged unresolved rather than asserted._"
+    "_Share of each system's **open-content** loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant) and is a PROVENANCE measure, not a denominator: it says nothing about which SRD entries are MISSING. That is what the Content Coverage section above measures, against the external indexes in `docs/generated/srd-coverage.md`. A 100% here is compatible with a low coverage figure there._"
   );
   lines.push(
     '_`Original (non-SRD)` counts entries this project AUTHORED rather than transcribed from an open document, declared via `originalContentSources` in `src/utils/openContentPolicy.ts`. They are cited and shippable, but they are not open content, so they are excluded from BOTH sides of the Integrity ratio — counting them as compliant open content would launder exactly the mislabeling that channel exists to expose (see `docs/mam3e-equipment-provenance.md`). `Open-Content Pop.` is `Loader Entries` minus that column._'
@@ -696,15 +738,10 @@ function buildMarkdownReport(
 
 async function main(): Promise<void> {
   const loaderRows: LoaderAuditRow[] = [];
-  const idsByKey = new Map<string, Set<string>>();
 
   for (const system of systems) {
     for (const loader of loaderDefinitions) {
       const items = await loader.load(system.id);
-      idsByKey.set(
-        `${system.id}:${loader.key}`,
-        new Set(items.filter(isItemRecord).map((item) => item.id))
-      );
       const metrics = computeMetrics(system.id, loader.key, items);
 
       if (metrics.rawCount === 0 && metrics.uniqueCount === 0) {
@@ -763,14 +800,19 @@ async function main(): Promise<void> {
     },
   ];
 
+  const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+  const projectRoot = path.resolve(scriptDir, '../..');
+
   const generatedAtIso = new Date().toISOString();
-  const contentCompletion = buildContentCompletion(idsByKey);
+  const srdCoverage = await readSrdCoverage(projectRoot);
+  const contentCoverage = buildContentCoverage(srdCoverage);
   const computeCompletion = buildComputeCompletion();
   const markdown = buildMarkdownReport(
     generatedAtIso,
     loaderRows,
     moduleRows,
-    contentCompletion,
+    contentCoverage,
+    srdCoverage?.generatedAt ?? null,
     computeCompletion
   );
 
@@ -789,14 +831,19 @@ async function main(): Promise<void> {
     policy: strictOpenContentPolicy,
     productReachableSummary,
     repoResidentSummary,
-    contentCompletion,
+    // Denominator A. `source` names the file this was measured in, and
+    // `measuredAt` is that run's timestamp — republished, never recomputed
+    // here, so this report cannot drift away from srd-coverage.md.
+    contentCoverage: {
+      source: 'docs/generated/srd-coverage.md',
+      measuredAt: srdCoverage?.generatedAt ?? null,
+      bySystem: contentCoverage,
+    },
     computeCompletion,
     loaderAudit: loaderRows,
     moduleAudit: moduleRows,
   };
 
-  const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-  const projectRoot = path.resolve(scriptDir, '../..');
   const generatedDir = path.join(projectRoot, 'docs/generated');
 
   await fs.mkdir(generatedDir, { recursive: true });

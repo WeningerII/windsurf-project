@@ -271,9 +271,11 @@ export interface EquippedItem {
   weaponVersatileDie?: number;
   /**
    * PF2e striking rune tier on this weapon: 'striking' rolls 2 weapon damage
-   * dice, 'greater' 3, 'major' 4. Type-only for now — no engine consumes it
-   * yet (Lane F wires it into damage assembly); optional so all existing
-   * equipment is unaffected.
+   * dice, 'greater' 3, 'major' 4. Consumed by
+   * `src/rules/combatants/characterCombatant.ts`, which SETS the damage-dice
+   * count from the tier when the system profile has `supportsStrikingRunes`
+   * (PF2e only); other systems leave the base count untouched. Optional, so
+   * all existing equipment is unaffected.
    */
   strikingRune?: 'striking' | 'greater' | 'major';
   /** Weapon properties driving assembly: 'light' | 'versatile' | 'two-handed' | … */
