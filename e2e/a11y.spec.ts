@@ -120,35 +120,37 @@ test('landing / empty-roster page has no critical or serious a11y violations', a
 });
 
 /**
- * QUARANTINED — an unresolved `color-contrast` finding on this surface, NOT a
- * dodge. What is known, so whoever picks this up starts where I stopped:
+ * UN-QUARANTINED 2026-07-28. This was a `test.fixme` whose note said resolving
+ * it needed the live DOM — computed styles on the ancestor chain — which was
+ * not available when it was written. Run against a real browser, it took about
+ * a minute, and the finding was real.
  *
- *   - axe reports `#6b788c` on `#ffffff` = 4.47:1 (needs 4.5) on the ability-
- *     score labels, `<span class="text-xs font-semibold text-muted-foreground
- *     uppercase">`, in `src/components/sheet/AbilityScoreGrid.tsx:285`.
- *   - That colour is NOT what the token declares. The built CSS ships
- *     `--muted-foreground: 215.4 16.3% 43%` = `#5c6a80` = a genuine **5.49:1**,
- *     emitted as `text-muted-foreground{color:hsl(var(--muted-foreground))}`
- *     with NO alpha. `src/index.css` shows it was already darkened once
- *     (46.9% -> 43% L) for this very criterion.
- *   - `#6b788c` is exactly `#5c6a80` composited over white at ~90.6% opacity,
- *     consistent across all three channels — so something applies opacity that
- *     the declaration does not. Freezing animations (see `freezeAnimations`,
- *     which is kept — it is good hygiene for every other scan here) did NOT
- *     change the result, so the entrance fade on the two dialogs
- *     (`animate-in fade-in zoom-in-95`) is not the source.
- *   - Reproducing further needs the live DOM (computed styles on the ancestor
- *     chain); it is not determinable from source alone, and Playwright is
- *     CI-only in the dev container.
+ * What it actually was: `<span>No class levels are selected yet.</span>`, the
+ * creation-validation warning, inheriting `text-amber-600` (`#d97706`) on the
+ * card's `#ffffff` at 12px = **3.18:1** against AA's 4.5. Tailwind's amber-600
+ * simply does not pass as body text on white; amber-700 (`#b45309`) is 5.02:1
+ * and is what the app now uses. Dark mode was already fine — `amber-400` on the
+ * dark card is 11.98:1 — so only the light-mode value moved.
  *
- * Quarantined at the TEST level on purpose. The alternative — adding
- * `color-contrast` to `KNOWN_A11Y_DEBT` — would blind the gate to every genuine
- * contrast regression on every surface, which is far worse than one skipped
- * scan. Every other surface here stays scanned, `color-contrast` included.
+ * The old note's diagnosis did NOT survive contact with the live DOM, and that
+ * is worth recording rather than quietly deleting. It described `#6b788c` on
+ * ability-score labels at 4.47:1 and theorised "something applies opacity that
+ * the declaration does not". On this surface every element in the chain from
+ * the failing span up to the dialog reports `opacity: 1` and `filter: none`,
+ * and the colour is exactly what the class declares. Whether that earlier
+ * finding was a different element since fixed, or a misread, it was not this.
  *
- * Tracked in `docs/GAPS.md`.
+ * `freezeAnimations` above is kept regardless: scanning mid-fade measures a
+ * composite, and that reasoning stands on its own for every scan in this file.
+ *
+ * The quarantine was the right call at the time — the alternative, adding
+ * `color-contrast` to `KNOWN_A11Y_DEBT`, would have blinded the gate to every
+ * genuine contrast regression on every surface. But a quarantine hides a real
+ * defect for as long as it lasts: this one was shipping a WCAG AA failure on
+ * the surface where every character in the app is created, for all seven
+ * systems, and nothing caught it because the only test that looked was skipped.
  */
-test.fixme('the New Character dialog and the guided-creation wizard have no critical or serious a11y violations', async ({
+test('the New Character dialog and the guided-creation wizard have no critical or serious a11y violations', async ({
   page,
 }) => {
   // Two surfaces the gate never reached before: the portaled system-picker

@@ -44,7 +44,7 @@ const systemAccents: Record<GameSystemId, { icon: ReactNode; gradient: string; a
   'dnd-3.5e': {
     icon: <Wand2 className="w-6 h-6" />,
     gradient: 'from-amber-500/10 to-yellow-500/10',
-    accent: 'text-amber-600 dark:text-amber-400',
+    accent: 'text-amber-700 dark:text-amber-400',
   },
   pf1e: {
     icon: <Swords className="w-6 h-6" />,

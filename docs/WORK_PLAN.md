@@ -319,13 +319,21 @@ Per-system engines now load through the registry's `loadEngine`/`peekEngine`/`pr
 
 **Two constraints nobody had written down until now:** the two flag-gated phases are *mutually exclusive in practice* — enabling the Phase-6 canvas flag disables Phase-4 drag (`sceneDragEnabled && !sceneCanvasEnabled`), so they cannot both be on to preview the destination. And the canvas render drops the map-image layer the DOM grid carries, which is a second reason its flag stays off.
 
-### 6.3 `p5.infra-gaps` residuals — **READY**
+### 6.3 `p5.infra-gaps` residuals — ~~READY~~ **NOT WORK — mislabelled**
 
-Four recorded decisions rather than omissions: no analytics network sink (`createBeaconSink` is seam-only), Sentry release wiring deferred behind the bundle budget, server-side 5xx alerting is ops provisioning, and the §12 a11y contrast quarantine.
+This has no work item in it. All four entries are *recorded decisions*: no analytics network sink (`createBeaconSink` is seam-only, deliberately), Sentry release wiring deferred behind the bundle budget, server-side 5xx alerting is ops provisioning rather than code, and the a11y contrast quarantine — which §6.4 has now closed.
 
-### 6.4 The quarantined a11y contrast finding — **READY**
+It read **READY** because the section exists, not because anything in it is dispatchable. Corrected 2026-07-28 rather than left to consume a lane's scoping time. The three genuine decisions still stand as decisions; if any is ever reversed it becomes a new item, not this one.
 
-`e2e/a11y.spec.ts` has one `test.fixme` on the dialog/wizard scan. Needs a live browser to reproduce — it is not determinable from source. Deliberately quarantined at the *test* level rather than by allowlisting `color-contrast`, which would blind the gate to every genuine contrast regression on every surface.
+### 6.4 ~~The quarantined a11y contrast finding~~ — **DONE 2026-07-28: it was a real WCAG AA failure**
+
+The `test.fixme` on the dialog/wizard scan is gone and the test runs. Its note said resolving it needed the live DOM (computed styles up the ancestor chain), which was true and took about a minute once a browser was actually available.
+
+**The finding was real and was shipping.** The creation-validation warning — `<span>No class levels are selected yet.</span>` — inherits `text-amber-600` (`#d97706`) on the card's white at 12px, which is **3.18:1** against AA's 4.5:1. Tailwind's amber-600 does not pass as body text on white anywhere; the app now uses amber-700 (`#b45309`, 5.02:1). Dark mode was already compliant (`amber-400` at 11.98:1) so only the light value moved, across the 13 call sites that shared the colour.
+
+**The old note's diagnosis did not survive the live DOM**, and that is recorded in the spec rather than deleted: it described `#6b788c` on ability-score labels at 4.47:1 and inferred an unexplained opacity, but every element from the failing span up to the dialog reports `opacity: 1` and `filter: none`, and the colour is exactly what the class declares.
+
+**The transferable point:** the quarantine was correctly placed at the test level rather than by allowlisting `color-contrast` — but it still hid a live AA failure on the surface where every character in this app is created, for all seven systems, for as long as it stood. A skipped test is a gate that cannot fail.
 
 ### 6.5 Toolchain modernization — **READY**
 

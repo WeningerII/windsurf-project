@@ -100,19 +100,19 @@ export const ConditionPicker: React.FC<Props> = ({
             <span className="font-medium">{c.name}</span>
             {c.value != null && (
               <div className="flex items-center gap-0.5">
-                <span className="tabular-nums font-bold text-amber-600">{c.value}</span>
+                <span className="tabular-nums font-bold text-amber-700">{c.value}</span>
                 {onChange && (
                   <>
                     <button
                       onClick={() => adjustValue(c.id, 1)}
-                      className="w-4 h-4 flex items-center justify-center hover:text-amber-600"
+                      className="w-4 h-4 flex items-center justify-center hover:text-amber-700"
                       title="Increase"
                     >
                       <ChevronUp className="w-3 h-3" />
                     </button>
                     <button
                       onClick={() => adjustValue(c.id, -1)}
-                      className="w-4 h-4 flex items-center justify-center hover:text-amber-600"
+                      className="w-4 h-4 flex items-center justify-center hover:text-amber-700"
                       title="Decrease"
                     >
                       <ChevronDown className="w-3 h-3" />
