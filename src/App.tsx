@@ -207,7 +207,10 @@ function AppContent() {
     const wasActive = prevSceneSurfaceRef.current;
     prevSceneSurfaceRef.current = isSceneSurface;
     if (!wasActive && isSceneSurface) {
-      reloadScenes();
+      // Fire-and-forget: the reconcile merges into state when it resolves, and
+      // a failed re-read leaves the live collection untouched rather than
+      // surfacing as an unhandled rejection.
+      void reloadScenes().catch(() => undefined);
     }
   }, [isSceneSurface, reloadScenes]);
 
