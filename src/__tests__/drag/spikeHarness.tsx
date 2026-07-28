@@ -25,17 +25,28 @@ const SpikeCell = memo(function SpikeCell({ x, y }: { x: number; y: number }) {
   );
 });
 
-/** The transformed ~900-cell surface. Ref is attached to the transform wrapper. */
+/**
+ * The transformed surface. Ref is attached to the transform wrapper.
+ *
+ * `width`/`height` default to the 30x30 spike and exist so a test can render
+ * the SAME surface at two sizes and compare the drop reconcile between them.
+ * That is what makes "the reconcile does a bounded amount of work over 900
+ * cells" checkable deterministically: the cost must not move with cell count.
+ */
 export const SpikeGrid = memo(function SpikeGrid({
   scale = 1,
   tx = 0,
   ty = 0,
   gridRef,
+  width = SPIKE_GRID_WIDTH,
+  height = SPIKE_GRID_HEIGHT,
 }: {
   scale?: number;
   tx?: number;
   ty?: number;
   gridRef?: React.Ref<HTMLDivElement>;
+  width?: number;
+  height?: number;
 }) {
   return (
     <div
@@ -43,15 +54,13 @@ export const SpikeGrid = memo(function SpikeGrid({
       role="grid"
       style={{
         display: 'grid',
-        gridTemplateColumns: `repeat(${SPIKE_GRID_WIDTH}, 24px)`,
+        gridTemplateColumns: `repeat(${width}, 24px)`,
         transform: `translate(${tx}px, ${ty}px) scale(${scale})`,
         transformOrigin: '0 0',
       }}
     >
-      {Array.from({ length: SPIKE_GRID_HEIGHT }).flatMap((_, y) =>
-        Array.from({ length: SPIKE_GRID_WIDTH }).map((__, x) => (
-          <SpikeCell key={`${x},${y}`} x={x} y={y} />
-        ))
+      {Array.from({ length: height }).flatMap((_, y) =>
+        Array.from({ length: width }).map((__, x) => <SpikeCell key={`${x},${y}`} x={x} y={y} />)
       )}
     </div>
   );

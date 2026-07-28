@@ -55,7 +55,8 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | --- | --- |
 | [11](#11-provenance-over-inclusion-outside-srcdata-added-2026-07-25) | OC-1 awaits an owner decision; the gate's honest residual is unclosed |
 | [19](#19-mm-3e-adversaries--the-source-search-and-why-nothing-was-encoded-added-2026-07-28) | The open-content M&M adversary source exists but this sandbox cannot reach it; options recorded, owner decides |
-| [20](#20-the-first-full-chain-green-run--what-twelve-never-executed-gates-actually-proved-added-2026-07-28) | Run itself CLOSED; the orphaned feat-automation copy and the unpinned shared-formatter contract are OPEN |
+| [20](#20-the-first-full-chain-green-run--what-twelve-never-executed-gates-actually-proved-added-2026-07-28) | Run itself CLOSED; the orphaned feat-automation copy is OPEN (the shared-formatter contract is now pinned — WORK_PLAN §6.6) |
+| [21](#21-wall-clock-assertions-cannot-be-gates-under-parallel-workers-added-2026-07-28) | CLOSED — `gateBudget` re-instrumented from wall-clock to counted DOM mutations plus scale-invariance |
 
 **Partly closed — evidence for what shipped, residual named inside:**
 
@@ -2364,6 +2365,76 @@ tests out of `.claude/worktrees/**`, so agent worktrees inflated a local run to
   smoke test, and only because it took down the entire page. A per-system fixture
   test over one shared browser row would have caught it at unit level. See
   `WORK_PLAN` §6.6.
+
+---
+
+## 21. Wall-clock assertions cannot be gates under parallel workers (added 2026-07-28)
+
+**Status: CLOSED for the one instance that existed.** Recorded because this is
+the *second* gate in this repo to hit the same wall, the first one reached the
+right answer and the lesson was never generalised, and the next person adding a
+performance gate will reach for `performance.now()` again.
+
+### 21.1 What happened
+
+Restoring vitest parallelism (§20.2, `maxWorkers: 4`) made
+`src/__tests__/drag/gateBudget.test.tsx` fail about **1 run in 3** under CPU
+contention. It asserted `performance.now()` deltas against
+`RECONCILE_BUDGET_MS = 50`. The reconcile had not regressed; four workers were
+sharing four cores.
+
+**A millisecond assertion cannot distinguish "the code got slower" from "the
+machine was busy."** That is not a flaky test to retry — it is an instrument
+that does not measure the thing the gate is about, and under any real
+parallelism it produces both false failures and (on an idle runner) false
+passes.
+
+### 21.2 The repo had already solved this once
+
+`check:keepalive-budget` counts **DOC writes, not wall-clock**, and
+`docs/MASTER_PLAN.md` records exactly why: the timing spread observed there
+(12.6–48.5 ms for four attribute writes) was "an order of magnitude above the
+signal". That gate was made deterministic on purpose. `gateBudget` never got the
+same treatment, and nothing pointed from one to the other — so the conclusion sat
+in the plan while a second gate shipped with the defect the plan describes.
+
+### 21.3 What replaced it, and why it is stronger
+
+The test's own header always said the intent was that "the reconcile does a
+bounded amount of synchronous work over 900 cells". Wall-clock was only ever a
+proxy for *bounded work*. The instrument is now the work itself:
+
+- **DOM mutations are counted** during the drop reconcile via a
+  `MutationObserver` drained with `takeRecords()`, which is synchronous and so
+  has no dependence on how loaded the machine is. **Measured: 1 mutation**, for
+  both sub-gates.
+- **Scale invariance is asserted** — the same drop runs on a 100-cell grid and a
+  900-cell grid and the counts must be **equal** (1 and 1). This is the real
+  invariant the millisecond budget was gesturing at: a regression that made the
+  drop touch every cell would pass a 50 ms budget on an idle machine and fail
+  this one on every machine.
+- **The absolute ceiling came down 50 ms → 8 mutations**, set from the measured
+  1 rather than guessed. The old budget would have accepted a 40× regression.
+- **The counter self-checks**: a test asserts it returns 0, 1 and 25 for 0, 1
+  and 25 real DOM insertions. A silently-zero counter would have made the whole
+  file pass regardless of the reconcile — the "gate that cannot fail" shape this
+  file exists to catch.
+
+`SpikeGrid` gained optional `width`/`height` (defaulting to the 30×30 spike) so
+the two sizes can be rendered. It is test-only and not in any shipped chunk.
+
+### 21.4 The rule worth carrying
+
+**A gate may not assert on wall-clock in the unit suite.** Time is a legitimate
+thing to *record* — both sub-gates still `console.info` their counts — but the
+assertion has to be on something deterministic: counted operations, counted
+mutations, or an invariant like scale-independence. Real-paint timing is a
+Playwright concern where the budget is about a frame, not a proxy.
+
+The generalisable half: when a gate is flaky under parallelism, the question is
+not "what timeout makes it pass" but "is this instrument measuring the property
+I am gating on". Here it was not, and the replacement is both deterministic and
+sharper than the thing it replaced.
 
 ---
 

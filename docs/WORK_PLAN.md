@@ -339,6 +339,26 @@ The `test.fixme` on the dialog/wizard scan is gone and the test runs. Its note s
 
 Risk-ordered, verified against `package.json`: React 18.2→19, Tailwind 3.3→4, Vite 7.3→8, `lucide-react` 0.294→1.17, `@types/node` 20→22, and runtime-pin reconciliation (`.nvmrc` pins 20.19.0 while `engines` already admits 22 and 24).
 
+### 6.7 ~~Wall-clock assertions flake under parallel workers~~ — **DONE 2026-07-28**
+
+Surfaced by the CI work, not planned: restoring vitest parallelism made
+`src/__tests__/drag/gateBudget.test.tsx` fail ~1 run in 3 under contention. It
+asserted `performance.now()` deltas against a 50 ms budget, which cannot tell
+"the code got slower" from "the machine was busy" — so it was never a gate under
+parallelism, in either direction.
+
+Re-instrumented to counted DOM mutations plus a scale-invariance assertion (the
+same drop on 100 cells and 900 cells must cost identically; both measure 1). The
+absolute ceiling came down from 50 ms to 8 mutations, set from measurement. The
+counter self-checks so it cannot silently return zero. Full write-up and the
+generalisable rule — **a gate may not assert on wall-clock in the unit suite** —
+in `docs/GAPS.md` §21.
+
+Worth noting for anyone adding a performance gate here: this repo had already
+reached that conclusion once, for `check:keepalive-budget`, and the reasoning
+was recorded in `MASTER_PLAN` while a second gate shipped with the same defect.
+Nothing pointed from one to the other.
+
 ### 6.6 Shared formatters lie about shape across systems — **READY, CHEAP**
 
 A defect *class*, not a defect. Two instances have now shipped and been fixed one commit apart, which is what makes it worth a plan item rather than a bug report.
