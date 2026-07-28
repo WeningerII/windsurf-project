@@ -75,10 +75,11 @@ export function DaggerheartCharacterBasicsSection({ controller }: Props) {
               )}
               <DiceRollButton
                 label={`Roll ${attr.label}`}
-                onRoll={() =>
-                  systemRegistry
-                    .get(controller.document.systemId)!
-                    .engine.rollCheck(controller.document, attr.id)
+                onRoll={async () =>
+                  (await systemRegistry.loadEngine(controller.document.systemId))!.rollCheck(
+                    controller.document,
+                    attr.id
+                  )
                 }
                 className="mt-1"
               />

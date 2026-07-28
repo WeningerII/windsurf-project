@@ -460,7 +460,14 @@ function AppContent() {
     });
   }, [addDocuments, openSheet, toast]);
 
-  const openNewCharacterDialog = useCallback(() => setNewCharacterDialogOpen(true), []);
+  const openNewCharacterDialog = useCallback(() => {
+    // Warm the (lazily imported) engines on create INTENT, so the pick that
+    // follows can prepare and dispatch the new document synchronously — the
+    // dialog is the only surface that can reach a system with no document yet.
+    // Engines only; sheet chunks and SRD metadata still prefetch per system.
+    void systemRegistry.preloadEngines(systemRegistry.getAll().map((def) => def.id));
+    setNewCharacterDialogOpen(true);
+  }, []);
 
   // Keyboard shortcuts
   useKeyboardNavigation([

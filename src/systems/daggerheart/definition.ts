@@ -1,6 +1,5 @@
 import { SystemDefinition } from '../../registry/types';
 import { DaggerheartDataModel, createDefaultDaggerheartData } from './data-model';
-import { DaggerheartEngine } from './engine';
 import { lazyWithPreload } from '../../utils/lazyWithPreload';
 import { SYSTEM_SUPPORT_NOTES } from '../../utils/documentationCopy';
 
@@ -50,7 +49,11 @@ export const DaggerheartSystemDef: SystemDefinition<DaggerheartDataModel> = {
   ],
   skills: [],
   createDefaultData: createDefaultDaggerheartData,
-  engine: new DaggerheartEngine(),
+  // Lazy engine: the dynamic import keeps this system's engine — and the shared
+  // rules-IR surface it pulls in — out of the eager registry bootstrap chunk,
+  // matching how the validator, legal-actions and creation-plan seams already
+  // load. The registry resolves it once and caches the instance.
+  loadEngine: () => import('./engine').then((m) => new m.DaggerheartEngine()),
   loadValidator: () => import('./validation').then((m) => m.createDaggerheartValidator()),
   loadLegalActions: () => import('./legalActions').then((m) => m.createDaggerheartLegalActions()),
   loadCreationPlan: () => import('./creationPlan').then((m) => m.createDaggerheartCreationPlan()),

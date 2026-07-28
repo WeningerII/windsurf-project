@@ -277,7 +277,8 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
   );
 
   const rollCheck = useCallback(
-    (checkId: string) => systemRegistry.get(document.systemId)!.engine.rollCheck(document, checkId),
+    async (checkId: string) =>
+      (await systemRegistry.loadEngine(document.systemId))!.rollCheck(document, checkId),
     [document]
   );
 

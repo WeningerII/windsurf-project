@@ -15,7 +15,8 @@ import type {
 import type { CharacterDocument, SystemDataModel } from '../../../types/core/document';
 import type { Item } from '../../../types/equipment/items';
 import type { Spell } from '../../../types/magic/spells';
-import type { SystemDefinition } from '../../../registry/types';
+import type { SystemDefinition, SystemEngine } from '../../../registry/types';
+import { systemRegistry } from '../../../registry';
 import {
   applyDnd5eFeatTemplate,
   getDnd5eFeatAutomationRequirements,
@@ -252,12 +253,26 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
         return;
       }
 
-      const nextDocument = systemDef.engine.applyDamage(
-        document as CharacterDocument<SystemDataModel>,
-        type === 'damage' ? amount : -amount,
-        type === 'damage' ? 'damage' : 'healing'
-      );
-      onUpdate({ ...nextDocument, updatedAt: new Date() });
+      const apply = (engine: SystemEngine<SystemDataModel>) => {
+        const nextDocument = engine.applyDamage(
+          document as CharacterDocument<SystemDataModel>,
+          type === 'damage' ? amount : -amount,
+          type === 'damage' ? 'damage' : 'healing'
+        );
+        onUpdate({ ...nextDocument, updatedAt: new Date() });
+      };
+
+      // Engines are lazily imported. A mounted 5e sheet implies a 5e document in
+      // the collection, whose engine `useDocuments` already resolved, so this
+      // stays the synchronous path; the fallback only covers a cold registry.
+      const resolved = systemRegistry.peekEngine(systemDef.id);
+      if (resolved) {
+        apply(resolved);
+        return;
+      }
+      void systemRegistry.loadEngine(systemDef.id).then((engine) => {
+        if (engine) apply(engine);
+      });
     },
     [document, onUpdate, systemDef]
   );

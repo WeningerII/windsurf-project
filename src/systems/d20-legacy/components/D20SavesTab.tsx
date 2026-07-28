@@ -45,16 +45,15 @@ export const D20SavesTab: React.FC<Props> = ({ document, saves, canUpdate, onSav
                   <span className="text-2xl font-bold tabular-nums">{formatMod(save.total)}</span>
                   <DiceRollButton
                     label={`${saveId} Save`}
-                    onRoll={() => {
+                    onRoll={async () => {
                       const saveRollId =
                         saveId === 'fortitude'
                           ? 'save-fort'
                           : saveId === 'reflex'
                             ? 'save-ref'
                             : 'save-will';
-                      return systemRegistry
-                        .get(document.systemId)!
-                        .engine.rollCheck(document, saveRollId);
+                      const engine = await systemRegistry.loadEngine(document.systemId);
+                      return engine!.rollCheck(document, saveRollId);
                     }}
                   />
                 </div>

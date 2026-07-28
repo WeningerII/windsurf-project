@@ -32,6 +32,7 @@ import {
 } from './dnd5eSheetConstants';
 import type { Dnd5eLikeDataModel } from './dnd5eSheetShared';
 import { useSheetDispatchRegister } from '../../../contexts/sheet-dispatch-context';
+import { systemRegistry } from '../../../registry';
 import { useDnd5eSheetController } from './useDnd5eSheetController';
 import { availableDnd5eToggles, dnd5eEditionOf } from '../../../rules/conditions/dnd5eRiders';
 import { presentDerivedQuantities } from '../../../rules/derivation';
@@ -167,7 +168,11 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
           onToggleProficiency={onUpdate ? controller.toggleSaveProficiency : undefined}
           onRollSave={
             controller.systemDef
-              ? (abilityId) => controller.systemDef!.engine.rollCheck(document, `save-${abilityId}`)
+              ? async (abilityId) =>
+                  (await systemRegistry.loadEngine(document.systemId))!.rollCheck(
+                    document,
+                    `save-${abilityId}`
+                  )
               : undefined
           }
         />
@@ -181,7 +186,8 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
           onToggleProficiency={onUpdate ? controller.toggleSkillProficiency : undefined}
           onRollSkill={
             controller.systemDef
-              ? (skillId) => controller.systemDef!.engine.rollCheck(document, skillId)
+              ? async (skillId) =>
+                  (await systemRegistry.loadEngine(document.systemId))!.rollCheck(document, skillId)
               : undefined
           }
         />

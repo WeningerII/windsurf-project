@@ -1,6 +1,5 @@
 import { SystemDefinition } from '../../registry/types';
 import { Pf2eDataModel, createDefaultPf2eData } from './data-model';
-import { Pf2eEngine } from './engine';
 import { lazyWithPreload } from '../../utils/lazyWithPreload';
 
 export const Pf2eSystemDef: SystemDefinition<Pf2eDataModel> = {
@@ -36,7 +35,11 @@ export const Pf2eSystemDef: SystemDefinition<Pf2eDataModel> = {
     { id: 'thievery', name: 'Thievery', attribute: 'dex' },
   ],
   createDefaultData: createDefaultPf2eData,
-  engine: new Pf2eEngine(),
+  // Lazy engine: the dynamic import keeps this system's engine — and the shared
+  // rules-IR surface it pulls in — out of the eager registry bootstrap chunk,
+  // matching how the validator, legal-actions and creation-plan seams already
+  // load. The registry resolves it once and caches the instance.
+  loadEngine: () => import('./engine').then((m) => new m.Pf2eEngine()),
   loadValidator: () => import('./validation').then((m) => m.createPf2eValidator()),
   loadLegalActions: () => import('./legalActions').then((m) => m.createPf2eLegalActions()),
   loadCreationPlan: () => import('./creationPlan').then((m) => m.createPf2eCreationPlan()),

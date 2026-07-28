@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { SystemRegistry } from '../registry';
 import { Mam3eSystemDef } from '../systems/mam3e/definition';
+import { Mam3eEngine } from '../systems/mam3e/engine';
 import { createDefaultMam3eData, type Mam3eDataModel } from '../systems/mam3e/data-model';
 import type { Power } from '../types/mam/powers';
 import type { CharacterDocument } from '../types/core/document';
@@ -27,10 +28,15 @@ function createDocument(
   };
 }
 
+// The definition now exposes the engine only through the registry's lazy
+// `loadEngine` seam, which is async. These sync `it(...)` bodies instantiate the
+// same engine class the definition loads — same math, same expectations.
+const mam3eEngine = new Mam3eEngine();
+
 /** Run the document through the engine so stored spent buckets/totals are the
  * real point-buy values, matching how documents are prepared at add time. */
 function prepared(system: Mam3eDataModel): Mam3eDataModel {
-  return Mam3eSystemDef.engine.prepareData(createDocument(system)).system;
+  return mam3eEngine.prepareData(createDocument(system)).system;
 }
 
 function power(overrides: Partial<Power> & Pick<Power, 'id' | 'name'>): Power {
