@@ -103,9 +103,15 @@ The manifests are generated *from* the loaders, so joining them against loaded i
 
 **Serves:** the all-seven-equal thesis directly. **Also blocks:** `p4.parity-matrix` from being honestly closable.
 
-### 2.4 5e-2024 hand-written monsters — 77 of 85 diverge — **READY**
+### 2.4 5e-2024 hand-written monsters diverge from SRD 5.2 — **DONE for every gated field (2026-07-28)**
 
-The largest single open content-integrity item. Mostly carrying SRD 5.1 values; some carry values in *neither* edition (Air Elemental `5d10+10` is invented). All 254 scalar divergences are itemised in the fidelity baseline, so this is transcription work against a pinned source, not research.
+Every scalar divergence the fidelity baseline itemised has been re-transcribed from the pinned SRD 5.2.1 source: 71 hand-written monsters and the 4 backgrounds. `scripts/data/srd-fidelity-baseline.json` now records an empty `divergences` block, and `npm run check:srd-fidelity` passes with nothing baselined but two `upstreamDefects` (Basilisk AC, Soldier gaming set — both cases where the shipped value is right and the pinned denominator is not). See GAPS §15.3(b).
+
+**What did NOT get fixed, and is the follow-on:**
+
+- **Prose and derived numbers on those same entries.** The gate pins scalars only, so traits, actions, `savingThrows`, `skills` and attack/damage strings on the repaired stat blocks are still whatever they were. An entry can now hold a 5.2 ability score next to a 5.1-derived save. GAPS §15.4.
+- **The 5e-2024 backgrounds' open-content exposure (GAPS §15(c)) is untouched.** Their proficiency sets are now SRD 5.2, but the 2014 structural model — `suggestedCharacteristics`, background `feature`, language grants — is still shipped under an `SRD 5.2` tag, and three of the four bodies of text are PHB content. This needs a `Background` type that can express the 2024 model, and it is a licensing item, not a tidiness one.
+- **Bucket placement.** Seven entries had a wrong `challengeRating`; they were corrected in place and now sit in CR-bucket files named for their old CR. Nothing enforces the correspondence.
 
 ### 2.5 Remaining denominator work — **READY**
 
