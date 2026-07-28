@@ -12,7 +12,7 @@ export const blackPudding: Monster = {
   type: 'ooze',
   alignment: 'unaligned',
   armorClass: 7,
-  hitPoints: { count: 11, die: 'd10', modifier: 33, notation: '11d10+33' },
+  hitPoints: { count: 8, die: 'd10', modifier: 24, notation: '8d10+24' },
   speed: { walk: 20, climb: 20 },
   abilities: { str: 16, dex: 5, con: 16, int: 1, wis: 6, cha: 1 },
   damageImmunities: ['acid', 'cold', 'lightning', 'poison', 'slashing'],

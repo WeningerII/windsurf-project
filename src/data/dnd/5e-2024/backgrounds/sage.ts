@@ -8,6 +8,8 @@ export const sage: Background = {
 
   skillProficiencies: ['arcana', 'history'],
 
+  toolProficiencies: ['calligraphers-supplies'],
+
   languageProficiencies: {
     count: 2,
     options: ['any'],

@@ -6,9 +6,9 @@ export const criminal: Background = {
   system: 'dnd-5e-2024',
   source: 'SRD 5.2',
 
-  skillProficiencies: ['deception', 'stealth'],
+  skillProficiencies: ['sleight-of-hand', 'stealth'],
 
-  toolProficiencies: ['thieves-tools', 'one-gaming-set'],
+  toolProficiencies: ['thieves-tools'],
 
   equipment: ['crowbar', 'dark-common-clothes-with-hood', 'pouch'],
 

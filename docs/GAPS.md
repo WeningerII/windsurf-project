@@ -68,8 +68,8 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | [7](#7-rules-ir-parity-debt--per-system-accounting-added-2026-07-21) | Rules-IR parity debt | nothing outside tests consumes the legal-actions seam |
 | [10](#10-ai-gateway-provider-agnosticism--what-is-proven-and-what-is-not-added-2026-07-25) | AI gateway provider-agnosticism | no live-API proof; no failover; no pricing |
 | [14](#14-p5infra-gaps--inventory-what-was-closed-and-what-is-deliberately-not-built-added-2026-07-25) | `p5.infra-gaps` | 14.4 — Sentry release/env, server 5xx, durable rate-limit store |
-| [15](#15-field-level-srd-fidelity--audit-result--the-gate-that-now-guards-it-added-2026-07-25) | Field-level SRD fidelity | **(b)** and **(c)** unfixed — the largest open content-integrity item |
-| [16](#16-lazy-per-system-engines--what-was-reclaimed-and-exactly-what-blocks-the-rest-added-2026-07-25) | Lazy per-system engines | CLOSED — reclaim landed via the preload design (16.5) |
+| [15](#15-field-level-srd-fidelity--audit-result--the-gate-that-now-guards-it-added-2026-07-25) | Field-level SRD fidelity | **(b)** fixed 2026-07-28 for every gated scalar; **(c)** still an open-content exposure |
+| [16](#16-lazy-per-system-engines--what-was-reclaimed-and-exactly-what-blocks-the-rest-added-2026-07-25) | Lazy per-system engines | CLOSED 2026-07-28 — reclaimed via the preload design, so the authorization question never had to be answered (16.5) |
 | [18](#18-provenance-over-inclusion--the-audit-result-and-the-gate-that-now-bounds-it-added-2026-07-25) | Provenance over-inclusion — 1,045 classified + gated | 31 records carry a false citation (owner decision); 3 measurement defects diagnosed, not repaired |
 
 **Closed, decided, or standing reference — kept for the evidence trail:**
@@ -1138,14 +1138,18 @@ sink should treat this section as the review that must be re-opened first.
 
 ## 15. Field-level SRD fidelity — audit result + the gate that now guards it (added 2026-07-25)
 
-**Status: PARTLY CLOSED — and this section holds the largest open item in the
-file.** The gate shipped and the audit is done (`scripts/check-srd-fidelity.mjs`
-plus its pinned manifest and ratchet baseline, all present and inside `verify`;
-re-verified 2026-07-26). **Findings (b) and (c) are NOT fixed**: 5e-2024
-hand-written monsters diverging from SRD 5.2.1, and 5e-2024 backgrounds carrying
-non-open 2014 content under an SRD tag. (c) is the same defect class as §11's
-OC-1 and is a licensing exposure, not a tidiness one. 15.4 is the itemized
-residual risk.
+**Status: PARTLY CLOSED.** The gate shipped and the audit is done
+(`scripts/check-srd-fidelity.mjs` plus its pinned manifest and ratchet baseline,
+all present and inside `verify`; re-verified 2026-07-26). **Finding (b) is now
+FIXED for every field the gate measures** (2026-07-28): the baseline's
+`divergences` block is empty and `check:srd-fidelity` passes with nothing
+baselined but the two `upstreamDefects`. **Finding (c) is still open** — the
+scalar proficiency sets were corrected alongside (b), but the 5e-2024 backgrounds
+still carry the 2014 structural model (`suggestedCharacteristics`, a background
+`feature`, language grants) under an SRD 5.2 tag, and three of those four bodies
+of text are *Player's Handbook* content, not open content. That is the same
+defect class as §11's OC-1 and is a licensing exposure, not a tidiness one; it is
+what remains of this section. 15.4 is the itemized residual risk.
 
 §13 recorded that nothing checks whether an entry's CONTENT matches the source it
 cites. This section records what a systematic audit found, and the check now wired
@@ -1232,31 +1236,59 @@ The last row is a structural bug, not a transcription one: consumers reading the
 typed `modifier` field got HP totals that disagreed with the entry's own notation
 string.
 
-**(b) 5e-2024 hand-written monsters — 77 of 85 diverge from SRD 5.2.1. NOT FIXED.**
+**(b) 5e-2024 hand-written monsters diverged from SRD 5.2.1 — FIXED for every
+gate-measured field (2026-07-28).**
 The Will-o'-Wisp (§13) was not an isolated case; it was one instance of a
 systemic pattern. The 5e-2024 loader ships ~96 hand-written monsters that override
-the encoder on name match, tagged `source: 'SRD 5.2'`. Of the 85 whose SRD 5.2.1
-stat block is machine-readable, **77 diverge** — mostly carrying the SRD 5.1 (2014)
-values (Wolf AC 13 vs 12; Skeleton AC 13 vs 14; Vampire 16d8+64 vs 23d8+92;
-Lich AC 17/18d8+72 vs 20/42d8+126; Deva CR 5 vs 10; Manticore CR 7 vs 3), and some
-carrying values found in **neither** edition (Air Elemental 5d10+10 is neither
-5.1's 12d10+24 nor 5.2's — an invented or placeholder line). All 254 scalar
-divergences are itemized field-by-field in
-`scripts/data/srd-fidelity-baseline.json`.
-Not fixed here: correct remediation is re-transcription of ~77 full stat blocks
-(prose, traits and actions included, which this lane's scalar gate does not even
-measure), or deleting the hand-written overrides so the encoder's verbatim 5.2.1
-output wins. Both have a blast radius well beyond an audit lane. **This is the
-single largest open content-integrity item in the repo.**
+the encoder on name match, tagged `source: 'SRD 5.2'`. The baseline recorded the
+divergence field-by-field, and every one of those fields has now been
+re-transcribed from the pinned SRD 5.2.1 markdown the entries already cite —
+mostly replacing carried-over SRD 5.1 (2014) values (Wolf AC 13 → 12; Skeleton
+AC 13 → 14; Vampire 16d8+64 → 23d8+92; Lich AC 17/18d8+72 → 20/42d8+126; Deva
+CR 5 → 10; Manticore CR 7 → 3).
 
-**(c) 5e-2024 backgrounds — all 4 carry 2014 content, and 3 are NOT open content.**
+Two things the remediation confirmed that the original audit did not separate:
+
+- **Most of the divergence was not stale-edition carry-over at all.** Comparing
+  every divergent field against the repo's own pinned SRD 5.1 manifest values,
+  the majority held a number found in **neither** edition — invented or
+  placeholder lines, of which Air Elemental `5d10+10` (neither 5.1's 12d10+24 nor
+  5.2's) was one of many, spread across roughly as many entries as the genuine
+  5.1 carry-overs. "Copied from the wrong edition" understates it.
+- **The stat-block count quoted above ("77 of 85") never matched the baseline it
+  cited.** The baseline itemized 71 monsters, not 77. The baseline is the
+  authority; the prose figure was wrong and is not restated here.
+
+Two derived fields the gate does not pin were corrected with the same source:
+`hitPoints.notation` (rebuilt from the corrected dice) and `experiencePoints`
+(re-read from the same stat block for the seven entries whose `challengeRating`
+was wrong).
+
+**Residual, unmeasured:** the gate pins scalars only. Prose, traits, actions,
+`savingThrows`, `skills`, attack bonuses and damage strings on these entries were
+NOT re-transcribed and are not compared by anything — an entry whose ability
+scores are now 5.2 may still carry a 5.1-derived save or attack line. The
+hand-written entries also still sit in CR-bucket files chosen under their old
+(wrong) CR, which nothing enforces. Deleting the hand-written overrides so the
+encoder's verbatim 5.2.1 output wins remains the durable fix.
+
+**(c) 5e-2024 backgrounds — all 4 carry 2014 content, and 3 are NOT open content.
+Proficiencies corrected 2026-07-28; the licensing exposure is STILL OPEN.**
 Acolyte, Criminal, Sage and Soldier all ship tagged `source: 'SRD 5.2'` carrying
 the 2014 model: `suggestedCharacteristics` tables, a background `feature`
 ("Shelter of the Faithful", "Criminal Contact", "Researcher", "Military Rank") and
 language grants — none of which exist in SRD 5.2, which instead grants ability
-scores, an origin feat and a tool proficiency. Acolyte is byte-identical to the
-repo's own 5e-2014 Acolyte. Criminal's skills are the 2014 Deception/Stealth, not
-5.2's Sleight of Hand/Stealth.
+scores, an origin feat and a tool proficiency. Acolyte was byte-identical to the
+repo's own 5e-2014 Acolyte.
+The **proficiency sets** — the only part of a background this section's gate
+measures — have since been re-transcribed from SRD 5.2: Acolyte and Sage gained
+the Calligrapher's Supplies tool proficiency, Criminal's skills moved from the
+2014 Deception/Stealth to 5.2's Sleight of Hand/Stealth and it lost the gaming
+set 5.2 does not grant, and Soldier lost Land Vehicles (a 5.1-only tool). **This
+does not close (c).** The structural 2014 model and the non-open PHB prose are
+untouched, and the fix still requires a `Background` type that can express the
+2024 model (ability scores + origin feat), so it stays recorded rather than
+papered over.
 **Open-content risk:** SRD 5.1 contains exactly ONE background (Acolyte). The 2014
 Criminal / Sage / Soldier text is *Player's Handbook* content, which is not open.
 So three shipped entries carry non-open content under an SRD tag. The name-based
@@ -1271,6 +1303,16 @@ the source tag.**
   'natural', value: 12}]`. SRD 5.1 prints **AC 15**, corroborated by the SRD 5.2.1
   markdown (`**AC** 15`, block otherwise identical). The shipped 15 is correct and
   the denominator is wrong; recorded under `upstreamDefects` in the baseline.
+- **Soldier gaming-set proficiency (added 2026-07-28).** SRD 5.2 grants the
+  Soldier one Gaming Set of the player's choice. `5e-bits/5e-database` 2024 does
+  carry it — but under `proficiency_choices`, not the flat `proficiencies` array
+  that `srdBackground()` in `scripts/check-srd-fidelity.mjs` reads, so the pinned
+  manifest records an empty tool set. The shipped `['one-gaming-set']` is correct
+  and the denominator is incomplete; recorded under `upstreamDefects` in the
+  baseline. Soldier is the only SRD 5.2 background whose tool proficiency is a
+  choice, which is why no other entry trips it. Clearing it properly means
+  teaching `srdBackground()` to read `proficiency_choices`, which re-pins the
+  manifest for every system.
 - **Malformed SRD 5.2.1 ability tables.** Three blocks merge the MOD and SAVE
   cells (`<td>13 +1</td>`): **Ancient Red Dragon**, **Remorhaz**, and the
   **Will-o'-Wisp** (§13's known STR-score defect). The fidelity check's parser
@@ -1296,6 +1338,23 @@ monsters.
   encoder-regeneration sweep proves the *generated* portions are faithful; it says
   nothing about the hand-written ones.
 - **Prose fidelity is unaudited everywhere.** Every finding above is scalar.
+  This bites hardest on the 5e-2024 hand-written monsters repaired under (b):
+  their scalars are now SRD 5.2, but their traits, actions, `savingThrows`,
+  `skills` and attack/damage strings were not re-transcribed and nothing compares
+  them, so an entry can be internally inconsistent (5.2 ability score, 5.1-derived
+  save). Deleting the overrides in favour of the encoder's verbatim output is the
+  durable fix.
+- **Alignment on the repaired 5e-2024 monsters — measured, not fixed.** The gate
+  does not pin `alignment` (it is modelled, not transcribed), so it was left
+  alone. Checking it against the same pinned SRD 5.2.1 markdown afterwards:
+  **17 of the 71 repaired entries disagree** — Aboleth, Air Elemental, Archmage,
+  Assassin, Awakened Shrub, Berserker, Earth Elemental, Fire Elemental, Giant Elk,
+  Lich, Manticore, Noble, Succubus, Vampire, Vampire Spawn, Water Elemental,
+  Wraith. Mostly the 2024 edition's move away from "Unaligned"/chaotic labels
+  (Lich is Neutral Evil in 5.2, shipped Chaotic Evil; the four elementals are
+  Neutral, shipped Unaligned). Listed so the follow-on lane does not have to
+  re-derive it. Left unfixed here because nothing gates it and this lane's
+  mandate was the itemized baseline.
 - **M&M 3e and Daggerheart** have no scalar gate at all; only the
   encoder-regeneration sweep covered them.
 

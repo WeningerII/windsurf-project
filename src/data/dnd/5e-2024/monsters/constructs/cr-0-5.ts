@@ -12,9 +12,9 @@ export const clayGolem: Monster = {
   type: 'construct',
   alignment: 'unaligned',
   armorClass: 14,
-  hitPoints: { count: 13, die: 'd10', modifier: 39, notation: '13d10+39' },
-  speed: { walk: 20 },
-  abilities: { str: 20, dex: 9, con: 16, int: 3, wis: 8, cha: 1 },
+  hitPoints: { count: 13, die: 'd10', modifier: 52, notation: '13d10+52' },
+  speed: { walk: 30 },
+  abilities: { str: 20, dex: 9, con: 18, int: 3, wis: 8, cha: 1 },
   damageImmunities: ['acid', 'poison', 'psychic'],
   conditionImmunities: [
     'charmed',
@@ -26,8 +26,8 @@ export const clayGolem: Monster = {
   ],
   senses: ['darkvision 60 ft.', 'passive Perception 9'],
   languages: ["understands the languages of its creator but can't speak"],
-  challengeRating: 5,
-  experiencePoints: 1800,
+  challengeRating: 9,
+  experiencePoints: 5000,
   specialAbilities: [
     {
       name: 'Immutable Form',

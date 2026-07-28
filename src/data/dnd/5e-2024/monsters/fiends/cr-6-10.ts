@@ -12,7 +12,7 @@ export const succubus: Monster = {
   type: 'fiend',
   alignment: 'chaotic evil',
   armorClass: 15,
-  hitPoints: { count: 6, die: 'd8', modifier: 12, notation: '6d8+12' },
+  hitPoints: { count: 13, die: 'd8', modifier: 13, notation: '13d8+13' },
   speed: { walk: 30, fly: 60 },
   abilities: { str: 8, dex: 17, con: 13, int: 15, wis: 12, cha: 20 },
   savingThrows: { wis: 4, cha: 7 },
