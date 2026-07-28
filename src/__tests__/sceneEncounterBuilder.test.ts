@@ -214,6 +214,7 @@ describe('encounterBuilder', () => {
         { monsterId: 'missing', count: 1 },
         { monsterId: 'legacy-goblin', count: 1 },
       ],
+      eventIdFactory: makeEventIdFactory(),
     });
 
     expect(result.events).toEqual([]);

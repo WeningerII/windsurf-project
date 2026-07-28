@@ -31,7 +31,17 @@ export interface BuildEncounterEventsParams {
   zone?: { position: SceneCoordinate; width: number; height: number };
   createdAt?: Date;
   seed?: string;
-  eventIdFactory?: () => string;
+  /**
+   * REQUIRED. Mints the id for each event this builder emits. There is no
+   * count-derived fallback on purpose: an id like `encounter-event-${n}` is a
+   * function of how many events the caller happened to have locally, so two
+   * devices building offline mint the SAME id for different events. Event ids
+   * are not just identity here — check/oracle RNG is seeded from them, so
+   * colliding ids would silently produce identical rolls, and
+   * `compareSceneEvents` uses the id as its final replay tiebreak. Pass
+   * `generateUUID` (or another globally unique source).
+   */
+  eventIdFactory: () => string;
 }
 
 export interface EncounterBuilderIssue {
@@ -253,7 +263,7 @@ export function buildEncounterSceneEvents({
           })(),
         },
       },
-      { eventId: nextEventId(scene, events, eventIdFactory), createdAt }
+      { eventId: eventIdFactory(), createdAt }
     );
 
     if (!result.event) {
@@ -284,7 +294,7 @@ export function buildEncounterSceneEvents({
         entries: initiativeEntries,
         activeTokenId: initiativeEntries[0]?.tokenId,
       },
-      { eventId: nextEventId(scene, events, eventIdFactory), createdAt }
+      { eventId: eventIdFactory(), createdAt }
     );
 
     if (!result.event) {
@@ -566,14 +576,6 @@ function makeUniqueTokenId(monsterId: string, used: Set<string>): string {
     candidate = `${base}-${index}`;
   }
   return candidate;
-}
-
-function nextEventId(
-  scene: SceneDocument,
-  events: SceneEvent[],
-  eventIdFactory?: () => string
-): string {
-  return eventIdFactory?.() ?? `encounter-event-${scene.events.length + events.length + 1}`;
 }
 
 function clampInteger(value: number, min: number, max: number): number {
