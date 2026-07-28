@@ -8,9 +8,17 @@
  * Adding a quantity here needs no new engine, sheet, or test code.
  *
  * The `compute`s reuse the existing cited pure helpers (derivedCombatMath,
- * derivedCasterMath, data-model's profTotal); this file only wires them into the
- * declarative layer. Per RFC 003 the SHARED thing is the mechanism, not the
- * formula: PF2e's level + tier proficiency and Bulk math stay first-class here.
+ * derivedCasterMath, data-model's profTotal, and derivedMath's death-track
+ * functions); this file only wires them into the declarative layer. Per RFC 003
+ * the SHARED thing is the mechanism, not the formula: PF2e's level + tier
+ * proficiency and Bulk math stay first-class here.
+ *
+ * The L8 death-track entries below mirror the PF1e pattern (pf1e/
+ * derivedQuantities.ts wiring pf1e/derivedMath.ts): the cited pure helpers in
+ * ./derivedMath already carry compute-register rows and unit tests, and these
+ * declarations are what make the engine actually COMPUTE them into
+ * `system.derived` and let the sheet surface them. They are additive — every
+ * pre-existing quantity keeps its exact value.
  */
 import type { DerivedQuantitySpec } from '../../rules/derivation';
 import { abilityMod } from '../../utils/math';
@@ -18,11 +26,32 @@ import { pf2eAutoHeightenRank, pf2eBulkLimits } from '../../utils/derivedCombatM
 import { pf2eClassOrSpellDC } from '../../utils/derivedCasterMath';
 import { resolvePf2eArmorClass } from '../../rules';
 import { resolvePf2eCheckPenalty } from '../../rules/conditions/pf2eConditions';
+import { pf2eInitialDying, pf2eRecoveryCheckDC, pf2eWoundedAfterRecovery } from './derivedMath';
 import { profTotal, type Pf2eDataModel, type Pf2eProficiencyTier } from './data-model';
 
 /** Build a full ability-score block from partial overrides (defaults are 10). */
 function attrs(overrides: Partial<Record<string, number>>): Record<string, number> {
   return { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10, ...overrides };
+}
+
+/**
+ * Current magnitude of a valued condition (0 when absent). Matches the shared
+ * condition reader in rules/conditions/pf2eConditions: name-insensitive match,
+ * a missing `value` counts as 1, and the highest duplicate wins.
+ */
+function conditionValue(system: Pf2eDataModel, name: string): number {
+  let highest = 0;
+  for (const condition of system.conditions) {
+    if (condition.name.toLowerCase() !== name) continue;
+    const magnitude = condition.value != null ? condition.value : 1;
+    if (magnitude > highest) highest = magnitude;
+  }
+  return highest;
+}
+
+/** True while the character is on the death track (dying or wounded present). */
+function onDeathTrack(system: Pf2eDataModel): boolean {
+  return conditionValue(system, 'dying') > 0 || conditionValue(system, 'wounded') > 0;
 }
 
 /** Strength modifier from the (unprepared) ability-score block. */
@@ -251,5 +280,90 @@ export const PF2E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Pf2eData
       icon: 'Swords',
       hint: '10 + key ability + proficiency',
     },
+  },
+  {
+    // L8 death track. compute() calls the cited helper in ./derivedMath (the one
+    // the pf2e.L8.dying-on-knockout register row already pins), reading the
+    // character's CURRENT wounded value — the non-critical case, which is the
+    // standing scalar; the `fromCriticalHit` doubling is the situational input
+    // the hint names, exactly as pf1e.L5.concentration-dc declares the 0-level
+    // base and scales in its hint.
+    id: 'pf2e.L8.dying-on-knockout',
+    layer: 'L8',
+    quantity: 'Dying value gained on being knocked out',
+    formula: '(critical hit ? 2 : 1) + current wounded value',
+    source: 'PF2e Core Rulebook (OGC): Hit Points, Healing, and Dying — Dying',
+    compute: (s) => pf2eInitialDying(false, conditionValue(s, 'wounded')),
+    cases: [
+      { name: 'no wounded → dying 1', system: {}, expected: 1 },
+      {
+        name: 'wounded 2 adds on top → dying 3',
+        system: { conditions: [{ id: 'wounded', name: 'Wounded', value: 2 }] },
+        expected: 3,
+      },
+      {
+        name: 'valueless wounded counts as 1 → dying 2',
+        system: { conditions: [{ id: 'wounded', name: 'Wounded' }] },
+        expected: 2,
+      },
+    ],
+    display: {
+      label: 'Dying on Knockout',
+      icon: 'Skull',
+      hint: '1 (2 from a critical hit) + wounded — shown while on the death track',
+      visible: onDeathTrack,
+    },
+  },
+  {
+    id: 'pf2e.L8.dying-recovery',
+    layer: 'L8',
+    quantity: 'Recovery check flat DC',
+    formula: 'recovery DC = 10 + current dying value',
+    source: 'PF2e Core Rulebook (OGC): Hit Points, Healing, and Dying — Dying/Recovery',
+    compute: (s) => pf2eRecoveryCheckDC(conditionValue(s, 'dying')),
+    cases: [
+      { name: 'not dying → base flat DC 10', system: {}, expected: 10 },
+      {
+        name: 'dying 1 → DC 11',
+        system: { conditions: [{ id: 'dying', name: 'Dying', value: 1 }] },
+        expected: 11,
+      },
+      {
+        name: 'dying 3 → DC 13',
+        system: { conditions: [{ id: 'dying', name: 'Dying', value: 3 }] },
+        expected: 13,
+      },
+    ],
+    display: {
+      label: 'Recovery DC',
+      icon: 'HeartPulse',
+      hint: '10 + dying value — flat check at the start of your turn while dying',
+      visible: onDeathTrack,
+    },
+  },
+  {
+    // Standing scalar, DISPLAY-LESS (the same call pf1e.L3.bab-sum makes): the
+    // number only means anything at the moment the dying condition is removed,
+    // so it is computed into `derived` for the death-track consumers rather than
+    // rendered as a third card next to the two above.
+    id: 'pf2e.L8.wounded-track',
+    layer: 'L8',
+    quantity: 'Wounded value after recovering from dying',
+    formula: 'wounded += 1 each time the dying condition is removed',
+    source: 'PF2e Core Rulebook (OGC): Hit Points, Healing, and Dying — Wounded',
+    compute: (s) => pf2eWoundedAfterRecovery(conditionValue(s, 'wounded')),
+    cases: [
+      { name: 'no wounded → recovering leaves wounded 1', system: {}, expected: 1 },
+      {
+        name: 'wounded 1 → recovering leaves wounded 2',
+        system: { conditions: [{ id: 'wounded', name: 'Wounded', value: 1 }] },
+        expected: 2,
+      },
+      {
+        name: 'wounded 3 → recovering leaves wounded 4',
+        system: { conditions: [{ id: 'wounded', name: 'Wounded', value: 3 }] },
+        expected: 4,
+      },
+    ],
   },
 ];

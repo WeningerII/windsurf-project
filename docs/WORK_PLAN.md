@@ -109,7 +109,7 @@ The largest single open content-integrity item. Mostly carrying SRD 5.1 values; 
 
 ### 2.5 Remaining denominator work — **READY**
 
-- `p1.wire-remaining-denominators` — 3.5e classes/feats/equipment remain unwired pending core-only sources.
+- `p1.wire-remaining-denominators` — 3.5e classes and feats are wired against the core-only olimot chapters and the feat list is now **closed**: `scripts/encode-35e-feats.mjs` transcribes the feats chapter (hand-written entries keep winning), so the gap the coverage report used to itemise is gone. 3.5e **equipment** stays closed-by-no-source — the olimot equipment tables interleave services/lodging/mounts outside the loader's scope, and a scrape would poison the denominator. Current numbers live in `docs/generated/srd-coverage.md`.
 - `p1.monster-denominator-fix` — 3.5e's denominator still inflated by container-like rows.
 - `p1.single-entry-gaps` — small, itemised, good filler. **CHEAP**
 
@@ -213,6 +213,7 @@ Small, real, and each found while checking something else.
 - **`path_ref_rule` has a blind spot** — it only matches `docs/`, `src/`, `scripts/`, `.github/`, `package.json`, `.nvmrc`, `.node-version` and the two root docs. Every `netlify/`, `supabase/` and `.env` path in the RFCs and runbooks is **ungated**, and two stale ones were found by hand this week.
 - **`src/types/core/character.ts:275`** documents `strikingRune` as "no engine consumes it yet"; the call site 29 lines below disproves it.
 - **The graphify index is stale.** `ShellContext`, `SurfaceStage` and `SceneCanvas` return no node, so every agent this session fell back to direct file reads. `npm run graph:update` is overdue.
+- **`src/systems/pf2e/derivedMath.ts` had no non-test importer** while its PF1e twin was live. **Done:** the death-track helpers are declared in `PF2E_DERIVED_QUANTITIES` (dying-on-knockout, recovery DC, wounded-track) so the engine computes them into `system.derived` and the sheet surfaces the first two while on the death track; `pf2eAttackModifier` now backs the sheet's spell-attack readout and the hero-point constants back the header pip track and the long-rest handler. All substitutions are value-identical — no computed output moved. **Still test-only, for structural reasons recorded on their compute-register rows:** `pf2eDyingAfterRecovery` / `pf2eIsDead` (transitions and a predicate, not standing numeric scalars), `pf2eShieldBlockDamage` (needs a shield Hardness the equipment model does not carry), and `pf2eCreatureXP` / `pf2eEncounterBudget` (party-scoped GM math owned by `src/scene/`, which the lint-enforced layer boundary forbids from value-importing `src/systems/**`).
 
 ---
 

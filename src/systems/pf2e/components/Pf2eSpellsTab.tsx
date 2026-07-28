@@ -9,6 +9,7 @@ import {
 } from '../../../utils/spellPreparation';
 import { PF2E_SPELLS_COPY } from '../../../utils/documentationCopy';
 import type { Pf2eSpellcasting } from '../data-model';
+import { pf2eAttackModifier } from '../derivedMath';
 import { Pf2eProficiencyBadge } from './Pf2eProficiencyBadge';
 import { Pf2eSpellBrowserPanel } from './Pf2eSpellBrowserPanel';
 
@@ -188,16 +189,29 @@ export const Pf2eSpellsTab = (({
                 canUpdate={Boolean(onSpellcastingChange)}
                 onClick={onSpellProficiencyTierCycle}
               />
-              {/* CRB: spell attack = key ability mod + proficiency; DC = 10 + that. */}
+              {/* CRB: spell attack = key ability mod + proficiency (the cited
+                  pf2eAttackModifier helper, register row pf2e.L3.attack-modifier);
+                  DC = 10 + that. */}
               <span className="text-lg font-bold tabular-nums">
                 {spellAbilityScore != null
-                  ? formatMod(abilityMod(spellAbilityScore) + spellcasting.proficiency.total)
+                  ? formatMod(
+                      pf2eAttackModifier(
+                        abilityMod(spellAbilityScore),
+                        spellcasting.proficiency.total
+                      )
+                    )
                   : '—'}
               </span>
               <span className="text-xs text-muted-foreground">/</span>
               <span className="text-lg font-bold tabular-nums">
                 {spellAbilityScore != null
-                  ? `DC ${10 + abilityMod(spellAbilityScore) + spellcasting.proficiency.total}`
+                  ? `DC ${
+                      10 +
+                      pf2eAttackModifier(
+                        abilityMod(spellAbilityScore),
+                        spellcasting.proficiency.total
+                      )
+                    }`
                   : 'DC —'}
               </span>
             </div>
