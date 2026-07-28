@@ -21,7 +21,7 @@ If `graphify` is not on PATH: `pip3 install --user graphifyy`, then use
 
 - `npm run dev` — Vite dev server; `npm run build` — typecheck + build
 - `npm test` — Vitest; `npm run test:e2e` — Playwright
-- `npm run verify` — the full CI gate, 21 steps (lint, typecheck incl. netlify,
+- `npm run verify` — the full CI gate, 22 steps (lint, typecheck incl. netlify,
   format, coverage, keepalive-budget, validate, build, bundle-size, e2e,
   repo-hygiene, generated-docs, doc-drift, dead-code, legal-notices,
   compute-register, rules-provenance, srd-fidelity, mam-equipment,

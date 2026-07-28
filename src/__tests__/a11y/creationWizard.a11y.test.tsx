@@ -64,6 +64,18 @@ async function settleValidation() {
   );
 }
 
+/**
+ * Explicit ceiling for "wait for the wizard to finish loading and paint".
+ *
+ * testing-library's 1s default is a statement about how fast a machine is, not
+ * about what this suite asserts, and these tests wait on a lazy SRD import.
+ * Raising it cannot hide a broken aria contract — a missing or wrong attribute
+ * still fails, just later. It only stops a busy CI worker from being reported
+ * as an accessibility regression. Deliberately well below `settleValidation`'s
+ * 20s so a genuine hang still surfaces as a failure rather than a timeout.
+ */
+const ASYNC_UI_TIMEOUT = 10000;
+
 function renderSyntheticWizard(maxSelections?: number) {
   const def = systemRegistry.get('dnd-5e-2024');
   if (!def) throw new Error('registry bootstrap failed');
@@ -115,23 +127,39 @@ describe('guided-creation wizard a11y — shared shell', () => {
     await settleValidation();
   });
 
+  // The only test in this file that mounts the wizard TWICE, which makes it the
+  // only one that can leave the first wizard's async validation — and its lazy
+  // SRD import — in flight across an unmount and straight into a second mount.
+  // That is precisely the race `settleValidation` above exists to prevent, and
+  // this test was the one place not applying it between renders.
+  //
+  // Serial execution hid it: with one worker there was nothing else contending
+  // for the event loop, so the second wizard always painted inside
+  // testing-library's 1s default. Under real parallelism it does not, and this
+  // failed on CI at 5,059ms with `Unable to find role="listbox" and name
+  // "Lineage"` while the DOM still showed loading skeletons. It is a latent
+  // defect in the test, not in the wizard — the assertions below are unchanged
+  // and still fail if the aria contract breaks.
   it('declares multi-select listboxes as multi-selectable, and single ones not', async () => {
     const single = renderSyntheticWizard(1);
     await screen.findByTestId('creation-wizard');
     userClickStep('2. Lineage');
-    expect(await screen.findByRole('listbox', { name: 'Lineage' })).not.toHaveAttribute(
-      'aria-multiselectable'
-    );
+    expect(
+      await screen.findByRole('listbox', { name: 'Lineage' }, { timeout: ASYNC_UI_TIMEOUT })
+    ).not.toHaveAttribute('aria-multiselectable');
+    // Settle BEFORE unmounting so no pending validation/import from this render
+    // races the next one. Every other test in this file settles before it ends;
+    // this one has two renders and so needs it twice.
+    await settleValidation();
     single.unmount();
     localStorage.clear();
 
     renderSyntheticWizard(2);
     await screen.findByTestId('creation-wizard');
     userClickStep('2. Lineage');
-    expect(await screen.findByRole('listbox', { name: 'Lineage' })).toHaveAttribute(
-      'aria-multiselectable',
-      'true'
-    );
+    expect(
+      await screen.findByRole('listbox', { name: 'Lineage' }, { timeout: ASYNC_UI_TIMEOUT })
+    ).toHaveAttribute('aria-multiselectable', 'true');
     await settleValidation();
   });
 });

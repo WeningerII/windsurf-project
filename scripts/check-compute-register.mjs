@@ -64,6 +64,58 @@ const REGISTER_FILE_BY_SYSTEM = {
  * un-fakeable artifact: pass/fail flows only from here.
  */
 const vitestCache = new Map();
+
+/**
+ * Pre-run every referenced test file in ONE vitest process and fill the cache.
+ *
+ * Each `runVitestFile` miss below costs a cold `npx vitest` boot — measured at
+ * 1.29s min / 1.95s mean / 2.97s max per spawn, and essentially 100% of that is
+ * process startup rather than the assertions, which take milliseconds. At the
+ * number of distinct files this register references that was ~39s of the CI
+ * run, spent four minutes after `test:coverage` had already executed every one
+ * of these same files.
+ *
+ * Passing them all to a single vitest invocation produces the same JSON tree
+ * with one suite per file, so the verdict is computed from identical data. This
+ * does NOT weaken the script's stated integrity property (see the header):
+ * pass/fail still flows only from a vitest result tree, never from a heuristic.
+ *
+ * Deliberately best-effort: on any failure it returns silently and the per-file
+ * path below runs exactly as before. A batching optimisation must never be able
+ * to turn a red gate green — the worst case here is that it is merely slow.
+ */
+function prewarmVitestFiles(absFiles) {
+  const files = [...new Set(absFiles)].filter((f) => f && existsSync(f));
+  if (files.length < 2) return;
+  const hash = crypto.createHash('sha1').update(files.join(':')).digest('hex').slice(0, 16);
+  const out = path.join(SCRATCH, `batch-${hash}.json`);
+  const res = spawnSync(
+    'npx',
+    ['vitest', 'run', ...files, '--reporter=json', `--outputFile=${out}`],
+    { cwd: REPO_ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 600000 }
+  );
+  let parsed;
+  try {
+    parsed = JSON.parse(readFileSync(out, 'utf8'));
+  } catch {
+    return; // fall back to per-file spawns
+  }
+  if (!Array.isArray(parsed.testResults)) return;
+  for (const suite of parsed.testResults) {
+    const abs = path.resolve(REPO_ROOT, suite?.name ?? '');
+    if (!files.includes(abs)) continue;
+    const assertions = Array.isArray(suite.assertionResults) ? suite.assertionResults : [];
+    let shapeOk = true;
+    for (const a of assertions) {
+      if (!Array.isArray(a.ancestorTitles) || typeof a.status !== 'string') shapeOk = false;
+    }
+    if (shapeOk) vitestCache.set(abs, assertions);
+  }
+  // A file the batch did not report on is simply left uncached, so the
+  // per-file path re-runs it and applies the same shape assertions.
+  if (res.status !== 0 && vitestCache.size === 0) return;
+}
+
 function runVitestFile(absFile) {
   if (vitestCache.has(absFile)) return vitestCache.get(absFile);
   const hash = crypto.createHash('sha1').update(absFile).digest('hex').slice(0, 16);
@@ -428,6 +480,22 @@ async function main() {
 
   const records = flattenEntries();
   const verified = records.filter((r) => r.entry.status === 'verified');
+
+  // Resolve every referenced test file up front and run them in one vitest
+  // process, so the loop below hits a warm cache instead of paying a cold
+  // `npx vitest` boot per distinct file. Mirrors the Step 1/Step 2 parsing in
+  // evaluateTierA; anything malformed is skipped here and still reported there.
+  if (!DO_MUTATE) {
+    const referenced = [];
+    for (const rec of verified) {
+      const ref = rec.entry.testRef;
+      if (!ref || !ref.includes(SEP)) continue;
+      const refPath = ref.slice(0, ref.indexOf(SEP)).trim();
+      if (!refPath) continue;
+      referenced.push(path.resolve(REPO_ROOT, refPath));
+    }
+    prewarmVitestFiles(referenced);
+  }
 
   const results = [];
   for (const rec of verified) {

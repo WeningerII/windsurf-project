@@ -1,8 +1,8 @@
 {
-  "lastVerifiedDate": "May 30, 2026",
+  "lastVerifiedDate": "July 28, 2026",
   "nodeVersion": "20.19.0",
   "verifyCommand": "npm run verify",
-  "vitestFiles": 118,
-  "vitestTests": 918,
-  "playwrightTests": 46
+  "vitestFiles": 307,
+  "vitestTests": 3092,
+  "playwrightTests": 86
 }

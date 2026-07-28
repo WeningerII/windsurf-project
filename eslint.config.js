@@ -17,6 +17,19 @@ export default tseslint.config(
     ignores: [
       '**/dist/',
       '**/node_modules/',
+      // `.claude/worktrees/` holds agent worktrees — full checkouts of this
+      // repo nested inside it. Unignored, `eslint .` walks 55,264 TS/TSX files
+      // instead of the repo's real 1,317, which is why a local `eslint .` runs
+      // for over ten minutes and `npm run verify` cannot finish on a developer
+      // machine. Worse than slow: `--max-warnings 0` was deriving its pass/fail
+      // verdict partly from stale code that is not in this repo.
+      //
+      // vitest.config.ts already carries this exact exclude for the same
+      // reason; the fix was applied there and not here.
+      '.claude/**',
+      '.tmp/**',
+      'graphify-out/**',
+      'coverage/**',
       '**/*.config.js',
       '**/*.config.ts',
       '**/*.js',
