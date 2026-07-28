@@ -6,12 +6,19 @@ import { expect, test, type Page } from '@playwright/test';
  *
  * CI-VERIFIED-ONLY: the drag machinery ships behind `VITE_SCENE_DRAG_ENABLED`
  * (default OFF), and the default e2e webServer builds WITHOUT it — so this spec
- * is skipped unless a dedicated CI job builds with the flag on and exports the
- * same env to the test process. That keeps the flag-off run (and the Phase-1
- * keepalive spec, which drives the legacy "Place Token" button) byte-unchanged,
- * while still pinning the flag-on acceptance. The drag ENGINE itself is fully
- * unit-tested (pointerEngine / useDropTarget / gateBudget) since Playwright is
- * unavailable in the authoring environment.
+ * is skipped unless a job builds with the flag on and exports the same env to
+ * the test process. That keeps the flag-off run (and the Phase-1 keepalive spec,
+ * which drives the legacy "Place Token" button) byte-unchanged, while still
+ * pinning the flag-on acceptance.
+ *
+ * That job is `scene-drag` in .github/workflows/ci.yml. It did not exist until
+ * 2026-07-28, and until then this file had never run once: the skip fired on
+ * every CI run and Playwright exits 0 on a fully skipped file, so a keystone
+ * acceptance reported green while proving nothing. Its first real execution
+ * failed on a shipped defect — the Dock ignored the open scene's system, so
+ * dragging a monster into a cross-system scene silently placed nothing (fixed
+ * in src/App.tsx). The job asserts these tests were not skipped, precisely
+ * because a green-but-skipped run is the failure this spec already had.
  */
 
 const FLAG_ON = process.env.VITE_SCENE_DRAG_ENABLED === 'true';

@@ -240,10 +240,17 @@ catalog, and nothing in this plan decided that.
 engine exists (`src/components/drag/`), the bound emit seam exists, the party tab is a
 real drag source, the PlacementMode mutual-exclusion keys off the same single predicate
 as the plan demanded, and the two-part gate was genuinely evaluated rather than
-asserted. But `sceneDrag` defaults OFF in the flag registry, no CI job builds with
-`VITE_SCENE_DRAG_ENABLED=true`, and `e2e/scene-drag.spec.ts` opens with a `test.skip`
-that fires on every current run. The engine is unit-gated; the user-facing gesture is
-not gated end to end and no user has one. **Do not call this phase complete.** The
+asserted. But `sceneDrag` defaults OFF in the flag registry, so no user has the
+gesture. **Do not call this phase complete.**
+
+The acceptance itself is no longer the hole it was. As of 2026-07-28 the `scene-drag`
+job in `.github/workflows/ci.yml` builds `VITE_SCENE_DRAG_ENABLED=true` and runs
+`e2e/scene-drag.spec.ts`, and asserts the spec was not skipped. Until that job existed
+the spec had never run: its `test.skip` fired every time and Playwright exits 0 on a
+fully skipped file, so the keystone acceptance was green and vacuous. Its first
+execution failed on a real shipped defect — the Dock keyed only off the open sheet's
+system, so with a scene of another system open a monster drag silently placed nothing.
+Fixed in `src/App.tsx`; the flag still defaults OFF. The
 reconcile-budget check also has a known flake history under full-suite load — the
 wall-clock problem the Phase-7 budgets doc analyses at length.
 

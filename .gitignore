@@ -30,6 +30,10 @@ docs/api
 spell-report.txt
 playwright-report/
 test-results/
+# Playwright's JSON reporter, written by the flag-on scene-drag CI job
+# (PLAYWRIGHT_JSON_OUTPUT_NAME) so the "was it actually executed?" assertion has
+# something to read. Run artifact, never committed.
+scene-drag-report.json
 # Per-system SRD manifests: ON-DEMAND, provenance-only. They are generated FROM
 # the loaders (`npm run srd:manifests`), so committing them created a circular
 # denominator — the same ids on both sides of the ratio, which could only ever

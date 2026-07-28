@@ -905,7 +905,28 @@ function AppContent() {
           it is reachable identically from the Library, Sheet and Scene
           surfaces. Its spell/feat/equipment click-add dispatches into the
           active sheet via SheetDispatchContext. */}
-        <Dock documents={documents} activeSystemId={currentDoc?.systemId} />
+        {/* activeSystemId prefers the OPEN SCENE over the open sheet. The Dock
+            re-keys its catalogs to this, and a scene is a system context just
+            as much as a sheet is — but only sheets were ever wired, so with a
+            scene open the Dock stayed on whatever system it had (the default
+            being the first registered one, 5e-2024).
+
+            That was not cosmetic. Dragging a monster from the Dock into a scene
+            of a DIFFERENT system silently did nothing: no token, no chip, no
+            error. Default state hit it immediately — a new scene is 5e-2014
+            while the Dock sits on 5e-2024 — and it is what
+            `e2e/scene-drag.spec.ts` caught the first time it was ever executed
+            (it had been skipped since it was written, because no workflow sets
+            VITE_SCENE_DRAG_ENABLED). Proven by the one-variable experiment:
+            aligning the Dock's system to the scene's makes the same drag land. */}
+        <Dock
+          documents={documents}
+          activeSystemId={
+            (nav.sceneId
+              ? scenes.find((scene) => scene.id === nav.sceneId)?.systemId
+              : undefined) ?? currentDoc?.systemId
+          }
+        />
       </DragRoot>
     </div>
   );

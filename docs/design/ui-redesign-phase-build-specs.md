@@ -24,7 +24,10 @@ Each phase section below opens with an **As built** line. In summary:
 
 **This appendix under-reported Phase 1 once already.** The bottom-of-file amendment recorded PR #30's deferrals and was not updated when PRs #32/#33 landed them, which is how a doc that says "NOT landed" outlived the landing by a week. The per-phase As-built lines above and below exist so that failure is not repeated at the phase level. They are hand-maintained and will go stale; the plan and the code are the checkable records.
 
-**Two flag-gated phases are not complete.** Phases 4 and 6 ship behind `VITE_SCENE_DRAG_ENABLED` and `VITE_SCENE_CANVAS_ENABLED`, both defaulting OFF, with no CI job building either on. Their acceptance gates therefore do not execute: Phase 4's spec skips, and Phase 6's `e2e/scene-canvas.spec.ts` was never written. Describe them as "shipped behind a default-off flag, not end-to-end gated."
+**Two flag-gated phases are not complete.** Phases 4 and 6 ship behind `VITE_SCENE_DRAG_ENABLED` and `VITE_SCENE_CANVAS_ENABLED`, both defaulting OFF.
+
+- **Phase 4 is now end-to-end gated** (2026-07-28). The `scene-drag` job in `.github/workflows/ci.yml` builds with `VITE_SCENE_DRAG_ENABLED=true` and runs `e2e/scene-drag.spec.ts`, plus an assertion that the spec was not skipped. Before that job existed the spec had never executed: the skip fired every run and Playwright exits 0 on a fully skipped file. Its first execution failed on a shipped defect (the Dock ignored the open scene's system, so cross-system drags placed nothing). The flag still defaults OFF, so the phase is not complete — but its acceptance now runs.
+- **Phase 6 remains ungated**: no job builds `VITE_SCENE_CANVAS_ENABLED` on, and `e2e/scene-canvas.spec.ts` was never written. Describe it as "shipped behind a default-off flag, not end-to-end gated."
 
 ## Drift corrections to the plan of record (apply these before building the affected phase)
 

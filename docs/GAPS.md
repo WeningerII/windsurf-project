@@ -2438,6 +2438,107 @@ sharper than the thing it replaced.
 
 ---
 
+## 22. A keystone acceptance that had never executed, and the defect it was hiding (added 2026-07-28)
+
+**Status: CLOSED.** Recorded because this is the *third* instance of the same
+shape in four days — §12/§6.4's quarantined a11y scan, §21.3's silently-zero
+counter, and now this — and because it is the first one where the never-run gate
+turned out to be hiding a live product defect rather than a stale note.
+
+### 22.1 The gate could not fail, and said so in its own header
+
+`e2e/scene-drag.spec.ts` is the Phase-4 pointer-drag keystone acceptance. It
+opens with:
+
+```ts
+const FLAG_ON = process.env.VITE_SCENE_DRAG_ENABLED === 'true';
+test.skip(!FLAG_ON, 'scene-drag flag is off in this build');
+```
+
+**No workflow set that variable.** Its own header says the spec "is skipped
+unless a dedicated CI job builds with the flag on", `MASTER_PLAN`, `WORK_PLAN`
+and both design docs each said the job did not exist — and none of that
+registered as a defect, because the pipeline was green.
+
+The mechanism that made it green is worth stating flatly: **Playwright exits 0
+on a file where every test skipped.** The run reports "2 skipped", the job
+passes, and the summary line scrolls past. Nothing distinguishes "this
+acceptance held" from "this acceptance was not attempted".
+
+### 22.2 Its first-ever execution failed, on shipped behaviour
+
+Test 1 passed. Test 2 — drag a bestiary monster onto the grid — failed with no
+allegiance chip. The failure screenshot showed the Dock on **D&D 5e (2024)**
+while the scene was **D&D 5e (2014)**.
+
+`Dock` re-keys its catalogs to `activeSystemId`, and `src/App.tsx` passed
+`currentDoc?.systemId` — the open **sheet's** system. A scene never set it, so
+with a scene open the Dock held whatever it had, defaulting to the first
+registered system. A new scene defaults to 5e-2014. The two disagree in the
+default state.
+
+**The user-visible behaviour: dragging a monster from the Dock into a scene of a
+different system does nothing at all — no token, no chip, no error, no console
+message.** The drop is rejected on a system mismatch the user cannot see and was
+never told about.
+
+Causation was established by a one-variable experiment rather than by reading:
+aligning the Dock's system selector to the scene's, changing nothing else, makes
+the identical drag land its token. Fixed by preferring the open scene's
+`systemId` over the open sheet's (`src/App.tsx`).
+
+### 22.3 The gate now runs, and asserts it ran
+
+`.github/workflows/ci.yml` gained a `scene-drag` job: build with
+`VITE_SCENE_DRAG_ENABLED=true`, run the spec against that dist with
+`PLAYWRIGHT_PREBUILT=1`, then parse Playwright's JSON report and **fail if any
+result is `skipped`**.
+
+That last step is the part that matters. The exit code is precisely the signal
+that failed to notice this for months, so the job does not rely on it. Both
+directions were validated locally before landing:
+
+| condition | playwright exit | assertion exit |
+| --- | --- | --- |
+| flag on — 2 specs executed, both passed | 0 | 0 |
+| flag absent — 2 specs skipped | **0** | **1** |
+
+A separate job rather than a step in `verify`, because the flag is a *build*
+input (the drag provider is tree-shaken out of a flag-off bundle) and `verify`'s
+dist is what the deploy jobs consume. It runs in parallel, off the critical path.
+
+### 22.4 Siblings, swept rather than assumed
+
+Per the rule in `docs/MASTER_PLAN.md` — *when you fix a class of defect, grep for
+its siblings before you close it* — every `test.skip` / `test.fixme` in `e2e/`
+and `src/__tests__/` was checked:
+
+- `e2e/pwa-offline.spec.ts` skips on `browserName !== 'chromium'`. The chromium
+  project always runs, so the test executes. **Legitimate**, not vacuous.
+- `e2e/a11y.spec.ts`'s `test.fixme` was the §12 quarantine, un-quarantined
+  earlier the same day (it was hiding a real WCAG AA failure).
+- No other skips exist.
+
+**Phase 6's `VITE_SCENE_CANVAS_ENABLED` still has no job, and that is
+deliberately not filed as the same defect:** `e2e/scene-canvas.spec.ts` was never
+written, so nothing claims to gate it. An absent gate is visible in the docs; a
+skipped one is invisible behind a green check. Only the second shape is what this
+section is about.
+
+### 22.5 The rule worth carrying
+
+**A gate whose skip condition depends on configuration must assert that it
+actually ran.** Three variants of this have now shipped here — a quarantined
+test, a counter that could return zero, and a spec nobody set the flag for — and
+each was found by hand rather than by any check. The common failure is that the
+absence of a signal reads identically to a passing signal.
+
+Where a gate can be trivially self-checking (the mutation counter in §21.3), make
+it self-check. Where it cannot, assert on the run report rather than the exit
+code, as §22.3 does.
+
+---
+
 ## Where the largest open work is
 
 Not a section — a reading aid, kept last so it stays out of the numbering. It is

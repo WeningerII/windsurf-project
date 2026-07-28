@@ -150,6 +150,123 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+  # The flag-on half of the Phase-4 acceptance. `e2e/scene-drag.spec.ts` opens
+  # with `test.skip(!FLAG_ON)` and NOTHING set the flag, so from the day it was
+  # written until 2026-07-28 it was a keystone acceptance that could not fail —
+  # every run reported it skipped and every run was green.
+  #
+  # The first execution failed, on a real shipped defect: with a scene open the
+  # Dock kept whatever system it had (the default first-registered one), so
+  # dragging a monster into a scene of a different system silently did nothing.
+  # See src/App.tsx `activeSystemId`. That is the entire argument for this job:
+  # a gate nobody runs is not a gate.
+  #
+  # Separate job rather than a step in `verify`, because the flag is a BUILD
+  # input — the drag provider is tree-shaken out of a flag-off bundle — so this
+  # needs its own dist, and `verify`'s dist is the one the deploy jobs consume.
+  # It runs in parallel and does not extend the pipeline's critical path.
+  scene-drag:
+    name: Scene drag (flag-on e2e)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Same pinned-path + version-keyed cache as `verify`; see the long note
+      # there for why the path is written from a step and asserted afterwards.
+      - name: Resolve Playwright version and browser path
+        id: pw
+        run: |
+          echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+          echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/pw-browsers" >> "$GITHUB_ENV"
+
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+          key: ${{ runner.os }}-playwright-${{ steps.pw.outputs.version }}
+
+      # chromium only: this job proves one flag-gated interaction, not
+      # cross-browser parity, and firefox would double the install for nothing.
+      - name: Install Playwright browsers
+        run: npx playwright install chromium
+
+      - name: Verify the browser cache is doing something
+        run: |
+          echo "cache-hit: ${{ steps.pw-cache.outputs.cache-hit || 'false' }}"
+          if [ ! -d "$PLAYWRIGHT_BROWSERS_PATH" ] || [ -z "$(ls -A "$PLAYWRIGHT_BROWSERS_PATH" 2>/dev/null)" ]; then
+            echo "::error::PLAYWRIGHT_BROWSERS_PATH is empty or missing after install."
+            exit 1
+          fi
+
+      - name: Build with the scene-drag flag on
+        env:
+          VITE_SCENE_DRAG_ENABLED: 'true'
+        run: npm run build
+
+      # The env var is needed TWICE and for different reasons: at build time
+      # Vite inlines it into the bundle, and at test time the spec's own
+      # `test.skip` guard reads process.env. PLAYWRIGHT_PREBUILT=1 makes the
+      # webServer serve the dist just built instead of rebuilding it flag-off.
+      - name: Run the flag-on acceptance
+        env:
+          VITE_SCENE_DRAG_ENABLED: 'true'
+          PLAYWRIGHT_PREBUILT: '1'
+          PLAYWRIGHT_JSON_OUTPUT_NAME: scene-drag-report.json
+        run: npx playwright test e2e/scene-drag.spec.ts --project=chromium --reporter=list,json
+
+      # The failure mode this job exists to end is a green run that proved
+      # nothing, so do not trust the exit code alone — a fully skipped file also
+      # exits 0. If the env var the spec reads is ever renamed on one side only,
+      # the skip silently comes back; this turns that into a red check.
+      #
+      # (A deleted or renamed spec is already covered: Playwright errors out
+      # when a path filter matches no test file.)
+      - name: Assert the acceptance was not skipped
+        if: always()
+        run: |
+          node -e '
+            const report = require("./scene-drag-report.json");
+            const specs = [];
+            const walk = (suite) => {
+              specs.push(...(suite.specs ?? []));
+              (suite.suites ?? []).forEach(walk);
+            };
+            (report.suites ?? []).forEach(walk);
+            const results = specs.flatMap((spec) =>
+              spec.tests.flatMap((test) => test.results.map((r) => r.status))
+            );
+            console.log(`${specs.length} spec(s): ${results.join(", ") || "none"}`);
+            const skipped = results.filter((s) => s === "skipped").length;
+            if (specs.length === 0 || skipped > 0) {
+              console.error(
+                `::error::scene-drag acceptance did not execute (${specs.length} specs, ${skipped} skipped). ` +
+                  "VITE_SCENE_DRAG_ENABLED is set by this job, so a skip means the spec no longer reads it."
+              );
+              process.exit(1);
+            }
+          '
+
+      - name: Upload Playwright traces and media
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results-scene-drag
+          path: test-results/
+          if-no-files-found: warn
+          retention-days: 7
+
   deploy-preview:
     name: Deploy Preview
     runs-on: ubuntu-latest
