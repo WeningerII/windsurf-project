@@ -59,7 +59,7 @@ rather than the whole chain.
 ### The verification baseline
 
 - Current baseline: run `npm run verify` under Node `20.19+` and capture exact counts from the command output.
-- Latest recorded full pass: May 30, 2026 under Node `v20.19.0`. Treat the exact Vitest and Playwright totals as command output, not a hardcoded invariant in this file.
+- Latest recorded full pass: July 28, 2026 under Node `v20.19.0`. Treat the exact Vitest and Playwright totals as command output, not a hardcoded invariant in this file.
 - Update `docs/generated/verification-baseline.json` via `npm run record:verify-baseline -- --date "Month DD, YYYY" --node-version 20.19.0 [...]`; `npm run check:doc-drift` enforces the mirrored live-doc verification claims.
 - The baseline records a *local* pass. CI run history is the standing authority for what is currently green. **Never pin a commit SHA in prose** — one sat in three documents until 64 merges had passed it.
 - `npm run verify` includes `check:doc-drift` after `check:generated-docs`; keep live docs, historical banners, workflow/runtime claims, and audited support-honesty copy aligned with the registered truth sources.

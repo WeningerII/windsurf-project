@@ -4,118 +4,71 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-20 — **22-item wave plan COMPLETE + FULLY GATED GREEN**
-on `claude/next-priorities-98pzof`. Authoritative plan + execution rules:
-[[sessions/2026-07-20-wave-plan-consensus]]. Each item ran as its own
-implement→adversarial-verify Workflow; orchestrator did per-item path-scoped
-commit+push, then staged OOM-safe barriers. **ALL 7 SYSTEMS ARE PEERS — never
-frame work as "5e vs non-5e" (hard, repeated user constraint).**
+**Last updated:** 2026-07-28 — **PR #105 merged to `main` (`62ac50a`)**. That PR
+carried the whole "master plan unfinished" tranche and is the first branch run to
+execute the *entire* `npm run verify` chain green in CI (run `30341196839`).
+Earlier runs never got that far: `2fd3380` died at `check:bundle-size`, `3daff1f`
+was cancelled mid-e2e at the 30-min job timeout, `60c3745` failed the last e2e
+test. Twelve gates had therefore never executed on the branch — all twelve passed.
 
-**ALL 22 ITEMS DONE (consensus ACCEPT each):**
-- **Wave 1 (11):** 1a declarative derived quantities pf2e `f6606ef`, mam3e
-  `f3b507f`, daggerheart `592a134`, 5e-family `4a5864f`, housekeeping `2dc4d2c`;
-  1b item 6 `d606754`, item 5 `808f8f8`, item 9 `5c856fb`, item 7 `edcc88e`;
-  1c item 8 `7a3fc31`, item 11 `ea3d59a`+`2a86120`, item 10 `fa29ae2`.
-- **Wave 2 (7):** 12 AC/defense resolver fold `d286b2d`, 13 `6e9bc6d`, 14
-  `baaa9f2`, 15 `3c1881d`, 17 `98d8fbc`, 16 `343fbec`, 21 `ecaf780` + a11y
-  `6555170`.
-- **Wave 3 (4):** 18 dnd5e spell-DC/attack ledger `02a4a34`, 19 d20-legacy
-  BAB/saves/synergy ledger `8190769`, 20 prod-smoke @smoke subset `d1a665e`,
-  **22 L9 build-legality validators `94a591c`** (dnd5e/dnd35e/pf1e/pf2e —
-  src/rules/legality/**; 10 new L9 register rows + 10 mutation anchors, all
-  mutation-proven). Regen `56e891b`.
+**Read `docs/WORK_PLAN.md` first** — it is the forward-looking queue and was
+refreshed against `main` on 2026-07-28. `docs/MASTER_PLAN.md` holds decisions and
+status; `docs/GAPS.md` §20 holds this session's evidence.
 
-**WAVE-3 BARRIER — ALL GREEN:** app+test tsc ✓; full lint ✓ format ✓; **full
-suite 245 files / 2452 tests ✓** (cov 86.04% stmts); compute-register **Tier A
-210 verified / Tier B --mutate 0 demotions** ✓ (all 10 new L9 anchors flip red);
-build ✓ bundle-size ✓ knip ✓ validate ✓; generated-docs ✓ doc-drift ✓ (regen'd
-gap-ledger 23 items 9 done, roadmap-metrics, graph); secrets ✓ legal-notices ✓
-repo-hygiene ✓; **e2e chromium 36 passed ✓** (via pw-bridge). Waves 1 & 2 were
-each independently fully gated earlier.
+**What landed in #105:**
+- The rescued **1,069-entry over-inclusion audit** (now 1,045 suspects) plus its
+  ratchet gate `check:provenance-over-inclusion`, which is a real CI gate now.
+- The **`srd-manifest` demotion** executed (GAPS §6) — PF2e content% fell 100% →
+  48.6% because the circular denominator is gone. Do NOT re-gate the manifests.
+- **Dead code deleted** (~556 LOC: `utils/systemCatalog`, `utils/validation`,
+  `components/MonsterStatBlock`) and `knip.json` → `knip.jsonc` with test entry
+  points dropped. `check:dead-code` passed in CI — neither predicted failure mode
+  (vitest plugin re-admitting tests; config-discovery fallback) occurred.
+- **Scene persistence** moved off the ~5 MB localStorage ceiling onto IndexedDB
+  with a localStorage snapshot for first paint (`src/hooks/useScenes.ts`).
+- The contribution-ledger consumer (5e AC tooltip), the `character-draft` AI
+  affordance, and `src/rules/legality/dnd5e.ts` bridged (it was dead at runtime).
 
-**FOLLOW-UP BATCH (post-plan, maintainer approved "all recommendations") — DONE
-+ FULLY GATED GREEN:** the previously-blocked items I could action:
-- **Exhaustion −2/level sign-off RATIFIED** `14727e7` (ledger review item → done;
-  SRD 5.2 RAW confirmed).
-- **a11y color-contrast remediated + ENFORCED** `507e888`: KNOWN_A11Y_DEBT now
-  EMPTY. Fixed `--muted-foreground` 46.9→43% L and `--destructive` 60.2→42% L
-  (red-700) — red-500 failed AA as both text (3.29–3.76:1) AND button label;
-  darkened globally (maintainer had no-preference). Light theme only; a11y e2e green.
-- **AI-gateway provider-agnosticism + durable rate-limit store** `c5b0959`
-  (netlify/functions/**): AI_PROVIDER registry (delegates to selectAiProvider) +
-  RateLimitStore interface (in-memory default + inert RATE_LIMIT_STORE_URL stub) +
-  adapter README + 11 tests. Built on item-8 DI; default-off byte-identical.
-- **RFC 007 AI-DM runtime (Draft)** `62e3da5`; **Sentry+Supabase DR runbooks**
-  `30258f7` (docs/runbooks/, honest DORMANT-alert notes); **PF1e equipment sourcing
-  recommendation** `30258f7` (verdict: source via PSRD-Data core_rulebook/item,
-  590 Core items — the encode follow-on has since shipped, and the proposal moved
-  to docs/history/pf1e-equipment-sourcing.md on 2026-07-26).
-- doc-drift manifest register `4eea6a1`+`bcacdf3` (new docs; runbooks='plan' not
-  'live' — live requires rule coverage). Regen/graph this batch: graphify only.
-- **BATCH BARRIER ALL GREEN:** full suite 245 files / 2463 tests (cov ~86%),
-  lint, build, bundle, compute-register Tier A 210, knip, validate,
-  typecheck:netlify + 103 gateway tests, doc-drift, generated-docs, secrets,
-  legal, repo-hygiene, **e2e 36 passed**, a11y e2e (contrast enforced) passed.
+**Three CI fixes worth remembering (all cross-system shape defects):**
+- `formatCastingTime` crashed the app into its error boundary because
+  `loadSpellsForSystem('mam3e')` returns *powers*, which have no casting time
+  (`dataLoader.ts:631`). Same class as `formatItemCost`. When a shared formatter
+  browses all seven catalogs, a declared non-optional field is a lie.
+- Bundle budgets: totalJs 1664 → 1680 KiB, and eagerShell **ratcheted down**
+  192 → 176 KiB so the lazy-engine reclaim is captured, not left unguarded.
+- `vitest.config.ts` was collecting tests out of `.claude/worktrees/**`.
 
-**PF1e EQUIPMENT ENCODE — DONE + FULLY GATED GREEN** `97b330d` (+regen `0ccee43`,
-bundle-split `35b00e7`): the last source-blocked content gap, now closed. New
-scripts/encode-pf1e-equipment.mjs reads a blobless sparse clone of
-devonjones/PSRD-Data core_rulebook/item/** (OGL/OGC, same repo as the bestiary)
-→ src/data/pathfinder/1e/equipment/srd-{weapons,armor,gear,magic-items}.ts
-(243 mundane + 347 magic = 590 Core items), prettier-normalized + deterministic
-(encoder shells to local prettier bin). index.ts merges srd+hand (hand wins on
-id); loader unchanged. Manifest scripts/data/pf1e-equipment-manifest.json pins the
-denominator; srd-coverage.ts gains pf1e equipment/magic-items CoverageTargets.
-Ledger p1.pf1e-equipment blocked→DONE (coverage published 100%). PF1e equipment
-loader total 70→617. Bundle: split into its own
-pf1e-equipment-data lazy chunk (100.3 KiB < 140 per-chunk budget); total-JS budget
-1536→1664 KiB. Gated: full suite 2466, tsc, lint, build, bundle, e2e 36,
-generated-docs, doc-drift, all green. Honest-mapping: exotic→martial+prose,
-8 damageless→gear, non-numeric prices/negligible weights at type default.
-
-**COVERAGE PUBLISHED + MASTER PLAN UPDATED** (`8783ceb` srd-coverage.md, `38bd423`
-ledger, `3700264` MASTER_PLAN). Networked `npm run srd:coverage` WORKS here (all
-GitHub-raw open-content sources reachable through the proxy): PF1e equipment
-243/243 + magic 347/347 = 100%; M&M equipment now measured 45/113 (39.8%, frnprt) —
-reveals 68 missing Hero SRD items; PF1e monsters 331/332 (1 gap: Skeletal Champion,
-likely a template). Ledger 11 done/23. MASTER_PLAN.md gained a dated 2026-07-21
-Current-Repo-Truth summary + RFC 007 provenance row + gateway/AI-DM + PF1e-equipment
-notes (doc-drift/generated-docs/repo-hygiene green; pinned phrases preserved).
-
-**⚠ CONTAINER RECYCLED TWICE this session** — each time local HEAD reset to old
-`1965c16`, ALL work safe on origin; recover: `git fetch origin <branch> && git reset
---hard origin/<branch>`, then `npm install` (node_modules comes back missing
-@axe-core/playwright). COMMIT+PUSH PER SLICE — recycles ~every 30-45 min.
-
-**STILL BLOCKED / next candidates (need human/secrets/infra, or a content push):**
-screen-reader listen-through; live secrets/infra (Sentry DSN, Supabase creds,
-durable rate-limit backend, staged rollout); AI-DM implementation (RFC 007 accept
-first). Code-doable content gaps NOW QUANTIFIED by coverage: M&M equipment 68
-missing (frnprt source, biggest real gap); PF1e Skeletal Champion (1, check if
-template); 3.5e monsters ~62 mostly denominator artifact. Next: await direction.
+**AWAITING THE OWNER — decisions, not work.** Do not chase these:
+1. 62 remote branch deletions (SHAs in `docs/history/2026-07-26-retired-branches.md`).
+2. WORK_PLAN §0.1 pile A — 31 records with no open-content counterpart. The only
+   genuine licensing exposure.
+3. Pile C — 78 wrong-edition records; honest re-tagging would drop **75** via
+   `filterOpenContentBySource`. Not a cheap re-tag.
+4. GAPS §19.4 M&M adversaries — recommended option (d), fetch `d20herosrd.com`
+   once from an unblocked connection. The blocker is the sandbox proxy, not
+   licensing.
+5. The orphaned feat-automation copy in `src/utils/documentationCopy.ts`.
+6. Ratification of the four kept sheet wrappers (WORK_PLAN §4.3).
 
 ## Landmines
 
-- **Container recycles mid-session** silently kill background workflows AND wipe
-  scratchpad + saved workflow scripts. Workflow subagent Edits DO persist to the
-  tree, so commit+push per slice; don't trust a long idle wait.
-- **Playwright browser bridge:** /opt/pw-browsers has rev **1194**, toolchain
-  wants **1208**. Working bridge lives at the **/tmp session scratchpad**
-  (`$SCRATCHPAD/pw-bridge`, NOT project-relative `scratchpad/` — that dir does
-  not exist under the repo). It symlinks chromium-1208 +
-  chromium_headless_shell-1208 → 1194 binaries (ffmpeg-1011 matches). Run e2e
-  directly: `PLAYWRIGHT_BROWSERS_PATH=$SCRATCHPAD/pw-bridge npx playwright test
-  --project=chromium` (bypasses the check-playwright-browsers 1208 guard;
-  firefox NOT bridged). webServer self-builds+previews on :4173. NEVER
-  `playwright install`.
-- **compute-register --mutate REFUSES a dirty tree** (its git-checkout restore
-  would discard uncommitted work). Commit the item FIRST, then run --mutate.
-- **Commits are gpg=N (Unverified on GitHub)** — ephemeral env has no signing
-  key (`gpg.ssh.allowedSignersFile` unset). Identity Claude/noreply@anthropic.com
-  IS correct; do NOT rewrite history to chase a signature that can't be produced.
-- **Merge policy:** auto-mode classifier blocks merge-to-main (and force-push)
-  unless the USER gave explicit, specific consent. Generic "proceed" ≠ consent.
-- **doc-drift** pins verbatim phrases — preserve exact strings when editing
-  paired docs. Regen docs/generated/** via gap:ledger + roadmap:metrics after
-  any compute-register change, then commit.
-- `outcome/baseline.json` gates TIME only (20s ceiling, ~30× headroom), not steps.
+- **Never delete or relabel shipped content on your own** — `filterOpenContentBySource`
+  silently drops any entry whose source leaves the allowlist, so a re-tag is a
+  product change. Owner's call (GAPS §11 / OC-1).
+- **Agents fabricate content data.** An adversarial verifier panel invented 5 of
+  20 M&M counterparts (25%). Verify every figure locally before writing it into a
+  doc (GAPS §18.7).
+- **Container recycles mid-session** silently kill background workflows and wipe
+  the scratchpad. Commit and push per slice.
+- **Playwright browser bridge:** `/opt/pw-browsers` has rev **1194**, the
+  toolchain wants **1208**. Point `launchOptions.executablePath` at
+  `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` in a temp config, run with
+  `NO_PROXY='*' PLAYWRIGHT_REUSE_SERVER=1` against `npx vite preview --port 4173`,
+  and delete the temp config before committing. Rebuild before testing a `src`
+  change — preview serves `dist`. NEVER `playwright install`.
+- **compute-register --mutate REFUSES a dirty tree.** Commit first, then mutate.
+- **doc-drift pins verbatim phrases** — preserve exact strings when editing paired
+  docs, and the verification baseline is generated
+  (`scripts/record-verification-baseline.mjs`), not hand-edited.
+- **Merge policy:** the auto-mode classifier blocks merge-to-main, force-push, and
+  remote branch deletion without explicit, specific user consent.

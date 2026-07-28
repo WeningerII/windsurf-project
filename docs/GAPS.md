@@ -55,7 +55,8 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | --- | --- |
 | [11](#11-provenance-over-inclusion-outside-srcdata-added-2026-07-25) | OC-1 awaits an owner decision; the gate's honest residual is unclosed |
 | [12](#12-unresolved-a11y-contrast-finding-on-the-creation-surface-added-2026-07-25) | Quarantined `color-contrast` violation, needs a live browser |
-| [19](#19-mm-3e-adversaries--the-source-search-and-why-nothing-was-encoded-added-2026-07-28) | No encodable open-content M&M adversary source exists; options recorded, owner decides |
+| [19](#19-mm-3e-adversaries--the-source-search-and-why-nothing-was-encoded-added-2026-07-28) | The open-content M&M adversary source exists but this sandbox cannot reach it; options recorded, owner decides |
+| [20](#20-the-first-full-chain-green-run--what-twelve-never-executed-gates-actually-proved-added-2026-07-28) | Run itself CLOSED; the orphaned feat-automation copy and the unpinned shared-formatter contract are OPEN |
 
 **Partly closed — evidence for what shipped, residual named inside:**
 
@@ -2250,6 +2251,92 @@ Handbook PDF, or from recall. Each of those produces exactly the artifact §15 a
 
 ---
 
+## 20. The first full-chain green run — what twelve never-executed gates actually proved (added 2026-07-28)
+
+**Status: CLOSED for the run itself; two residuals named at the end are OPEN.**
+
+Recorded because a gate that has never executed is not evidence, and until
+2026-07-28 twelve of this repo's gates had never executed on the branch that
+changed them.
+
+### 20.1 The chain had been failing before it reached them
+
+Three CI runs died early enough that the later steps never ran at all:
+
+| Head | Where it stopped | Why that hid things |
+| --- | --- | --- |
+| `2fd3380` | `check:bundle-size` | Aborted the chain; nothing after it ran. |
+| `3daff1f` | cancelled at 29.5 min, mid `test:e2e` | The 30-min job timeout (`.github/workflows/ci.yml`) reports the run as *cancelled* and swallows the failure summary. `playwright.config.ts`'s own comment predicts this exact masking, and it happened. |
+| `60c3745` | last e2e test | Still short of the twelve. |
+
+Run `30341196839` on `ebc9e7a` is the first to complete the whole of
+`npm run verify`. The gates that had never run and now pass: `test:e2e`,
+`check:repo-hygiene`, `check:generated-docs`, `check:doc-drift`,
+`check:dead-code`, `check:legal-notices`, `check:compute-register`,
+`check:rules-provenance`, `check:srd-fidelity`, `check:mam-equipment`,
+`check:provenance-over-inclusion`, `check:secret-exposure`.
+
+Two of those matter more than the rest:
+
+- **`check:dead-code`** shipped *unverified*. knip OOMs in this container, so the
+  `knip.json` → `knip.jsonc` change (dropping test files as entry points) was
+  reasoned rather than run, and two specific failure modes were predicted in
+  writing: knip 5's auto-enabled vitest plugin re-admitting test files through its
+  additive `entry` patterns, and the `.jsonc` rename silently falling back to
+  default config. **Neither occurred.** The reasoning was right — but it was still
+  the gate, not the argument, that settled it.
+- **`check:provenance-over-inclusion`** now runs as a real CI gate, so the rescued
+  1,045-entry audit (§18) is enforced rather than merely committed.
+
+### 20.2 Three fixes, and one of them is a defect class
+
+**(a) A shared formatter crashed the app, and it is the second instance of the
+same shape.** `formatCastingTime` declared `ct: CastingTime` non-optional and read
+`ct.amount` unguarded. `loadSpellsForSystem('mam3e')` returns `loadMam3ePowers()`
+(`src/utils/dataLoader.ts:631`) — an M&M power has no casting time at all — so the
+Dock took the whole page into its error boundary the moment it re-keyed to M&M.
+
+`formatItemCost` had been written for the identical problem *one commit earlier*
+(M&M prices gear in Equipment Points; Daggerheart may carry nothing), and the Phase-5
+eviction that made the Dock the single browse route hardened `cost` and missed
+`castingTime`. The lesson generalises: **collapsing seven per-system wrappers into
+one shared browser moves every runtime shape divergence onto the shared formatters
+at once**, and the declared types cannot see it because the shape only diverges per
+system at runtime. Absence is a legitimate value here, not a content defect — so
+the remedy is a fallback, not a null check that would silence a real data problem.
+Tracked forward as `WORK_PLAN` §6.6.
+
+**(b) Bundle budgets moved in both directions.** `totalJsGzipBytes` 1664 → 1680 KiB
+(measured 1,710,182 B, 6,246 B over the old ceiling), and `eagerShellGzipBytes`
+**ratcheted down** 192 → 176 KiB (measured 172,441 B, 24,167 B under). Raising the
+first without lowering the second would have left the lazy-engine reclaim (§16)
+unguarded — a budget that only ever loosens stops being a budget.
+
+**(c) Two e2e specs were stale against changes made in this repo.** The 5e-2024
+smoke test still clicked an in-sheet Feats tab that commit `3cdfbbb` had deleted
+(that lane updated the M&M and 3.5e/PF1e specs and missed this one), and the
+scene-import test reset only `localStorage` after scenes gained a durable
+IndexedDB tier. Both are the same failure: a change updated some of its dependents.
+
+**(d) Not in CI, but found while debugging it:** `vitest.config.ts` was collecting
+tests out of `.claude/worktrees/**`, so agent worktrees inflated a local run to
+26 files / 388 tests / 102 s where the real figure was 4 / 32 / 7.8 s. Excluded.
+
+### 20.3 What is still open from this section
+
+- **The orphaned copy.** `"Feat automation applies ability score increases and
+  proficiencies"` in `src/utils/documentationCopy.ts` had exactly one renderer,
+  `Dnd5eFeatBrowserTab`, deleted by the Phase-5 eviction. Nothing renders it now,
+  so the eviction silently dropped user-facing explanation. It is recorded in
+  `e2e/system-smoke.spec.ts`. Wire it into the Dock's Feats tab or delete it —
+  **owner decision**, because it is a product-copy question, not a cleanup.
+- **No test pins the shared-formatter contract.** The crash was caught by an e2e
+  smoke test, and only because it took down the entire page. A per-system fixture
+  test over one shared browser row would have caught it at unit level. See
+  `WORK_PLAN` §6.6.
+
+---
+
 ## Where the largest open work is
 
 Not a section — a reading aid, kept last so it stays out of the numbering. It is
@@ -2263,11 +2350,16 @@ above already say.
    single body of genuine work in the repo.
 2. **§11 OC-1 — the owner decision.** Cheap to make, and it is blocking a
    self-expiring quarantine that otherwise sits indefinitely.
-3. **§6 — execute the Denominator-A demotion.** Until it runs, the headline
-   content metric is measured against a denominator that structurally cannot go
-   below 100%.
-4. **§2 — compute.** Expand the registers toward the full L1–L10 set, and give
+3. **§2 — compute.** Expand the registers toward the full L1–L10 set, and give
    the build-legality layer a user-facing surface.
+4. **§19 — M&M adversaries.** The only system with no creature catalog, and the
+   one thing keeping the 7×N parity matrix from closing honestly. The source
+   exists and is open; the obstacle is that this sandbox cannot reach it.
+
+**Corrected 2026-07-28.** Item 3 used to read *"§6 — execute the Denominator-A
+demotion"*. It was executed on 2026-07-27 and merged in `62ac50a`; PF2e content%
+fell from a circular 100% to a measured 48.6%. The list is re-derived on each
+audit and this entry had outlived its finding.
 
 **Corrected 2026-07-26.** The note that stood here named "the §1 data input" as
 the highest-leverage unblock — "with authoritative SRD/CRB indices in-repo,

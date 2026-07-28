@@ -34,7 +34,7 @@ decide, with the app fully usable when no key is configured. The thesis is in
 
 ## 🎯 Project Status
 
-- ✅ **Verification**: `npm run verify` passed on May 30, 2026 under Node `20.19.0`
+- ✅ **Verification**: `npm run verify` passed on July 28, 2026 under Node `20.19.0`
   — see [Quality Gates](#-quality-gates) for how this baseline is maintained
 - ✅ **D&D 5e 2014 + 2024**: full SRD-backed character management with shared 5e sheet flows and structured always-prepared support
 - ✅ **Pathfinder 2e**: native sheet with loader-backed archetypes, backgrounds, feats, spells, and equipment

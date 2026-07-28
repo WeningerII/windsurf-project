@@ -1,6 +1,13 @@
 # Work Plan — what remains, in order
 
-**Built:** 2026-07-26 · **Basis:** four independent verification passes against code, not against prose
+**Built:** 2026-07-26 · **Refreshed:** 2026-07-28 against `main` at `62ac50a` · **Basis:** four independent verification passes against code, not against prose
+
+> **2026-07-28 — PR #105 is merged.** Everything this file marked DONE between
+> 2026-07-26 and 2026-07-28 is now on `main`, and CI run `30341196839` is the first
+> on that branch to execute the *entire* `npm run verify` chain green — twelve gates
+> that had never run on it, including `check:dead-code` and
+> `check:provenance-over-inclusion`, all passed. Items below are stated relative to
+> `main`, not to a branch.
 
 This is the **forward-looking** document. It answers one question: *what should be done next, and what does it unblock?*
 
@@ -29,7 +36,7 @@ Effort is given in lanes (one focused agent-or-session unit), not hours.
 
 These are first because each one holds up work that is otherwise ready.
 
-**Status as of 2026-07-27 — four of six are resolved:**
+**Status as of 2026-07-28 — four of six are resolved:**
 
 | | Decision | State |
 | --- | --- | --- |
@@ -37,10 +44,16 @@ These are first because each one holds up work that is otherwise ready.
 | 0.2 | Shelf branches | Decided: delete deliberately · Phase 12 cut · *remote deletions still pending* |
 | 0.3 | Cold-start microtask | Dissolved — the hazard was one call site, not six, so a third path needs no authorization |
 | 0.4 | Contribution ledger | Decided and shipped: it has a consumer |
-| 0.5 | knip test entry points | Decided and shipped · unverified locally, needs CI |
+| 0.5 | knip test entry points | Decided, shipped, **and now CI-verified** (2026-07-28) |
 | 0.6 | Phase 10 / character-draft | `character-draft` shipped · **Phase 10 still OPEN — owner** |
 
 So two questions actually remain: **§0.1** (licensing) and the Phase-10 half of **§0.6**.
+
+Three smaller owner calls have accumulated since. They are not in the table because
+nothing downstream stalls on them, but they are unanswered and should not be
+silently dropped: the **62 remote branch deletions** (§0.2), the **orphaned
+feat-automation copy** (§4.3), and **ratification of the four kept sheet
+wrappers** (§4.3).
 
 ### 0.1 Open-content licensing: two populations shipping under source tags they do not have
 
@@ -99,7 +112,7 @@ Today `src/__tests__/**` is an entry point, so **a test import counts as a live 
 
 **DECIDED AND DONE 2026-07-27: dropped.** `knip.json` became `knip.jsonc` (strict JSON cannot carry the per-entry doc citations), the test entry pattern is gone, and the three genuinely documented seams carry explicit `ignore` entries naming their doc. `legalActions.ts` deliberately does **not** — it is registered by all seven `definition.ts` files and called by the registry, so it is UI-unreachable rather than dead.
 
-**Unverified locally, needs CI.** knip OOMs in this container, so the config change is reasoned rather than run. Two specific risks to watch on the first CI run: knip 5 auto-enables its vitest plugin, whose entry patterns are *additive* to the root `entry` array — if that re-admits test files the blind spot is still open, and the fix is `"vitest": { "entry": [] }`. And the `.json` → `.jsonc` rename means that run also proves config discovery; a silent fallback to defaults would produce a flood of false positives.
+~~**Unverified locally, needs CI.**~~ **VERIFIED IN CI 2026-07-28.** knip OOMs in this container, so the change shipped reasoned rather than run — which was the honest but uncomfortable state. Run `30341196839` executed `check:dead-code` for the first time on this branch and it passed. Both predicted failure modes were wrong: knip 5's auto-enabled vitest plugin did **not** re-admit test files through its additive `entry` patterns (so `"vitest": { "entry": [] }` was not needed), and the `.json` → `.jsonc` rename did **not** silently fall back to defaults. Recorded because the reasoning was sound and still could have been wrong — the gate, not the argument, is what settled it.
 
 ### 0.6 Phase 10 and the character-draft surface — build or formally close?
 
@@ -149,15 +162,15 @@ All 1,045 suspects are classified with evidence and held by a gate that is a pro
 
 **Known remainder:** 21 non-SRD M&M powers and 1 advantage still ship under `Hero's Handbook` — same defect class as the equipment finding, untreated. These now sit in the gate as `denominator-scope-defect` and are the obvious next tranche.
 
-### 2.2 Execute the `srd-manifest` demotion — **READY**
+### 2.2 ~~Execute the `srd-manifest` demotion~~ — **DONE 2026-07-27, on `main` since `62ac50a`**
 
-Decided 2026-07-21 (`GAPS.md` §6), **never executed** — verified: 10 files still tracked, `generate-roadmap-metrics.ts` still imports `SRD_MANIFESTS`, and no wired command regenerates them.
+Decided 2026-07-21 (`GAPS.md` §6) and executed. The manifests are no longer committed, `generate-roadmap-metrics.ts` no longer imports `SRD_MANIFESTS`, and Denominator A is `docs/generated/srd-coverage.md` — the independent networked reverse diff — for every system.
 
-The manifests are generated *from* the loaders, so joining them against loaded ids is circular: manifest ids are both numerator and denominator, and drift can only ever read as 100%. One category currently prints a green 100% against a denominator holding roughly a tenth of what its loader ships.
+The demotion was worth doing precisely because it *moved numbers downward*: **PF2e content% fell from a green 100% to 48.6%.** The old figure was circular — the manifests are generated *from* the loaders, so manifest ids sat on both sides of the join and drift could only ever read 100%, in that case against a denominator holding roughly a tenth of what the loader ships. The 48.6% is the first honest reading, not a regression.
 
-**Do not "fix" this by gating the manifests** — that entrenches a mechanism already scheduled for retirement. The task is to move Denominator A onto `docs/generated/srd-coverage.md` (the independent networked reverse diff) and demote the manifests to provenance-only.
+**Do not re-gate the manifests.** Adding them to `check:generated-docs` would entrench the retired mechanism; this is a standing constraint, not a preference. See `docs/srd-manifest/README.md`.
 
-**Unblocks:** every content% number in the repo becoming meaningful.
+**Unblocked:** every content% number in the repo is now measured against something external to it.
 
 ### 2.3 M&M 3e adversaries — **BLOCKED ON A DECISION, and the blocker is network access, not licensing** (corrected 2026-07-28)
 
@@ -231,9 +244,14 @@ Six of the ten in-sheet browser wrappers are deleted and every affected tab grid
 
 **What this unblocks / what it left open:**
 
-- Making the Dock the only catalog route exposed three defects a sheet-side copy had been masking — the Dock pinned its catalog to the system open at *first* render (a PF2e sheet browsed the 5e catalog and click-add would have written 5e ids into it), printed M&M Equipment-Point costs as `undefined undefined`, and captioned PF2e Bulk as pounds. All three are fixed; the per-system cost/weight normalisations the wrappers each carried locally are now one shared `formatItemCost` plus a per-system weight-unit map.
+- Making the Dock the only catalog route exposed **four** defects a sheet-side copy had been masking — the Dock pinned its catalog to the system open at *first* render (a PF2e sheet browsed the 5e catalog and click-add would have written 5e ids into it), printed M&M Equipment-Point costs as `undefined undefined`, captioned PF2e Bulk as pounds, and **crashed the whole app into its error boundary the moment the Dock re-keyed to M&M** (§6.6). All four are fixed; the per-system cost/weight normalisations the wrappers each carried locally are now one shared `formatItemCost` plus a per-system weight-unit map.
 - Finishing the remaining four is **Dock capability work, not deletion work**: Advantage and Power-Modifier tabs, and a seam letting a sheet publish a catalog filter the Dock applies. That is the natural successor item.
 - Phase 5's toast + count-badge micro-feedback on the click-add path is still unbuilt; adds land silently.
+
+**Two things the eviction left for the owner, both small and both unanswered:**
+
+1. **DECIDE — the four kept wrappers need ratification.** The Phase-5 spec assumed the Dock covered every catalog and it does not (the three capability gaps above). Keeping the wrappers was the right call *given* that, but it was made by the lane, not by you, and it leaves the product with two browse routes indefinitely. Either ratify the split as the shipped design or fund the Dock capability work that would close it.
+2. **DECIDE — one string of user-facing copy is now orphaned.** `"Feat automation applies ability score increases and proficiencies"` in `src/utils/documentationCopy.ts` had exactly one renderer, `Dnd5eFeatBrowserTab`, which this eviction deleted. Nothing renders it today, so the eviction quietly dropped an explanation users used to see. Either wire it into the Dock's Feats tab or delete it as dead copy — but it should not sit in a copy module with no consumer, which is how it escaped review in the first place. Found by `e2e/system-smoke.spec.ts`, which records it.
 
 ---
 
@@ -279,7 +297,7 @@ Accepted 2026-07-21, nothing landed. Verified: the RFC's proposed AI-DM module d
 
 **Two prerequisites are bugs, not features, and should land first and separately:**
 
-1. **`saveScenes` has no `try/catch`** (`sceneStorage.ts`). It writes every scene with its full log in one `localStorage.setItem`. A long campaign hits the ~5 MB quota and it throws on the save path. This is live data loss today, independent of sync.
+1. ~~**`saveScenes` has no `try/catch`**~~ — **DONE 2026-07-27.** Scenes now persist to IndexedDB with a localStorage snapshot kept only so the first paint has something to render (`src/hooks/useScenes.ts`, `src/utils/sceneStorage.ts`). Durability moves from the ~5 MB localStorage ceiling to the browser's storage quota, `saveScenes` resolves with which tiers are current instead of throwing inside a debounce timer with nobody to catch it, and a campaign too large for localStorage lives in IndexedDB alone — so the async second stage is not an optimization, it is the only path that returns the full collection. The live data-loss risk is closed; the sync question below is not.
 2. **Event order is not intrinsic to the data.** `sequence` is assigned as `scene.events.length + 1` — a local counter — and `foldSceneEvents` sorts on it alone. `Array#sort` is stable, so tied sequences resolve to *array insertion order*, a property of how the array was assembled rather than of the data. Two devices appending offline both mint `N+1`. RFC 006 guarantees byte-identical folds; under any merge that guarantee is currently unenforceable. The fix is a comparator — `sequence`, then `createdAt`, then `id` — and it must land alone, with a test proving existing single-device logs fold identically before and after.
 
 Note the failure mode is *order ambiguity*, not re-rolling: every random value is resolved at authoring time and seeded from the event's own id, which is sound.
@@ -312,6 +330,16 @@ Four recorded decisions rather than omissions: no analytics network sink (`creat
 ### 6.5 Toolchain modernization — **READY**
 
 Risk-ordered, verified against `package.json`: React 18.2→19, Tailwind 3.3→4, Vite 7.3→8, `lucide-react` 0.294→1.17, `@types/node` 20→22, and runtime-pin reconciliation (`.nvmrc` pins 20.19.0 while `engines` already admits 22 and 24).
+
+### 6.6 Shared formatters lie about shape across systems — **READY, CHEAP**
+
+A defect *class*, not a defect. Two instances have now shipped and been fixed one commit apart, which is what makes it worth a plan item rather than a bug report.
+
+`formatCastingTime(ct: CastingTime)` declares its parameter non-optional and read `ct.amount` unguarded. But `loadSpellsForSystem('mam3e')` returns `loadMam3ePowers()` (`src/utils/dataLoader.ts:631`), and an M&M power has no casting time at all — so the Dock crashed the entire app into its error boundary the moment it re-keyed to M&M. `formatItemCost` had been written for the identical problem one commit earlier (M&M prices gear in Equipment Points, Daggerheart may carry nothing), and the eviction that made the Dock the single browse route hardened `cost` and missed `castingTime`.
+
+**The shape only diverges at runtime, per system, so TypeScript cannot catch it.** The per-system wrappers used to absorb it locally; collapsing them into one shared browser moved every such divergence onto the shared formatters at once. Expect more of these as Dock coverage grows.
+
+**The work:** audit `src/utils/formatters.ts` against what each of the seven loaders actually returns — not against the declared types — and give every field that is legitimately absent for some system a fallback rather than a guard-at-the-call-site. Absence is a valid value here, not a content defect, so this is not a place for a null check that silences a real data problem. A per-system fixture test over the shared browser row would pin it; today nothing does, and the crash was found by an e2e smoke test only because it took down the whole page.
 
 ---
 
