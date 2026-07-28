@@ -12,7 +12,7 @@ export const balor: Monster = {
   type: 'fiend',
   alignment: 'chaotic evil',
   armorClass: 19,
-  hitPoints: { count: 21, die: 'd12', modifier: 105, notation: '21d12+105' },
+  hitPoints: { count: 23, die: 'd12', modifier: 138, notation: '23d12+138' },
   speed: { walk: 40, fly: 80 },
   abilities: { str: 26, dex: 15, con: 22, int: 20, wis: 16, cha: 22 },
   savingThrows: { str: 12, con: 11, wis: 8, cha: 11 },
