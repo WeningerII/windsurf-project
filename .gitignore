@@ -30,6 +30,18 @@ docs/api
 spell-report.txt
 playwright-report/
 test-results/
+# Per-system SRD manifests: ON-DEMAND, provenance-only. They are generated FROM
+# the loaders (`npm run srd:manifests`), so committing them created a circular
+# denominator — the same ids on both sides of the ratio, which could only ever
+# read 100%. Denominator A is now docs/generated/srd-coverage.md. The
+# hand-authored docs/srd-manifest/types.ts and _exclusions.ts stay committed.
+docs/srd-manifest/dnd5e-2014.ts
+docs/srd-manifest/dnd5e-2024.ts
+docs/srd-manifest/dnd35e.ts
+docs/srd-manifest/pf1e.ts
+docs/srd-manifest/pf2e.ts
+docs/srd-manifest/mam3e.ts
+docs/srd-manifest/daggerheart.ts
 # Transient per-run diagnostic from check:compute-register (Tier A vs A+B content
 # differs per flag); the committed honest metric is docs/generated/roadmap-metrics.*.
 docs/generated/compute-register-gate.json

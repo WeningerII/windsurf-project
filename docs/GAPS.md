@@ -53,7 +53,6 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 
 | § | Finding |
 | --- | --- |
-| [6](#6-reconsider-artifact--decided-2026-07-21-execution-not-yet-run) | `docs/srd-manifest/` demotion decided, **not executed** |
 | [11](#11-provenance-over-inclusion-outside-srcdata-added-2026-07-25) | OC-1 awaits an owner decision; the gate's honest residual is unclosed |
 | [12](#12-unresolved-a11y-contrast-finding-on-the-creation-surface-added-2026-07-25) | Quarantined `color-contrast` violation, needs a live browser |
 
@@ -77,6 +76,7 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | § | Finding | What closed it |
 | --- | --- | --- |
 | [5](#5-review-item--a-shipped-behavior-change-ratified-2026-07-20) | 5e-2024 exhaustion −2/level | human ratification 2026-07-20 |
+| [6](#6-reconsider-artifact--decided-2026-07-21-executed-2026-07-27) | `docs/srd-manifest/` demotion | executed 2026-07-27; Denominator A is `docs/generated/srd-coverage.md` |
 | [8](#8-w6-executable-activity-contract--close-by-rule-under-constraint-5-added-2026-07-24) | W6 executable-activity contract | close-by-rule: one consumer, not graduated |
 | [9](#9-make-me-a-game-flow--what-it-composes-and-what-it-deliberately-does-not-added-2026-07-24) | Make-me-a-game flow scope | scope record; nothing stubbed |
 | [13](#13-srd-521-will-o-wisp--upstream-str-score-defect-added-2026-07-25) | Will-o'-Wisp STR-score defect | re-transcription; superseded by §15 |
@@ -101,7 +101,9 @@ Node `fetch()` does not). Verified independent sources for all 7 systems are in
 `docs/srd-sources.md`. `npm run srd:coverage` builds the genuine coverage report at
 `docs/generated/srd-coverage.md` (independent SRD lists diffed against the loaders
 by normalized name, each scoped to the policy's `allowedSources`) — real coverage,
-unlike the loader-derived `docs/srd-manifest/`.
+unlike the loader-derived `docs/srd-manifest/`. **Since 2026-07-27 that file is
+Denominator A outright** (§6), and the metrics report republishes its per-system
+rollup.
 
 **Measured — `docs/generated/srd-coverage.md` is authoritative for live counts (do not restate them here; they drift):**
 - The earlier deep gaps (PF2e spells "24%", PF1e "21%", 5e-2014 "67%") were a stale
@@ -203,10 +205,10 @@ unlike the loader-derived `docs/srd-manifest/`.
   earlier "all monsters" phrasing here was stale.
 - Remediate under-covered categories (encode missing SRD entries — e.g. PF2e/PF1e/5e
   spells) and the provenance over-inclusion (re-source or re-scope mislabeled entries).
-- Fold genuine coverage into the headline metric in place of the loader-mirror
-  `docs/srd-manifest/` numbers. **This is no longer an open question** — the
-  decision was taken on 2026-07-21 and is recorded in §6; what remains is its
-  execution, tracked there, not here.
+- ~~Fold genuine coverage into the headline metric in place of the loader-mirror
+  `docs/srd-manifest/` numbers.~~ **DONE 2026-07-27** — decided 2026-07-21,
+  executed and recorded in §6. `docs/generated/roadmap-metrics.md` now publishes
+  the reverse diff's per-system rollup as Denominator A.
 
 ## 2. Compute (Denominator B) — register completeness + engine wiring
 
@@ -521,46 +523,63 @@ Exhaustion level"; the −1/level figure matched only the One D&D playtest draft
 `Dnd5e2024Engine.getExhaustionD20Penalty` is settled and test-pinned. No open
 action remains.
 
-## 6. Reconsider artifact — DECIDED 2026-07-21, execution not yet run
+## 6. Reconsider artifact — DECIDED 2026-07-21, EXECUTED 2026-07-27
 
-**Status: OPEN.** The decision is recorded and unchanged. **The execution has
-NOT happened — verified 2026-07-26, not assumed from the earlier "scheduled
-Wave 2" note.** Three independent checks, any one of which would have gone the
-other way had the demotion landed:
+**Status: CLOSED.** The decision below was taken on 2026-07-21 and sat unexecuted
+through two verification passes. It is now executed. The three checks that
+established non-execution on 2026-07-26 all now go the other way:
 
-- The manifests are still **committed**: `git ls-files docs/srd-manifest/`
-  returns 10 tracked TypeScript modules, one per system plus `_exclusions.ts`,
-  `index.ts` and `types.ts`.
-- They are still **doing denominator duty**: the metrics generator imports them
-  directly — `SRD_MANIFESTS` and `ManifestCategory` at
-  `src/scripts/generate-roadmap-metrics.ts:45-46`, `MANUAL_EXCLUSIONS` at `:48`.
-- The move to on-demand generation has no vehicle:
-  `src/scripts/generate-srd-manifests.ts` still writes into `docs/srd-manifest/`
-  (`:189-194`) and **no `package.json` script invokes it**, which is also why
-  the drift below has never been regenerated away.
+- The per-system manifests are **no longer committed.** `git ls-files
+  docs/srd-manifest/` returns the hand-authored `types.ts`, `_exclusions.ts` and
+  a `README.md` warning label. The seven generated modules are gitignored and
+  `index.ts` — which existed only to aggregate them for the metric — is deleted.
+- They no longer do **denominator duty.** `src/scripts/generate-roadmap-metrics.ts`
+  imports neither `SRD_MANIFESTS` nor `ManifestCategory`; it keeps
+  `MANUAL_EXCLUSIONS` only, which is hand-authored and was never part of the
+  circularity. `categoryProgress` — the helper that returned
+  `{denominator, numerator}` per category — is deleted from `types.ts`.
+- On-demand generation **has a vehicle**: `npm run srd:manifests`.
 
-The loader-mirror manifests are honest on catalog and provenance but BADLY
-diverged from the loaders they mirror, unregenerated since ~2026-06-17: one
-system's manifest lists a monster and equipment count roughly a tenth of what
-its loader currently ships. (An entry total previously cited here as "4,053"
-matched nothing committed and was corrected 2026-07-21; the current totals live
-in `docs/generated/roadmap-metrics.md` and are not restated here.) Because
-manifest ids serve as both numerator and denominator, that drift can only ever
-read as 100% — the structural reason for the decision below.
+**What replaced it.** `docs/generated/srd-coverage.md` is Denominator A. The
+metrics report publishes a per-system rollup of it under **Content Coverage
+(Denominator A — independent SRD reverse diff)**, read offline from a new
+`docs/generated/srd-coverage.json` sidecar written by the same networked
+`npm run srd:coverage` run — so `roadmap-metrics.md` can be regenerated inside
+`check:generated-docs` without the network, and the two reports cannot disagree.
+When the sidecar is absent the section says so and publishes nothing, rather than
+falling back to a substitute denominator.
 
-**Decision (user, 2026-07-21):** `docs/srd-manifest/` moves to **on-demand
-generation** (no longer committed) and is **demoted from denominator duty** —
-`docs/generated/srd-coverage.md` becomes the **sole content denominator**
-(Denominator A). Nothing is deleted until the demotion executes; the committed
-manifests and the docs/metrics that cite them (the two-denominator completion
-goal in `docs/MASTER_PLAN.md`, `docs/generated/roadmap-metrics.md`,
-`_exclusions.ts`) remain in place and accurate as-is. **Do not "fix" the drift by
-gating the manifests** — that would entrench a mechanism already scheduled for
-retirement.
+**Published numbers moved, which is the point.** The retired table read 100% on
+all 44 of its rows. The replacement, measured against external indexes on the
+same tree, reads: D&D 5e (2014) 100%, D&D 5e (2024) 100%, D&D 3.5e 92.8%,
+Pathfinder 1e 100%, Pathfinder 2e 48.6%, M&M 3e 100%, Daggerheart 99.5%. No
+content changed — only the denominator did. Per-category figures and the named
+missing entries are in `docs/generated/srd-coverage.md` and are not restated
+here; they drift.
 
-Note for whoever executes this: §17 has since added a `ManifestEntryStatus` of
-`original` to `docs/srd-manifest/`, so the demotion now has one more consumer to
-re-home than it did when the decision was taken.
+**Why the old form could not work** (kept, because the failure mode is reusable):
+the manifests are generated *from* the loaders, so manifest ids served as both
+numerator and denominator. Any drift shrank both sides together and the ratio
+still read 100% — which is how one system's manifest came to list a monster and
+equipment count roughly a tenth of what its loader ships while printing green.
+Unregenerated since ~2026-06-17. (An entry total previously cited here as "4,053"
+matched nothing committed and was corrected 2026-07-21.) **The lesson is not
+"regenerate more often."** A denominator the product can move is not a
+denominator; the fix had to come from outside the repo.
+
+**Decision (user, 2026-07-21), as executed:** `docs/srd-manifest/` moves to
+**on-demand generation** (no longer committed) and is **demoted from denominator
+duty** — `docs/generated/srd-coverage.md` becomes the **sole content denominator**
+(Denominator A). **Do not "fix" the drift by gating the manifests** — that would
+entrench a retired mechanism. That instruction outlives the demotion: it now
+lives in `docs/srd-manifest/README.md`, where the next person to notice the
+staleness will find it.
+
+The `ManifestEntryStatus` of `original` added by §17 needed no re-homing: it is a
+provenance distinction, and provenance is exactly what the manifests were kept
+for. The open-content/original split that §17 relies on is published
+independently in the metrics report's Content Integrity table, which was not
+manifest-derived.
 
 ## 7. Rules-IR parity debt — per-system accounting (added 2026-07-21)
 
