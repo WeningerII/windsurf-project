@@ -340,6 +340,125 @@ export function validateHistoricalHeader(contents: string): string[] {
   return issues;
 }
 
+/** Markers that mean a plan section has been resolved and is no longer a gate. */
+const RESOLVED_SECTION_MARKERS =
+  /\b(DECIDED|DONE|RESOLVED|MOOT|CUT|CLOSED|SHIPPED|UNBLOCKED|NOT WORK)\b/;
+
+/**
+ * A "BLOCKED on §X" that outlives §X's resolution parks work that is already
+ * free to start, which is the most expensive kind of stale plan text: it is
+ * invisible (nothing is wrong, work simply never gets scheduled) and it reads
+ * as authoritative.
+ *
+ * Finds every `BLOCKED on <section ref>` in a plan, resolves the referenced
+ * section's own heading in the same file, and fails if that heading is marked
+ * resolved — struck through, or carrying DECIDED / DONE / MOOT / CUT etc.
+ *
+ * Deliberately same-file only. A cross-document dependency graph is a bigger
+ * design than this is worth, and every observed instance was intra-file.
+ */
+export function validateBlockedReferences(contents: string): string[] {
+  const issues: string[] = [];
+  const lines = contents.split(/\r?\n/);
+
+  // Index every section heading by its leading number, e.g. "### 0.2 …" -> "0.2".
+  const headingByRef = new Map<string, string>();
+  for (const line of lines) {
+    const heading = /^#{2,4}\s+§?(\d+(?:\.\d+)*)[.\s]/.exec(line);
+    if (heading) headingByRef.set(heading[1], line);
+  }
+
+  const seen = new Set<string>();
+  for (const line of lines) {
+    // Skip the heading lines themselves: a heading may legitimately say
+    // "~~BLOCKED on 0.3~~ DONE" while recording that it *used* to be blocked.
+    if (/^#{2,4}\s/.test(line) && RESOLVED_SECTION_MARKERS.test(line)) continue;
+
+    for (const match of line.matchAll(/BLOCKED on\s+§?(\d+(?:\.\d+)*)/gi)) {
+      const ref = match[1];
+      const heading = headingByRef.get(ref);
+      if (!heading || seen.has(ref)) continue;
+      if (RESOLVED_SECTION_MARKERS.test(heading) || /~~/.test(heading)) {
+        seen.add(ref);
+        issues.push(
+          `Says "BLOCKED on ${ref}", but §${ref} is already resolved: "${heading.trim()}". ` +
+            'Update the blocker or remove it — a stale block parks work that can start.'
+        );
+      }
+    }
+  }
+
+  return issues;
+}
+
+/**
+ * The gap ledger is the machine-readable half of the plan, so a status there
+ * that contradicts its own cited evidence is worse than stale prose — the
+ * generated `master-gap-ledger.md` republishes it as fact.
+ *
+ * Two checks, both drawn from real contradictions rather than invented:
+ *   1. An item whose `detail` announces closure must not carry a non-done
+ *      `status`. Self-contradiction inside one record.
+ *   2. An item still open whose `evidence` cites `srd-coverage.md` must be
+ *      supported by that report actually listing something missing. This is the
+ *      `p1.single-entry-gaps` case: it sat at `status: 'missing'` naming four
+ *      entries while the independent networked denominator reported
+ *      "complete (0 missing)" for every category owning them.
+ */
+export function validateLedgerStatus(rootDir: string): string[] {
+  const issues: string[] = [];
+  const sourcePath = 'docs/master-gap-ledger.source.ts';
+  if (!existsSync(path.join(rootDir, sourcePath))) return issues;
+  const source = readText(rootDir, sourcePath);
+
+  const coveragePath = 'docs/generated/srd-coverage.md';
+  const coverage = existsSync(path.join(rootDir, coveragePath))
+    ? readText(rootDir, coveragePath)
+    : '';
+  // "…/spells — complete (0 missing)." vs "…/feats — 721 missing: …"
+  const coverageReportsAnyMissing = /—\s*\d+\s+missing:/.test(coverage);
+
+  const OPEN_STATUSES = new Set(['missing', 'pending', 'blocked', 'in-progress']);
+
+  // Anchored to the START of the detail, deliberately. The first draft matched
+  // these words anywhere and immediately produced two false positives:
+  // `p5.infra-gaps` and `p1.provenance-over-inclusion-audit` both describe
+  // SUB-parts closing ("Observability closed 2026-07-25 … Backup/DR closed …")
+  // while the item itself is legitimately still in progress. That is normal and
+  // correct prose, so matching it is the gate crying wolf — which is worse than
+  // no gate, because it trains the next person to weaken or ignore it.
+  //
+  // The convention this encodes: if a detail declares the WHOLE item closed, it
+  // says so first. Mid-sentence mentions of a closed sub-part are untouched.
+  const CLOSURE_IN_DETAIL = /^\s*(CLOSED|RESOLVED|DONE)\b/i;
+
+  for (const block of source.split(/\n\s*\{\s*\n/).slice(1)) {
+    const id = /id:\s*'([^']+)'/.exec(block)?.[1];
+    const status = /status:\s*'([^']+)'/.exec(block)?.[1];
+    if (!id || !status || !OPEN_STATUSES.has(status)) continue;
+
+    const detail = /detail:\s*\n?\s*(?:"([^"]*)"|'([^']*)'|`([^`]*)`)/.exec(block);
+    const detailText = detail ? (detail[1] ?? detail[2] ?? detail[3] ?? '') : '';
+    if (CLOSURE_IN_DETAIL.test(detailText)) {
+      issues.push(
+        `Ledger item "${id}" has status '${status}' but its own detail announces closure. ` +
+          'Set status to done, or state what remains.'
+      );
+    }
+
+    const evidence = /evidence:\s*\n?\s*(?:"([^"]*)"|'([^']*)'|`([^`]*)`)/.exec(block);
+    const evidenceText = evidence ? (evidence[1] ?? evidence[2] ?? evidence[3] ?? '') : '';
+    if (/srd-coverage\.md/.test(evidenceText) && coverage && !coverageReportsAnyMissing) {
+      issues.push(
+        `Ledger item "${id}" has status '${status}' and cites ${coveragePath}, but that report ` +
+          'lists no missing entries at all. The cited evidence contradicts the status.'
+      );
+    }
+  }
+
+  return issues;
+}
+
 function pushExpectedTextIssues(
   issues: DocDriftIssue[],
   contents: string,
@@ -560,6 +679,22 @@ export async function runDocDriftCheck(rootDir = process.cwd()): Promise<DocDrif
     if (surface.rules.includes('historical_banner_rule')) {
       for (const message of validateHistoricalHeader(contents)) {
         issues.push({ path: surface.path, rule: 'historical_banner_rule', message });
+      }
+    }
+
+    if (surface.rules.includes('blocked_ref_rule')) {
+      for (const message of validateBlockedReferences(contents)) {
+        issues.push({ path: surface.path, rule: 'blocked_ref_rule', message });
+      }
+    }
+
+    if (surface.rules.includes('ledger_status_rule')) {
+      for (const message of validateLedgerStatus(rootDir)) {
+        issues.push({
+          path: 'docs/master-gap-ledger.source.ts',
+          rule: 'ledger_status_rule',
+          message,
+        });
       }
     }
 

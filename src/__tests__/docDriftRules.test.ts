@@ -6,8 +6,10 @@ import {
   extractDocumentedNpmCommands,
   extractRepoCodePaths,
   runDocDriftCheck,
+  validateBlockedReferences,
   validateDocumentedNpmCommands,
   validateHistoricalHeader,
+  validateLedgerStatus,
   validateMarkdownLinks,
   validateRepoCodePaths,
 } from '../utils/docDrift';
@@ -119,6 +121,94 @@ describe('docDrift helpers', () => {
       'Broken repo path reference in docs/rfc/002-ai-control-plane.md: `netlify/functions/gone.mts`',
       'Broken repo path reference in docs/rfc/002-ai-control-plane.md: `supabase/functions/gone.sql`',
     ]);
+  });
+
+  /**
+   * Both cases below are the ACTUAL defects these rules were written for, not
+   * invented ones — §5 sat "BLOCKED on 0.2" for two days after §0.2 was decided,
+   * and `p1.single-entry-gaps` sat at status 'missing' while every entry it
+   * named already shipped.
+   */
+  it('flags a BLOCKED reference whose target section is already resolved', () => {
+    const plan = [
+      '### 0.2 ~~Which shelf branches are live?~~ — **DECIDED 2026-07-26: delete deliberately**',
+      'Body text.',
+      '',
+      '## 5. AI and scene runtime — all BLOCKED on 0.2',
+      'Do not schedule any of these before the shelf-branch verdict.',
+    ].join('\n');
+
+    const issues = validateBlockedReferences(plan);
+    expect(issues).toHaveLength(1);
+    expect(issues[0]).toContain('BLOCKED on 0.2');
+    expect(issues[0]).toContain('already resolved');
+  });
+
+  it('leaves a BLOCKED reference alone while its target is genuinely open', () => {
+    const plan = [
+      '### 0.1 Open-content licensing — **OPEN — owner**',
+      '',
+      '## 8. Release — **BLOCKED on 0.1**',
+    ].join('\n');
+
+    expect(validateBlockedReferences(plan)).toEqual([]);
+  });
+
+  it('does not flag a heading that records having BEEN blocked', () => {
+    // "~~BLOCKED on 0.3~~ **DONE**" is a correct historical note, not a stale gate.
+    const plan = [
+      '### 0.3 Cold-start microtask — ~~DECIDE~~ **MOOT 2026-07-28**',
+      '',
+      '### 6.1 Finish the eager-bundle reclaim — ~~BLOCKED on 0.3~~ **DONE 2026-07-28**',
+    ].join('\n');
+
+    expect(validateBlockedReferences(plan)).toEqual([]);
+  });
+
+  it('flags a ledger item whose detail announces closure while its status is open', () => {
+    const rootDir = makeTempDir();
+    mkdirSync(path.join(rootDir, 'docs'), { recursive: true });
+    writeFileSync(
+      path.join(rootDir, 'docs/master-gap-ledger.source.ts'),
+      [
+        'export const ITEMS = [',
+        '  {',
+        "    id: 'p1.single-entry-gaps',",
+        "    detail: 'CLOSED 2026-07-28 — all four ship, verified against the loaders.',",
+        "    status: 'missing',",
+        "    evidence: 'docs/generated/srd-coverage.md',",
+        '  },',
+        '];',
+      ].join('\n')
+    );
+
+    const issues = validateLedgerStatus(rootDir);
+    expect(issues.some((issue) => issue.includes('p1.single-entry-gaps'))).toBe(true);
+    expect(issues.some((issue) => issue.includes('announces closure'))).toBe(true);
+  });
+
+  it('does not flag an open item whose detail merely mentions a closed sub-part', () => {
+    // The first draft of this rule matched CLOSED anywhere and fired on
+    // `p5.infra-gaps` and `p1.provenance-over-inclusion-audit`, both of which
+    // legitimately describe sub-parts closing while the item stays open. A gate
+    // that cries wolf gets weakened, so the marker must lead the detail.
+    const rootDir = makeTempDir();
+    mkdirSync(path.join(rootDir, 'docs'), { recursive: true });
+    writeFileSync(
+      path.join(rootDir, 'docs/master-gap-ledger.source.ts'),
+      [
+        'export const ITEMS = [',
+        '  {',
+        "    id: 'p5.infra-gaps',",
+        "    detail: 'Rate-limiting is built. Observability closed 2026-07-25. Sentry release wiring remains.',",
+        "    status: 'in-progress',",
+        "    evidence: 'docs/runbooks/sentry-alerts.md',",
+        '  },',
+        '];',
+      ].join('\n')
+    );
+
+    expect(validateLedgerStatus(rootDir)).toEqual([]);
   });
 
   it('passes the real repo doc-drift audit', async () => {
