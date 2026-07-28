@@ -197,7 +197,7 @@ export function DaggerheartInventorySection({ controller }: Props) {
       />
 
       {controller.relicEntries.length > 1 && (
-        <p className="text-sm text-amber-600">
+        <p className="text-sm text-amber-700">
           Multiple relics are recorded in inventory. The SRD only allows carrying one relic at a
           time.
         </p>

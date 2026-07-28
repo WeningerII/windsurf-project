@@ -44,7 +44,7 @@ export const CombatTogglesSection: React.FC<Props> = ({
               aria-pressed={isActive}
               className={`text-sm px-3 py-1 rounded-full border transition-colors ${
                 isActive
-                  ? 'bg-amber-500/10 border-amber-500/40 text-amber-600 font-medium'
+                  ? 'bg-amber-500/10 border-amber-500/40 text-amber-700 font-medium'
                   : 'border-input hover:bg-muted text-muted-foreground'
               }`}
             >

@@ -201,7 +201,7 @@ export function TokenPanel({
                     onClick={() => onToggleSelectedTokenCondition(conditionId)}
                     className={`rounded border px-1.5 py-0.5 text-[11px] capitalize transition-colors disabled:opacity-50 ${
                       active
-                        ? 'border-amber-500 bg-amber-500/15 text-amber-600'
+                        ? 'border-amber-500 bg-amber-500/15 text-amber-700'
                         : 'text-muted-foreground hover:border-primary hover:text-primary'
                     }`}
                     title={`${active ? 'Clear' : 'Apply'} ${conditionId} on the selected token — applied under this system's rules in combat`}

@@ -4,8 +4,21 @@ import { Search, Filter } from 'lucide-react';
 export interface SpellBrowserSpell {
   id: string;
   name: string;
-  level: number;
-  school: string;
+  /**
+   * OPTIONAL, and measured rather than assumed: all 61 M&M 3e powers ship with
+   * no `level` and no `school`, because a power has neither. The comment below
+   * says rank rides `level` and power type rides `school` — that describes the
+   * intended mapping, not the data, and the loader does not populate either.
+   *
+   * Declaring them required did not make them present; it only meant the
+   * absence surfaced as a blank "Rank  " caption and a filter dropdown with an
+   * empty option, on the one system this browser was re-labelled for. Same
+   * defect class as `formatCastingTime` reading `ct.amount` on a power that has
+   * no casting time (docs/GAPS.md §20.2) — a shared browser over seven
+   * catalogs, typed against one of them.
+   */
+  level?: number;
+  school?: string;
   castingTime: string;
   range: string;
   duration: string;
@@ -80,12 +93,27 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
   const [selectedTradition, setSelectedTradition] = useState<string | null>(null);
 
+  // Absent level/school are dropped from the filter vocabularies rather than
+  // becoming a blank option that filters to nothing. A catalog where no entry
+  // has a level (M&M powers) yields an empty list, and the control below hides
+  // itself instead of offering a choice that cannot narrow anything.
   const levels = useMemo(
-    () => [...new Set(spells.map((s) => s.level))].sort((a, b) => a - b),
+    () =>
+      [
+        ...new Set(spells.map((s) => s.level).filter((l): l is number => typeof l === 'number')),
+      ].sort((a, b) => a - b),
     [spells]
   );
 
-  const schools = useMemo(() => [...new Set(spells.map((s) => s.school))].sort(), [spells]);
+  const schools = useMemo(
+    () =>
+      [
+        ...new Set(
+          spells.map((s) => s.school).filter((s): s is string => typeof s === 'string' && s !== '')
+        ),
+      ].sort(),
+    [spells]
+  );
 
   const classes = useMemo(() => [...new Set(spells.flatMap((s) => s.classes))].sort(), [spells]);
 
@@ -171,41 +199,47 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
 
       {/* Filters */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        {/* Level Filter */}
-        <div>
-          <label className="block text-sm font-medium mb-2">{t.level}</label>
-          <select
-            value={selectedLevel ?? ''}
-            onChange={(e) => setSelectedLevel(e.target.value ? parseInt(e.target.value) : null)}
-            className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            aria-label={t.levelAria}
-          >
-            <option value="">{t.allLevels}</option>
-            {levels.map((level) => (
-              <option key={level} value={level}>
-                {level === 0 ? t.levelZero : `${t.levelPrefix} ${level}`}
-              </option>
-            ))}
-          </select>
-        </div>
+        {/* Level Filter — hidden when no entry in this catalog has a level.
+            A select whose only option is "All" cannot narrow anything, and
+            offering it implies the catalog has a dimension it does not. */}
+        {levels.length > 0 && (
+          <div>
+            <label className="block text-sm font-medium mb-2">{t.level}</label>
+            <select
+              value={selectedLevel ?? ''}
+              onChange={(e) => setSelectedLevel(e.target.value ? parseInt(e.target.value) : null)}
+              className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              aria-label={t.levelAria}
+            >
+              <option value="">{t.allLevels}</option>
+              {levels.map((level) => (
+                <option key={level} value={level}>
+                  {level === 0 ? t.levelZero : `${t.levelPrefix} ${level}`}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
-        {/* School Filter */}
-        <div>
-          <label className="block text-sm font-medium mb-2">{t.school}</label>
-          <select
-            value={selectedSchool ?? ''}
-            onChange={(e) => setSelectedSchool(e.target.value || null)}
-            className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            aria-label={t.schoolAria}
-          >
-            <option value="">{t.allSchools}</option>
-            {schools.map((school) => (
-              <option key={school} value={school}>
-                {school.charAt(0).toUpperCase() + school.slice(1)}
-              </option>
-            ))}
-          </select>
-        </div>
+        {/* School Filter — same rule as Level above. */}
+        {schools.length > 0 && (
+          <div>
+            <label className="block text-sm font-medium mb-2">{t.school}</label>
+            <select
+              value={selectedSchool ?? ''}
+              onChange={(e) => setSelectedSchool(e.target.value || null)}
+              className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              aria-label={t.schoolAria}
+            >
+              <option value="">{t.allSchools}</option>
+              {schools.map((school) => (
+                <option key={school} value={school}>
+                  {school.charAt(0).toUpperCase() + school.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Class Filter */}
         <div>
@@ -275,9 +309,22 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <h3 className="font-semibold text-lg">{spell.name}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {t.levelPrefix} {spell.level} {spell.school}
-                    </p>
+                    {/*
+                      Built from the parts that exist. With `level` and `school`
+                      both absent — every M&M power — this used to render the
+                      prefix followed by two blanks ("Rank  "), a caption
+                      promising two facts and showing neither.
+                    */}
+                    {(spell.level !== undefined || spell.school) && (
+                      <p className="text-sm text-muted-foreground">
+                        {[
+                          spell.level !== undefined ? `${t.levelPrefix} ${spell.level}` : null,
+                          spell.school || null,
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
+                      </p>
+                    )}
                   </div>
                   <div className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
                     {spell.classes.join(', ')}

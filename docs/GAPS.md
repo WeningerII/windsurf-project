@@ -54,7 +54,6 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | § | Finding |
 | --- | --- |
 | [11](#11-provenance-over-inclusion-outside-srcdata-added-2026-07-25) | OC-1 awaits an owner decision; the gate's honest residual is unclosed |
-| [12](#12-unresolved-a11y-contrast-finding-on-the-creation-surface-added-2026-07-25) | Quarantined `color-contrast` violation, needs a live browser |
 | [19](#19-mm-3e-adversaries--the-source-search-and-why-nothing-was-encoded-added-2026-07-28) | The open-content M&M adversary source exists but this sandbox cannot reach it; options recorded, owner decides |
 | [20](#20-the-first-full-chain-green-run--what-twelve-never-executed-gates-actually-proved-added-2026-07-28) | Run itself CLOSED; the orphaned feat-automation copy and the unpinned shared-formatter contract are OPEN |
 
@@ -81,6 +80,7 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | [6](#6-reconsider-artifact--decided-2026-07-21-executed-2026-07-27) | `docs/srd-manifest/` demotion | executed 2026-07-27; Denominator A is `docs/generated/srd-coverage.md` |
 | [8](#8-w6-executable-activity-contract--close-by-rule-under-constraint-5-added-2026-07-24) | W6 executable-activity contract | close-by-rule: one consumer, not graduated |
 | [9](#9-make-me-a-game-flow--what-it-composes-and-what-it-deliberately-does-not-added-2026-07-24) | Make-me-a-game flow scope | scope record; nothing stubbed |
+| [12](#12-unresolved-a11y-contrast-finding-on-the-creation-surface-added-2026-07-25) | a11y contrast on the creation surface | un-quarantined 2026-07-28; it was a real AA failure (amber-600 at 3.18:1), fixed to amber-700 |
 | [13](#13-srd-521-will-o-wisp--upstream-str-score-defect-added-2026-07-25) | Will-o'-Wisp STR-score defect | re-transcription; superseded by §15 |
 | [17](#17-mm-3e-equipment--150-hand-written-entries-one-false-citation-added-2026-07-25) | M&M 3e equipment provenance | encoder + `check:mam-equipment` gate, merged |
 
@@ -922,10 +922,40 @@ denominator of SRD section titles, which does not exist in-repo.
 
 ## 12. Unresolved a11y contrast finding on the creation surface (added 2026-07-25)
 
-**Status: OPEN.** Re-verified 2026-07-26 — the scan is still quarantined
-(`test.fixme(...)` at `e2e/a11y.spec.ts:151`) and `KNOWN_A11Y_DEBT` is still
-empty (`:22`), so `color-contrast` remains enforced on every other surface. This
-one needs a live browser; nothing in it can be advanced from source alone.
+**Status: CLOSED 2026-07-28 — and it was a live WCAG AA failure, not a
+measurement artifact.** The quarantine is lifted, the scan runs, and all four
+a11y tests pass. `KNOWN_A11Y_DEBT` is still empty, so nothing was allowlisted.
+
+**What it actually was.** Run against a real browser — the one thing the note
+below said was needed — the failing node is
+`<span>No class levels are selected yet.</span>`, the creation-validation
+warning, inheriting `text-amber-600` (`#d97706`) on the card's `#ffffff` at
+12px: **3.18:1** against AA's 4.5:1. Tailwind's amber-600 does not pass as body
+text on white on any surface. The app now uses amber-700 (`#b45309`, 5.02:1)
+across the 13 call sites that shared it. Dark mode was already compliant
+(`amber-400` at 11.98:1), so only the light value moved.
+
+**The diagnosis recorded below did not survive the live DOM, and is kept for the
+trail rather than rewritten.** It describes `#6b788c` on ability-score labels at
+4.47:1 and infers "something applies opacity that the declaration does not". On
+this surface every element from the failing span up to the dialog reports
+`opacity: 1` and `filter: none`, and the rendered colour is exactly what the
+class declares. Whether the earlier finding was a different element since fixed
+or a misread, it was not this one — so the reasoning that followed from it,
+including the compositing theory, never had anything to explain.
+
+**What this cost, which is the part worth carrying.** The quarantine was placed
+correctly — at the test level, rather than by adding `color-contrast` to
+`KNOWN_A11Y_DEBT`, which would have blinded the gate on every surface. It was
+still hiding a shipped AA failure on the screen where every character in this
+app is created, for all seven systems, from 2026-07-25 to 2026-07-28. Nothing
+else caught it because the only test that looked was skipped. **A quarantined
+test is a gate that cannot fail**, and it should carry an expiry or an owner,
+not just a good reason.
+
+---
+
+*Original 2026-07-25 record, superseded above:*
 
 `e2e/a11y.spec.ts` scans the New Character dialog + guided-creation wizard for
 critical/serious axe violations. That scan is currently **`test.fixme`** — a

@@ -261,7 +261,7 @@ export function DaggerheartSheetHeader({ controller }: Props) {
             </div>
           </div>
           <div className="min-w-[80px] rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
-            <div className="flex items-center justify-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400">
+            <div className="flex items-center justify-center gap-1 text-xs font-medium text-amber-700 dark:text-amber-400">
               <Star className="h-3 w-3" /> Hope
             </div>
             <input

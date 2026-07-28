@@ -319,13 +319,21 @@ Per-system engines now load through the registry's `loadEngine`/`peekEngine`/`pr
 
 **Two constraints nobody had written down until now:** the two flag-gated phases are *mutually exclusive in practice* — enabling the Phase-6 canvas flag disables Phase-4 drag (`sceneDragEnabled && !sceneCanvasEnabled`), so they cannot both be on to preview the destination. And the canvas render drops the map-image layer the DOM grid carries, which is a second reason its flag stays off.
 
-### 6.3 `p5.infra-gaps` residuals — **READY**
+### 6.3 `p5.infra-gaps` residuals — ~~READY~~ **NOT WORK — mislabelled**
 
-Four recorded decisions rather than omissions: no analytics network sink (`createBeaconSink` is seam-only), Sentry release wiring deferred behind the bundle budget, server-side 5xx alerting is ops provisioning, and the §12 a11y contrast quarantine.
+This has no work item in it. All four entries are *recorded decisions*: no analytics network sink (`createBeaconSink` is seam-only, deliberately), Sentry release wiring deferred behind the bundle budget, server-side 5xx alerting is ops provisioning rather than code, and the a11y contrast quarantine — which §6.4 has now closed.
 
-### 6.4 The quarantined a11y contrast finding — **READY**
+It read **READY** because the section exists, not because anything in it is dispatchable. Corrected 2026-07-28 rather than left to consume a lane's scoping time. The three genuine decisions still stand as decisions; if any is ever reversed it becomes a new item, not this one.
 
-`e2e/a11y.spec.ts` has one `test.fixme` on the dialog/wizard scan. Needs a live browser to reproduce — it is not determinable from source. Deliberately quarantined at the *test* level rather than by allowlisting `color-contrast`, which would blind the gate to every genuine contrast regression on every surface.
+### 6.4 ~~The quarantined a11y contrast finding~~ — **DONE 2026-07-28: it was a real WCAG AA failure**
+
+The `test.fixme` on the dialog/wizard scan is gone and the test runs. Its note said resolving it needed the live DOM (computed styles up the ancestor chain), which was true and took about a minute once a browser was actually available.
+
+**The finding was real and was shipping.** The creation-validation warning — `<span>No class levels are selected yet.</span>` — inherits `text-amber-600` (`#d97706`) on the card's white at 12px, which is **3.18:1** against AA's 4.5:1. Tailwind's amber-600 does not pass as body text on white anywhere; the app now uses amber-700 (`#b45309`, 5.02:1). Dark mode was already compliant (`amber-400` at 11.98:1) so only the light value moved, across the 13 call sites that shared the colour.
+
+**The old note's diagnosis did not survive the live DOM**, and that is recorded in the spec rather than deleted: it described `#6b788c` on ability-score labels at 4.47:1 and inferred an unexplained opacity, but every element from the failing span up to the dialog reports `opacity: 1` and `filter: none`, and the colour is exactly what the class declares.
+
+**The transferable point:** the quarantine was correctly placed at the test level rather than by allowlisting `color-contrast` — but it still hid a live AA failure on the surface where every character in this app is created, for all seven systems, for as long as it stood. A skipped test is a gate that cannot fail.
 
 ### 6.5 Toolchain modernization — **READY**
 
@@ -339,7 +347,22 @@ A defect *class*, not a defect. Two instances have now shipped and been fixed on
 
 **The shape only diverges at runtime, per system, so TypeScript cannot catch it.** The per-system wrappers used to absorb it locally; collapsing them into one shared browser moved every such divergence onto the shared formatters at once. Expect more of these as Dock coverage grows.
 
-**The work:** audit `src/utils/formatters.ts` against what each of the seven loaders actually returns — not against the declared types — and give every field that is legitimately absent for some system a fallback rather than a guard-at-the-call-site. Absence is a valid value here, not a content defect, so this is not a place for a null check that silences a real data problem. A per-system fixture test over the shared browser row would pin it; today nothing does, and the crash was found by an e2e smoke test only because it took down the whole page.
+~~**The work:**~~ **DONE 2026-07-28.** The audit ran against what the loaders actually return, by loading all seven catalogs and counting absent fields rather than reading the types:
+
+| catalog | measured absences |
+| --- | --- |
+| `mam3e` spells (61 powers) | `castingTime` 61/61, `areaOfEffect` 61/61, **`level` 61/61, `school` 61/61** |
+| `mam3e` equipment (192) | `weight` 192/192 |
+| every d20 system's spells | `areaOfEffect` absent on most rows (e.g. PF1e 616/625) |
+| `daggerheart` | both catalogs empty (0 rows) |
+
+**One live defect found, one layer above the formatters.** `castingTime`, `cost` and `weight` were already handled. But `SpellBrowserSpell` declared `level: number` and `school: string` **required**, and M&M has neither — so the row caption rendered its prefix followed by two blanks (`"Rank  "`), and the Level and School filters offered a dropdown whose only entry was an empty option. The interface comment even asserted "rank rides `level`, power type rides `school`" — that describes an intended mapping the loader never populated. Both fields are now optional, absent values are dropped from the filter vocabularies, each filter hides itself when its vocabulary is empty, and the caption is built from the parts that exist.
+
+**`formatRange` and `formatDuration` were checked and are fine** — the probe found `range` and `duration` present on every row of every system, and both functions `switch` on `.type` and fall through to `'Unknown'`, so an unfamiliar shape degrades rather than throws.
+
+**The gate the plan asked for now exists:** `src/__tests__/dock/sharedFormatterShapes.test.ts` runs every formatter over every row of all seven shipped catalogs (15 tests), failing if one throws or leaks `undefined`/`null`/`NaN` into a caption. Proven able to fail: deleting the `formatCastingTime` guard reproduces `TypeError: Cannot read properties of undefined (reading 'amount')` against the mam3e catalog — the original crash — and turns the suite red.
+
+**Still true, and the reason this was a class rather than a bug:** absence is legitimate. A power has no casting time, and that must not be "fixed" in the data. Expect more of these as Dock coverage grows — the test is the thing that will catch the next one at unit level instead of via an e2e smoke test that only noticed because the page died.
 
 ---
 

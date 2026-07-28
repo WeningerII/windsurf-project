@@ -480,7 +480,7 @@ function ValidationSummary({
             issue.severity === 'error'
               ? 'text-destructive'
               : issue.severity === 'warning'
-                ? 'text-amber-600 dark:text-amber-400'
+                ? 'text-amber-700 dark:text-amber-400'
                 : 'text-muted-foreground'
           }`}
         >
