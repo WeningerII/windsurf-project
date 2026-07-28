@@ -273,7 +273,8 @@ export function useMam3eMutationHandlers({
   }, [update]);
 
   const rollCheck = useCallback(
-    (checkId: string) => systemRegistry.get(document.systemId)!.engine.rollCheck(document, checkId),
+    async (checkId: string) =>
+      (await systemRegistry.loadEngine(document.systemId))!.rollCheck(document, checkId),
     [document]
   );
 

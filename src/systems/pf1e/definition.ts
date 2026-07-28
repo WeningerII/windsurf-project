@@ -1,6 +1,5 @@
 import { SystemDefinition } from '../../registry/types';
 import { Pf1eDataModel, createDefaultPf1eData } from './data-model';
-import { Pf1eEngine } from './engine';
 import { makeD20LegacySheet } from '../d20-legacy/wrapper';
 import { SYSTEM_SUPPORT_NOTES } from '../../utils/documentationCopy';
 
@@ -44,7 +43,11 @@ export const Pf1eSystemDef: SystemDefinition<Pf1eDataModel> = {
     { id: 'use-magic', name: 'Use Magic Device', attribute: 'cha' },
   ],
   createDefaultData: createDefaultPf1eData,
-  engine: new Pf1eEngine(),
+  // Lazy engine: the dynamic import keeps this system's engine — and the shared
+  // rules-IR surface it pulls in — out of the eager registry bootstrap chunk,
+  // matching how the validator, legal-actions and creation-plan seams already
+  // load. The registry resolves it once and caches the instance.
+  loadEngine: () => import('./engine').then((m) => new m.Pf1eEngine()),
   loadValidator: () => import('./validation').then((m) => m.pf1eValidator),
   loadLegalActions: () =>
     import('../d20-legacy/legalActions').then((m) =>

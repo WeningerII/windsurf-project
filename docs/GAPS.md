@@ -69,7 +69,7 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | [10](#10-ai-gateway-provider-agnosticism--what-is-proven-and-what-is-not-added-2026-07-25) | AI gateway provider-agnosticism | no live-API proof; no failover; no pricing |
 | [14](#14-p5infra-gaps--inventory-what-was-closed-and-what-is-deliberately-not-built-added-2026-07-25) | `p5.infra-gaps` | 14.4 — Sentry release/env, server 5xx, durable rate-limit store |
 | [15](#15-field-level-srd-fidelity--audit-result--the-gate-that-now-guards-it-added-2026-07-25) | Field-level SRD fidelity | **(b)** and **(c)** unfixed — the largest open content-integrity item |
-| [16](#16-lazy-per-system-engines--what-was-reclaimed-and-exactly-what-blocks-the-rest-added-2026-07-25) | Lazy per-system engines | engine reclaim blocked, needs authorization |
+| [16](#16-lazy-per-system-engines--what-was-reclaimed-and-exactly-what-blocks-the-rest-added-2026-07-25) | Lazy per-system engines | CLOSED — reclaim landed via the preload design (16.5) |
 | [18](#18-provenance-over-inclusion--the-audit-result-and-the-gate-that-now-bounds-it-added-2026-07-25) | Provenance over-inclusion — 1,045 classified + gated | 31 records carry a false citation (owner decision); 3 measurement defects diagnosed, not repaired |
 
 **Closed, decided, or standing reference — kept for the evidence trail:**
@@ -1118,10 +1118,11 @@ sink should treat this section as the review that must be re-opened first.
 
 - **Sentry `release` + separate preview/production environments.** Both are
   one-line additions to `Sentry.init` in `src/main.tsx`, and both would genuinely
-  improve regression grouping (`sentry-alerts.md` §5). Not taken because
-  `main.tsx` is in the eager first-paint chunk, which is at **84.8 / 85.0 KiB
-  gzip**. The documented reclaim (lazy-loading per-system engines) is a separate
-  piece of work; these two should land immediately after it, not before.
+  improve regression grouping (`sentry-alerts.md` §5). Not taken at the time
+  because `main.tsx` is in the eager first-paint chunk, which was then at 84.8 /
+  85.0 KiB gzip. **That constraint is gone**: the lazy-engine reclaim landed
+  (§16.5) and the app chunk now sits well under its budget, so these two are
+  free to take.
 - **AI-gateway server-side 5xx in Sentry.** The function already emits one
   structured JSON line per request to the Netlify function log, and its
   `traceId` joins to the client-side events wired in 14.2 — so a client alert is
@@ -1302,14 +1303,12 @@ monsters.
 
 ## 16. Lazy per-system engines — what was reclaimed, and exactly what blocks the rest (added 2026-07-25)
 
-**Status: PARTLY CLOSED.** 16.2 landed and is verifiable: all seven
-`src/systems/*/definition.ts` now supply the lazy `loadValidator`, none the eager
-`validator:` field (2026-07-26). **The engine reclaim itself is blocked and needs
-an explicit authorization**, not more investigation — `SystemDefinition.engine`
-is still a required synchronous property (`src/registry/types.ts:250`) and
-`prepareDocumentWithEngine` still calls `.engine.prepareData` synchronously
-inside `setDocuments` updaters (`src/hooks/useDocuments.ts:18-23`). 16.4 states
-what unblocking needs; 16.4's second bullet is the decision to make.
+**Status: CLOSED (2026-07-28).** 16.2 landed first (all seven
+`src/systems/*/definition.ts` on the lazy `loadValidator`), and the engine
+reclaim itself has now landed too — via the preload design 16.4 named as the
+alternative, so the decision 16.4 asked for was never needed. 16.5 records what
+shipped and what it measured. 16.1–16.4 are kept verbatim as the investigation
+record; read them as history, not as the current state of the tree.
 
 The eager app chunk budget note in `scripts/check-bundle-size.mjs` names ONE
 structural reclaim as the thing that must pay for the next climb: **lazy-loading
@@ -1398,6 +1397,54 @@ alongside the registry seam); awaiting the engine chunk in `main.tsx` before
 it makes the fetch serial, so it games the gate rather than paying it); and any
 environment-divergent arrangement that keeps engines eager under test and lazy
 in the browser.
+
+### 16.5 What shipped (2026-07-28)
+
+The preload design, not the behaviour change. `SystemDefinition.engine` became
+optional and paired with `loadEngine`, exactly as `validator`/`loadValidator`
+already were. `SystemRegistry` gained three methods: `loadEngine` (resolve +
+cache the dynamic import; it never rejects, because engine resolution now sits
+on the document load and mutation paths where a rejected promise would take out
+the collection rather than one optional feature), `preloadEngines` (resolve a
+set at once), and `peekEngine` — a SYNCHRONOUS read of an already-resolved
+engine. `peekEngine` is what keeps the reclaim a pure code-splitting change: a
+caller pre-resolves, then runs exactly the synchronous code it ran before.
+
+Against the two things 16.3(2) said were observable:
+
+- **Documents are never published unprepared.** `useDocuments` resolves the
+  engines for the systems present in the loaded collection BEFORE publishing,
+  holding `isLoading` true meanwhile. When nothing is outstanding — an empty
+  store, or engines already resolved — the load block still runs synchronously
+  inside the effect, as it always did. The IndexedDB reconcile still starts in
+  parallel with the localStorage read and is only APPLIED after the localStorage
+  branch publishes, so the old ordering holds; its local-edit guard is
+  re-checked after the await.
+- **Mutation ordering inside the updaters is unchanged.** `updateDocument`
+  pre-resolves the engine OUTSIDE the updater; the version derivation still
+  reads `prev` from inside it, untouched. Add / import / cross-tab / sync-merge
+  pre-resolve then dispatch, and stay synchronous whenever the systems involved
+  are already resolved — which is every document already in the collection. The
+  one path that can reach a system with no document yet is creation, so opening
+  the New Character dialog warms the engines (engines only, not sheet chunks or
+  SRD metadata).
+
+One behaviour that is genuinely new, and deliberate: a failed engine chunk no
+longer yields silently stale derived values. The affected system ids surface
+through the hook's `error`, and the unprepared collection is not persisted, so
+stale math cannot be written back as authoritative.
+
+16.3(3)'s two test files were adapted as authorized — call shape only, no
+expectation touched. `applyMergedCollections.test.tsx` needed the same treatment
+for a different reason: its first add of a system is now the call that resolves
+that engine chunk, which a synchronous `act()` cannot settle.
+
+Measured on a clean build of the base commit versus the change: eager
+`index-*.js` **84,280 B -> 61,037 B gzip (-23,243 B)**, eager shell 187.8 ->
+165.1 KiB, `appChunkGzipBytes` unchanged at 85 KiB. Budget headroom against that
+ceiling goes from 2,760 B to 26,003 B. That is 23.2 KiB of the 23.6 KiB ceiling
+16.1 measured — the residue is the engine classes' own construction sites, which
+the throwaway stub also elided.
 
 ---
 

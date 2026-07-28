@@ -102,9 +102,10 @@ const LAZY_SURFACE_MODULES = ['src/components/SceneManager.tsx', 'src/components
  * lives in that system's directory, not because that system bootstraps eagerly.
  * Attributing this debt per system needs symbol-level analysis this gate does not
  * do. What is certain: 755.0 KiB rides first paint, and it must not grow.
- * Reducing it is the STRUCTURAL reclaim already named in the app-chunk budget
- * note (lazy-loading the per-system engines behind the registry) — a larger
- * async-boundary change tracked separately, NOT something Phase 7 should smuggle in.
+ * Reducing it is a separate, larger async-boundary change, NOT something Phase 7
+ * should smuggle in. (The engine reclaim that the app-chunk budget note below
+ * once named landed on 2026-07-28 — see docs/GAPS.md §16.5 — but it moved the
+ * shell's OWN code, not this per-system SRD data debt, which is untouched.)
  *
  * What IS hard-gated here: the list may only ever SHRINK. Any per-system data
  * chunk that newly joins the eager closure fails the build, so the debt cannot
@@ -159,6 +160,13 @@ const budgets = {
   // STRUCTURAL reclaim — lazy-loading the per-system engines behind the registry
   // (a larger async-boundary change, tracked separately) — not another bump.
   // The budget still catches a large jump — it is +1 KiB, with ~0.9 KiB headroom.
+  //
+  // 2026-07-28: that reclaim LANDED (docs/GAPS.md §16.5). Engines resolve through
+  // the registry's loadEngine/peekEngine seam, taking the seven engines and the
+  // rules-IR surface they pull out of the eager closure: 84,280 -> 61,037 B gzip.
+  // The ceiling is deliberately NOT ratcheted down — buying headroom for the next
+  // climb was the point of the reclaim, and this is that headroom being banked.
+  // What it is NOT is a licence to re-add eagerly what was just made lazy.
   appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 85 * 1024,
   // UI-shell Phase 7 (2026-07-24): the FIRST-PAINT budget for the shell's own
   // code — every eager chunk except the grandfathered per-system SRD data above

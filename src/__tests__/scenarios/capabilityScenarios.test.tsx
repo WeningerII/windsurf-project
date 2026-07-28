@@ -308,7 +308,9 @@ describe('Capability scenarios', () => {
     expect(token!.hp).toBeDefined();
   });
 
-  it('S5: every registered system computes default sheet state without error', () => {
+  // Async only because engines are lazily imported behind the registry's
+  // `loadEngine` seam; the assertions below are unchanged.
+  it('S5: every registered system computes default sheet state without error', async () => {
     const systems = systemRegistry.getAll();
     expect(systems.length).toBeGreaterThanOrEqual(7);
     for (const def of systems) {
@@ -320,7 +322,8 @@ describe('Capability scenarios', () => {
         createdAt: NOW,
         updatedAt: NOW,
       };
-      const prepared = def.engine.prepareData(doc);
+      const engine = await systemRegistry.loadEngine(def.id);
+      const prepared = engine!.prepareData(doc);
       expect(prepared).toBeDefined();
       expect(prepared.systemId).toBe(def.id);
     }

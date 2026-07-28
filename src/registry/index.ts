@@ -1,6 +1,7 @@
 import {
   SystemDefinition,
   SystemDataModel,
+  type SystemEngine,
   type SystemValidator,
   type ValidationContext,
   type ValidationResult,
@@ -33,6 +34,16 @@ export class SystemRegistry {
   // Mirrors `validatorCache`.
   private creationPlanCache: Map<string, Promise<CreationPlan<SystemDataModel>>> = new Map();
 
+  // Caches the promise from each system's lazy `loadEngine`, so an engine chunk
+  // is imported at most once. Mirrors `validatorCache`.
+  private engineCache: Map<string, Promise<SystemEngine<SystemDataModel> | undefined>> = new Map();
+
+  // The RESOLVED engines, readable synchronously. Callers that cannot await —
+  // React state updaters, most of all `useDocuments.updateDocument`, whose
+  // version derivation has to read `prev` inside the updater — pre-resolve with
+  // `loadEngine` and then read the instance back out of here synchronously.
+  private resolvedEngines: Map<string, SystemEngine<SystemDataModel>> = new Map();
+
   /**
    * Register a new game system.
    */
@@ -42,6 +53,10 @@ export class SystemRegistry {
         console.warn(`SystemRegistry: Overwriting existing system '${def.id}'`);
       }
     }
+    // A replacement definition brings its own engine, so any instance resolved
+    // from the previous one must not survive the swap.
+    this.engineCache.delete(def.id);
+    this.resolvedEngines.delete(def.id);
     // We cast to SystemDefinition<SystemDataModel> because T extends SystemDataModel
     // This implies that the registry holds generic system definitions.
     this.systems.set(def.id, def as unknown as SystemDefinition<SystemDataModel>);
@@ -59,6 +74,83 @@ export class SystemRegistry {
    */
   getAll(): SystemDefinition<SystemDataModel>[] {
     return Array.from(this.systems.values());
+  }
+
+  /**
+   * Read a system's engine SYNCHRONOUSLY, or `undefined` when it is not resolved
+   * yet. Never triggers a load — pair it with `loadEngine`/`preloadEngines`.
+   *
+   * This is the seam that lets lazy engines stay a pure code-splitting change:
+   * a caller resolves the engine before it needs it, then runs exactly the
+   * synchronous code it ran before.
+   */
+  peekEngine<T extends SystemDataModel = SystemDataModel>(
+    systemId: string
+  ): SystemEngine<T> | undefined {
+    const systemDef = this.systems.get(systemId);
+    if (systemDef?.engine) {
+      return systemDef.engine as unknown as SystemEngine<T>;
+    }
+    return this.resolvedEngines.get(systemId) as SystemEngine<T> | undefined;
+  }
+
+  /**
+   * Resolve a system's engine, preferring the lazy `loadEngine` dynamic import
+   * and caching the resolved instance so the chunk is fetched at most once per
+   * system. Falls back to an eagerly-supplied `engine`.
+   *
+   * Unlike the validator/legal-actions/creation-plan seams this NEVER rejects:
+   * engine resolution sits on the document load and mutation paths, where a
+   * rejected promise would take out the collection rather than one optional
+   * feature. A failed import resolves to `undefined` and is evicted from the
+   * cache so a later call retries. Callers decide what an absent engine means
+   * (`useDocuments` surfaces it rather than silently publishing unprepared math).
+   */
+  async loadEngine<T extends SystemDataModel = SystemDataModel>(
+    systemId: string
+  ): Promise<SystemEngine<T> | undefined> {
+    const systemDef = this.get<T>(systemId);
+    if (!systemDef) {
+      return undefined;
+    }
+    if (systemDef.engine) {
+      return systemDef.engine;
+    }
+    if (!systemDef.loadEngine) {
+      return undefined;
+    }
+
+    let pending = this.engineCache.get(systemId) as
+      | Promise<SystemEngine<T> | undefined>
+      | undefined;
+    if (!pending) {
+      pending = systemDef
+        .loadEngine()
+        .then((engine) => {
+          this.resolvedEngines.set(systemId, engine as unknown as SystemEngine<SystemDataModel>);
+          return engine;
+        })
+        .catch(() => {
+          this.engineCache.delete(systemId);
+          return undefined;
+        });
+      this.engineCache.set(systemId, pending as Promise<SystemEngine<SystemDataModel> | undefined>);
+    }
+    return pending;
+  }
+
+  /**
+   * Resolve the engines for a set of systems at once. Used before publishing a
+   * collection so every document in it can be prepared synchronously.
+   */
+  async preloadEngines(systemIds: Iterable<string>): Promise<void> {
+    const pending = [...new Set(systemIds)]
+      .filter((systemId) => !this.peekEngine(systemId))
+      .map((systemId) => this.loadEngine(systemId));
+    if (pending.length === 0) {
+      return;
+    }
+    await Promise.all(pending);
   }
 
   /**

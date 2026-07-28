@@ -136,22 +136,22 @@ export const D20CombatSection: React.FC<Props> = ({
         <div className="flex flex-wrap items-center gap-2">
           <DiceRollButton
             label="Attack Roll"
-            onRoll={() =>
-              systemRegistry.get(document.systemId)!.engine.rollCheck(document, 'attack')
+            onRoll={async () =>
+              (await systemRegistry.loadEngine(document.systemId))!.rollCheck(document, 'attack')
             }
           />
           {isPf1e ? (
             <DiceRollButton
               label="Combat Maneuver"
-              onRoll={() =>
-                systemRegistry.get(document.systemId)!.engine.rollCheck(document, 'cmb')
+              onRoll={async () =>
+                (await systemRegistry.loadEngine(document.systemId))!.rollCheck(document, 'cmb')
               }
             />
           ) : (
             <DiceRollButton
               label="Grapple Check"
-              onRoll={() =>
-                systemRegistry.get(document.systemId)!.engine.rollCheck(document, 'grapple')
+              onRoll={async () =>
+                (await systemRegistry.loadEngine(document.systemId))!.rollCheck(document, 'grapple')
               }
             />
           )}

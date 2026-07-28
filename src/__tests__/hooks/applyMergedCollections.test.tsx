@@ -61,7 +61,12 @@ describe('applyMerged collections (sync onMerge pathway)', () => {
       result.current.addDocument(makeDoc('keep-doc'));
       result.current.addDocument(makeDoc('tombstoned-doc'));
     });
-    expect(result.current.documents.map((d) => d.id)).toEqual(['keep-doc', 'tombstoned-doc']);
+    // Awaited because these are the FIRST documents of their system in this
+    // store: engines load lazily, so the very first add resolves the engine
+    // chunk before dispatching. Everything after it is synchronous again.
+    await waitFor(() =>
+      expect(result.current.documents.map((d) => d.id)).toEqual(['keep-doc', 'tombstoned-doc'])
+    );
 
     // Sync merge came back without the tombstoned document.
     act(() => {
@@ -88,6 +93,8 @@ describe('applyMerged collections (sync onMerge pathway)', () => {
     act(() => {
       result.current.addDocument(makeDoc('doomed-doc'));
     });
+    // Awaited for the lazy-engine reason documented in the test above.
+    await waitFor(() => expect(result.current.documents.map((d) => d.id)).toEqual(['doomed-doc']));
 
     act(() => {
       result.current.applyMergedDocuments([]);

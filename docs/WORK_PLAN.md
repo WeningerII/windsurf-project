@@ -67,21 +67,17 @@ What the inventory established, kept here because it explains *why* deleting was
 
 **Remaining action:** the branch deletions themselves still need to be run against `origin` — they were blocked here as a destructive remote operation.
 
-### 0.3 May documents publish one microtask late on cold start?
+### 0.3 May documents publish one microtask late on cold start? — ~~DECIDE~~ **MOOT 2026-07-28**
 
-`src/hooks/useDocuments.ts` defines `prepareDocumentWithEngine` (line 18) — the single eager consumer blocking lazy per-system engines. **The hazard is narrower than this section previously claimed**, which changes the remedy:
+**The question never had to be answered.** The recorded alternative — a preload design guaranteeing engine resolution *before* `useDocuments` publishes — was built instead, so documents still never publish unprepared and the version derivation inside `updateDocument` never moved.
 
-- Line 28 prepares a whole list inside a `.map()` — the load / import / cross-tab / sync-merge paths reach it here, and they compute *before* dispatching, so they can await a lazy engine without reordering anything.
-- Line 214 (`addDocument`) likewise computes before dispatch.
-- **Line 232 (`updateDocument`) is the only genuine problem.** It sits inside an `applyDocumentsUpdate((prev) => …)` updater and reads `prev` to derive the next version — deliberately, so that a stale `doc` reused across rapid successive edits cannot collide on a version and drop the later edit. Making that async changes mutation ordering.
+Why it was avoidable, kept because it is the transferable part: the hazard was narrower than this section originally claimed. `prepareDocumentWithEngine` has two direct call sites plus a list `.map()`, not six. The load / import / cross-tab / sync-merge paths all compute *before* dispatching, so they can await a lazy engine without reordering anything. Only `updateDocument` sat inside an `applyDocumentsUpdate((prev) => …)` updater, reading `prev` to derive the next version — deliberately, so a stale doc reused across rapid successive edits cannot collide on a version and drop the later edit.
 
-So the behaviour change is confined to `updateDocument` plus the cold-start load path, where documents would publish unprepared for ≥1 microtask. That is still a behaviour change and still fails the standing safety bar for touching engine math — but it is one call site, not six.
+Once that was established, pre-resolving the engine *outside* the updater made the whole authorization question moot. **A decision that looks like it needs owner sign-off is sometimes a decision resting on an unverified premise** — checking the premise cost less than asking.
 
-Two tests (`mam3eValidation.test.ts:33`, `capabilityScenarios.test.tsx:323`) read `.engine` synchronously inside sync `it()` bodies; unblocking also needs authorization to change their **call shape** — not their expectations.
+Only the two named test files' **call shape** changed, plus `applyMergedCollections.test.tsx` for the same reason. No expectation changed.
 
-**Unblocks:** 21.2 KiB of eager-bundle headroom (§6.1). The measured ceiling is 23.6 KiB; 2.4 KiB has been claimed.
-**Third option, now that the shape is known:** await at the sites that already compute before dispatch, and keep `updateDocument` synchronous by pre-resolving the engine *before* the updater runs. Gets the reclaim without touching mutation ordering. **This is now the recommended path** — it needs no authorization at all.
-**Alternative if the answer is no:** a preload design that guarantees resolution before `useDocuments` publishes. More work, no behaviour change.
+**Unblocked:** §6.1, now closed.
 
 ### 0.4 ~~The contribution ledger — wire a consumer, or delete ~1,600 LOC?~~ — **DECIDED AND DONE 2026-07-27**
 
@@ -270,9 +266,9 @@ Note the failure mode is *order ambiguity*, not re-rolling: every random value i
 
 ## 6. Infrastructure and hardening
 
-### 6.1 Finish the eager-bundle reclaim — **BLOCKED on 0.3**
+### 6.1 Finish the eager-bundle reclaim — ~~BLOCKED on 0.3~~ **DONE 2026-07-28**
 
-2.4 KiB claimed of a measured 23.6 KiB ceiling; headroom is now ~2,658 bytes against the 85 KiB budget. Rejected alternatives are recorded so they are not re-proposed: an engine-internal `rollCheck` split (only 2.5 KiB, and it introduces a *second* engine-loading mechanism), and awaiting engines in `main.tsx` before `render()` (shrinks the measured chunk without shrinking first paint — that games the gate rather than paying it).
+Per-system engines now load through the registry's `loadEngine`/`peekEngine`/`preloadEngines` seam (`src/registry/index.ts`), with `useDocuments` pre-resolving before it publishes or dispatches. Measured against a clean build of the base commit: eager `index-*.js` 84,280 B -> 61,037 B gzip, eager shell 187.8 -> 165.1 KiB, `appChunkGzipBytes` unchanged at 85 KiB — headroom against that budget goes from 2,760 B to 26,003 B. Evidence and the design rationale: `docs/GAPS.md` §16.5. The rejected alternatives recorded there still stand as rejected.
 
 ### 6.2 UI shell Phases 6 and 7 — **partly BLOCKED**
 

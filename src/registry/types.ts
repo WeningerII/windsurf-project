@@ -246,8 +246,20 @@ export interface SystemDefinition<T extends SystemDataModel> {
   // Returns a default/empty data state for a new character
   createDefaultData: () => T;
 
-  // The Logic Engine implementation
-  engine: SystemEngine<T>;
+  // The Logic Engine implementation.
+  //
+  // Optional, and paired with `loadEngine` exactly as `validator` is paired with
+  // `loadValidator`. Shipping definitions supply only the lazy `loadEngine` so a
+  // system's engine — and the whole rules-IR surface it pulls in — is code-split
+  // out of the eager registry bootstrap chunk. The eager field remains for test
+  // doubles and for any definition that has nothing worth splitting.
+  engine?: SystemEngine<T>;
+
+  // Lazy variant of `engine`: a dynamic import that resolves the engine on first
+  // use. The registry caches the resolved instance per system and also exposes it
+  // synchronously through `peekEngine` once resolved, so callers that must stay
+  // synchronous (React state updaters) can pre-resolve and then run unchanged.
+  loadEngine?: () => Promise<SystemEngine<T>>;
 
   // Optional validation hook for import, guided creation, and AI draft review.
   validator?: SystemValidator<T>;
