@@ -347,7 +347,22 @@ A defect *class*, not a defect. Two instances have now shipped and been fixed on
 
 **The shape only diverges at runtime, per system, so TypeScript cannot catch it.** The per-system wrappers used to absorb it locally; collapsing them into one shared browser moved every such divergence onto the shared formatters at once. Expect more of these as Dock coverage grows.
 
-**The work:** audit `src/utils/formatters.ts` against what each of the seven loaders actually returns — not against the declared types — and give every field that is legitimately absent for some system a fallback rather than a guard-at-the-call-site. Absence is a valid value here, not a content defect, so this is not a place for a null check that silences a real data problem. A per-system fixture test over the shared browser row would pin it; today nothing does, and the crash was found by an e2e smoke test only because it took down the whole page.
+~~**The work:**~~ **DONE 2026-07-28.** The audit ran against what the loaders actually return, by loading all seven catalogs and counting absent fields rather than reading the types:
+
+| catalog | measured absences |
+| --- | --- |
+| `mam3e` spells (61 powers) | `castingTime` 61/61, `areaOfEffect` 61/61, **`level` 61/61, `school` 61/61** |
+| `mam3e` equipment (192) | `weight` 192/192 |
+| every d20 system's spells | `areaOfEffect` absent on most rows (e.g. PF1e 616/625) |
+| `daggerheart` | both catalogs empty (0 rows) |
+
+**One live defect found, one layer above the formatters.** `castingTime`, `cost` and `weight` were already handled. But `SpellBrowserSpell` declared `level: number` and `school: string` **required**, and M&M has neither — so the row caption rendered its prefix followed by two blanks (`"Rank  "`), and the Level and School filters offered a dropdown whose only entry was an empty option. The interface comment even asserted "rank rides `level`, power type rides `school`" — that describes an intended mapping the loader never populated. Both fields are now optional, absent values are dropped from the filter vocabularies, each filter hides itself when its vocabulary is empty, and the caption is built from the parts that exist.
+
+**`formatRange` and `formatDuration` were checked and are fine** — the probe found `range` and `duration` present on every row of every system, and both functions `switch` on `.type` and fall through to `'Unknown'`, so an unfamiliar shape degrades rather than throws.
+
+**The gate the plan asked for now exists:** `src/__tests__/dock/sharedFormatterShapes.test.ts` runs every formatter over every row of all seven shipped catalogs (15 tests), failing if one throws or leaks `undefined`/`null`/`NaN` into a caption. Proven able to fail: deleting the `formatCastingTime` guard reproduces `TypeError: Cannot read properties of undefined (reading 'amount')` against the mam3e catalog — the original crash — and turns the suite red.
+
+**Still true, and the reason this was a class rather than a bug:** absence is legitimate. A power has no casting time, and that must not be "fixed" in the data. Expect more of these as Dock coverage grows — the test is the thing that will catch the next one at unit level instead of via an e2e smoke test that only noticed because the page died.
 
 ---
 
