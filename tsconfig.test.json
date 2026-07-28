@@ -12,7 +12,14 @@
     "src/__tests__/**/*",
     "e2e/**/*",
     "playwright.config.ts",
-    "vitest.config.ts"
+    "vitest.config.ts",
+    // vite.config.ts was typechecked by NOTHING. tsconfig.json references
+    // tsconfig.node.json, which includes it, but project references are only
+    // honoured under `tsc -b` and no script uses build mode — `tsc --listFiles`
+    // and `tsc -p tsconfig.test.json --listFiles` both returned zero entries
+    // for it. That left 11 KB unchecked, including the two hand-written rollup
+    // plugins whose chunk-graph output is check:bundle-size's oracle.
+    "vite.config.ts"
   ],
   // The base config excludes src/__tests__/**; reset so the include above wins.
   "exclude": [],

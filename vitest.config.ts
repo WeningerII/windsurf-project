@@ -18,11 +18,33 @@ export default defineConfig({
     // multiplies its own runtime by the worktree count.
     exclude: [...configDefaults.exclude, 'e2e/**', '.tmp/**', '.claude/worktrees/**'],
     testTimeout: isCoverageRun ? 15000 : 10000,
-    fileParallelism: !isCoverageRun,
-    maxWorkers: isCoverageRun ? 1 : undefined,
+    // Coverage runs used to be forced fully serial (`fileParallelism: false`
+    // plus `maxWorkers: 1`), with no comment, doc or commit message giving a
+    // reason — and `npm run verify` passed `--maxWorkers=1` on top of it. That
+    // made the CI coverage step 253.8s, ~39% of the entire pipeline.
+    //
+    // Measured back-to-back on an idle machine, same command otherwise:
+    //   serial          286.4s   307 files / 3092 tests, cov 86.49/76.69/84.67/87.5
+    //   4 workers       108.1s   307 files / 3092 tests, cov 86.49/76.69/84.67/87.5
+    // Identical pass count, identical coverage, 2.65x faster.
+    //
+    // NOTE for anyone bisecting this: dropping only the `--maxWorkers=1` CLI
+    // flag changes nothing, because `fileParallelism: false` here is what
+    // actually serialized the run. Both had to go.
+    //
+    // The cap is explicit rather than left to the default because each worker
+    // holds its own v8 coverage map, and 4 is both the measured configuration
+    // and the vCPU count of the ubuntu-latest runner. If a smaller runner ever
+    // exhausts memory, lower this to 2 — do not go back to 1.
+    maxWorkers: isCoverageRun ? 4 : undefined,
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html', 'lcov'],
+      // No 'html': the lcov reporter is a composite that ALREADY emits an HTML
+      // tree (istanbul-reports' LcovReport wraps HtmlReport into
+      // coverage/lcov-report/). The two were byte-identical at 11,550,823 bytes
+      // each, 444 files apiece, differing only in a generation timestamp.
+      // A full HTML report still exists at coverage/lcov-report/index.html.
+      reporter: ['text', 'json', 'lcov'],
       include: [
         'src/components/**/*.{ts,tsx}',
         'src/utils/**/*.{ts,tsx}',

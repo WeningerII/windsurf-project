@@ -21,15 +21,23 @@ permissions:
   pages: write
   id-token: write
 
-# Serialize Pages deploys; a newer push supersedes an in-flight one.
+# Serialize Pages deploys. cancel-in-progress is deliberately FALSE: cancelling
+# between the deployment request and its completion can strand the deployment
+# in-progress and hold this single-slot group. ci.yml already states this policy
+# for its own deploys ("pushes to main/develop never cancel an in-flight
+# deploy"); this workflow contradicted it, and GitHub's own Pages starter uses
+# false for the same reason.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    # Without this, a hang holds the single-slot `pages` group for the 6-hour
+    # default. Matches the 15 on ci.yml's two deploy jobs.
+    timeout-minutes: 15
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

@@ -35,10 +35,36 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
+      # Keyed on the resolved @playwright/test version, not just the lockfile
+      # hash: a browser revision is pinned by that package, so a stale-key
+      # restore is the one way this cache could hide a real failure.
+      - name: Resolve Playwright version
+        id: pw
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.pw.outputs.version }}
+
+      # No --with-deps. It apt-installs 9 packages on ubuntu-latest and every
+      # one of them is a font (measured: 18.4s of the 30.6s step, "0 upgraded,
+      # 9 newly installed", zero shared libraries). The runner image already
+      # carries everything Chromium and Firefox link against. No spec in e2e/
+      # uses toHaveScreenshot or toMatchSnapshot, so the only thing the missing
+      # CJK/Thai fonts can affect is glyph rendering inside failure screenshots,
+      # never a DOM or text assertion. Restore --with-deps if a pixel-comparison
+      # assertion is ever added.
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium firefox
+        run: npx playwright install chromium firefox
 
       - name: Run full verification suite
+        # Skips the duplicate `tsc && vite build` inside Playwright's webServer:
+        # `npm run build` already ran earlier in this same chain and
+        # check:bundle-size gated that dist. See playwright.config.ts.
+        env:
+          PLAYWRIGHT_PREBUILT: '1'
         run: npm run verify
 
       - name: Upload build artifacts

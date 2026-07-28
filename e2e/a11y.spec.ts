@@ -217,5 +217,22 @@ test('a created character sheet and the Library bestiary browser have no critica
   await page.getByRole('button', { name: 'Bestiary', exact: true }).click();
   await page.getByLabel('Select game system').selectOption('dnd-5e-2024');
   await expect(page.getByLabel('Search monsters')).toBeVisible({ timeout: 30_000 });
-  await expectNoBlockingViolations(page, 'Bestiary (Library route)');
+
+  // Filter before scanning. The unfiltered list renders ~8,235 DOM nodes and
+  // axe cost is superlinear in node count, not in the number of DISTINCT
+  // widgets: measured 8,235 nodes -> 22.8s, 1,753 -> 3.2s, 1,221 -> 2.65s,
+  // 195 -> 0.59s, and every one of those scans reported the identical single
+  // (non-blocking) finding. Across both browser projects the unfiltered scan
+  // was 45.6s — 21.7% of all e2e execution time — to re-check the same row
+  // markup eight thousand times.
+  //
+  // Every axe rule still runs, over every distinct control on this surface.
+  // What is given up is duplicate-id-at-scale detection, and that is not a
+  // live exposure here: the full list carries exactly 3 `id` attributes and
+  // all 3 are unique. Restore the unfiltered scan if the row markup ever
+  // starts minting ids per row. The durable fix is virtualizing this list,
+  // which the real user on a low-end device needs more than CI does.
+  await page.getByLabel('Search monsters').fill('dragon');
+  await expect(page.getByRole('button', { name: /Adult .* Dragon/i }).first()).toBeVisible();
+  await expectNoBlockingViolations(page, 'Bestiary (Library route, filtered)');
 });

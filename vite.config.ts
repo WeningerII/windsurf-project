@@ -168,13 +168,21 @@ export default defineConfig({
       ext: '.br',
       threshold: 10240,
     }),
-    visualizer({
-      // Outside dist/ so the module-structure report is never deployed.
-      filename: './stats.html',
-      open: false,
-      gzipSize: true,
-      brotliSize: true,
-    }),
+    // Opt-in via `npm run analyze`. It ran on EVERY build and cost 8.2s of
+    // which 7.8s was computing gzip+brotli sizes for the report, while
+    // stats.html is gitignored, uploaded by no workflow, and read by no
+    // script — `check:bundle-size` computes its own gzip sizes from dist/.
+    ...(process.env.ANALYZE
+      ? [
+          visualizer({
+            // Outside dist/ so the module-structure report is never deployed.
+            filename: './stats.html',
+            open: false,
+            gzipSize: true,
+            brotliSize: true,
+          }),
+        ]
+      : []),
   ],
   resolve: {
     alias: {
@@ -271,5 +279,8 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 1000,
     sourcemap: false,
+    // Rollup's own gzip column is printed and then read by nobody:
+    // `check:bundle-size` gzips dist/ itself (gzipSync) and is the gate.
+    reportCompressedSize: false,
   },
 });

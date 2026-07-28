@@ -14,22 +14,33 @@
     "netlify/functions/*.mts"
   ],
   "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "netlify/functions/**/*.mts"],
+  // `.claude/worktrees/` holds agent worktrees — full nested checkouts of this
+  // repo. Without this, knip walks every worktree's copy of src/ and exhausts
+  // the heap: measured twice at ~80s then `FATAL ERROR: Reached heap limit`
+  // (exit 134), which aborts `npm run verify` at step 15 of 22 so the last
+  // seven gates never run locally. The identical tree with the worktrees absent
+  // completes in 8.0s. Same defect vitest.config.ts and eslint.config.js each
+  // carry an exclude for.
+  //
+  // knip prints "Configuration hints (2) — remove from ignore" for these two
+  // whenever no worktree happens to exist. That is expected and the entries
+  // must STAY: they are load-bearing the moment an agent worktree appears
+  // again, and the failure they prevent is an OOM abort that silently skips
+  // every gate after this one. Hints are informational; knip still exits 0.
   "ignore": [
-    "src/__tests__/vitest.d.ts",
-    // Deliberate seams: reachable by design decision, not by the import graph.
-    // Each entry cites the doc that ratifies it. Do not add to this list without one.
-
-    // RFC 002 (AI control plane) + docs/GAPS.md §9: the make-me-a-game flow is
-    // composed but deliberately not wired to a UI entry point yet.
-    "src/ai/makeMeAGameFlow.ts",
-
-    // RFC 006 (scene/encounter runtime): grid geometry proposal awaits the
-    // Phase 10 vision adapter that will consume it.
-    "src/scene/gridGeometryProposal.ts",
-
-    // docs/GAPS.md §8 (W6 executable-activity contract): CLOSE-BY-RULE at a
-    // single consumer; kept as the contract surface.
-    "src/systems/dnd5e/shared/activities.ts"
+    ".claude/**",
+    ".tmp/**",
+    "src/__tests__/vitest.d.ts"
+    // Deliberate seams that were exempted here are gone: knip itself now
+    // reports all three as resolvable ("Configuration hints (3) — remove from
+    // ignore"), and removing them leaves the gate exit-0 with no output. At
+    // least one exemption was provably obsolete — it claimed makeMeAGameFlow.ts
+    // was "deliberately not wired to a UI entry point yet", which stopped being
+    // true when the character-draft flow got its entry point in 02d7b45. Three
+    // modules are now subject to dead-code detection that were exempt from it.
+    //
+    // Do not add to this list without citing the doc that ratifies the seam,
+    // AND re-checking that knip does not already resolve it.
   ],
   "ignoreDependencies": ["playwright-core"],
   "ignoreBinaries": ["graphify"],
