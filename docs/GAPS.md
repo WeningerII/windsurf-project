@@ -55,6 +55,7 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | --- | --- |
 | [11](#11-provenance-over-inclusion-outside-srcdata-added-2026-07-25) | OC-1 awaits an owner decision; the gate's honest residual is unclosed |
 | [12](#12-unresolved-a11y-contrast-finding-on-the-creation-surface-added-2026-07-25) | Quarantined `color-contrast` violation, needs a live browser |
+| [19](#19-mm-3e-adversaries--the-source-search-and-why-nothing-was-encoded-added-2026-07-28) | No encodable open-content M&M adversary source exists; options recorded, owner decides |
 
 **Partly closed — evidence for what shipped, residual named inside:**
 
@@ -62,7 +63,7 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | --- | --- | --- |
 | [1](#1-content-denominator-a--independent-srd-coverage) | Independent SRD coverage | unwired categories; 3.5e monster misses |
 | [2](#2-compute-denominator-b--register-completeness--engine-wiring) | Register completeness + engine wiring | L8 typed damage; legality layer unreached by any UI |
-| [3](#3-bestiaries--rfc-004) | Bestiaries / RFC 004 | M&M 3e adversary data |
+| [3](#3-bestiaries--rfc-004) | Bestiaries / RFC 004 | M&M 3e adversary data — source search done, see §19 |
 | [4](#4-global-done-criteria-still-outstanding) | GLOBAL DONE criteria | `Full` measures automation depth, not content completeness |
 | [7](#7-rules-ir-parity-debt--per-system-accounting-added-2026-07-21) | Rules-IR parity debt | nothing outside tests consumes the legal-actions seam |
 | [10](#10-ai-gateway-provider-agnosticism--what-is-proven-and-what-is-not-added-2026-07-25) | AI gateway provider-agnosticism | no live-API proof; no failover; no pricing |
@@ -452,7 +453,11 @@ product-reachable through the scene encounter flow
 in `docs/generated/roadmap-metrics.md` and `docs/generated/srd-coverage.md`, not
 here. **The residual, still open:** M&M 3e adversary (reference) data — confirmed
 2026-07-26, `src/data/mutants-and-masterminds/3e/` has no adversary or monster
-directory, and `src/utils/dataLoader.ts` exposes no M&M creature loader.
+directory, and `src/utils/dataLoader.ts` exposes no M&M creature loader. **§19
+(added 2026-07-28) is the search for a source to close this from, and its
+result** — no open-content M&M 3e adversary catalog exists that this repo's
+provenance rules can accept, so the residual is now blocked on an owner decision
+rather than on effort.
 Daggerheart, by contrast, ships loader-backed SRD adversaries
 (`loadDaggerheartAdversariesForSystem`, `src/utils/dataLoader.ts:807`), fieldable
 as monster-kind scene tokens since 2026-06-12 — the earlier claim here that
@@ -1960,6 +1965,153 @@ a PF1e counterpart — not present in the pinned `pf1e/magic-items` denominator,
 unconfirmed) and `Captain` (5e-2024; the existing disproof rests on a one-point AC
 difference, which cannot establish absence under any name, but no counterpart was
 established either). Both keep their current class pending evidence.
+
+## 19. M&M 3e adversaries — the source search, and why nothing was encoded (added 2026-07-28)
+
+**Status: OPEN — a recorded finding, not a repair.** No adversary data was
+written. §3's residual asked for M&M 3e adversary data so that RFC 004's
+"reference adversaries for the others" stops being half-delivered (Daggerheart
+ships them; M&M does not). This section is the search for something to encode
+that data *from*, and its result: **no open-content M&M 3e adversary catalog
+exists in a form this repo's provenance rules can accept.** Writing one anyway is
+how §17 and §18 happened.
+
+### 19.1 What was searched, and what each candidate actually contains
+
+**The upstream this repo already cites.** `frnprt/mm3e-character-creator`
+`js/data.js` (`src/scripts/srd-coverage.ts:733`), fetched 2026-07-28. Its
+complete set of top-level exports is `ABILITIES`, `ABILITY_COST`, `ADVANTAGES`,
+`ADVANTAGE_CATEGORIES`, `AFFLICTION_CONDITIONS`, `COMPLICATION_TYPES`,
+`COMPREHEND_TYPES`, `CONDITIONS`, `DEFENSES`, `DEFENSE_COST`, `EQUIPMENT_LIST`,
+`IMMUNITY_EXAMPLES`, `IMMUNITY_OPTIONS`, `INSUBSTANTIAL_TYPES`,
+`MEASUREMENT_TABLE`, `MOVEMENT_TYPES`, `POWER_DESCRIPTORS`, `POWER_EFFECTS`,
+`POWER_EFFECT_TYPES`, `POWER_EXTRAS`, `POWER_FLAWS`, `SENSES_TYPES`, `SKILLS`,
+`SKILL_COST`. **There is no NPC, adversary, villain, minion or archetype array
+in it.** It is a character-building component list; no stat block can be derived
+from it without inventing one.
+
+**d20HeroSRD.** The human-readable Hero SRD already cited at
+`docs/srd-sources.md:50` does publish an NPCs section (`/9-gamemastering/npcs/`,
+generic entries such as Criminal Minion, Mob Boss, Bruiser). Two things
+disqualify it as an encoder input, before the licensing question in 19.2 is even
+reached. It is HTML-only with no machine-readable mirror. And **it is not
+reachable** — every request to `d20herosrd.com` from this environment fails at
+the network proxy with `CONNECT tunnel failed, response 403`, so `curl` and the
+fetch tooling both fail before touching the site. Every encoder under `scripts/`
+reads a source verified fetchable at encode time. Encoding an unreachable HTML
+site means transcribing from recall, which is the precise failure mode §15 and
+§18 exist to stop.
+
+**Foundry VTT M&M 3e systems**, cloned and inspected 2026-07-28.
+`Deyzeria/foundrymnm3e` declares `"packs": []` in `system.json` and ships only
+advantage and power data under `json/`. `jonnyguio/foundryvtt-mutants-and-masterminds`
+has no packs directory at all. `Ikaguia/mnm3e` ships `packs/advantages.db` and
+`packs/power-effects.db` and nothing else. **None ships an NPC or adversary
+compendium**, and the MIT licence in each explicitly excludes pack content from
+its grant — so even where pack data exists it carries no usable licence.
+
+**`SkySpiral7/Humans-and-Heroes`** is the one machine-readable superhero-RPG NPC
+catalog the search found (37 character JSON files under
+`examples/characters/*/js/`, grouped animals / civilians / constructs /
+public-servants / super-heroes / trained-combatants / underworld-archetypes). It
+is **not M&M 3e**. It is a CC BY-SA 3.0 *fork* with divergent rules — its stat
+blocks carry a `transcendence` field M&M has no concept of — so shipping it as
+`mam3e` data under a Hero's Handbook citation would be committing §17's
+false-citation defect deliberately, and shipping it as faithful M&M content would
+be §15's. It is also not clean on its own terms: `other-works/js/Mewtwo.js` is a
+third-party IP character sitting inside the same catalog. Adopting it would
+further import a **ShareAlike** obligation that no other source in this repo
+carries.
+
+### 19.2 What the M&M licence actually permits — a correction owed
+
+`src/utils/openContentPolicy.ts:70-80` and `src/legal/attributions.ts:196` both
+state that the **sole** Product Identity in M&M 3e is the branded resource terms
+"Hero Points" and "Power Points". That is incomplete, and the omitted clause is
+the one that governs this section. Green Ronin's designation, as printed in the
+M&M books and reproduced consistently across editions, also declares Product
+Identity: *all characters and their associated images, descriptions, backgrounds,
+and related information.*
+
+An adversary catalog is a set of characters with descriptions and backgrounds.
+The *mechanics* a published NPC is built from — effect ranks, modifier maths,
+the cost tables — stay Open Game Content and are already shipped. The NPC **as a
+character** is on the other side of the line. d20HeroSRD's maintainer publishes
+the generic NPCs anyway; that is a fan site's reading, not the publisher's grant,
+and it is not a reading to adopt silently while §11 OC-1 and §18's 31 records are
+still waiting on an owner decision about a narrower question.
+
+A corroborating signal is already in the tree: `docs/srd-sources.md:50` records
+that d20HeroSRD renames "Hero Points" to "Victory Points" and "Power Points" to
+"Character Points". The site does scrub Product Identity where scrubbing is
+possible. It does not scrub the character write-ups, because scrubbing a
+character is deleting it.
+
+**Owed, not done here:** those two comments should be corrected to state the
+character clause, whether or not any adversary work ever proceeds. This lane
+wrote no code, and editing a published legal attribution is an owner-visible
+change rather than an audit's to make.
+
+### 19.3 The data set someone will reach for next — and why it does not close this
+
+`src/data/mutants-and-masterminds/3e/archetypes/` ships 15 archetype modules,
+loader-wired at `src/utils/dataLoader.ts:752`, counted at
+`src/scripts/generate-roadmap-metrics.ts:741`, each citing a real per-archetype
+d20HeroSRD URL (`.../archetypes/battlesuit.ts:23`). The Hero's Handbook's own
+archetypes chapter says the archetypes double as ready-made villains, so this
+looks like the shortest path to closing §3's residual. It is not, for two
+independent reasons.
+
+- **They are not stat blocks, and the type forbids them from becoming one.**
+  `Mam3eArchetype` (`src/types/mam/archetypes.ts:14`) carries `id`, `name`,
+  `source`, `description`, `suggestedSkills` and `features` — no abilities, no
+  defenses, no power level, no attack. That narrowness is deliberate and
+  recorded (`docs/srd-manifest/_exclusions.ts:47`,
+  `mam3e.archetypes.reference-only`). Nothing typed this way can be fielded as a
+  scene combatant the way `DaggerheartAdversary` (`src/types/daggerheart.ts:257`)
+  is.
+- **Their content does not come from the URL they cite.** Every one of the 15
+  files is roughly 46 lines. `battlesuit.ts` claims `sourceBook.page: 1` and
+  carries a one-line description plus two features ("Powered Armor", "Weapons
+  Array") that read as authored, not transcribed; the published archetype is a
+  full PL10 build. This is §18's defect class — a genuine citation attached to
+  content that did not come from it — in a data set the provenance audit did not
+  cover (§17.2 names archetypes among the untreated M&M sets). **It is a live
+  defect regardless of what is decided about adversaries.**
+
+### 19.4 The honest options
+
+Ranked by how much each asks of the owner. None was taken here; taking one is an
+owner decision.
+
+- **(a) Ship nothing, by recorded decision.** Close §3's residual the way 3.5e
+  equipment was closed for a structurally identical reason
+  (`src/scripts/srd-coverage.ts:722` — no clean source, and honest absence beats
+  a poisoned denominator, so no target was wired). Cost: M&M 3e stays the one
+  system with no fieldable opposition, and §3 never reaches CLOSED on content.
+  Reversible the day a source appears.
+- **(b) Ship clearly-labelled original content, the way §17 did for equipment.**
+  The machinery exists and is proven: the `originalContentSources` channel
+  (`src/utils/openContentPolicy.ts:94`), the `Original Content (not SRD)` label,
+  the `original` manifest status that keeps such entries out of the open-content
+  denominator, and the NOTICE/attribution split. Adversaries authored against
+  the *rules* — which are Open Game Content — rather than transcribed from any
+  book would be legitimate on the same footing as the 79 original equipment
+  entries. §17.2 already states that footing's cost, though:
+  `original-not-srd.ts` is hand-written and unaudited with no upstream to check
+  it against, and whether it should ship at all is explicitly the owner's call.
+  Option (b) doubles that surface rather than shrinking it.
+- **(c) Repair 19.3 first, independently.** The 15 archetypes should stop citing
+  per-page d20HeroSRD URLs for content that is not on those pages — either
+  re-sourced (blocked by 19.1's reachability finding) or relabelled through
+  (b)'s original-content channel. This is owed whichever of (a) or (b) is chosen,
+  and it is the smallest piece of real work named in this section.
+
+What is **not** an option: encoding from `Humans-and-Heroes`, from a Hero's
+Handbook PDF, or from recall. Each of those produces exactly the artifact §15 and
+§18 were opened to remove, and this time it would be produced knowingly.
+
+---
 
 ## Where the largest open work is
 
