@@ -81,13 +81,25 @@ export function setLastSyncedUserId(userId: string): void {
 export async function clearLocalDataForAccountChange(): Promise<void> {
   clearDocumentStorage();
   clearCampaignStorage();
-  clearSceneStorage();
+  // Scenes are two-tier (localStorage + IndexedDB). The localStorage key is
+  // dropped synchronously inside the call; hold the promise so the IndexedDB
+  // half is awaited below with the rest of the async wipes rather than racing
+  // the next account's initial load.
+  const scenesCleared = clearSceneStorage();
   clearQueuedSyncSnapshot();
   clearQueuedDeletedDocumentIds();
   clearQueuedCampaignsSnapshot();
   clearQueuedDeletedCampaignIds();
   clearSyncTombstones('documents');
   clearSyncTombstones('campaigns');
+
+  try {
+    await scenesCleared;
+  } catch {
+    // Best-effort: the localStorage scene snapshot is already gone, and the
+    // next load re-attempts nothing that could leak the previous account's
+    // scenes into a sync push (scenes have no backend channel).
+  }
 
   // clearDocumentStorage's own IndexedDB clear is fire-and-forget; issue an
   // awaited pass so a still-pending mirror cannot resurface after the switch.
