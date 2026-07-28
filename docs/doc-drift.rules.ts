@@ -366,11 +366,6 @@ export const RUNTIME_COPY_RULES: RuntimeCopyRule[] = [
     requiredTokens: ['DND5E_FEAT_COPY.selectedSupport'],
   },
   {
-    path: 'src/systems/dnd5e/shared/components/Dnd5eFeatBrowserTab.tsx',
-    kind: 'source-token',
-    requiredTokens: ['DND5E_FEAT_COPY.browserSupport'],
-  },
-  {
     path: 'src/systems/dnd5e/shared/components/Dnd5eFeatureOptionsSection.tsx',
     kind: 'source-token',
     requiredTokens: [

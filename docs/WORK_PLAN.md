@@ -139,11 +139,21 @@ Cannot be honestly closed while one system has no creature catalog.
 
 `_exclusions.ts` holds 10 entries and **none for PF2e**, yet PF2e reads `Full` and names a manual focus-spell surface in its own support row. By the plan's own rule — a system reads `Full` when its only residual gaps live in that registry — PF2e does not currently qualify. Either enumerate its boundaries or correct the label.
 
-### 4.3 Sheet eviction — the dual-home is not transient — **READY**
+### 4.3 Sheet eviction — ~~the dual-home is not transient~~ **DONE, four wrappers kept with reasons**
 
-Phase 5's *dispatch* half is complete at 7 of 7. The *eviction* half never happened: all ten in-sheet browser wrappers are still imported and rendered across the PF2e, 5e, d20-legacy and M&M sheets. The shell plan capped this dual-home at "one chapter"; it has outlived that. Every affected system browses the same catalog from two places today.
+Six of the ten in-sheet browser wrappers are deleted and every affected tab grid is collapsed: `Dnd5eFeatBrowserTab`, `Pf2eFeatBrowserTab`, `Pf2eEquipmentBrowserTab`, `D20FeatBrowserTab`, `D20EquipmentBrowserTab`, `MamEquipmentBrowserTab`. Each re-hosted the same shared browser over the same loader the Dock already calls for that system, so the sheet copy was a true duplicate. The equipped-armour controls that shared the PF2e and d20-legacy equipment-browser tab moved onto Inventory instead of dying with it.
 
-**Deliverable:** delete the in-sheet browser wrappers, collapse the tab grids, all seven.
+**Four are kept, and this is the finding the lane owes.** They are not duplication; they are capability the Dock does not have:
+
+- `Pf2eSpellBrowserPanel` / `D20SpellBrowserPanel` browse a **class/tradition-filtered** spell list. The Dock's spell tab is the whole system catalog and cannot filter — it is shared-layer and cannot see the open character's class list.
+- `MamAdvantageBrowserTab` is the only advantage browse-and-add surface in the product. `loadFeatsForSystem('mam3e')` returns `[]`, so the Dock's Feats tab is empty for M&M and there is no Advantage tab for its add verb to route through.
+- `MamPowerBrowserTab` also hosts the power-modifier catalog, which has no Dock tab at all.
+
+**What this unblocks / what it left open:**
+
+- Making the Dock the only catalog route exposed three defects a sheet-side copy had been masking — the Dock pinned its catalog to the system open at *first* render (a PF2e sheet browsed the 5e catalog and click-add would have written 5e ids into it), printed M&M Equipment-Point costs as `undefined undefined`, and captioned PF2e Bulk as pounds. All three are fixed; the per-system cost/weight normalisations the wrappers each carried locally are now one shared `formatItemCost` plus a per-system weight-unit map.
+- Finishing the remaining four is **Dock capability work, not deletion work**: Advantage and Power-Modifier tabs, and a seam letting a sheet publish a catalog filter the Dock applies. That is the natural successor item.
+- Phase 5's toast + count-badge micro-feedback on the click-add path is still unbuilt; adds land silently.
 
 ---
 

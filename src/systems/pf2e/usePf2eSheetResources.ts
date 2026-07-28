@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import type { Pf2eBackgroundDefinition } from '../../data/pathfinder/2e/backgrounds';
 import type { Archetype } from '../../types/character-options/archetypes';
-import type { FeatDefinition } from '../../types/character-options/feats';
 import type { Item } from '../../types/equipment/items';
 import type { Spell } from '../../types/magic/spells';
 import type { GameSystemId } from '../../types/game-systems';
@@ -9,12 +8,9 @@ import { useLazyResource, useSystemOptions } from '../../hooks/useLazyResource';
 import {
   loadArchetypesForSystem,
   loadEquipmentForSystem,
-  loadFeatsForSystem,
   loadPf2eBackgroundsForSystem,
   loadSpellsForSystem,
 } from '../../utils/dataLoader';
-import { Pf2eEquipmentBrowserTab } from './components/Pf2eEquipmentBrowserTab';
-import { Pf2eFeatBrowserTab } from './components/Pf2eFeatBrowserTab';
 import { Pf2eSpellsTab } from './components/Pf2eSpellsTab';
 
 interface UsePf2eSheetResourcesProps {
@@ -22,11 +18,6 @@ interface UsePf2eSheetResourcesProps {
 }
 
 export function usePf2eSheetResources({ systemId }: UsePf2eSheetResourcesProps) {
-  const {
-    data: featDefs,
-    loaded: featsLoaded,
-    load: loadFeatDefs,
-  } = useLazyResource<FeatDefinition>(systemId, loadFeatsForSystem);
   const {
     data: spells,
     loaded: spellsLoaded,
@@ -57,11 +48,6 @@ export function usePf2eSheetResources({ systemId }: UsePf2eSheetResourcesProps) 
     void loadOptions();
   }, [loadOptions]);
 
-  const warmFeatBrowser = useCallback(() => {
-    void loadFeatDefs();
-    void Pf2eFeatBrowserTab.preload();
-  }, [loadFeatDefs]);
-
   const warmArchetypes = useCallback(() => {
     void loadArchetypes();
   }, [loadArchetypes]);
@@ -71,15 +57,14 @@ export function usePf2eSheetResources({ systemId }: UsePf2eSheetResourcesProps) 
     void Pf2eSpellsTab.preload();
   }, [loadSpells]);
 
-  const warmEquipmentBrowser = useCallback(() => {
+  // The equipment CATALOG is still loaded by the sheet even though its browser
+  // tab was evicted (Phase 5): the Inventory tab's EquippedArmorSection resolves
+  // armour/shield/weapon stats out of it. Browsing the catalog is the Dock's job.
+  const warmEquipment = useCallback(() => {
     void loadEquipment();
-    void Pf2eEquipmentBrowserTab.preload();
   }, [loadEquipment]);
 
   return {
-    featDefs,
-    featsLoaded,
-    loadFeatDefs,
     spells,
     spellsLoaded,
     loadSpells,
@@ -95,9 +80,8 @@ export function usePf2eSheetResources({ systemId }: UsePf2eSheetResourcesProps) 
     archetypes,
     archetypesLoaded,
     loadArchetypes,
-    warmFeatBrowser,
     warmArchetypes,
     warmSpellsTab,
-    warmEquipmentBrowser,
+    warmEquipment,
   };
 }

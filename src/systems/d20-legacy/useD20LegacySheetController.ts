@@ -89,14 +89,10 @@ export function useD20LegacySheetController({
   );
 
   const {
-    featDefs,
-    featsLoaded,
-    loadFeatDefs,
     spells,
     spellsLoaded,
     loadSpells,
     equipmentItems,
-    equipmentLoaded,
     loadEquipment,
     classes,
     species,
@@ -232,7 +228,6 @@ export function useD20LegacySheetController({
     },
     tabsProps: {
       document: typedDocument,
-      systemId,
       isPf1e,
       canUpdate,
       baseAttributes,
@@ -256,9 +251,6 @@ export function useD20LegacySheetController({
       traitOptions,
       traitsLoaded,
       selectedTraitId: mutationHandlers.selectedTraitId,
-      featDefs,
-      featsLoaded,
-      onLoadFeatDefs: loadFeatDefs,
       spellsLoaded,
       spells,
       spellListIds,
@@ -270,7 +262,6 @@ export function useD20LegacySheetController({
       manualSpellcastingExtras: sys.manualSpellcastingExtras,
       arcaneSpecialtySchool: sys.arcaneSpecialtySchool,
       onLoadSpells: loadSpells,
-      equipmentLoaded,
       equipmentItems,
       onLoadEquipment: loadEquipment,
       onEquipArmor: mutationHandlers.equipArmor,

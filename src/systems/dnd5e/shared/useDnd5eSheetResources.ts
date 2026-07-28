@@ -14,7 +14,6 @@ import {
 } from '../../../utils/dataLoader';
 import { errorLogger, ErrorCategory, ErrorSeverity } from '../../../utils/errorLogger';
 import { Dnd5eEquipmentTab } from './components/Dnd5eEquipmentTab';
-import { Dnd5eFeatBrowserTab } from './components/Dnd5eFeatBrowserTab';
 import { Dnd5eFeaturesTab } from './components/Dnd5eFeaturesTab';
 import { Dnd5eSpellsTab } from './components/Dnd5eSpellsTab';
 import { useDnd5eDeferredResource } from './useDnd5eDeferredResource';
@@ -22,14 +21,12 @@ import { useDnd5eDeferredResource } from './useDnd5eDeferredResource';
 interface UseDnd5eSheetResourcesOptions {
   systemId: GameSystemId;
   featCount: number;
-  showFeatBrowser: boolean;
   showFeatureOptionBrowser: boolean;
 }
 
 export function useDnd5eSheetResources({
   systemId,
   featCount,
-  showFeatBrowser,
   showFeatureOptionBrowser,
 }: UseDnd5eSheetResourcesOptions) {
   const activeSystemIdRef = useRef(systemId);
@@ -150,8 +147,12 @@ export function useDnd5eSheetResources({
     systemId,
   ]);
 
+  // Feat DEFINITIONS still load on demand even though the in-sheet feat browser
+  // is gone (Phase 5 eviction — browsing lives in the shared Dock now): the
+  // Features tab resolves each selected feat's automation against
+  // `featDefinitionsById`, so a character carrying feats still needs them.
   useEffect(() => {
-    if (!showFeatBrowser || featsLoaded || featCount === 0) {
+    if (featsLoaded || featCount === 0) {
       return;
     }
 
@@ -159,7 +160,7 @@ export function useDnd5eSheetResources({
     void loadFeatDefs().catch((error: unknown) => {
       reportResourceLoadError('feats', requestSystemId, error);
     });
-  }, [featCount, featsLoaded, loadFeatDefs, reportResourceLoadError, showFeatBrowser, systemId]);
+  }, [featCount, featsLoaded, loadFeatDefs, reportResourceLoadError, systemId]);
 
   useEffect(() => {
     if (!showFeatureOptionBrowser || featureOptionsLoaded) {
@@ -194,15 +195,6 @@ export function useDnd5eSheetResources({
     void Dnd5eSpellsTab.preload();
   }, [loadSpells, reportResourceLoadError, systemId]);
 
-  const warmFeatBrowser = useCallback(() => {
-    if (showFeatBrowser) {
-      void loadFeatDefs().catch((error: unknown) => {
-        reportResourceLoadError('feats', systemId, error);
-      });
-      void Dnd5eFeatBrowserTab.preload();
-    }
-  }, [loadFeatDefs, reportResourceLoadError, showFeatBrowser, systemId]);
-
   const warmEquipmentTab = useCallback(() => {
     void loadEquipment().catch((error: unknown) => {
       reportResourceLoadError('equipment', systemId, error);
@@ -224,7 +216,6 @@ export function useDnd5eSheetResources({
     spells,
     spellsLoaded,
     warmEquipmentTab,
-    warmFeatBrowser,
     warmFeaturesTab,
     warmSpellsTab,
   };

@@ -426,12 +426,6 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['runtime_copy_rule'],
   },
   {
-    path: 'src/systems/dnd5e/shared/components/Dnd5eFeatBrowserTab.tsx',
-    kind: 'runtime-copy',
-    owner: 'shared-5e-feat-browser-boundaries',
-    rules: ['runtime_copy_rule'],
-  },
-  {
     path: 'src/systems/dnd5e/shared/components/Dnd5eFeatureOptionsSection.tsx',
     kind: 'runtime-copy',
     owner: 'shared-5e-feature-option-boundaries',
