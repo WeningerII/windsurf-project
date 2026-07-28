@@ -24,12 +24,13 @@
  *   surface (`src/ai/`, RFC 002); it produces a `GridGeometryProposal` and
  *   must call `validateGridGeometryProposal` / `acceptGridGeometryProposal`
  *   before anything touches a scene. Nothing here imports provider code.
- * - PHASE 9 MAP-ASSET GRID REGISTRATION: no map-asset shape exists in the
- *   codebase yet, so `SceneGridRegistration` is defined LOCALLY here. When the
- *   Phase 9 map-asset record lands (image hash + manual grid registration),
- *   its registration field should unify with `SceneGridRegistration` — the
- *   pixel offsets/cell size plus the derived `SceneGrid` are exactly what a
- *   manual registration UI captures.
+ * - PHASE 9 MAP-ASSET GRID REGISTRATION: Phase 9 has since landed
+ *   (`SceneMapReference` in `src/types/core/scene.ts`), and it carries its own
+ *   `SceneGridRegistration`. The two shapes did NOT converge, so this module's
+ *   `SceneGridRegistration` stays local and deliberately distinct — see its
+ *   doc comment for the field-level difference. Unifying them is a real change
+ *   to what each type promises, not a rename; treat it as its own piece of
+ *   work rather than a cleanup.
  */
 
 import type {
@@ -458,10 +459,21 @@ function validateBoxPreset(box: GridBoxProposal, boxIndex: number): GridGeometry
 }
 
 /**
- * Grid registration as scene-side state. Defined LOCALLY pending the Phase 9
- * map-asset record (none exists in the codebase yet); when that lands, its
- * manual-registration field should unify with this shape — see the module
- * header's "PHASE 9 MAP-ASSET GRID REGISTRATION" join point.
+ * Grid registration as the acceptance transform's OUTPUT: enough to derive
+ * scene state from a vision proposal.
+ *
+ * NOT the same type as `SceneGridRegistration` in `src/types/core/scene.ts`,
+ * despite the shared name — that one is the manual map-asset registration
+ * (`SceneMapReference.gridRegistration`) and is deliberately three fields of
+ * pure presentation geometry (`offsetX`, `offsetY`, `cellSizePx`) that never
+ * enter `SceneState`, so replay stays byte-identical with or without a map.
+ * This one adds the source image's dimensions (the proposal validator needs
+ * them to bounds-check boxes) and a derived `grid`, which IS scene state. Only
+ * `cellSizePx` is common to both; the offsets differ in name as well
+ * (`offsetXPx`/`offsetYPx` here). Collapsing the two would either force scene
+ * state into the presentation type or drop the image bounds the validator
+ * checks against — so they stay separate until something actually needs one
+ * shape for both jobs.
  */
 export interface SceneGridRegistration {
   imageWidthPx: number;

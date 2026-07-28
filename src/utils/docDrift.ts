@@ -289,7 +289,7 @@ export function extractRepoCodePaths(contents: string): Array<{ raw: string; pat
   const paths = new Map<string, string>();
   const codeSpanPattern = /`([^`]+)`/g;
   const looksLikeRepoPath =
-    /^(README\.md|CONTRIBUTING\.md|docs\/[^\s`]+|src\/[^\s`]+|scripts\/[^\s`]+|package\.json|\.nvmrc|\.node-version|\.github\/[^\s`]+)$/;
+    /^(README\.md|CONTRIBUTING\.md|docs\/[^\s`]+|src\/[^\s`]+|scripts\/[^\s`]+|netlify\/[^\s`]+|supabase\/[^\s`]+|package\.json|\.nvmrc|\.node-version|\.github\/[^\s`]+)$/;
 
   for (const match of contents.matchAll(codeSpanPattern)) {
     const candidate = match[1].trim();

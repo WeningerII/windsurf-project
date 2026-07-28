@@ -95,6 +95,32 @@ describe('docDrift helpers', () => {
     expect(issues).toEqual(['Broken repo path reference in README.md: `src/missing.ts:10`']);
   });
 
+  it('gates deploy-surface paths under netlify/ and supabase/', () => {
+    const rootDir = makeTempDir();
+    mkdirSync(path.join(rootDir, 'netlify', 'functions'), { recursive: true });
+    mkdirSync(path.join(rootDir, 'supabase', 'migrations'), { recursive: true });
+    writeFileSync(path.join(rootDir, 'netlify', 'functions', 'ai-gateway.mts'), '');
+
+    expect(
+      validateRepoCodePaths(
+        rootDir,
+        'docs/rfc/002-ai-control-plane.md',
+        'The gateway is `netlify/functions/ai-gateway.mts`; migrations live in `supabase/migrations/`.'
+      )
+    ).toEqual([]);
+
+    expect(
+      validateRepoCodePaths(
+        rootDir,
+        'docs/rfc/002-ai-control-plane.md',
+        'See `netlify/functions/gone.mts` and `supabase/functions/gone.sql`.'
+      )
+    ).toEqual([
+      'Broken repo path reference in docs/rfc/002-ai-control-plane.md: `netlify/functions/gone.mts`',
+      'Broken repo path reference in docs/rfc/002-ai-control-plane.md: `supabase/functions/gone.sql`',
+    ]);
+  });
+
   it('passes the real repo doc-drift audit', async () => {
     await expect(runDocDriftCheck(process.cwd())).resolves.toEqual([]);
   });
