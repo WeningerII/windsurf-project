@@ -1301,6 +1301,17 @@ monsters.
   them, so an entry can be internally inconsistent (5.2 ability score, 5.1-derived
   save). Deleting the overrides in favour of the encoder's verbatim output is the
   durable fix.
+- **Alignment on the repaired 5e-2024 monsters — measured, not fixed.** The gate
+  does not pin `alignment` (it is modelled, not transcribed), so it was left
+  alone. Checking it against the same pinned SRD 5.2.1 markdown afterwards:
+  **17 of the 71 repaired entries disagree** — Aboleth, Air Elemental, Archmage,
+  Assassin, Awakened Shrub, Berserker, Earth Elemental, Fire Elemental, Giant Elk,
+  Lich, Manticore, Noble, Succubus, Vampire, Vampire Spawn, Water Elemental,
+  Wraith. Mostly the 2024 edition's move away from "Unaligned"/chaotic labels
+  (Lich is Neutral Evil in 5.2, shipped Chaotic Evil; the four elementals are
+  Neutral, shipped Unaligned). Listed so the follow-on lane does not have to
+  re-derive it. Left unfixed here because nothing gates it and this lane's
+  mandate was the itemized baseline.
 - **M&M 3e and Daggerheart** have no scalar gate at all; only the
   encoder-regeneration sweep covered them.
 
