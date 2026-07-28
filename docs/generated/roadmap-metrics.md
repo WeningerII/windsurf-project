@@ -1,4 +1,4 @@
-_Generated: 2026-07-28T00:16:36.711Z_
+_Generated: 2026-07-28T02:22:38.323Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -6,7 +6,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | D&D 5e (2014) | 319 | 12 | 9 | 1 | 0 | 106 | 335 | 657 | 1 | 0 |
 | D&D 5e (2024) | 339 | 12 | 9 | 4 | 0 | 0 | 340 | 502 | 19 | 0 |
-| D&D 3.5e | 610 | 26 | 7 | 0 | 0 | 0 | 188 | 207 | 80 | 0 |
+| D&D 3.5e | 610 | 26 | 7 | 0 | 0 | 0 | 188 | 207 | 118 | 0 |
 | Pathfinder 1e | 625 | 18 | 7 | 0 | 12 | 0 | 332 | 617 | 86 | 0 |
 | Pathfinder 2e | 551 | 12 | 6 | 16 | 0 | 0 | 413 | 188 | 93 | 0 |
 | Mutants & Masterminds 3e | 61 | 0 | 0 | 0 | 0 | 0 | 0 | 192 | 0 | 74 |
@@ -46,7 +46,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 3.5e | Species/Races | 7 | 0 | 0 | 0 | 0 |
 | D&D 3.5e | Monsters | 188 | 0 | 0 | 0 | 0 |
 | D&D 3.5e | Equipment | 207 | 0 | 0 | 0 | 0 |
-| D&D 3.5e | Feats | 80 | 0 | 0 | 0 | 0 |
+| D&D 3.5e | Feats | 118 | 0 | 0 | 0 | 0 |
 | Pathfinder 1e | Spells/Powers | 625 | 0 | 0 | 0 | 0 |
 | Pathfinder 1e | Classes | 18 | 0 | 0 | 0 | 0 |
 | Pathfinder 1e | Species/Races | 7 | 0 | 0 | 0 | 0 |
@@ -126,7 +126,7 @@ _`Original (non-SRD)` counts entries this project AUTHORED rather than transcrib
 | --- | ---: | ---: | ---: | ---: | ---: |
 | D&D 5e (2014) | 1440 | 0 | 1440 | 1440 | 100% |
 | D&D 5e (2024) | 1225 | 0 | 1225 | 1225 | 100% |
-| D&D 3.5e | 1118 | 0 | 1118 | 1118 | 100% |
+| D&D 3.5e | 1156 | 0 | 1156 | 1156 | 100% |
 | Pathfinder 1e | 1697 | 0 | 1697 | 1697 | 100% |
 | Pathfinder 2e | 1284 | 0 | 1284 | 1284 | 100% |
 | Mutants & Masterminds 3e | 469 | 79 | 390 | 390 | 100% |
