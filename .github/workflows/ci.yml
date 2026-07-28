@@ -35,17 +35,41 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      # Keyed on the resolved @playwright/test version, not just the lockfile
-      # hash: a browser revision is pinned by that package, so a stale-key
+      # Pins the browser directory explicitly rather than relying on
+      # playwright-core's platform-dependent default, so the cache path and the
+      # install location are the SAME value and cannot drift apart. The first
+      # version of this cache hardcoded `~/.ms-playwright`, which is not the
+      # Linux default (`$XDG_CACHE_HOME/ms-playwright`, i.e.
+      # `~/.cache/ms-playwright`) and therefore never existed: the restore could
+      # not hit and the save had nothing to write, so it finished in 0s while two
+      # runs re-downloaded 380 MiB of browsers looking correctly cached.
+      #
+      # Written into $GITHUB_ENV from a STEP, not declared in a job-level `env:`.
+      # The `runner` context is not available to `jobs.<id>.env` — only inside
+      # steps, once a runner is assigned — and using it there does not fail at
+      # runtime, it fails to COMPILE the workflow: GitHub emits a run with zero
+      # jobs, named after the file path instead of the workflow, so nothing in
+      # the PR checks list even appears. That is what runs 30385270683 and
+      # 30385653756 are.
+      #
+      # $RUNNER_TEMP keeps the 380 MiB outside the workspace, which matters
+      # beyond tidiness: `check:secret-exposure` walks the repo tree and has no
+      # skip entry for a browser directory.
+      #
+      # The version key is the resolved @playwright/test version, not the
+      # lockfile hash: that package pins the browser revision, so a stale-key
       # restore is the one way this cache could hide a real failure.
-      - name: Resolve Playwright version
+      - name: Resolve Playwright version and browser path
         id: pw
-        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+          echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/pw-browsers" >> "$GITHUB_ENV"
 
       - name: Cache Playwright browsers
+        id: pw-cache
         uses: actions/cache@v4
         with:
-          path: ~/.ms-playwright
+          path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
           key: ${{ runner.os }}-playwright-${{ steps.pw.outputs.version }}
 
       # No --with-deps. It apt-installs 9 packages on ubuntu-latest and every
@@ -58,6 +82,23 @@ jobs:
       # assertion is ever added.
       - name: Install Playwright browsers
         run: npx playwright install chromium firefox
+
+      # A cache that silently does nothing is the exact failure this one already
+      # had once, and it cost nothing visible — the step was green, the post-job
+      # save took 0s, and the browsers were re-downloaded every run. Assert the
+      # directory the cache is pointed at actually holds browsers, and print the
+      # hit/miss so a regression shows up in the log instead of only in the
+      # wall clock. A miss is legitimate (version bump, first run after a key
+      # change); an EMPTY path after install is not.
+      - name: Verify the browser cache is doing something
+        run: |
+          echo "cache-hit: ${{ steps.pw-cache.outputs.cache-hit || 'false' }}"
+          echo "path:      $PLAYWRIGHT_BROWSERS_PATH"
+          if [ ! -d "$PLAYWRIGHT_BROWSERS_PATH" ] || [ -z "$(ls -A "$PLAYWRIGHT_BROWSERS_PATH" 2>/dev/null)" ]; then
+            echo "::error::PLAYWRIGHT_BROWSERS_PATH is empty or missing after install — the cache path and the install path have drifted, so nothing is being cached."
+            exit 1
+          fi
+          du -sh "$PLAYWRIGHT_BROWSERS_PATH"
 
       - name: Run full verification suite
         # Skips the duplicate `tsc && vite build` inside Playwright's webServer:
