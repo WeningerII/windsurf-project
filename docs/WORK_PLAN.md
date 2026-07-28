@@ -25,9 +25,22 @@ Effort is given in lanes (one focused agent-or-session unit), not hours.
 
 ---
 
-## 0. Decisions that gate everything else — **DECIDE**
+## 0. Decisions that gate everything else
 
-These are first because each one holds up work that is otherwise ready. They cost minutes to answer and days to leave open.
+These are first because each one holds up work that is otherwise ready.
+
+**Status as of 2026-07-27 — four of six are resolved:**
+
+| | Decision | State |
+| --- | --- | --- |
+| 0.1 | Open-content licensing | **OPEN — owner** · the only genuine licensing exposure left |
+| 0.2 | Shelf branches | Decided: delete deliberately · Phase 12 cut · *remote deletions still pending* |
+| 0.3 | Cold-start microtask | Dissolved — the hazard was one call site, not six, so a third path needs no authorization |
+| 0.4 | Contribution ledger | Decided and shipped: it has a consumer |
+| 0.5 | knip test entry points | Decided and shipped · unverified locally, needs CI |
+| 0.6 | Phase 10 / character-draft | `character-draft` shipped · **Phase 10 still OPEN — owner** |
+
+So two questions actually remain: **§0.1** (licensing) and the Phase-10 half of **§0.6**.
 
 ### 0.1 Open-content licensing: two populations shipping under source tags they do not have
 
@@ -70,21 +83,27 @@ Two tests (`mam3eValidation.test.ts:33`, `capabilityScenarios.test.tsx:323`) rea
 **Third option, now that the shape is known:** await at the sites that already compute before dispatch, and keep `updateDocument` synchronous by pre-resolving the engine *before* the updater runs. Gets the reclaim without touching mutation ordering. **This is now the recommended path** — it needs no authorization at all.
 **Alternative if the answer is no:** a preload design that guarantees resolution before `useDocuments` publishes. More work, no behaviour change.
 
-### 0.4 The contribution ledger — wire a consumer, or delete ~1,600 LOC?
+### 0.4 ~~The contribution ledger — wire a consumer, or delete ~1,600 LOC?~~ — **DECIDED AND DONE 2026-07-27**
 
-Five per-system ledger builders plus `src/rules/ir/ledgerView.ts` compute *"explain where this number came from"* for all seven systems. **Zero consumers**: no sheet, panel or tooltip renders a ledger; the only callers are test assertions.
+Five per-system ledger builders plus `src/rules/ir/ledgerView.ts` compute *"explain where this number came from"* for all seven systems, and until 2026-07-27 **nothing rendered any of them** — the only callers were test assertions.
 
-The accounting hides this. `GAPS §7` marks the row COMPLETE and `MASTER_PLAN` marks it 7 of 7 — both measure *builder existence*, not consumption. The legal-actions row one line below in the same table does say "0 consumers"; this row conspicuously does not.
+The accounting had hidden that: `GAPS §7` marked the row COMPLETE and `MASTER_PLAN` marked it 7 of 7, both measuring *builder existence* rather than consumption. The legal-actions row one line below in the same table says "0 consumers" out loud; this row conspicuously did not.
 
-**Options:** build one tooltip/panel consumer and keep all five · keep 5e as reference and delete four · delete all five plus `ledgerView`.
-**Recommendation:** build the consumer — the math is done and correct, and provenance display is arguably this product's differentiating feature. But if no UI is on the roadmap within a quarter, deleting is the honest call and reclaims ~1,600 LOC.
+**DECIDED AND DONE 2026-07-27: build the consumer.** The 5e Armor Class card now explains itself — *"17 = 10 Unarmored defense + 4 Chain Shirt + 2 Dexterity modifier + 1 Ring of Protection"* — via a shared `ContributionBreakdown` component that degrades to the plain number whenever no ledger explains the value.
+
+AC was chosen on evidence, not convenience: its ledger population is complete, ordered, and documented to sum to the number the sheet already displays. Ability modifiers and saves were rejected because their ledger rows cover only feat automation and would not sum to the displayed value — a breakdown that does not add up is worse than none.
+
+**Still one surface, not a provenance UI.** Four systems' builders remain unrendered, and the ledger rebuilds on every character edit to power a tooltip — cheap today, but the first thing to revisit if more surfaces subscribe.
+
+**Note for the campaign-history ambition:** this explains *a number*. It is not a chronicle and cannot become one — see §5.7.
 
 ### 0.5 Should `knip.json` keep test files as entry points?
 
 Today `src/__tests__/**` is an entry point, so **a test import counts as a live consumer**. That is why three confirmed-dead modules pass `check:dead-code` today. The gate cannot see this class of rot at all.
 
-**Options:** leave it (accept the blind spot) · drop tests from entry points and add explicit `ignore` entries for the genuinely documented seams.
-**Recommendation:** drop them. It converts "documented seam" from a prose claim into a machine-checked one, and would have caught all three dead modules automatically. This is the same defect class as every other unfalsifiable gate this repo has already fixed.
+**DECIDED AND DONE 2026-07-27: dropped.** `knip.json` became `knip.jsonc` (strict JSON cannot carry the per-entry doc citations), the test entry pattern is gone, and the three genuinely documented seams carry explicit `ignore` entries naming their doc. `legalActions.ts` deliberately does **not** — it is registered by all seven `definition.ts` files and called by the registry, so it is UI-unreachable rather than dead.
+
+**Unverified locally, needs CI.** knip OOMs in this container, so the config change is reasoned rather than run. Two specific risks to watch on the first CI run: knip 5 auto-enables its vitest plugin, whose entry patterns are *additive* to the root `entry` array — if that re-admits test files the blind spot is still open, and the fix is `"vitest": { "entry": [] }`. And the `.json` → `.jsonc` rename means that run also proves config discovery; a silent fallback to defaults would produce a flood of false positives.
 
 ### 0.6 Phase 10 and the character-draft surface — build or formally close?
 
@@ -93,7 +112,9 @@ Two separate features, same shape: **the expensive half is built and the cheap h
 - **Phase 10** — `gridGeometryProposal.ts` (579 LOC, well tested) has had no consumer since it landed. Building the `analyze-map` task plus a MapPanel affordance is roughly a day.
 - **`character-draft`** — flow, pools, validators and fixtures all exist; only the UI entry point is missing. This is the **smallest gap between "built" and "usable" anywhere in the repo**, and it would also give `makeMeAGameFlow` its first real consumer.
 
-**Recommendation:** ship `character-draft` regardless — it is nearly free and retires RFC 002's standing caveat that counting these as shipped surfaces overstates the rollout. For Phase 10, build it if any AI-vision work is planned this year; otherwise close it formally and reclassify the validator as a permanent documented seam. **Do not delete the validator** — it is the careful half.
+**`character-draft` — DONE 2026-07-27.** Reachable from the new-character dialog's "Draft with AI" mode, rendered only when `isAiEnabled()`, loaded by dynamic import so the AI-off eager chunk is unchanged. The draft applies through the system's *own* creation plan and is gated on its own `registry.validateDocument`, and the proposal is shown before anything is created — model proposes, validators decide. It also gave `makeMeAGameFlow` a shared seam instead of a second inline copy of that logic.
+
+**Phase 10 — still open, and this is the decision that remains.** Build the `analyze-map` task plus a MapPanel affordance (~1 day), or close Phase 10 formally and reclassify the validator as a permanent documented seam. **Do not delete the validator** — it is the careful half, and the retired shelf branch's version was strictly worse. One prerequisite for whoever builds it: `MapPanel` never learns the image's pixel dimensions, and the shipped validator requires `image: { widthPx, heightPx }`.
 
 ---
 
@@ -180,9 +201,13 @@ Every new verified entry must land with its Tier-B mutation anchor.
 
 Cannot be honestly closed while one system has no creature catalog.
 
-### 4.2 PF2e carries zero exclusion entries — **READY, CHEAP**
+### 4.2 ~~PF2e carries zero exclusion entries~~ — **DONE 2026-07-27**
 
-`_exclusions.ts` holds 10 entries and **none for PF2e**, yet PF2e reads `Full` and names a manual focus-spell surface in its own support row. By the plan's own rule — a system reads `Full` when its only residual gaps live in that registry — PF2e does not currently qualify. Either enumerate its boundaries or correct the label.
+PF2e read `Full` with zero entries while naming a manual focus-spell surface in its own support row. **Enumerated rather than relabelled**, because the gaps turned out real and findable and of genuine boundary shape: focus spells (no catalog automation — the list is a manual surface whose ids are deliberately not validated), prepared-slot assignment and cantrip selection, and rank-10 slots (class progression tables stop at rank 9; a rank-10 slot comes from a 10th-rank class feature).
+
+**Deliberately kept out:** agile MAP and PF2e weapon specialization. Those are *unfinished automation*, and the registry header forbids parking unfinished work there — enumerating them would have converted a to-do into a permanent boundary.
+
+The label was not downgraded to `Partial`, and the reason matters: PF2e's remaining non-boundary debt is content fidelity, which four of seven systems share and which `docs/generated/srd-coverage.md` already measures. Singling PF2e out would have swapped one mislabel for another. Now gated by `src/__tests__/manualExclusionRegistry.test.ts`.
 
 ### 4.3 Sheet eviction — the dual-home is not transient — **READY**
 
@@ -196,9 +221,11 @@ Phase 5's *dispatch* half is complete at 7 of 7. The *eviction* half never happe
 
 Ordered by dependency. Do not schedule any of these before the shelf-branch verdict.
 
-### 5.1 Give the shipped AI flows a surface — **READY once 0.2 answers**
+### 5.1 Give the shipped AI flows a surface — **HALF DONE 2026-07-27**
 
-`character-draft` and the `make-me-a-game` composition flow are **complete, validator-gated, fixture-covered modules with no UI entry point** — their only importers are each other and their tests. This is the cheapest real user-facing AI win available: the hard part is built.
+`character-draft` now has its affordance (§0.6). **`make-me-a-game` still has none** — it remains a complete, validator-gated, fixture-covered composition flow (party → encounter → ready scene, one seeded path parameterized over the registry with no per-system branch) with no UI and no persistence.
+
+It is now reachable *through* the character-draft seam rather than being the only caller of it, which removes the "dead-rooted" problem but not the missing surface. Worth knowing before scoping it: `makeMeAGameFlow` is the **only** non-test caller of `systemRegistry.validateDocument`, which is why no user surface invokes build legality anywhere.
 
 ### 5.2 Phase 14's one remaining join
 
@@ -288,7 +315,7 @@ The near-miss worth recording: `utils/validation` is trivially confusable with `
 
 ### 7.1 Wire-ups — open defects, not seams
 
-- **`src/rules/legality/dnd5e.ts`** — asymmetric defect. PF2e, PF1e and 3.5e each bridge their legality module into `validation.ts`; **both 5e editions have no bridge**, so they silently skip build-legality checks their siblings apply. Pinned in `GAPS.md`.
+- ~~**`src/rules/legality/dnd5e.ts`**~~ — **DONE 2026-07-27.** The module was **dead at runtime**: PF2e, PF1e and 3.5e each bridged their legality module into validation and 5e did not, so both editions silently skipped four build caps their siblings enforce. One bridge covers both editions — they already share `createDnd5eValidator(systemId)` and `validateDnd5eBuild` branches on that same id, so each keeps its own compute-register rule prefix. Note one user-visible rename: `dnd5e-class-total-mismatch` → `dnd5e-class-total-shortfall`, narrowed to the shortfall direction so it stops double-reporting against the class-level-sum cap — matching what PF1e and 3.5e already did.
 - **`src/systems/pf2e/derivedMath.ts`** (129 LOC) — its PF1e twin is live; this one has no non-test importer. An archived full-repo review prescribed "wire these in or mark them missing"; neither happened, and the finding was never carried into live `GAPS.md`. The PF1e pattern is right there to mirror.
 
 ### 7.2 Small items surfaced during verification
