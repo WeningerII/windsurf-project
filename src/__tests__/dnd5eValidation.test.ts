@@ -177,4 +177,129 @@ describe('D&D 5e validation', () => {
       ])
     );
   });
+
+  // --- Build-legality bridge (src/rules/legality/dnd5e.ts) ---
+  //
+  // Both editions share this validator, so one bridge covers both; the systemId
+  // the factory is stamped with selects the edition's rule ids. These tests pin
+  // that both editions reach the bridge and that each keeps its own rule prefix.
+
+  it('surfaces the rules-layer build-legality caps as warnings for the 2014 edition', async () => {
+    const registry = createRegistry();
+    const system: Dnd5eDataModel = {
+      ...createDefaultDnd5eData(),
+      level: 3,
+      speciesId: 'human',
+      backgroundId: 'acolyte',
+      // Sum of class levels is 5, above the character level of 3.
+      classLevels: [
+        { classId: 'fighter', level: 3, hitDieRolls: [6, 6] },
+        { classId: 'wizard', level: 2, hitDieRolls: [4] },
+      ],
+      // STR 25 is above the ASI ceiling of 20; INT 10 fails the Wizard
+      // multiclass prerequisite of 13.
+      baseAttributes: { str: 25, dex: 14, con: 14, int: 10, wis: 12, cha: 8 },
+      // Fighter 3 / Wizard 2 grants no ASI slots yet, so one feat is one too many.
+      feats: [
+        {
+          id: 'grappler',
+          name: 'Grappler',
+          source: 'SRD 5.1',
+          description: 'Loader-backed 2014 feat.',
+        },
+      ],
+    };
+
+    const result = await registry.validateDocument(createDocument('dnd-5e-2014', system), {
+      reason: 'edit',
+    });
+
+    const legalityIssues = result.issues.filter((issue) => issue.code === 'dnd5e-build-legality');
+    expect(legalityIssues.map((issue) => issue.details?.rule).sort()).toEqual([
+      'dnd5e2014.L7.asi-feat-cadence',
+      'dnd5e2014.L9.ability-score-cap',
+      'dnd5e2014.L9.class-level-sum',
+      'dnd5e2014.L9.multiclass-prereq',
+    ]);
+    legalityIssues.forEach((issue) => {
+      expect(issue.severity).toBe('warning');
+      expect(issue.recoverable).toBe(true);
+    });
+    // Legality caps annotate; they are never error-severity blockers.
+    expect(result.issues.filter((issue) => issue.severity === 'error')).toEqual([]);
+    // The exceed direction belongs to legality alone — no duplicate annotation.
+    expect(issueCodes(result)).not.toContain('dnd5e-class-total-shortfall');
+  });
+
+  it('surfaces the rules-layer build-legality caps as warnings for the 2024 edition', async () => {
+    const registry = createRegistry();
+    const system: Dnd5e2024DataModel = {
+      ...createDefaultDnd5e2024Data(),
+      level: 3,
+      speciesId: 'human',
+      backgroundId: 'soldier-2024',
+      // Sum of class levels is 5, above the character level of 3.
+      classLevels: [
+        { classId: 'rogue', level: 3, hitDieRolls: [5, 5] },
+        { classId: 'sorcerer', level: 2, hitDieRolls: [4] },
+      ],
+      // DEX 22 is above the ASI ceiling of 20; CHA 8 fails the Sorcerer
+      // multiclass prerequisite of 13.
+      baseAttributes: { str: 10, dex: 22, con: 14, int: 12, wis: 12, cha: 8 },
+      // Rogue 3 / Sorcerer 2 grants no ASI slots yet, so one feat is one too many.
+      feats: [
+        { id: 'alert', name: 'Alert', source: 'SRD 5.2', description: 'Loader-backed 2024 feat.' },
+      ],
+    };
+
+    const result = await registry.validateDocument(createDocument('dnd-5e-2024', system), {
+      reason: 'edit',
+    });
+
+    const legalityIssues = result.issues.filter((issue) => issue.code === 'dnd5e-build-legality');
+    // Same four caps as 2014, stamped with the 2024 compute-register rule ids.
+    expect(legalityIssues.map((issue) => issue.details?.rule).sort()).toEqual([
+      'dnd5e2024.L7.asi-feat-cadence',
+      'dnd5e2024.L9.ability-score-cap',
+      'dnd5e2024.L9.class-level-sum',
+      'dnd5e2024.L9.multiclass-prereq',
+    ]);
+    legalityIssues.forEach((issue) => {
+      expect(issue.severity).toBe('warning');
+    });
+    expect(result.issues.filter((issue) => issue.severity === 'error')).toEqual([]);
+    expect(issueCodes(result)).not.toContain('dnd5e-class-total-shortfall');
+  });
+
+  it('leaves a legal build of either edition free of build-legality issues', async () => {
+    const registry = createRegistry();
+    const legal2014: Dnd5eDataModel = {
+      ...createDefaultDnd5eData(),
+      level: 3,
+      speciesId: 'human',
+      backgroundId: 'acolyte',
+      classLevels: [{ classId: 'fighter', level: 3, hitDieRolls: [6, 6] }],
+      baseAttributes: { str: 16, dex: 14, con: 14, int: 10, wis: 12, cha: 8 },
+    };
+    const legal2024: Dnd5e2024DataModel = {
+      ...createDefaultDnd5e2024Data(),
+      level: 3,
+      speciesId: 'human',
+      backgroundId: 'soldier-2024',
+      classLevels: [{ classId: 'rogue', level: 3, hitDieRolls: [5, 5] }],
+      baseAttributes: { str: 10, dex: 16, con: 14, int: 12, wis: 12, cha: 10 },
+    };
+
+    const result2014 = await registry.validateDocument(createDocument('dnd-5e-2014', legal2014), {
+      reason: 'edit',
+    });
+    const result2024 = await registry.validateDocument(createDocument('dnd-5e-2024', legal2024), {
+      reason: 'edit',
+    });
+
+    expect(issueCodes(result2014)).not.toContain('dnd5e-build-legality');
+    expect(issueCodes(result2024)).not.toContain('dnd5e-build-legality');
+    expect(result2014.issues.filter((issue) => issue.severity === 'error')).toEqual([]);
+    expect(result2024.issues.filter((issue) => issue.severity === 'error')).toEqual([]);
+  });
 });
