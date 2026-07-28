@@ -23,20 +23,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
-    env:
-      # Pin the browser directory explicitly rather than relying on
-      # playwright-core's platform-dependent default, so the cache path and the
-      # install location are the SAME string and cannot drift apart. The first
-      # version of this cache hardcoded `~/.ms-playwright`, which is not the
-      # Linux default (`$XDG_CACHE_HOME/ms-playwright`, i.e.
-      # `~/.cache/ms-playwright`) and therefore never existed: the restore could
-      # not hit and the save had nothing to write, so it finished in 0s and two
-      # runs re-downloaded 380 MiB of browsers while looking correctly cached.
-      # Absolute, no `..`, no `~`: actions/cache globs the path, and
-      # playwright-core resolves a non-absolute value against cwd (registry
-      # index.js), so a `~/...` value would silently install somewhere else.
-      PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/pw-browsers
-
     steps:
       - uses: actions/checkout@v4
       
@@ -49,16 +35,36 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      # Keyed on the resolved @playwright/test version, not just the lockfile
-      # hash: a browser revision is pinned by that package, so a stale-key
+      # Pins the browser directory explicitly rather than relying on
+      # playwright-core's platform-dependent default, so the cache path and the
+      # install location are the SAME value and cannot drift apart. The first
+      # version of this cache hardcoded `~/.ms-playwright`, which is not the
+      # Linux default (`$XDG_CACHE_HOME/ms-playwright`, i.e.
+      # `~/.cache/ms-playwright`) and therefore never existed: the restore could
+      # not hit and the save had nothing to write, so it finished in 0s while two
+      # runs re-downloaded 380 MiB of browsers looking correctly cached.
+      #
+      # Written into $GITHUB_ENV from a STEP, not declared in a job-level `env:`.
+      # The `runner` context is not available to `jobs.<id>.env` — only inside
+      # steps, once a runner is assigned — and using it there does not fail at
+      # runtime, it fails to COMPILE the workflow: GitHub emits a run with zero
+      # jobs, named after the file path instead of the workflow, so nothing in
+      # the PR checks list even appears. That is what runs 30385270683 and
+      # 30385653756 are.
+      #
+      # $RUNNER_TEMP keeps the 380 MiB outside the workspace, which matters
+      # beyond tidiness: `check:secret-exposure` walks the repo tree and has no
+      # skip entry for a browser directory.
+      #
+      # The version key is the resolved @playwright/test version, not the
+      # lockfile hash: that package pins the browser revision, so a stale-key
       # restore is the one way this cache could hide a real failure.
-      - name: Resolve Playwright version
+      - name: Resolve Playwright version and browser path
         id: pw
-        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+          echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/pw-browsers" >> "$GITHUB_ENV"
 
-      # Caches PLAYWRIGHT_BROWSERS_PATH (set at job level above) so the cached
-      # directory and the installed-to directory are the same value by
-      # construction.
       - name: Cache Playwright browsers
         id: pw-cache
         uses: actions/cache@v4
