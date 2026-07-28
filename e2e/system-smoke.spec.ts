@@ -126,14 +126,14 @@ test('smokes D&D 5e 2024 content surfaces', async ({ page }) => {
   await expect(page.getByPlaceholder('Search feats by name or description...')).toBeVisible({
     timeout: 10000,
   });
-  // NOT asserted here, and that is a recorded FINDING rather than a relaxation:
-  // the "Feat automation applies ability score increases and proficiencies" copy
-  // had exactly one renderer, the in-sheet browser this phase deleted. It still
-  // sits in src/utils/documentationCopy.ts with NO consumer anywhere, so the
-  // eviction dropped user-facing explanation on the floor. Either the Dock's feat
-  // tab should render it or the entry is dead copy — see WORK_PLAN §4.3. The
-  // sibling 3.5e/PF1e specs never asserted it, which is why they stayed green and
-  // hid this.
+  // No blanket automation caption is asserted here, and that is now settled
+  // rather than open. The "Feat automation applies ability score increases and
+  // proficiencies" copy had exactly one renderer — the in-sheet browser this
+  // phase deleted — and it was removed on 2026-07-28 rather than re-homed here:
+  // this tab browses all seven systems' feat catalogs, so a 5e statement about
+  // ability score increases would be wrong on four of them, and the Dock already
+  // marks the affected feats individually with a per-row "Manual" badge
+  // (shouldShowDnd5eManualFeatBadge). See WORK_PLAN §4.3.
   await closeDock(page);
 
   await clickTab(page, /^Spells$/i);

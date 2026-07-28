@@ -23,11 +23,29 @@ export const DND5E_SPELLS_COPY = {
     'Add spells you know or keep in your spellbook here, then mark your daily prepared list below.',
 } as const;
 
+/**
+ * `browserSupport` was removed 2026-07-28 (WORK_PLAN §4.3). It read "Feat
+ * automation applies ability score increases and proficiencies. Other feat
+ * riders still require manual tracking." and had exactly one renderer —
+ * `Dnd5eFeatBrowserTab`, which the Phase-5 eviction deleted — so it had sat
+ * here rendered by nothing.
+ *
+ * Deleted rather than re-homed in the Dock's Feats tab, for two reasons:
+ *   - That tab is shared-layer and browses ALL SEVEN systems' feat catalogs. A
+ *     blanket caption about ability score increases and proficiencies is a 5e
+ *     statement; it would be wrong on the 3.5e, PF1e, PF2e and M&M catalogs the
+ *     same tab shows.
+ *   - The information is already there, and better: the Dock stamps a per-feat
+ *     "Manual" badge via `shouldShowDnd5eManualFeatBadge` (`src/dock/Dock.tsx`),
+ *     which marks the individual feats whose riders the engine cannot apply
+ *     instead of asserting it over a whole catalog.
+ *
+ * `selectedSupport` below stays — it is live in `Dnd5eSelectedFeatsSection`,
+ * on the 5e sheet, where a 5e-specific statement is correct.
+ */
 export const DND5E_FEAT_COPY = {
   selectedSupport:
     'Ability score increases and proficiency grants are applied automatically. Other feat riders remain manual.',
-  browserSupport:
-    'Feat automation applies ability score increases and proficiencies. Other feat riders still require manual tracking.',
 } as const;
 
 export const DND5E_FEATURE_OPTION_COPY = {

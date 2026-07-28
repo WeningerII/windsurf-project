@@ -393,7 +393,13 @@ export const RUNTIME_COPY_RULES: RuntimeCopyRule[] = [
       'SYSTEM_SUPPORT_NOTES = {',
       D20_LEGACY_MANUAL_NOTES[0],
       DND5E_SPELLS_COPY.alwaysPreparedSupport,
-      DND5E_FEAT_COPY.browserSupport,
+      // Was DND5E_FEAT_COPY.browserSupport. That string was deleted on
+      // 2026-07-28 (WORK_PLAN §4.3) once its only renderer was gone; the
+      // sibling `selectedSupport` below is the live 5e feat copy and is what
+      // this rule now pins. Worth noting the gate did its job: removing the
+      // string broke `typecheck:test` and `check:doc-drift` immediately rather
+      // than leaving a rule pinning a token that no longer exists.
+      DND5E_FEAT_COPY.selectedSupport,
       DND5E_FEATURE_OPTION_COPY.provenanceSupport,
       PF2E_SPELLS_COPY.preparedSlotsSupport,
       MAM3E_ARCHETYPE_COPY.referenceOnly,
