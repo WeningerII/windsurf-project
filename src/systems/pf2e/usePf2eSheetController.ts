@@ -24,12 +24,9 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
   const trainedSkillCount = countTrainedPf2eSkills(data.skillProficiencies);
 
   const {
-    featDefs,
-    featsLoaded,
     spells,
     spellsLoaded,
     equipmentItems,
-    equipmentLoaded,
     classes,
     ancestries,
     loadOptions,
@@ -38,10 +35,9 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
     loadBackgrounds,
     archetypes,
     archetypesLoaded,
-    warmFeatBrowser,
     warmArchetypes,
     warmSpellsTab,
-    warmEquipmentBrowser,
+    warmEquipment,
   } = usePf2eSheetResources({
     systemId: document.systemId as GameSystemId,
   });
@@ -109,10 +105,9 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
   return {
     data,
     trainedSkillCount,
-    warmFeatBrowser,
     warmArchetypes,
     warmSpellsTab,
-    warmEquipmentBrowser,
+    warmEquipment,
     headerProps: {
       document,
       canUpdate: mutationHandlers.canUpdate,
@@ -196,11 +191,6 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
         ? (activeToggles: string[]) => mutationHandlers.update({ activeToggles })
         : undefined,
     },
-    featBrowserProps: {
-      systemId: document.systemId as GameSystemId,
-      featsLoaded,
-      featDefs,
-    },
     archetypesTabProps: {
       archetypesLoaded,
       classId: data.classId,
@@ -220,10 +210,6 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
       onSpellcastingChange: onUpdate
         ? (spellcasting: Pf2eDataModel['spellcasting']) => mutationHandlers.update({ spellcasting })
         : undefined,
-    },
-    equipmentBrowserTabProps: {
-      equipmentLoaded,
-      equipmentItems,
     },
     equippedArmorSectionProps: {
       equipmentItems,

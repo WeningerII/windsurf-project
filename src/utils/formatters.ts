@@ -95,3 +95,30 @@ export function formatAreaOfEffect(area: AreaOfEffect | undefined): string | und
       return undefined;
   }
 }
+
+/**
+ * Render an equipment item's price for a browser row.
+ *
+ * `Item['cost']` is DECLARED as `{amount, currency}`, but the M&M 3e catalog
+ * carries a bare Equipment-Point number and the Daggerheart/hand-written tiers
+ * may carry nothing at all. A template literal over the declared shape prints
+ * "undefined undefined" for those rows, which is what the per-system in-sheet
+ * equipment wrappers each worked around locally. This is the one shared
+ * formatter they collapse into, so the Dock (which browses every system's
+ * catalog through one component) prints all three shapes correctly.
+ */
+export function formatItemCost(cost: unknown, fallback = '—'): string {
+  if (typeof cost === 'number' && Number.isFinite(cost)) {
+    // M&M prices gear in Equipment Points, not coin.
+    return `${cost} ep`;
+  }
+
+  if (cost && typeof cost === 'object') {
+    const { amount, currency } = cost as { amount?: unknown; currency?: unknown };
+    if (typeof amount === 'number' && typeof currency === 'string') {
+      return `${amount} ${currency}`;
+    }
+  }
+
+  return fallback;
+}

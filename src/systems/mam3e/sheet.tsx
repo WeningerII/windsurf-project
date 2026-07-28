@@ -10,7 +10,6 @@ import {
   Target,
   Star,
   StickyNote,
-  Sword,
   HeartPulse,
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
@@ -22,7 +21,6 @@ import { MamArchetypesTab } from './components/MamArchetypesTab';
 import { MamComplicationsTab } from './components/MamComplicationsTab';
 import { MamPowerBrowserTab } from './components/MamPowerBrowserTab';
 import { MamAdvantageBrowserTab } from './components/MamAdvantageBrowserTab';
-import { MamEquipmentBrowserTab } from './components/MamEquipmentBrowserTab';
 import { MamHeader } from './components/MamHeader';
 import { MamAbilitiesTab } from './components/MamAbilitiesTab';
 import { MamSkillsAdvantagesTab } from './components/MamSkillsAdvantagesTab';
@@ -48,8 +46,14 @@ export const Mam3eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => 
     <div className="max-w-4xl mx-auto space-y-6 p-6">
       <MamHeader {...controller.headerProps} />
       <MamDerivedStats derivedCards={derivedCards} />
+      {/* Nine tabs. The Equipment browser was evicted in Phase 5 — M&M gear is
+          reference-only (this sheet carries no inventory), so the shared Dock's
+          Equipment tab is its single home. The Powers DB and Advantages DB tabs
+          deliberately STAY: the Dock has no power-modifier catalog and loads no
+          advantages for M&M, so evicting those two would delete capability
+          rather than a duplicate. See docs/WORK_PLAN.md §4.3. */}
       <Tabs defaultValue="abilities">
-        <TabsList className="w-full grid grid-cols-2 md:grid-cols-5 h-auto gap-1">
+        <TabsList className="w-full grid grid-cols-2 md:grid-cols-3 h-auto gap-1">
           <TabsTrigger value="abilities" className="flex items-center gap-1.5">
             <Brain className="w-4 h-4" /> Abilities
           </TabsTrigger>
@@ -106,15 +110,6 @@ export const Mam3eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => 
             onPointerEnter={controller.warmAdvantages}
           >
             <Star className="w-4 h-4" /> Advantages DB
-          </TabsTrigger>
-          <TabsTrigger
-            value="equipment-browser"
-            className="flex items-center gap-1.5"
-            onClick={controller.warmEquipmentBrowser}
-            onFocus={controller.warmEquipmentBrowser}
-            onPointerEnter={controller.warmEquipmentBrowser}
-          >
-            <Sword className="w-4 h-4" /> Equipment
           </TabsTrigger>
           <TabsTrigger value="conditions" className="flex items-center gap-1.5">
             <HeartPulse className="w-4 h-4" /> Conditions
@@ -179,10 +174,6 @@ export const Mam3eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => 
 
         <TabsContent value="advantage-browser">
           <MamAdvantageBrowserTab {...controller.advantageBrowserTabProps} />
-        </TabsContent>
-
-        <TabsContent value="equipment-browser">
-          <MamEquipmentBrowserTab {...controller.equipmentBrowserTabProps} />
         </TabsContent>
 
         <TabsContent value="notes">

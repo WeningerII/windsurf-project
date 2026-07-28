@@ -14,7 +14,6 @@ import { CharacterDocument, SystemDataModel } from '../../../types/core/document
 import { Dnd5eAbilitiesTab } from './components/Dnd5eAbilitiesTab';
 import { Dnd5eEquipmentTab } from './components/Dnd5eEquipmentTab';
 import { Dnd5eFeaturesTab } from './components/Dnd5eFeaturesTab';
-import { Dnd5eFeatBrowserTab } from './components/Dnd5eFeatBrowserTab';
 import { Dnd5eHeaderSection } from './components/Dnd5eHeaderSection';
 import { Dnd5eClassesSection } from './components/Dnd5eClassesSection';
 import { Dnd5eNotesTab } from './components/Dnd5eNotesTab';
@@ -149,11 +148,9 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
 
       <Tabs defaultValue="abilities">
         <Dnd5eTabsNavigation
-          showFeatBrowser={controller.showFeatBrowser}
           showWeaponMasteries={enableWeaponMasteries}
           onWarmFeatures={controller.warmFeaturesTab}
           onWarmSpells={controller.warmSpellsTab}
-          onWarmFeats={controller.warmFeatBrowser}
           onWarmEquipment={controller.warmEquipmentTab}
         />
 
@@ -271,16 +268,6 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
           onTogglePreparedSpell={onUpdate ? controller.handleTogglePreparedSpell : undefined}
           onSelectSpell={onUpdate ? controller.handleSpellSelect : undefined}
         />
-
-        {controller.showFeatBrowser && (
-          <Dnd5eFeatBrowserTab
-            systemId={document.systemId}
-            featsLoaded={controller.featsLoaded}
-            featTemplateError={controller.featTemplateError}
-            featDefs={controller.featDefs}
-            onSelectFeat={onUpdate ? controller.handleFeatSelect : undefined}
-          />
-        )}
 
         <TabsContent value="equipment" className="space-y-4">
           <Dnd5eEquipmentTab

@@ -4,28 +4,26 @@ import { Shield } from 'lucide-react';
 import { TabsList, TabsTrigger } from '../../../../components/ui/Tabs';
 
 interface Props {
-  showFeatBrowser: boolean;
   showWeaponMasteries: boolean;
   onWarmFeatures: () => void;
   onWarmSpells: () => void;
-  onWarmFeats: () => void;
   onWarmEquipment: () => void;
 }
 
 export function Dnd5eTabsNavigation({
-  showFeatBrowser,
   showWeaponMasteries,
   onWarmFeatures,
   onWarmSpells,
-  onWarmFeats,
   onWarmEquipment,
 }: Props) {
-  // The read-only bestiary (Monsters) tab moved out of the sheet into the
-  // shared Dock / Library Bestiary route (Phase 3), so the tab strip is one
-  // column narrower than before.
+  // Two tabs have left this strip. The read-only bestiary (Monsters) tab moved
+  // to the shared Dock / Library Bestiary route in Phase 3; the Feats *browser*
+  // tab followed it in the Phase-5 eviction (browse-and-add now lives in the
+  // Dock's Feats tab, dispatched through SheetDispatchContext). Selected feats
+  // still live on the Features tab. Seven columns, eight with masteries.
   const tabsListClassName = showWeaponMasteries
-    ? 'w-full grid grid-cols-3 gap-1 md:grid-cols-5 xl:grid-cols-9'
-    : 'w-full grid grid-cols-3 gap-1 md:grid-cols-5 xl:grid-cols-8';
+    ? 'w-full grid grid-cols-3 gap-1 md:grid-cols-4 xl:grid-cols-8'
+    : 'w-full grid grid-cols-3 gap-1 md:grid-cols-4 xl:grid-cols-7';
 
   return (
     <TabsList className={tabsListClassName}>
@@ -56,17 +54,6 @@ export function Dnd5eTabsNavigation({
       >
         <BookOpen className="w-4 h-4" /> Spells
       </TabsTrigger>
-      {showFeatBrowser && (
-        <TabsTrigger
-          value="feats"
-          className="flex items-center gap-1.5"
-          onClick={onWarmFeats}
-          onFocus={onWarmFeats}
-          onPointerEnter={onWarmFeats}
-        >
-          <BookOpen className="w-4 h-4" /> Feats
-        </TabsTrigger>
-      )}
       <TabsTrigger
         value="equipment"
         className="flex items-center gap-1.5"

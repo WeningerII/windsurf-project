@@ -21,8 +21,10 @@ import {
   formatAreaOfEffect,
   formatCastingTime,
   formatDuration,
+  formatItemCost,
   formatRange,
 } from '../utils/formatters';
+import { shouldShowDnd5eManualFeatBadge } from '../utils/featManualBadge';
 import { lazyWithPreload } from '../utils/lazyWithPreload';
 import { useDragContext, useDragSource } from '../components/drag/dragContext';
 import { DOCK_TABS } from './dockRegistry';
@@ -81,13 +83,25 @@ type EquipmentBrowserItem = {
   type: string;
   rarity: string;
   cost: string;
-  weight: number;
+  /** Omitted when the system carries no weight stat (M&M gear), which hides
+   * the browser's weight line instead of printing a fake "0 lbs". */
+  weight?: number;
   description: string;
   properties?: string[];
 };
 type EquipmentBrowserProps = {
   equipment: EquipmentBrowserItem[];
   onSelectEquipment?: (item: EquipmentBrowserItem) => void;
+  weightUnit?: string;
+};
+
+/**
+ * Per-system carry-weight caption. PF2e stores Bulk in `Item.weight`, so the
+ * default "lbs" printed Bulk as pounds — the same correction the deleted
+ * in-sheet PF2e equipment wrapper carried.
+ */
+const SYSTEM_WEIGHT_UNITS: Partial<Record<GameSystemId, string>> = {
+  pf2e: 'Bulk',
 };
 const EquipmentBrowser = lazyWithPreload<EquipmentBrowserProps>(async () => {
   const module = await import('../components/EquipmentBrowser');
@@ -116,26 +130,42 @@ interface DockProps {
   /** The App character-document roster — the party tab source. */
   documents: CharacterDocument[];
   /**
-   * Initial system for the SRD catalogs (e.g. the open sheet's `systemId`,
-   * a plain string). Validated against the known system set; an unknown or
-   * absent value falls back to the first known system.
+   * The active sheet's `systemId` (a plain string). Validated against the
+   * known system set; an unknown or absent value falls back to the first known
+   * system. The Dock FOLLOWS this: whenever the open sheet changes system, the
+   * catalogs re-key to it. Within one sheet the user's manual selector choice
+   * is preserved.
    */
-  initialSystemId?: string;
+  activeSystemId?: string;
 }
 
 const DOCK_PANEL_ID = 'toolkit-dock-panel';
 
-export function Dock({ documents, initialSystemId }: DockProps) {
+export function Dock({ documents, activeSystemId }: DockProps) {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>(DOCK_TABS[0].id);
   const systemIds = useMemo(() => KNOWN_SYSTEM_IDS, []);
-  const [selectedSystem, setSelectedSystem] = useState<GameSystemId>(() =>
-    initialSystemId && (systemIds as readonly string[]).includes(initialSystemId)
-      ? (initialSystemId as GameSystemId)
-      : systemIds[0]
+  const resolvedActiveSystem =
+    activeSystemId && (systemIds as readonly string[]).includes(activeSystemId)
+      ? (activeSystemId as GameSystemId)
+      : null;
+  const [selectedSystem, setSelectedSystem] = useState<GameSystemId>(
+    () => resolvedActiveSystem ?? systemIds[0]
   );
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLElement>(null);
+
+  // The Dock is mounted at the shell root from boot, so seeding `selectedSystem`
+  // once in the initializer left it pinned to whatever was open on FIRST render
+  // (usually nothing -> the first known system). With the in-sheet browsers gone
+  // the Dock is the only catalog route, so a PF2e sheet must not browse — and
+  // click-add from — the 5e catalog. Re-key whenever the open sheet's system
+  // changes; a manual selector choice still survives for that sheet.
+  useEffect(() => {
+    if (resolvedActiveSystem) {
+      setSelectedSystem(resolvedActiveSystem);
+    }
+  }, [resolvedActiveSystem]);
 
   // Dismissing must put focus back on the summon control. Without this the
   // panel unmounts under the user's focus and focus resets to <body> — a
@@ -268,6 +298,11 @@ function DockPanel({
           type: entry.type,
           description: entry.description || entry.type,
         })),
+        // The "Manual" rider badge the deleted in-sheet 5e feat browser carried:
+        // it marks a feat whose benefit the engine cannot apply for you. The
+        // predicate reads only shared FeatDefinition fields, so it is safe (and
+        // honest) for every system's catalog, not just 5e's.
+        manual: shouldShowDnd5eManualFeatBadge(feat),
       })),
     [resources.feats, selectedSystem]
   );
@@ -277,10 +312,10 @@ function DockPanel({
       resources.equipment.map((item) => ({
         id: item.id,
         name: item.name,
-        type: item.type,
-        rarity: item.rarity,
-        cost: `${item.cost.amount} ${item.cost.currency}`,
-        weight: item.weight,
+        type: item.type || 'gear',
+        rarity: item.rarity || 'common',
+        cost: formatItemCost(item.cost),
+        ...(item.weight != null ? { weight: item.weight } : {}),
         description: item.description,
         properties:
           'properties' in item && Array.isArray((item as { properties?: unknown }).properties)
@@ -423,6 +458,7 @@ function DockPanel({
               <Suspense fallback={BROWSER_FALLBACK}>
                 <EquipmentBrowser
                   equipment={browserEquipment}
+                  weightUnit={SYSTEM_WEIGHT_UNITS[selectedSystem]}
                   onSelectEquipment={
                     dispatch.canAddEquipment
                       ? (selected) => {

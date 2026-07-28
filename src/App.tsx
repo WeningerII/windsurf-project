@@ -905,7 +905,7 @@ function AppContent() {
           it is reachable identically from the Library, Sheet and Scene
           surfaces. Its spell/feat/equipment click-add dispatches into the
           active sheet via SheetDispatchContext. */}
-        <Dock documents={documents} initialSystemId={currentDoc?.systemId} />
+        <Dock documents={documents} activeSystemId={currentDoc?.systemId} />
       </DragRoot>
     </div>
   );

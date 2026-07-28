@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Mam3eArchetype } from '../../types/mam/archetypes';
-import type { Item } from '../../types/equipment/items';
 import type { GameSystemId } from '../../types/game-systems';
 import type { Spell } from '../../types/magic/spells';
 import type { Advantage } from '../../types/mam/advantages';
@@ -9,14 +8,12 @@ import type { PowerModifier } from '../../data/mutants-and-masterminds/3e/modifi
 import {
   loadAdvantagesForSystem,
   loadComplicationsForSystem,
-  loadEquipmentForSystem,
   loadMam3eArchetypesForSystem,
   loadPowerModifiersForSystem,
   loadSpellsForSystem,
 } from '../../utils/dataLoader';
 import { MamArchetypesTab } from './components/MamArchetypesTab';
 import { MamComplicationsTab } from './components/MamComplicationsTab';
-import { MamEquipmentBrowserTab } from './components/MamEquipmentBrowserTab';
 import { MamPowerBrowserTab } from './components/MamPowerBrowserTab';
 import { MAM3E_EXTRA_MODIFIERS, MAM3E_FLAW_MODIFIERS } from './powerMath';
 
@@ -83,12 +80,9 @@ function useLazyResource<T>(
 }
 
 export function useMam3eSheetResources({ systemId }: UseMam3eSheetResourcesProps) {
-  const {
-    data: equipmentItems,
-    loaded: equipmentLoaded,
-    error: equipmentError,
-    load: loadEquipment,
-  } = useLazyResource<Item>(systemId, loadEquipmentForSystem);
+  // No equipment catalog here: M&M gear is reference-only (the sheet has no
+  // inventory or equipped-item surface at all), so its browser was evicted in
+  // Phase 5 and the shared Dock's Equipment tab is now its single home.
   const {
     data: powers,
     loaded: powersLoaded,
@@ -186,21 +180,12 @@ export function useMam3eSheetResources({ systemId }: UseMam3eSheetResourcesProps
     void loadAdvantages();
   }, [loadAdvantages]);
 
-  const warmEquipmentBrowser = useCallback(() => {
-    void loadEquipment();
-    void MamEquipmentBrowserTab.preload();
-  }, [loadEquipment]);
-
   const warmComplications = useCallback(() => {
     void loadComplications();
     void MamComplicationsTab.preload();
   }, [loadComplications]);
 
   return {
-    equipmentItems,
-    equipmentLoaded,
-    equipmentError,
-    loadEquipment,
     powers,
     powersLoaded,
     powersError,
@@ -225,7 +210,6 @@ export function useMam3eSheetResources({ systemId }: UseMam3eSheetResourcesProps
     warmPowers,
     warmPowerBrowser,
     warmAdvantages,
-    warmEquipmentBrowser,
     warmComplications,
   };
 }
