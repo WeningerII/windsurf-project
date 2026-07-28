@@ -1,7 +1,23 @@
 import type { AreaOfEffect, Duration, Range } from '../types/core/common';
 import type { CastingTime } from '../types/magic/spells';
 
-export function formatCastingTime(ct: CastingTime): string {
+/**
+ * Render a spell's casting time for a browser row.
+ *
+ * `ct` is DECLARED non-optional, but the Dock browses EVERY system's catalog
+ * through one component and `loadSpellsForSystem` is not uniformly d20 spells:
+ * for `mam3e` it returns `loadMam3ePowers()`, and an M&M power has no casting
+ * time at all. The declared type cannot catch that — the shape only diverges at
+ * runtime, per system. Reading `ct.amount` unguarded therefore crashed the whole
+ * app into its error boundary as soon as the Dock re-keyed to M&M.
+ *
+ * This is the same cross-system shape problem `formatItemCost` below was written
+ * for (M&M prices gear in Equipment Points, Daggerheart may carry nothing); the
+ * eviction that made the Dock the single browse route hardened `cost` and missed
+ * `castingTime`. Absent is a legitimate value here, not a content defect.
+ */
+export function formatCastingTime(ct: CastingTime | undefined, fallback = '—'): string {
+  if (!ct || typeof ct !== 'object') return fallback;
   if (ct.amount && ct.amount > 1) return `${ct.amount} ${ct.type}s`;
   if (ct.minutes) return `${ct.minutes} minute${ct.minutes > 1 ? 's' : ''}`;
   if (ct.hours) return `${ct.hours} hour${ct.hours > 1 ? 's' : ''}`;
