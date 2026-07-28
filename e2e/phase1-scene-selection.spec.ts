@@ -92,7 +92,21 @@ test('importing a scenes file selects the imported scene and lands on its canvas
   const exportSnapshot = await page.evaluate(() => localStorage.getItem('rpg-scenes-v1'));
 
   // Reset to a fresh boot so the import is the only way this scene exists.
-  await page.evaluate(() => localStorage.clear());
+  // Scenes gained a DURABLE IndexedDB tier, so clearing localStorage alone no
+  // longer resets them — the created scene survives the wipe, merges back in on
+  // load, and the saved-count below reads 2 instead of 1. Clearing both tiers is
+  // what "fresh boot" means now; the survival itself is the intended durability,
+  // not a bug.
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        localStorage.clear();
+        const request = indexedDB.deleteDatabase('rpg-character-sheet');
+        request.onsuccess = () => resolve();
+        request.onerror = () => resolve();
+        request.onblocked = () => resolve();
+      })
+  );
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
 
