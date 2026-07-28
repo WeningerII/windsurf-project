@@ -7,38 +7,14 @@
       "encoded": 15,
       "source": 12,
       "evidence": "The shipped value is CORRECT and the upstream denominator is wrong. SRD 5.1 prints Basilisk AC 15 (natural armor); 5e-bits/5e-database 2014 5e-SRD-Monsters.json records armor_class [{type:'natural', value:12}]. Corroborated independently by the SRD 5.2.1 markdown (downfallx/dnd-5e-srd-markdown monsters-A-Z.md), which also prints **AC** 15, and the Basilisk stat block is otherwise identical across the two editions. Recorded rather than normalized, per the GAPS §13 precedent for the Will-o'-Wisp STR cell. Do NOT 'fix' the shipped 15."
-    }
-  },
-  "divergences": {
-    "dnd-5e-2024/backgrounds/acolyte|toolProficiencies": {
-      "name": "Acolyte",
-      "taggedSource": "SRD 5.2",
-      "encoded": "",
-      "source": "calligrapherssupplies"
-    },
-    "dnd-5e-2024/backgrounds/criminal|skillProficiencies": {
-      "name": "Criminal",
-      "taggedSource": "SRD 5.2",
-      "encoded": "deception,stealth",
-      "source": "sleightofhand,stealth"
-    },
-    "dnd-5e-2024/backgrounds/criminal|toolProficiencies": {
-      "name": "Criminal",
-      "taggedSource": "SRD 5.2",
-      "encoded": "onegamingset,thievestools",
-      "source": "thievestools"
-    },
-    "dnd-5e-2024/backgrounds/sage|toolProficiencies": {
-      "name": "Sage",
-      "taggedSource": "SRD 5.2",
-      "encoded": "",
-      "source": "calligrapherssupplies"
     },
     "dnd-5e-2024/backgrounds/soldier|toolProficiencies": {
       "name": "Soldier",
       "taggedSource": "SRD 5.2",
-      "encoded": "onegamingset,vehiclesland",
-      "source": ""
+      "encoded": "onegamingset",
+      "source": "",
+      "evidence": "The shipped value is CORRECT and the pinned denominator is incomplete. SRD 5.2 gives the Soldier one Gaming Set of the player's choice, and 5e-bits/5e-database 2024 5e-SRD-Backgrounds.json does carry it — but under `proficiency_choices` (choose 1 from Tool: Dice / Dragonchess / Playing Cards / Three-Dragon Ante), not under the flat `proficiencies` array that srdBackground() in scripts/check-srd-fidelity.mjs reads, so the manifest pins ''. Soldier is the only SRD 5.2 background whose tool proficiency is a choice, which is why no other background trips this. The prior shipped value ['one-gaming-set','vehicles-land'] WAS wrong — Land Vehicles is the SRD 5.1 Soldier's second tool and was removed. Recorded rather than normalized (dropping the gaming set to match '' would delete real SRD content), per the GAPS §13 precedent. Clearing this properly means teaching srdBackground() to read `proficiency_choices`, which changes the pinned manifest for every system and is out of scope here."
     }
-  }
+  },
+  "divergences": {}
 }
