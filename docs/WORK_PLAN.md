@@ -334,6 +334,8 @@ Per-system engines now load through the registry's `loadEngine`/`peekEngine`/`pr
 
 **Two constraints nobody had written down until now:** the two flag-gated phases are *mutually exclusive in practice* — enabling the Phase-6 canvas flag disables Phase-4 drag (`sceneDragEnabled && !sceneCanvasEnabled`), so they cannot both be on to preview the destination. And the canvas render drops the map-image layer the DOM grid carries, which is a second reason its flag stays off.
 
+**Asymmetry in how the two flags are gated, as of 2026-07-28:** Phase 4's flag-on acceptance now runs in CI (§6.8) even though the flag still defaults OFF. Phase 6's does not, and the reason is different — its spec was never written, so there is no gate to run rather than a gate that skips.
+
 ### 6.3 `p5.infra-gaps` residuals — ~~READY~~ **NOT WORK — mislabelled**
 
 This has no work item in it. All four entries are *recorded decisions*: no analytics network sink (`createBeaconSink` is seam-only, deliberately), Sentry release wiring deferred behind the bundle budget, server-side 5xx alerting is ops provisioning rather than code, and the a11y contrast quarantine — which §6.4 has now closed.
@@ -398,6 +400,41 @@ A defect *class*, not a defect. Two instances have now shipped and been fixed on
 **The gate the plan asked for now exists:** `src/__tests__/dock/sharedFormatterShapes.test.ts` runs every formatter over every row of all seven shipped catalogs (15 tests), failing if one throws or leaks `undefined`/`null`/`NaN` into a caption. Proven able to fail: deleting the `formatCastingTime` guard reproduces `TypeError: Cannot read properties of undefined (reading 'amount')` against the mam3e catalog — the original crash — and turns the suite red.
 
 **Still true, and the reason this was a class rather than a bug:** absence is legitimate. A power has no casting time, and that must not be "fixed" in the data. Expect more of these as Dock coverage grows — the test is the thing that will catch the next one at unit level instead of via an e2e smoke test that only noticed because the page died.
+
+### 6.8 The Phase-4 keystone acceptance had never executed — **DONE 2026-07-28**
+
+Third instance of §6.4's transferable point (*"a skipped test is a gate that cannot
+fail"*), found by deliberately grepping for siblings after that one closed.
+
+`e2e/scene-drag.spec.ts` opens with `test.skip(!FLAG_ON)` on
+`VITE_SCENE_DRAG_ENABLED`, and **no workflow had ever set that variable.** So from
+the day it was written the spec skipped on every run — and Playwright exits 0 on a
+fully skipped file, so the phase's keystone acceptance reported green while proving
+nothing. The docs said this out loud in three places and nobody read it as a defect,
+because the pipeline was green.
+
+**Its first-ever execution failed, on a defect that was shipping.** `Dock` re-keys
+its catalogs to `activeSystemId`, which `src/App.tsx` passed as `currentDoc?.systemId`
+— the open *sheet's* system. A scene never set it, so with a scene open the Dock
+stayed on the default (first registered system, 5e-2024) while a new scene is
+5e-2014. **Dragging a monster from the Dock into a scene of a different system
+silently did nothing: no token, no chip, no error.** Default state hit it
+immediately. Causation confirmed by a one-variable experiment — aligning the Dock's
+system to the scene's makes the identical drag land. Fixed by preferring the open
+scene's `systemId`.
+
+**The gate now runs, and cannot go quiet again.** The `scene-drag` job in
+`.github/workflows/ci.yml` builds with the flag on, runs the spec against that dist,
+and then asserts from Playwright's JSON report that the tests were not *skipped* —
+because the exit code alone is exactly what failed to notice this for months. Both
+halves were validated locally before landing: with the flag the assertion passes on
+2 executed specs; without it, Playwright still exits 0 and the assertion exits 1.
+
+**Remaining sibling, checked and clean:** the only other `test.skip` in `e2e/` is
+`pwa-offline.spec.ts`, conditioned on `browserName !== 'chromium'`. The chromium
+project always runs, so that test does execute — a legitimate per-project skip, not a
+vacuous gate. Phase 6's flag (`VITE_SCENE_CANVAS_ENABLED`) still has no job, but that
+is not the same defect: its spec was never written, so nothing is claiming to gate it.
 
 ---
 
