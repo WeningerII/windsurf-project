@@ -320,16 +320,20 @@ in what order. `CONTRIBUTING.md` describes how to work the gate; this file does 
 duplicate the list, because prose copies of it have drifted twice.
 
 **Completion methodology**: every system is measured on two denominators —
-**content%** (Denominator A: the cited per-system catalogs in `docs/srd-manifest/`
-joined against actually-loaded ids; this certifies catalog parity and provenance,
-with independent full-SRD coverage reported separately in
-`docs/generated/srd-coverage.md`) and **compute%** (Denominator B:
-`docs/compute-register/` registers of every derived quantity, counted verified only
-when test-linked, passing, and mutation-proven via `npm run check:compute-register`).
-Both are reported per system in `docs/generated/roadmap-metrics.md`;
-manual/reference-only boundaries are enumerated in `docs/srd-manifest/_exclusions.ts`
-so the metric is never gamed by fake automation. See `docs/STATUS.md` and
-`docs/GAPS.md`.
+**content%** (Denominator A: `docs/generated/srd-coverage.md`, a reverse diff of the
+loaders against open-content SRD entry indexes fetched from **outside** this repo,
+so shipping more content cannot move the denominator) and **compute%**
+(Denominator B: `docs/compute-register/` registers of every derived quantity, counted
+verified only when test-linked, passing, and mutation-proven via
+`npm run check:compute-register`). Both are reported per system in
+`docs/generated/roadmap-metrics.md`; manual/reference-only boundaries are enumerated
+in `docs/srd-manifest/_exclusions.ts` so the metric is never gamed by fake automation.
+
+Content% used to be measured against the loader-derived catalogs in
+`docs/srd-manifest/`, which was circular — those catalogs are *generated from* the
+loaders, so every category could only read 100%. They were demoted to
+provenance-only on 2026-07-27; see `docs/srd-manifest/README.md` and `docs/GAPS.md`
+§6. See also `docs/STATUS.md`.
 
 ## 🔍 5e Class-Data Validation
 

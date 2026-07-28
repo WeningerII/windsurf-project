@@ -1,4 +1,4 @@
-_Generated: 2026-07-27T23:54:19.191Z_
+_Generated: 2026-07-28T00:04:58.440Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -92,53 +92,19 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 ### Derived Next Steps
 - Keep roadmap counts synced by running `npm run roadmap:metrics` after content changes.
 
-### Content Catalog Parity (Denominator A — provenance; loader-derived, NOT independent SRD parity)
-_The manifests in docs/srd-manifest/ are generated from the loaders, so this measures CATALOG PARITY + provenance (every shipped open-content entry is encoded, loader-backed, and cited) — it is NOT independent data-parity against the full published SRD. Genuine SRD parity (comparing the shipped product to an external authoritative SRD index to detect omitted entries) requires that external index, which is unavailable in this environment and is flagged unresolved per the "cite, never invent" policy. A 100% here does not assert published-SRD coverage._
-| System | Category | Encoded | Target | Complete |
-| --- | --- | ---: | ---: | ---: |
-| D&D 5e (2014) | spells | 222 | 222 | 100% |
-| D&D 5e (2014) | classes | 12 | 12 | 100% |
-| D&D 5e (2014) | species | 9 | 9 | 100% |
-| D&D 5e (2014) | backgrounds | 1 | 1 | 100% |
-| D&D 5e (2014) | featureOptions | 106 | 106 | 100% |
-| D&D 5e (2014) | monsters | 39 | 39 | 100% |
-| D&D 5e (2014) | equipment | 230 | 230 | 100% |
-| D&D 5e (2014) | feats | 1 | 1 | 100% |
-| D&D 5e (2024) | spells | 294 | 294 | 100% |
-| D&D 5e (2024) | classes | 12 | 12 | 100% |
-| D&D 5e (2024) | species | 7 | 7 | 100% |
-| D&D 5e (2024) | backgrounds | 4 | 4 | 100% |
-| D&D 5e (2024) | monsters | 95 | 95 | 100% |
-| D&D 5e (2024) | equipment | 204 | 204 | 100% |
-| D&D 5e (2024) | feats | 19 | 19 | 100% |
-| D&D 3.5e | spells | 428 | 428 | 100% |
-| D&D 3.5e | classes | 26 | 26 | 100% |
-| D&D 3.5e | species | 7 | 7 | 100% |
-| D&D 3.5e | equipment | 207 | 207 | 100% |
-| D&D 3.5e | feats | 80 | 80 | 100% |
-| Pathfinder 1e | spells | 134 | 134 | 100% |
-| Pathfinder 1e | classes | 18 | 18 | 100% |
-| Pathfinder 1e | species | 7 | 7 | 100% |
-| Pathfinder 1e | traits | 12 | 12 | 100% |
-| Pathfinder 1e | equipment | 70 | 70 | 100% |
-| Pathfinder 1e | feats | 86 | 86 | 100% |
-| Pathfinder 2e | spells | 143 | 143 | 100% |
-| Pathfinder 2e | classes | 12 | 12 | 100% |
-| Pathfinder 2e | species | 6 | 6 | 100% |
-| Pathfinder 2e | backgrounds | 16 | 16 | 100% |
-| Pathfinder 2e | archetypes | 5 | 5 | 100% |
-| Pathfinder 2e | equipment | 188 | 188 | 100% |
-| Pathfinder 2e | feats | 93 | 93 | 100% |
-| Mutants & Masterminds 3e | spells | 61 | 61 | 100% |
-| Mutants & Masterminds 3e | archetypes | 15 | 15 | 100% |
-| Mutants & Masterminds 3e | complications | 28 | 28 | 100% |
-| Mutants & Masterminds 3e | equipment | 113 | 113 | 100% |
-| Mutants & Masterminds 3e | advantages | 74 | 74 | 100% |
-| Mutants & Masterminds 3e | powerModifiers | 99 | 99 | 100% |
-| Daggerheart | classes | 9 | 9 | 100% |
-| Daggerheart | species | 19 | 19 | 100% |
-| Daggerheart | backgrounds | 9 | 9 | 100% |
-| Daggerheart | equipment | 353 | 353 | 100% |
+### Content Coverage (Denominator A — independent SRD reverse diff)
+_Per-system rollup of `docs/generated/srd-coverage.md`, which is the sole content denominator. Denominators are open-content SRD entry indexes fetched from OUTSIDE this repo and diffed against the loaders by normalized name, so `Covered / SRD Total` is genuine coverage — how much of each measured SRD category the product actually ships — and changing the product cannot move the denominator. Only wired (system × category) targets are counted; unwired and closed-by-no-source categories are listed in that file rather than folded in at an assumed 100%, so these percentages describe what is MEASURED, not the whole SRD._
+_Superseded the loader-derived `docs/srd-manifest/` catalogs (decision 2026-07-21, executed 2026-07-27 — `docs/GAPS.md` §6). Those manifests are generated FROM the loaders, so joining their ids against loaded ids put the same population on both sides of the ratio and could only ever read 100%. They are now provenance-only and no longer published as a denominator here; per-category coverage and the named missing entries live in `docs/generated/srd-coverage.md`._
+_Measured 2026-07-28T00:04:51.558Z by `npm run srd:coverage`; republished here, never recomputed._
+| System | Categories Measured | Covered | SRD Total | Coverage | Categories With Gaps |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| D&D 5e (2014) | 7 | 1274 | 1274 | 100% | 0 |
+| D&D 5e (2024) | 7 | 1154 | 1154 | 100% | 0 |
+| D&D 3.5e | 4 | 880 | 948 | 92.8% | 2 |
+| Pathfinder 1e | 4 | 1545 | 1545 | 100% | 0 |
+| Pathfinder 2e | 7 | 1109 | 2284 | 48.6% | 3 |
+| Mutants & Masterminds 3e | 4 | 242 | 242 | 100% | 0 |
+| Daggerheart | 8 | 586 | 589 | 99.5% | 2 |
 
 ### Engine-Math Completion (vs Compute Register — Denominator B)
 | System | Verified | In-Scope | Complete |
@@ -151,10 +117,10 @@ _The manifests in docs/srd-manifest/ are generated from the loaders, so this mea
 | Pathfinder 2e | 29 | 29 | 100% |
 | Daggerheart | 26 | 26 | 100% |
 
-_Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compute-register/. Enumerated manual boundaries excluded from both: 13._
+_Denominators: the independent SRD reverse diff in docs/generated/srd-coverage.md (content) and the cited registers in docs/compute-register/ (compute). Enumerated manual boundaries excluded from both: 10, registered in `docs/srd-manifest/_exclusions.ts`._
 
 ### Content Integrity (Denominator A — provenance + policy)
-_Share of each system's **open-content** loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant). It is NOT coverage vs the full published SRD: measuring which SRD entries are MISSING requires an external authoritative SRD index that is unavailable in this environment, so that coverage dimension is flagged unresolved rather than asserted._
+_Share of each system's **open-content** loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant) and is a PROVENANCE measure, not a denominator: it says nothing about which SRD entries are MISSING. That is what the Content Coverage section above measures, against the external indexes in `docs/generated/srd-coverage.md`. A 100% here is compatible with a low coverage figure there._
 _`Original (non-SRD)` counts entries this project AUTHORED rather than transcribed from an open document, declared via `originalContentSources` in `src/utils/openContentPolicy.ts`. They are cited and shippable, but they are not open content, so they are excluded from BOTH sides of the Integrity ratio — counting them as compliant open content would launder exactly the mislabeling that channel exists to expose (see `docs/mam3e-equipment-provenance.md`). `Open-Content Pop.` is `Loader Entries` minus that column._
 | System | Loader Entries | Original (non-SRD) | Open-Content Pop. | Cited + Policy-Clean | Integrity |
 | --- | ---: | ---: | ---: | ---: | ---: |

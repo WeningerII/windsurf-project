@@ -59,7 +59,7 @@ and several have been overtaken by what shipped.
 | `design/` | Live design docs for work still in progress | Yes |
 | `runbooks/` | Operational procedures (alerting, backup/restore, recovery) | Yes |
 | `compute-register/` | Denominator B: per-system engine math, gated by `check:compute-register` | Yes, with a test anchor |
-| `srd-manifest/` | Denominator A catalogs — **being demoted**, see `GAPS.md` §6 | Generated; do not gate |
+| `srd-manifest/` | **Demoted 2026-07-27 to provenance-only** (`GAPS.md` §6). The schema and the manual-exclusion registry; the per-system catalogs are generated on demand and gitignored. Denominator A is `generated/srd-coverage.md` | Schema and `_exclusions.ts` yes; catalogs generated, do not gate |
 | `history/` | Superseded documents. Banner-enforced, never updated to track current state | Only to add a banner |
 
 ## Order of operations when you change something

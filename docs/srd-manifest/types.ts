@@ -1,24 +1,34 @@
 /**
- * SRD Manifest — DENOMINATOR A (content catalog).
+ * SRD Manifest — PROVENANCE ONLY (shipped-content inventory).
  *
- * The repo's roadmap metric historically counted only the NUMERATOR: how many
- * entries are currently encoded and loader-backed. It had no DENOMINATOR — no
- * authoritative statement of how many open-content SRD entries a system *should*
- * contain. Without a denominator, "completeness" is undefined and a completion
- * goal can never terminate.
+ * DEMOTED 2026-07-27 (decided 2026-07-21; docs/GAPS.md §6). This was Denominator
+ * A: a per-system list of in-scope open-content entries, with completeness read
+ * as `encoded / inScopeManifestEntries`. That could not work. The manifests are
+ * GENERATED FROM the loaders by `npm run srd:manifests`, so the ids were both
+ * numerator and denominator — the ratio could only ever read 100%, and did,
+ * even for a category whose manifest had drifted to roughly a tenth of what its
+ * loader ships. A denominator the product can move is not a denominator.
  *
- * A `SystemManifest` is that denominator: a cited, per-system list of every
- * open-content SRD entry that is in scope for the product. Completeness for a
- * (system x category) slice is then `encoded / inScopeManifestEntries`.
+ * **Denominator A is now `docs/generated/srd-coverage.md`** — the independent
+ * networked reverse diff, whose entry lists come from open-content SRD indexes
+ * outside this repo. Nothing may compute a content-completeness percentage from
+ * the types below; doing so would restore the circularity this demotion exists
+ * to remove.
+ *
+ * What a `SystemManifest` is now: a cited inventory of what the product ships,
+ * for provenance questions — which entries claim which source, and which are
+ * self-authored rather than transcribed (`original`). The per-system manifests
+ * are generated on demand and gitignored; this schema and the hand-authored
+ * `_exclusions.ts` registry stay committed.
  *
  * Authoring rules (mirror docs/MASTER_PLAN.md open-content policy + the goal):
  *   - OPEN CONTENT ONLY. Every entry must be sourced from SRD / open-licensed
  *     material consistent with src/utils/openContentPolicy.ts.
  *   - CITED, NEVER INVENTED. Every entry carries a `source` citation. If an
  *     entry cannot be verified against an open source, mark it `flagged` (it is
- *     excluded from the denominator) rather than fabricating it.
+ *     excluded from the open-content population) rather than fabricating it.
  *   - `id` SHOULD match the loader-backed data id once the entry is `encoded`,
- *     so the metric can join manifest -> data without guesswork.
+ *     so a provenance question can be traced manifest -> data without guesswork.
  */
 
 /**
@@ -113,21 +123,15 @@ export interface SystemManifest {
 }
 
 /**
- * An entry counts toward the OPEN-CONTENT denominator unless flagged, excluded,
- * or `original` (self-authored — cited and shipping, but not open content).
+ * An entry belongs to the OPEN-CONTENT population unless flagged, excluded, or
+ * `original` (self-authored — cited and shipping, but not open content).
+ *
+ * This is a provenance predicate, NOT a denominator. The `categoryProgress`
+ * helper that used to sit beside it — returning `{denominator, numerator}` per
+ * category — was deleted with the demotion (docs/GAPS.md §6): its denominator
+ * was derived from the same loaders as its numerator, so it could only ever
+ * report 100%. Content coverage comes from docs/generated/srd-coverage.md.
  */
 export function isInScope(entry: SrdManifestEntry): boolean {
   return entry.status === 'encoded' || entry.status === 'missing';
-}
-
-/** Denominator (in-scope) and numerator (encoded) counts for one category. */
-export function categoryProgress(
-  manifest: SystemManifest,
-  category: ManifestCategory
-): { denominator: number; numerator: number } {
-  const inCategory = manifest.entries.filter((e) => e.category === category);
-  return {
-    denominator: inCategory.filter(isInScope).length,
-    numerator: inCategory.filter((e) => e.status === 'encoded').length,
-  };
 }

@@ -114,7 +114,7 @@ Two things worth carrying forward:
 
 ## 2. Content — Denominator A
 
-The content denominator is mid-migration. Read §2.2 before starting anything else here, because it changes what "coverage" means.
+The denominator migration is done (§2.2, 2026-07-27): coverage now means the reverse diff in `docs/generated/srd-coverage.md`, measured against indexes outside this repo. Read the per-system rollup in `docs/generated/roadmap-metrics.md` before picking up anything below — the items here are now sized by a number that can actually move.
 
 ### 2.1 `p1.provenance-over-inclusion-audit` — ~~BLOCKED on 1.1~~ **classification DONE, remedies are owner decisions**
 
@@ -132,15 +132,13 @@ All 1,045 suspects are classified with evidence and held by a gate that is a pro
 
 **Known remainder:** 21 non-SRD M&M powers and 1 advantage still ship under `Hero's Handbook` — same defect class as the equipment finding, untreated. These now sit in the gate as `denominator-scope-defect` and are the obvious next tranche.
 
-### 2.2 Execute the `srd-manifest` demotion — **READY**
+### 2.2 ~~Execute the `srd-manifest` demotion~~ — **DONE 2026-07-27**
 
-Decided 2026-07-21 (`GAPS.md` §6), **never executed** — verified: 10 files still tracked, `generate-roadmap-metrics.ts` still imports `SRD_MANIFESTS`, and no wired command regenerates them.
+Decided 2026-07-21 (`GAPS.md` §6), unexecuted through two verification passes, executed now. Denominator A is `docs/generated/srd-coverage.md`; the per-system manifests are gitignored, generated on demand by `npm run srd:manifests`, and provenance-only. `generate-roadmap-metrics.ts` no longer imports `SRD_MANIFESTS` and publishes the reverse diff's per-system rollup instead of the circular parity table.
 
-The manifests are generated *from* the loaders, so joining them against loaded ids is circular: manifest ids are both numerator and denominator, and drift can only ever read as 100%. One category currently prints a green 100% against a denominator holding roughly a tenth of what its loader ships.
+**The published numbers moved, which was the point.** The retired table read 100% on all 44 rows. Against external indexes, on the same tree: 5e-2014 100%, 5e-2024 100%, 3.5e 92.8%, PF1e 100%, PF2e 48.6%, M&M 3e 100%, Daggerheart 99.5%. Per-category figures live in the coverage report and are not restated here.
 
-**Do not "fix" this by gating the manifests** — that entrenches a mechanism already scheduled for retirement. The task is to move Denominator A onto `docs/generated/srd-coverage.md` (the independent networked reverse diff) and demote the manifests to provenance-only.
-
-**Unblocks:** every content% number in the repo becoming meaningful.
+**This unblocked** every content% number in the repo becoming meaningful — and it makes the shortfalls in §2.3–2.5 legible as percentages for the first time, rather than as prose beside a green 100%.
 
 ### 2.3 M&M 3e adversaries — the system has none — **READY**
 

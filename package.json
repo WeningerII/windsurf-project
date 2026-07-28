@@ -51,6 +51,7 @@
     "roadmap:metrics": "npm run node:check && tsx src/scripts/generate-roadmap-metrics.ts",
     "gap:ledger": "npm run node:check && tsx src/scripts/generate-master-gap-ledger.ts",
     "srd:coverage": "npm run node:check && tsx src/scripts/srd-coverage.ts",
+    "srd:manifests": "npm run node:check && tsx src/scripts/generate-srd-manifests.ts",
     "check:provenance-over-inclusion": "npm run node:check && tsx scripts/check-provenance-over-inclusion.mjs",
     "srd:overinclusion:write": "npm run node:check && tsx scripts/check-provenance-over-inclusion.mjs --write",
     "srd:overinclusion:record": "npm run node:check && tsx scripts/check-provenance-over-inclusion.mjs --record",
