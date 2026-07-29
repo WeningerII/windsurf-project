@@ -1351,10 +1351,14 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'export const LOADOUT_LIMIT = 5;',
     replace: 'export const LOADOUT_LIMIT = 6;',
   },
+  // 5 -> 99, not 5 -> 6. The first attempt at this anchor was DEMOTED by the
+  // gate: the linked test's over-max fixture carries quantity 9, so nudging the
+  // cap to 6 left it just as illegal and nothing flipped. A boundary anchor has
+  // to clear the fixture's value, not merely move.
   'daggerheart.L9.consumable-quantity-cap': {
     file: 'src/rules/daggerheartInventory.ts',
     find: 'export const MAX_DAGGERHEART_CONSUMABLE_QUANTITY = 5;',
-    replace: 'export const MAX_DAGGERHEART_CONSUMABLE_QUANTITY = 6;',
+    replace: 'export const MAX_DAGGERHEART_CONSUMABLE_QUANTITY = 99;',
   },
   // Two hands total: burden > 2 is over-equipped. Widening to 3 admits the
   // two-handed-primary-plus-secondary build the test expects to be flagged.
