@@ -2717,6 +2717,122 @@ would produce noise and nothing else.
 
 ---
 
+## 24. Denominator B could only ever read 100% (added 2026-07-29)
+
+**Status: CLOSED for the metric; the Tier-B anchoring tail is OPEN.**
+
+Recorded because this is the **same defect this repo already found, diagnosed and
+fixed once** — in the other denominator — and nobody transferred the lesson.
+
+### 24.1 The number was structurally incapable of failing
+
+Every system published **100% compute completion**: 47/47, 41/41, 33/33, 26/26,
+29/29, 26/26, 33/33. It read 100% because the register only ever contained rows
+that were already `verified` — the same ids on both sides of the ratio.
+
+§6 of this file records the identical shape in Denominator A. Committing the
+per-system SRD manifests "created a circular denominator — the same ids on both
+sides of the ratio, which could only ever read 100%", and the fix was to demote
+the manifests and measure against an independent networked reverse diff. That
+write-up is nine sections above this one. The same pathology sat in Denominator B
+untouched, and `docs/WORK_PLAN.md` §3.1 described it as merely "a curated subset
+… an uneven target" — true, and a serious understatement of a metric that could
+not report anything but success.
+
+**This is the strongest instance yet of the rule in `docs/MASTER_PLAN.md`: when
+you fix a class of defect, grep for its siblings.** The sibling here was not a
+config line or a test helper. It was the other half of the project's two headline
+numbers.
+
+### 24.2 What the enumeration found
+
+The eight missing (system, layer) pairs were worked by a 10-agent workflow —
+5 proposers, then 5 **adversarial verifiers** briefed to refute rather than
+agree, each independently opening the cited source, the cited test and the
+claimed engine line. 61 of 64 proposed entries survived.
+
+The three rejections are why that stage existed:
+
+| rejected | why |
+| --- | --- |
+| `dnd5e2014.L10.class-starting-wealth` | **Fabricated repo-state claim** — asserted what code reads a field; the verifier opened the files and it was false. Flagged as "the worst failure in this proposal." |
+| `dnd5e2014.L10.encounter-multiplier` | **Non-open-content citation** — sourced to the 2014 DMG encounter tables, which are not SRD. |
+| `daggerheart.L5.spellcast-passive-bonus` | Duplicate of the existing `daggerheart.L2.passive-bonuses` row. |
+
+§18.7 records an earlier panel in this repo inventing 5 of 20 M&M counterparts —
+a 25% fabrication rate. One fabrication in 64 got caught here **before** it
+reached a file. The verify stage is not optional on content work in this repo.
+
+**And it was still not enough — this is the part worth carrying.** All 61
+survivors were written to the registers, and then `check:rules-provenance`, a
+gate the agents never ran and were never told about, **rejected 8 more**:
+
+| rejected by the provenance gate | why |
+| --- | --- |
+| `dnd35e.L10.el-value-scale`, `.wealth-by-level`, `.monster-xp-award` | cite 3.5e **DMG** tables (EL scale, Table 5-1, Table 2-6) never released as Open Game Content. The proposer *knew* — it wrote "NOT CITABLE" into the `source` field and marked them `flagged` — but a row whose `source` is a paragraph explaining that no source exists is not a citation. |
+| `dnd5e2014.L10.encounter-xp-budget`, `.encounter-spend` | cite **SRD 5.2.1**, which is the *2024* SRD, inside the **2014** register. Right rule, wrong edition, wrong system. |
+| `dnd5e2014.L10.monster-encounter-cost`, `mam3e.L6.speed-rank-from-effect` | name entries absent from their system's open-content corpus. |
+
+All 8 were **removed**, not quarantined. The gate has an allowlist for recording
+unsubstantiated citations with evidence, and using it here would have been
+weakening a gate to admit my own work — the precise move this file exists to
+catch. 53 of 61 landed.
+
+**The transferable point: an adversarial agent panel is not a substitute for the
+repo's own gates.** Five hostile verifiers, briefed to refute and given the
+fabrication history, passed 8 citations that a deterministic checker caught in
+one run. Agent review and mechanical gates fail on different axes — run both, and
+run the mechanical one last.
+
+`mam3e` L5 came back `applicable: false` and the verifier upheld it: M&M 3e has
+no spellcasting economy of any kind. **A layer that does not exist for a system is
+an honest structural absence, not a gap** — and the workflow briefed that answer
+as a win precisely so agents under pressure to produce would not invent one.
+
+### 24.3 The first honest numbers
+
+| system | before | after |
+| --- | --- | --- |
+| daggerheart | 26/26 = 100% | **35/52 = 67.3%** |
+| mam3e | 26/26 = 100% | **26/34 = 76.5%** |
+| dnd-3.5e | 32/32 = 100% | **32/37 = 86.5%** |
+| dnd-5e-2024 | 41/41 = 100% | **44/50 = 88%** |
+| dnd-5e-2014 | 47/47 = 100% | **48/51 = 94.1%** |
+| pf1e | 33/33 = 100% | 33/33 = 100% |
+| pf2e | 29/29 = 100% | 29/29 = 100% |
+
+**The verified COUNT went up, 234 → 247.** The percentages fell because the
+denominator finally admits the quantities the rules define that the engine does
+not yet compute. pf1e and pf2e hold at 100% because they were the two systems that
+genuinely already enumerated all ten layers — theirs was the only ratio that ever
+meant anything.
+
+`check:compute-register` Tier A **demoted zero** new `verified` entries: each
+resolves to a real, exactly-named, passing test. The Tier-A gate is the check that
+matters more than the proposal.
+
+**All seven systems now span L1–L10, with one honest exception**: `mam3e` has no
+L5, because M&M 3e has no spellcasting economy — no slots, no points, no per-rest
+casting resource. A layer that does not exist for a system is a structural
+absence, not a gap, and the workflow was briefed to treat that answer as a win so
+that an agent under pressure to produce would not invent one.
+
+### 24.4 What is still open, stated plainly
+
+The 17 new verified entries are Tier-A clean but carry **no Tier-B mutation
+anchor**, so the gate reports them `mutation: 'unanchored'`. That is a deliberate
+design of the gate — the published numerator stays honest about which
+verifications are name-and-pass versus mutation-proven — and it means these
+entries are *less* proven than the anchored ones. `docs/WORK_PLAN.md` §3.1 carries
+the anchoring lane.
+
+Two further honest exclusions landed with the batch and are visible in the
+registers: 3 `flagged` (formula not verifiable from an open source) and 1
+`excluded`. Both leave the denominator by design, per
+`docs/compute-register/types.ts`.
+
+---
+
 ## Where the largest open work is
 
 Not a section — a reading aid, kept last so it stays out of the numbering. It is

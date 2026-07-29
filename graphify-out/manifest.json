@@ -5,23 +5,23 @@
     "semantic_hash": ""
   },
   "docs/compute-register/daggerheart.ts": {
-    "mtime": 1784669553.98754,
-    "ast_hash": "d831c21149dd353e81e43d88bba910ee",
+    "mtime": 1785336638.8722792,
+    "ast_hash": "6fbac3bb024a809378e63f2dfde9e68f",
     "semantic_hash": ""
   },
   "docs/compute-register/dnd35e.ts": {
-    "mtime": 1784921080.6598825,
-    "ast_hash": "f2a9931a29b6c1603ca063d6024ccfd3",
+    "mtime": 1785337012.3839686,
+    "ast_hash": "38702b8594298146acd3eac50e3703bb",
     "semantic_hash": ""
   },
   "docs/compute-register/dnd5e-2014.ts": {
-    "mtime": 1784947992.8256125,
-    "ast_hash": "aa7acb61f2fb00ff10dc6f0e5e632c1f",
+    "mtime": 1785337012.4304597,
+    "ast_hash": "2d68a6a48529b58a5fab9bd4bd5a745e",
     "semantic_hash": ""
   },
   "docs/compute-register/dnd5e-2024.ts": {
-    "mtime": 1784939309.0212617,
-    "ast_hash": "3961f811740adc3e1d0862b0f6e40953",
+    "mtime": 1785336639.0116782,
+    "ast_hash": "4ea73c445b8dfe70685f42dc3ba4e97a",
     "semantic_hash": ""
   },
   "docs/compute-register/index.ts": {
@@ -30,8 +30,8 @@
     "semantic_hash": "6cc9769cb27f172775a2f0a22bdd8d38"
   },
   "docs/compute-register/mam3e.ts": {
-    "mtime": 1784669553.98754,
-    "ast_hash": "36c3701717b3097f78e52f526cb09f60",
+    "mtime": 1785337012.4798028,
+    "ast_hash": "0504e6ec9009d8e566c846f05b12f067",
     "semantic_hash": ""
   },
   "docs/compute-register/pf1e.ts": {
@@ -60,8 +60,8 @@
     "semantic_hash": ""
   },
   "docs/generated/roadmap-metrics.json": {
-    "mtime": 1785332103.0959551,
-    "ast_hash": "07b547214595fa319149f3c856f1e3d2",
+    "mtime": 1785337353.7682674,
+    "ast_hash": "eb202372bdd3fc0bf057bfbf63fc7ca6",
     "semantic_hash": ""
   },
   "docs/generated/verification-baseline.json": {
@@ -3100,7 +3100,7 @@
     "semantic_hash": ""
   },
   "docs/generated/master-gap-ledger.json": {
-    "mtime": 1785332103.0959551,
+    "mtime": 1785337353.7682674,
     "ast_hash": "eff22a1ac80e40d095b2758b126d0e0f",
     "semantic_hash": ""
   },

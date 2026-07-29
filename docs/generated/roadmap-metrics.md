@@ -1,4 +1,4 @@
-_Generated: 2026-07-28T02:22:38.323Z_
+_Generated: 2026-07-29T14:57:41.985Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -109,13 +109,13 @@ _Measured 2026-07-28T00:04:51.558Z by `npm run srd:coverage`; republished here, 
 ### Engine-Math Completion (vs Compute Register — Denominator B)
 | System | Verified | In-Scope | Complete |
 | --- | ---: | ---: | ---: |
-| D&D 5e (2014) | 47 | 47 | 100% |
-| D&D 5e (2024) | 41 | 41 | 100% |
-| D&D 3.5e | 32 | 32 | 100% |
+| D&D 5e (2014) | 48 | 51 | 94.1% |
+| D&D 5e (2024) | 44 | 50 | 88% |
+| D&D 3.5e | 32 | 37 | 86.5% |
 | Pathfinder 1e | 33 | 33 | 100% |
-| Mutants & Masterminds 3e | 26 | 26 | 100% |
+| Mutants & Masterminds 3e | 26 | 34 | 76.5% |
 | Pathfinder 2e | 29 | 29 | 100% |
-| Daggerheart | 26 | 26 | 100% |
+| Daggerheart | 35 | 52 | 67.3% |
 
 _Denominators: the independent SRD reverse diff in docs/generated/srd-coverage.md (content) and the cited registers in docs/compute-register/ (compute). Enumerated manual boundaries excluded from both: 13, registered in `docs/srd-manifest/_exclusions.ts`._
 
