@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T02:22:38.323Z",
+  "generatedAt": "2026-07-29T14:57:41.985Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -350,9 +350,9 @@
     {
       "systemId": "dnd-5e-2014",
       "systemLabel": "D&D 5e (2014)",
-      "verified": 47,
-      "inScope": 47,
-      "percent": 100,
+      "verified": 48,
+      "inScope": 51,
+      "percent": 94.1,
       "byLayer": {
         "L1": {
           "verified": 2,
@@ -389,15 +389,19 @@
         "L9": {
           "verified": 3,
           "inScope": 3
+        },
+        "L10": {
+          "verified": 1,
+          "inScope": 4
         }
       }
     },
     {
       "systemId": "dnd-5e-2024",
       "systemLabel": "D&D 5e (2024)",
-      "verified": 41,
-      "inScope": 41,
-      "percent": 100,
+      "verified": 44,
+      "inScope": 50,
+      "percent": 88,
       "byLayer": {
         "L1": {
           "verified": 2,
@@ -434,6 +438,10 @@
         "L9": {
           "verified": 3,
           "inScope": 3
+        },
+        "L10": {
+          "verified": 3,
+          "inScope": 9
         }
       }
     },
@@ -441,8 +449,8 @@
       "systemId": "dnd-3.5e",
       "systemLabel": "D&D 3.5e",
       "verified": 32,
-      "inScope": 32,
-      "percent": 100,
+      "inScope": 37,
+      "percent": 86.5,
       "byLayer": {
         "L1": {
           "verified": 4,
@@ -479,6 +487,10 @@
         "L9": {
           "verified": 2,
           "inScope": 2
+        },
+        "L10": {
+          "verified": 0,
+          "inScope": 5
         }
       }
     },
@@ -535,8 +547,8 @@
       "systemId": "mam3e",
       "systemLabel": "Mutants & Masterminds 3e",
       "verified": 26,
-      "inScope": 26,
-      "percent": 100,
+      "inScope": 34,
+      "percent": 76.5,
       "byLayer": {
         "L1": {
           "verified": 1,
@@ -569,6 +581,10 @@
         "L9": {
           "verified": 12,
           "inScope": 12
+        },
+        "L6": {
+          "verified": 0,
+          "inScope": 8
         }
       }
     },
@@ -624,9 +640,9 @@
     {
       "systemId": "daggerheart",
       "systemLabel": "Daggerheart",
-      "verified": 26,
-      "inScope": 26,
-      "percent": 100,
+      "verified": 35,
+      "inScope": 52,
+      "percent": 67.3,
       "byLayer": {
         "L1": {
           "verified": 6,
@@ -655,6 +671,18 @@
         "L6": {
           "verified": 1,
           "inScope": 1
+        },
+        "L4": {
+          "verified": 1,
+          "inScope": 8
+        },
+        "L5": {
+          "verified": 0,
+          "inScope": 2
+        },
+        "L9": {
+          "verified": 8,
+          "inScope": 16
         }
       }
     }

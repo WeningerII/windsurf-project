@@ -208,11 +208,33 @@ Every scalar divergence the fidelity baseline itemised has been re-transcribed f
 
 ## 3. Compute — Denominator B
 
-### 3.1 Level the register layers — **READY**
+### 3.1 Level the register layers — ~~READY~~ **DONE 2026-07-29 — and it turned a metric that could only read 100% into a real one**
 
-L1–L10 is complete for **2 of 7** systems. L10 is owed by 3, L5–L6 by one, L4/L5/L9 by one. The registers are a curated subset of the full spec, not its exhaustive enumeration — which is honest, but it means `compute%` is measured against an uneven target.
+**The layer gaps are closed.** All seven systems now span L1–L10, except `mam3e` L5, which is absent because M&M 3e has no spellcasting economy at all — no slots, no points, no per-rest casting resource. That is an honest structural absence, not a hole, and it was verified rather than assumed.
 
-Every new verified entry must land with its Tier-B mutation anchor.
+**The bigger finding is what closing them exposed.** Before this, every system published **100% compute completion** — 47/47, 41/41, 33/33, and so on across all seven. It read 100% because the register only ever contained rows that were already verified: the same ids on both sides of the ratio. **That is the identical circular-denominator defect this repo already diagnosed and fixed once for CONTENT** — the `srd-manifest` demotion (`docs/GAPS.md` §6), whose write-up says a committed manifest "created a circular denominator … which could only ever read 100%." The same shape had been sitting in Denominator B the whole time, and the previous wording of this section ("a curated subset … an uneven target") understated it: the metric was not merely uneven, it was structurally incapable of reporting anything but success.
+
+**The first honest numbers, after +53 entries:**
+
+| system | before | after |
+| --- | --- | --- |
+| daggerheart | 26/26 = 100% | **35/52 = 67.3%** |
+| mam3e | 26/26 = 100% | **26/34 = 76.5%** |
+| dnd-3.5e | 32/32 = 100% | **32/37 = 86.5%** |
+| dnd-5e-2024 | 41/41 = 100% | **44/50 = 88%** |
+| dnd-5e-2014 | 47/47 = 100% | **48/51 = 94.1%** |
+| pf1e | 33/33 = 100% | 33/33 = 100% |
+| pf2e | 29/29 = 100% | 29/29 = 100% |
+
+pf1e and pf2e stay at 100% because they were the two that genuinely already enumerated all ten layers — the ratio was only ever meaningful for them.
+
+**The `verified` count went UP, not down**: 234 → 247, and `check:compute-register` Tier A **demoted zero** — every new verified entry resolves to a real, exactly-named, passing test. The percentages fell because the denominator finally includes the quantities the rules define that the engine does not yet compute.
+
+**61 entries survived the agent verifiers; 53 landed.** `check:rules-provenance` — a gate the agents never saw — then rejected 8 more on citations, which is the finding in `docs/GAPS.md` §24.2 worth carrying: an adversarial agent panel is not a substitute for the repo's own provenance gate.
+
+Still true, and now the actual queue: **every new verified entry should land with a Tier-B mutation anchor.** The 17 added here pass Tier A and are reported `mutation: 'unanchored'`, which the gate deliberately surfaces so the numerator is honest about which verifications are name+pass only versus mutation-proven. Anchoring them is the follow-on lane.
+
+Evidence and the adversarial method: `docs/GAPS.md` §24.
 
 ### 3.2 L8 — damage types and resistance — **SHIPPED 2026-07-29 (engine + scene path); sheet surface still open**
 
