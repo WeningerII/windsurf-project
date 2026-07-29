@@ -232,7 +232,11 @@ pf1e and pf2e stay at 100% because they were the two that genuinely already enum
 
 **61 entries survived the agent verifiers; 53 landed.** `check:rules-provenance` — a gate the agents never saw — then rejected 8 more on citations, which is the finding in `docs/GAPS.md` §24.2 worth carrying: an adversarial agent panel is not a substitute for the repo's own provenance gate.
 
-Still true, and now the actual queue: **every new verified entry should land with a Tier-B mutation anchor.** The 17 added here pass Tier A and are reported `mutation: 'unanchored'`, which the gate deliberately surfaces so the numerator is honest about which verifications are name+pass only versus mutation-proven. Anchoring them is the follow-on lane.
+**The Tier-B tail is closed too — `mutation: 'proven'` is now 247 of 247.** When this section was first rewritten, 28 verified entries were `unanchored`: Tier-A clean (a real, exactly-named, passing test) but never proven mutation-sensitive. 19 of those predated this lane. All 28 now carry an anchor and every one flips its linked assertion under `check:compute-register --mutate`.
+
+Nine were free: where the two 5e editions engine-wire the same shared helper, one perturbation flips both editions' tests. Daggerheart's L9 rows needed a different shape — they are legality predicates, not scalars, so each anchor moves the *boundary* (widen a cap, invert a comparison) rather than the arithmetic.
+
+**One anchor was demoted by the gate and had to be strengthened**, which is the useful detail: raising the Daggerheart consumable cap 5 → 6 left the linked test's quantity-9 fixture just as illegal, so nothing flipped. A boundary anchor has to clear the fixture's value, not merely move. 5 → 99 fixed it. The gate caught a weak anchor that looked correct — exactly what Tier B is for.
 
 Evidence and the adversarial method: `docs/GAPS.md` §24.
 
