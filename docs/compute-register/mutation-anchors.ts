@@ -1399,4 +1399,34 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'const total = hopeDie + fearDie + mod;',
     replace: 'const total = hopeDie + fearDie + mod + 1;',
   },
+
+  // Shaken's -2 on checks. `value: 2` appears many times in this file, so the
+  // find carries the following unique label line to pin exactly one occurrence.
+  // 3.5e and PF1e share the one OGL condition table, so this single
+  // perturbation flips the fold assertion for both systems.
+  'dnd35e.L8.condition-check-penalty': {
+    file: 'src/rules/conditions/d20LegacyConditions.ts',
+    find: "value: 2,\n      label: 'Shaken: -2 on saves, skill and ability checks',",
+    replace: "value: 3,\n      label: 'Shaken: -2 on saves, skill and ability checks',",
+  },
+  'pf1e.L8.condition-check-penalty': {
+    file: 'src/rules/conditions/d20LegacyConditions.ts',
+    find: "value: 2,\n      label: 'Shaken: -2 on saves, skill and ability checks',",
+    replace: "value: 3,\n      label: 'Shaken: -2 on saves, skill and ability checks',",
+  },
+
+  // A background grants its starting gold only on first application.
+  'dnd5e2014.L10.background-starting-gold': {
+    file: 'src/systems/dnd5e/shared/backgroundTemplate.ts',
+    find: 'sys.currency.gold = background.gold;',
+    replace: 'sys.currency.gold = background.gold + 1;',
+  },
+
+  // Non-PF2e, non-3.5e systems spend a monster's own XP award; 5e-2024 is the
+  // fall-through return.
+  'dnd5e2024.L10.encounter-spend': {
+    file: 'src/scene/encounterDraft.ts',
+    find: '  return monster.experiencePoints;',
+    replace: '  return monster.experiencePoints + 1;',
+  },
 };
