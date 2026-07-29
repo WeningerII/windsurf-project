@@ -240,7 +240,15 @@ Nine were free: where the two 5e editions engine-wire the same shared helper, on
 
 Evidence and the adversarial method: `docs/GAPS.md` §24.
 
-### 3.2 L8 — damage types and resistance — **SHIPPED 2026-07-29 (engine + scene path); sheet surface still open**
+### 3.2 L8 — damage types and resistance — **DONE 2026-07-29 — engine, scene path, and the combat join that made it reachable**
+
+**The join landed 2026-07-29 and it is what makes the rest of this item real.** The engine, the mitigation transform and the 395 shipped resistance declarations were all in place, and none of them could fire from actual combat: `monsterDamageEffects` encodes a damage type into an effect CHANNEL (`damage.fire`, `damage.slashing`, or bare `damage` when the source asserts none — it never invents one), `resolveAttack` summed every channel into a single scalar, and `attackToDamageIntent` emitted `{tokenId, amount}` with the type already gone. **A fire elemental took full fire damage on the grid.**
+
+`AttackResolution` now carries `damageType`, and the one bridge function threads it into the intent — which covers the scene combat bridge and the tactical executor, its only three call sites.
+
+**Scoped narrowly on purpose.** The type is reported only when an attack resolves to exactly ONE typed channel and nothing untyped alongside it. An attack dealing "slashing plus fire" has two channels and one scalar total; splitting that total back apart needs a remainder rule so the parts still sum to the whole, and guessing one would silently change damage numbers. Multi-channel attacks therefore stay untyped and unmitigated — byte-identical to the previous behaviour, because untyped damage is never mitigated. **That split rule is the one piece still open here**, and it is a decision rather than a task.
+
+Pinned end to end by `src/__tests__/rules/sceneCombatBridge.test.ts`: a fire-resistant token takes 5 from a flat-10 fire attack while an unprofiled token takes 10, and the recorded event carries `type: 'fire'`, `mitigation: 'resistant'`, `raw: 10` so the log explains its own number. Verified red before the join (`expected 10 to be 5`) and green after.
 
 **The gap was never missing data, which changes what this item was.** `Monster` has declared `damageResistances`, `damageImmunities` and `damageVulnerabilities` since the type was written, and the shipped catalogs populate them **395 times**. Before this landed, the only references to those three fields anywhere outside `src/data/` and the tests were their own declarations in `src/types/creatures/monsters.ts` — **nothing read them.** A fire elemental took full fire damage on the grid; a skeleton took full bludgeoning. This was a wire-up, not a feature.
 

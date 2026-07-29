@@ -198,6 +198,8 @@
   "196": "@vitest/coverage-v8",
   "197": "useKeyboardNavigation",
   "198": "combatStats.test.ts",
+  "199": "failureReporting.test.tsx",
+  "200": "legality/pf2e.ts",
   "201": "participantResolution.test.ts",
   "202": "phase3-workflows.spec.ts",
   "203": "aiSdkAdapter.test.mts",

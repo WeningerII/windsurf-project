@@ -24,6 +24,7 @@ import { resolveEffects, type ResolveContext, type RollMode } from './resolve';
 import { pf2eDegreeOfSuccess, type Pf2eDegreeOfSuccess } from './pf2eDegree';
 import { d20CriticalConfirmed, d20CriticalDamage } from '../../utils/derivedCombatMath';
 import type { EffectInstance } from '../ir/types';
+import type { DamageType } from '../../types/core/common';
 
 export interface AttackResolutionInput {
   /** Compiled attack-roll effects (proficiency, ability, item, feat bonuses…). */
@@ -87,6 +88,24 @@ export interface AttackResolution {
   degreeOfSuccess?: Pf2eDegreeOfSuccess;
   /** Total damage (only rolled on a hit; 0 on a miss). */
   damage: number;
+  /**
+   * The damage type, when this attack resolved to exactly ONE typed channel.
+   *
+   * Damage effects are namespaced by channel — `damage.fire`, `damage.slashing`,
+   * or plain `damage` when the source asserted no type (`monsterDamageEffects`,
+   * which never invents one). `damage` above is the sum across every channel, so
+   * the breakdown was previously discarded here and the scene's typed-damage
+   * mitigation could never fire for a real attack.
+   *
+   * Set ONLY for a single typed channel, deliberately. An attack that deals
+   * "slashing plus fire" has two channels and one scalar total; splitting that
+   * total back apart needs a remainder rule so the parts still sum to the whole,
+   * and guessing one would silently change damage numbers. Multi-channel attacks
+   * therefore stay untyped and unmitigated — the same behaviour as before this
+   * field existed — until that rule is decided. Untyped damage is never
+   * mitigated, so leaving it absent is the safe direction.
+   */
+  damageType?: DamageType;
   /** Individual damage dice rolled (empty on a miss or with no dice). */
   damageDiceTerms: number[];
   damageBonus: number;
@@ -146,6 +165,7 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
   let damage = 0;
   let damageDiceTerms: number[] = [];
   let damageBonus = 0;
+  let damageType: DamageType | undefined;
   let criticalConfirmed: boolean | undefined;
   let confirmationRoll: number | undefined;
 
@@ -153,11 +173,25 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
     const damageResolved = resolveEffects(input.damageEffects, ctx);
     // Sum every damage target (e.g. 'damage', 'damage.fire'); each carries its
     // rolled dice and flat bonuses.
-    for (const resolved of Object.values(damageResolved.byTarget)) {
+    //
+    // The channel KEYS are also the only place the damage type survives, so
+    // record which ones actually contributed while summing. `damage.fire` ->
+    // 'fire'; the bare `damage` channel is untyped and contributes none.
+    const contributingTypes = new Set<string>();
+    for (const [target, resolved] of Object.entries(damageResolved.byTarget)) {
       damage += resolved.total;
+      if (resolved.total !== 0 && target.startsWith('damage.')) {
+        contributingTypes.add(target.slice('damage.'.length));
+      }
       if (resolved.diceTerms) {
         damageDiceTerms = [...damageDiceTerms, ...resolved.diceTerms];
       }
+    }
+    // Exactly one typed channel and nothing untyped alongside it: the whole
+    // total belongs to that type, so it can be reported without any split.
+    const untypedTotal = damageResolved.byTarget.damage?.total ?? 0;
+    if (contributingTypes.size === 1 && untypedTotal === 0) {
+      damageType = [...contributingTypes][0] as DamageType;
     }
     // Flat damage bonus = total minus the rolled dice.
     const diceSum = damageDiceTerms.reduce((sum, term) => sum + term, 0);
@@ -205,6 +239,7 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
     confirmationRoll,
     degreeOfSuccess,
     damage,
+    damageType,
     damageDiceTerms,
     damageBonus,
     ledger,
