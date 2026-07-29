@@ -29,7 +29,12 @@ export type DocDriftRuleType =
   //
   // Prose does not own status either.
   | 'blocked_ref_rule'
-  | 'ledger_status_rule';
+  | 'ledger_status_rule'
+  // Added 2026-07-28, completing the pair above. `ledger_status_rule` catches a
+  // ledger entry that contradicts itself; this catches plan prose that queues
+  // work the ledger already records as done — the drift that actually costs a
+  // lane, because the plan is where you look to find out what is left.
+  | 'ledger_ref_rule';
 
 export interface DocDriftSurface {
   path: string;
@@ -98,7 +103,13 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     // §X" that outlives §X's resolution is the failure mode that costs most —
     // it parks work that is already free to start. §5 carried exactly that for
     // two days after §0.2 was decided.
-    rules: ['path_ref_rule', 'blocked_ref_rule'],
+    //
+    // ledger_ref_rule (added 2026-07-28): the same failure in the other
+    // direction. §2.5 queued `p1.single-entry-gaps` as "small, itemised, good
+    // filler. **CHEAP**" while the ledger already recorded it CLOSED with four
+    // verified entries. blocked_ref_rule could not see it — that rule reads
+    // section refs inside this file; this one reads the ledger.
+    rules: ['path_ref_rule', 'blocked_ref_rule', 'ledger_ref_rule'],
   },
   {
     path: 'docs/MASTER_PLAN.md',

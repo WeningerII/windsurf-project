@@ -476,6 +476,53 @@ export function validateLedgerStatus(rootDir: string): string[] {
   return issues;
 }
 
+/**
+ * The other direction of `validateLedgerStatus`, and the hole it left.
+ *
+ * That rule catches a ledger item whose own detail contradicts its status. It
+ * cannot see the far more common drift: the ledger is updated to `done` and the
+ * PLAN prose that queues the work is not. `p1.single-entry-gaps` sat in
+ * `docs/WORK_PLAN.md` §2.5 as `small, itemised, good filler. **CHEAP**` for as
+ * long as it took someone to notice, while the ledger recorded it CLOSED with
+ * four verified entries and an independent denominator agreeing.
+ *
+ * That is the expensive kind of stale text: it costs a future lane a scoping
+ * pass on finished work, and it reads as authoritative because the plan is where
+ * you go to find out what is left.
+ *
+ * A citation counts as acknowledged if the line strikes it through or carries a
+ * resolution marker — the convention the plan already uses everywhere else. Only
+ * `done` is checked; open statuses are exactly what a plan is supposed to list.
+ */
+export function validateLedgerReferences(rootDir: string, relativePath: string): string[] {
+  const issues: string[] = [];
+  const sourcePath = 'docs/master-gap-ledger.source.ts';
+  if (!existsSync(path.join(rootDir, sourcePath))) return issues;
+
+  const doneIds = new Set<string>();
+  for (const block of readText(rootDir, sourcePath)
+    .split(/\n\s*\{\s*\n/)
+    .slice(1)) {
+    const id = /id:\s*'([^']+)'/.exec(block)?.[1];
+    const status = /status:\s*'([^']+)'/.exec(block)?.[1];
+    if (id && status === 'done') doneIds.add(id);
+  }
+
+  const lines = readText(rootDir, relativePath).split(/\r?\n/);
+  lines.forEach((line, index) => {
+    if (/~~/.test(line) || RESOLVED_SECTION_MARKERS.test(line)) return;
+    for (const id of doneIds) {
+      if (!line.includes(id)) continue;
+      issues.push(
+        `${relativePath}:${index + 1} lists ledger item "${id}" as open work, but the ledger ` +
+          'records it done. Strike it through or mark it DONE, or reopen the ledger entry.'
+      );
+    }
+  });
+
+  return issues;
+}
+
 function pushExpectedTextIssues(
   issues: DocDriftIssue[],
   contents: string,
@@ -712,6 +759,12 @@ export async function runDocDriftCheck(rootDir = process.cwd()): Promise<DocDrif
           rule: 'ledger_status_rule',
           message,
         });
+      }
+    }
+
+    if (surface.rules.includes('ledger_ref_rule')) {
+      for (const message of validateLedgerReferences(rootDir, surface.path)) {
+        issues.push({ path: surface.path, rule: 'ledger_ref_rule', message });
       }
     }
 

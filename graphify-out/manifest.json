@@ -50,8 +50,8 @@
     "semantic_hash": "a1b8f23b1952493828f101c62cd3d27b"
   },
   "docs/doc-drift.manifest.ts": {
-    "mtime": 1785282680.6491332,
-    "ast_hash": "6f11ee55bcc76676870fce034deb3635",
+    "mtime": 1785283622.273189,
+    "ast_hash": "132ccc14392114a679cba291b72dd094",
     "semantic_hash": ""
   },
   "docs/doc-drift.rules.ts": {
@@ -60,7 +60,7 @@
     "semantic_hash": ""
   },
   "docs/generated/roadmap-metrics.json": {
-    "mtime": 1785283150.6091611,
+    "mtime": 1785284244.053226,
     "ast_hash": "07b547214595fa319149f3c856f1e3d2",
     "semantic_hash": ""
   },
@@ -690,8 +690,8 @@
     "semantic_hash": ""
   },
   "src/__tests__/docDriftRules.test.ts": {
-    "mtime": 1785277372.9848175,
-    "ast_hash": "e2f68e38a8728583e785de1741ecf798",
+    "mtime": 1785284160.881221,
+    "ast_hash": "38dcd5de99c77070a41be498e6f56314",
     "semantic_hash": ""
   },
   "src/__tests__/documentStorage.test.ts": {
@@ -2860,8 +2860,8 @@
     "semantic_hash": ""
   },
   "src/utils/docDrift.ts": {
-    "mtime": 1785282662.401132,
-    "ast_hash": "23a7d15b04c653786637a5aa87f19205",
+    "mtime": 1785284176.265222,
+    "ast_hash": "a8fe1e978a3edd0a542f9d487ca5333e",
     "semantic_hash": ""
   },
   "src/utils/documentMigrations.ts": {
@@ -3100,7 +3100,7 @@
     "semantic_hash": ""
   },
   "docs/generated/master-gap-ledger.json": {
-    "mtime": 1785283150.6091611,
+    "mtime": 1785284244.053226,
     "ast_hash": "eff22a1ac80e40d095b2758b126d0e0f",
     "semantic_hash": ""
   },

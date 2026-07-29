@@ -200,7 +200,9 @@ Every scalar divergence the fidelity baseline itemised has been re-transcribed f
 
 - `p1.wire-remaining-denominators` — 3.5e classes and feats are wired against the core-only olimot chapters and the feat list is now **closed**: `scripts/encode-35e-feats.mjs` transcribes the feats chapter (hand-written entries keep winning), so the gap the coverage report used to itemise is gone. 3.5e **equipment** stays closed-by-no-source — the olimot equipment tables interleave services/lodging/mounts outside the loader's scope, and a scrape would poison the denominator. Current numbers live in `docs/generated/srd-coverage.md`.
 - `p1.monster-denominator-fix` — 3.5e's denominator still inflated by container-like rows.
-- `p1.single-entry-gaps` — small, itemised, good filler. **CHEAP**
+- ~~`p1.single-entry-gaps`~~ — **DONE 2026-07-28.** All four entries verified shipping against the loaders, and `docs/generated/srd-coverage.md` reports 0 missing in all four owning categories — an independent denominator, not just a re-read of the data. The two `[naming]` items were never missing content: the ledger listed them index-sort style (`Teleport (Greater)`) while the SRD and the loaders name them `Greater Teleport`. The 30 remaining 3.5e/monsters misses are container-like rows and belong to `p1.monster-denominator-fix` above, not here.
+
+  This bullet is why `ledger_ref_rule` now exists. It sat here reading **CHEAP** and dispatchable while the ledger already recorded the item CLOSED, and nothing could see the disagreement: `ledger_status_rule` only checks the ledger against itself, and `blocked_ref_rule` only resolves section refs inside this file. The gate now reads the ledger.
 
 ---
 
@@ -470,6 +472,15 @@ is where the three real findings were:
    worktree) and archived before removal. **113 local branches before, 113
    after** — worktree removal does not delete branches.
 
+4. **The status gates had a hole in the expensive direction.** `ledger_status_rule`
+   checks the ledger against itself and `blocked_ref_rule` resolves section refs
+   inside this file; neither could see this plan queuing an item the ledger already
+   recorded `done` — which is what §2.5 was doing. New **`ledger_ref_rule`** resolves
+   every ledger id cited here against the ledger. Confirmed red on the real drift,
+   green after the fix, red again when experimentally re-opened; three unit tests
+   pin it including the false-positive guards. A full plan-against-ledger scan found
+   exactly one instance, so this was a hole, not a pattern.
+
 **Not repo defects, recorded so they are not re-diagnosed:** `@ai-sdk/anthropic`
 was missing from this container's `node_modules` after a recycle (`npm ci`
 restores it; the lockfile is correct), and one earlier "verify passed" report of
@@ -511,7 +522,9 @@ Small, real, and each found while checking something else.
 - **The Phase-2 surfaces directory was never created.** `SurfaceStage` takes `ReactNode` slots instead, so later specs referring to "the Phase-2 `SceneSurface` stub to flesh out" point at nothing that exists.
 - **`path_ref_rule` blind spot** — **CLOSED for the deploy surfaces.** The matcher now accepts `netlify/` and `supabase/` paths, so gateway, adapter and migration references are checked on every `check:doc-drift` run instead of by hand. It brought 12 references under the gate and found **0 stale** — the two spotted by hand this week were already fixed, so the value is prospective: the next one fails CI rather than surviving to a reader. `.env` stays ungated deliberately, since only `.env.example` is tracked and gating bare `.env` mentions would fail on a correctly-absent file.
 - **`strikingRune` comment was stale** — **FIXED.** `src/types/core/character.ts` claimed no engine consumed it; `src/rules/combatants/characterCombatant.ts` does, gated on the system profile's `supportsStrikingRunes`. The comment now names the consumer and the gate.
-- **The graphify index is stale.** `ShellContext`, `SurfaceStage` and `SceneCanvas` return no node, so every agent this session fell back to direct file reads. `npm run graph:update` is overdue.
+- ~~**The graphify index is stale.**~~ — **DONE 2026-07-28.** All three named symbols resolve again after `graphify update`: `ShellContext` (`src/contexts/shell-context.ts:165`), `SurfaceStage` (`src/components/SurfaceStage.tsx:53`), `SceneCanvas` (`src/components/SceneCanvas.tsx:56`). Graph now at 5,938 nodes / 17,180 edges.
+
+  **The recurrence is the real item, and it is not fixed.** Nothing runs `graph:update`; it is not in `npm run verify` and no workflow calls it, so the index goes stale again on the next merge and the next agent silently falls back to file reads — a slow failure with no signal, which is why this bullet had to be written by hand in the first place. Deliberately not added to `verify`: the graph artifacts are committed, so a gate would either fail every PR that touches `src/` or quietly rewrite tracked files mid-chain. A staleness *check* (compare the graph's recorded input hashes against the tree, warn rather than fail) is the shape that would work. Left open rather than half-built.
 - **`src/systems/pf2e/derivedMath.ts` had no non-test importer** while its PF1e twin was live. **Done:** the death-track helpers are declared in `PF2E_DERIVED_QUANTITIES` (dying-on-knockout, recovery DC, wounded-track) so the engine computes them into `system.derived` and the sheet surfaces the first two while on the death track; `pf2eAttackModifier` now backs the sheet's spell-attack readout and the hero-point constants back the header pip track and the long-rest handler. All substitutions are value-identical — no computed output moved. **Still test-only, for structural reasons recorded on their compute-register rows:** `pf2eDyingAfterRecovery` / `pf2eIsDead` (transitions and a predicate, not standing numeric scalars), `pf2eShieldBlockDamage` (needs a shield Hardness the equipment model does not carry), and `pf2eCreatureXP` / `pf2eEncounterBudget` (party-scoped GM math owned by `src/scene/`, which the lint-enforced layer boundary forbids from value-importing `src/systems/**`).
 
 ---

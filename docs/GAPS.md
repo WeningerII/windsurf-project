@@ -2651,6 +2651,38 @@ A command that always exits 0 will always look green. Same shape as §22 — the
 absence of a signal reading identically to a passing one — arrived at from the
 tooling side rather than the test side.
 
+### 23.5 The status gates had a hole, in the direction that costs a lane
+
+`ledger_status_rule` (§added 2026-07-28, `WORK_PLAN` §6.7's sibling) catches a
+ledger entry whose own detail contradicts its status. `blocked_ref_rule` catches
+a `BLOCKED on §X` that outlives §X. Neither could see the drift that actually
+happened next:
+
+> `docs/WORK_PLAN.md` §2.5 queued `p1.single-entry-gaps` as *"small, itemised,
+> good filler. **CHEAP**"* while `docs/master-gap-ledger.source.ts` already
+> recorded it `status: 'done'`, CLOSED, with four entries verified against the
+> loaders and `srd-coverage.md` reporting 0 missing in all four owning
+> categories.
+
+The plan is where you look to find out what is left, so a finished item sitting
+there reading CHEAP costs the next lane a scoping pass on completed work — and
+reads as authoritative while doing it.
+
+**`ledger_ref_rule`** closes it: every ledger id cited in the plan is resolved
+against the ledger, and a `done` item on a line that is neither struck through
+nor carrying a resolution marker fails the gate. Only `done` is checked — listing
+open items is exactly what a plan is for.
+
+Confirmed on the live repo in both directions: the rule went red on the real
+`p1.single-entry-gaps` bullet before it was fixed, green after, and red again
+when the bullet was experimentally re-opened. A scan of the whole plan against
+the whole ledger found **exactly one** instance, so this was a hole rather than a
+pattern — but it was a hole with nothing watching it.
+
+Three unit tests pin it, including the false-positive guard that killed the first
+draft of `ledger_status_rule`: struck-through and `**DONE**`-marked citations
+must stay silent, and open items must stay silent regardless of wording.
+
 ---
 
 ## Where the largest open work is
