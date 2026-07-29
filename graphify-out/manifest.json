@@ -55,12 +55,12 @@
     "semantic_hash": ""
   },
   "docs/doc-drift.rules.ts": {
-    "mtime": 1785328554.5400045,
-    "ast_hash": "bf10b570c3f41cdc9ac82009d7f0112a",
+    "mtime": 1785346525.0888126,
+    "ast_hash": "3184da4cc80db2594719096538603948",
     "semantic_hash": ""
   },
   "docs/generated/roadmap-metrics.json": {
-    "mtime": 1785342414.1285682,
+    "mtime": 1785346659.0968204,
     "ast_hash": "eb202372bdd3fc0bf057bfbf63fc7ca6",
     "semantic_hash": ""
   },
@@ -3100,7 +3100,7 @@
     "semantic_hash": ""
   },
   "docs/generated/master-gap-ledger.json": {
-    "mtime": 1785342414.1285682,
+    "mtime": 1785346659.0968204,
     "ast_hash": "eff22a1ac80e40d095b2758b126d0e0f",
     "semantic_hash": ""
   },

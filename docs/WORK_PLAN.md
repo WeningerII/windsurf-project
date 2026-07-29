@@ -402,6 +402,23 @@ The `test.fixme` on the dialog/wizard scan is gone and the test runs. Its note s
 
 Risk-ordered, verified against `package.json`: React 18.2→19, Tailwind 3.3→4, Vite 7.3→8, `lucide-react` 0.294→1.17, `@types/node` 20→22, and runtime-pin reconciliation (`.nvmrc` pins 20.19.0 while `engines` already admits 22 and 24).
 
+**Surveyed 2026-07-29 — all six axes, each adversarially re-checked. Zero came back safe to land from this container, and the reason is uniform:** every one of them fails in a way `npm run verify` steps 1–21 cannot see, and step 22 (e2e) **cannot run here at all** — `/opt/pw-browsers` carries chromium 1194 against a toolchain wanting 1208, and there is no Firefox whatsoever while `playwright.config.ts` declares a firefox project. CI is the only gate that can judge any of this.
+
+| axis | state | the actual blocker |
+| --- | --- | --- |
+| **React 19** | code-CLEAN, budget-BLOCKED | Typechecked against real `@types/react@19.2.17` via a `paths` override: **exit 0 on both tsconfigs**, and all the classic breaks are absent (0 `defaultProps`, 0 legacy `ReactDOM.render`, 0 zero-arg `useRef`, 0 callback refs; `main.tsx` already uses `createRoot`). The blocker is **size**: react-dom 18→19 is ~+13.9 KB gzip, which breaks **two** budgets — eager shell ~187.7 KB vs the 180,224 B ceiling, and total JS ~1684.9 vs 1680 KiB. Raising them is a governance decision, not a bump. Also hard-blocked by `npm` ERESOLVE until lucide moves (below). |
+| **Tailwind 4** | defer | Codemod exists, but two **silent** preflight changes were found by diffing tarballs: v4 drops `button { cursor: pointer }` (172 `<button>` across 81 files, only 7 explicit `cursor-pointer`), and placeholder colour becomes a `color-mix()`. Neither is visible to any gate — there is no CSS budget and zero screenshot assertions. |
+| **Vite 8** | defer — **premise confirmed** | v8.1.5 is real, so this row was right. Two traps: `@vitejs/plugin-react` should go to **^5.2.0, not ^6** (its peer already admits vite 8), and vitest 4.0.18 pins vite as a *direct dependency* capped at `^6\|\|^7` — leaving it would silently nest a second Vite 7 and **run all 3,092 tests on the old toolchain while reporting green**. Also `build.target` defaults shift browser baselines with nothing in the chain watching. |
+| **lucide 1.x** | defer — needs human eyes | One hard break (`Github` removed; it is a brand glyph, so inline an SVG rather than substitute). The real issue: **47 of the 81 icons this repo imports have redesigned geometry**, including 4 of the 5 most-used. Invisible to every gate — no snapshots exist anywhere. |
+| **@types/node 26** | closest to landable | Low risk, caught by typecheck. The only axis whose survey survived refutation intact. |
+| **runtime pin** | ready, needs a version decision | See below. |
+
+**The runtime pin is scoped and one decision away.** The edit is narrow but *wider than it looks*: `.nvmrc`, `.node-version`, and **four** doc lines — the two "Runtime Pin" statements plus the two "Manual Fallback" lines. Everything else matching `20.19.0` is a **historical record** (the verification baseline, `MASTER_PLAN` §62, `STATUS`) that must NOT change, because it records what actually ran.
+
+Those two fallback lines were **ungated until 2026-07-29** — nothing in `docs/doc-drift.rules.ts` mentioned "fallback", while the two Runtime-Pin rules derive from `.nvmrc`. A bump would therefore have updated the gated lines, passed CI, and left both docs instructing new contributors to hand-install a dead runtime. Two `command_rule` entries now own them; proven by simulating exactly that half-landed bump and watching both fail.
+
+What remains is picking the target Node version — a real choice with CI and contributor consequences that should not be guessed, and `npm view node` is not authoritative for Node releases. Once chosen: bump the six lines, let the **full 22-step CI run** be the acceptance gate (this is precisely what puts Playwright on a Node line it has never run on here), and only then re-record the baseline with `npm run record:verify-baseline`.
+
 ### 6.7 ~~Wall-clock assertions flake under parallel workers~~ — **DONE 2026-07-28**
 
 Surfaced by the CI work, not planned: restoring vitest parallelism made
