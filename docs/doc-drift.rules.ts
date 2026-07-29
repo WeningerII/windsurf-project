@@ -241,6 +241,29 @@ export const COMMAND_RUNTIME_RULES: ExpectedTextRule[] = [
     expectedText: () =>
       '- Bootstrap path: on host Node 18+, run `npm run bootstrap:node`, then `npm run pinned -- run <task>` if no version manager is available.',
   },
+  // Added 2026-07-29. Both docs restate the PINNED VERSION a second time, in a
+  // "manual fallback" line, and nothing covered it — grepping this file for
+  // "fallback" returned nothing at all. The two runtime-pin rules above are
+  // derived from `.nvmrc`, so a pin bump updates them and CI stays green while
+  // README and CONTRIBUTING keep telling a new contributor to install the OLD,
+  // now-unsupported runtime by hand.
+  //
+  // That is not hypothetical: it is the precise failure mode of the §6.5
+  // runtime-pin reconciliation that is queued right now. These two rules make
+  // the gate own every place the pinned version appears, so the bump cannot
+  // half-land.
+  {
+    path: 'README.md',
+    description: 'README manual fallback pin',
+    expectedText: (truth) =>
+      `- **Manual Fallback**: If the host shell is below Node 18 or has no usable Node install, install Node \`${truth.pinnedNodeVersion}\` manually or fix your version manager before using the repo`,
+  },
+  {
+    path: 'CONTRIBUTING.md',
+    description: 'CONTRIBUTING manual fallback pin',
+    expectedText: (truth) =>
+      `- Manual fallback: if the host shell is below Node 18 or has no usable Node install, install Node \`${truth.pinnedNodeVersion}\` directly or fix the version manager before working in the repo.`,
+  },
 ];
 
 export const CAPABILITY_PHRASE_RULES: CapabilityPhraseRule[] = [

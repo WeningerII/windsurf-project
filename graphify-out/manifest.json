@@ -55,12 +55,12 @@
     "semantic_hash": ""
   },
   "docs/doc-drift.rules.ts": {
-    "mtime": 1785328554.5400045,
-    "ast_hash": "bf10b570c3f41cdc9ac82009d7f0112a",
+    "mtime": 1785346525.0888126,
+    "ast_hash": "3184da4cc80db2594719096538603948",
     "semantic_hash": ""
   },
   "docs/generated/roadmap-metrics.json": {
-    "mtime": 1785337353.7682674,
+    "mtime": 1785346659.0968204,
     "ast_hash": "eb202372bdd3fc0bf057bfbf63fc7ca6",
     "semantic_hash": ""
   },
@@ -900,9 +900,9 @@
     "semantic_hash": "e0789ecf7197410949f28be56dd0e9c7"
   },
   "src/__tests__/rules/sceneCombatBridge.test.ts": {
-    "mtime": 1784234274.61267,
-    "ast_hash": "2328236213b990700c17328da22546d1",
-    "semantic_hash": "2328236213b990700c17328da22546d1"
+    "mtime": 1785342300.9214506,
+    "ast_hash": "5bd344b08c90c968debcf3a1d9b31266",
+    "semantic_hash": ""
   },
   "src/__tests__/rules/sceneCombatBridgeUi.test.ts": {
     "mtime": 1784669554.1066456,
@@ -1760,7 +1760,7 @@
     "semantic_hash": ""
   },
   "src/rules/conditions/d20LegacyConditions.ts": {
-    "mtime": 1784904360.8995087,
+    "mtime": 1785340278.3244412,
     "ast_hash": "99dd489147eda534f4370d4f5210f82a",
     "semantic_hash": ""
   },
@@ -1770,17 +1770,17 @@
     "semantic_hash": "37f4c79f042c12044e89f4b29e07dd57"
   },
   "src/rules/conditions/dnd5eConditions.ts": {
-    "mtime": 1784234274.887711,
+    "mtime": 1785340169.2964346,
     "ast_hash": "27c26100c203cab7c0e0da21f48318ec",
     "semantic_hash": "27c26100c203cab7c0e0da21f48318ec"
   },
   "src/rules/conditions/dnd5eRiders.ts": {
-    "mtime": 1784939309.0533576,
+    "mtime": 1785340124.908432,
     "ast_hash": "2e0039bbfb76283689312bd167e29dd1",
     "semantic_hash": ""
   },
   "src/rules/conditions/pf2eConditions.ts": {
-    "mtime": 1784951483.916142,
+    "mtime": 1785340398.7524483,
     "ast_hash": "61f7478a2580d0e5165e293cc58469cf",
     "semantic_hash": ""
   },
@@ -1815,8 +1815,8 @@
     "semantic_hash": "8a60f09674e802df1bd9bbefec27a33f"
   },
   "src/rules/resolver/attackResolution.ts": {
-    "mtime": 1784234274.8913975,
-    "ast_hash": "a0a239c09ff1548c155eb291e4ae438e",
+    "mtime": 1785342070.0539677,
+    "ast_hash": "e8f631970cfc9bccb84d376cbc060a6e",
     "semantic_hash": ""
   },
   "src/rules/resolver/daggerheartResolution.ts": {
@@ -1840,9 +1840,9 @@
     "semantic_hash": ""
   },
   "src/rules/resolver/sceneCombat.ts": {
-    "mtime": 1784234274.8913975,
-    "ast_hash": "5d08fb01bfacfb665c78b7e530f63dcd",
-    "semantic_hash": "5d08fb01bfacfb665c78b7e530f63dcd"
+    "mtime": 1785342322.3228085,
+    "ast_hash": "d66625c4e03174564cf4931ed8a6247e",
+    "semantic_hash": ""
   },
   "src/rules/tactical/roundDriver.ts": {
     "mtime": 1784669554.1182964,
@@ -1890,7 +1890,7 @@
     "semantic_hash": ""
   },
   "src/scene/encounterDraft.ts": {
-    "mtime": 1784669554.1182964,
+    "mtime": 1785340210.296437,
     "ast_hash": "fd1a0276b2368ae8a51847b22d6b8119",
     "semantic_hash": ""
   },
@@ -2110,7 +2110,7 @@
     "semantic_hash": ""
   },
   "src/systems/daggerheart/daggerheartSheetConstants.ts": {
-    "mtime": 1784234274.9073887,
+    "mtime": 1785340494.8204541,
     "ast_hash": "eb335ac0812b0b196bc7fc846d232cbd",
     "semantic_hash": "eb335ac0812b0b196bc7fc846d232cbd"
   },
@@ -2130,7 +2130,7 @@
     "semantic_hash": ""
   },
   "src/systems/daggerheart/engine.ts": {
-    "mtime": 1784901198.3285956,
+    "mtime": 1785340485.5564535,
     "ast_hash": "3bf599cd65c891bdafcc7b596244ee47",
     "semantic_hash": ""
   },
@@ -2180,12 +2180,12 @@
     "semantic_hash": ""
   },
   "src/systems/dnd35e/derivedMath.ts": {
-    "mtime": 1784669554.1195402,
+    "mtime": 1785340268.9444406,
     "ast_hash": "9e49c051f5214e6b0529d47140beac88",
     "semantic_hash": ""
   },
   "src/systems/dnd35e/engine.ts": {
-    "mtime": 1784951483.916142,
+    "mtime": 1785340255.4164398,
     "ast_hash": "3b63e82b20e68daa469faa3997a652c0",
     "semantic_hash": ""
   },
@@ -2205,7 +2205,7 @@
     "semantic_hash": ""
   },
   "src/systems/dnd5e-2024/engine.ts": {
-    "mtime": 1784234274.9134076,
+    "mtime": 1785340197.2844362,
     "ast_hash": "c23a811ed9787b826b25d9a2d4cab48a",
     "semantic_hash": "c23a811ed9787b826b25d9a2d4cab48a"
   },
@@ -2230,7 +2230,7 @@
     "semantic_hash": ""
   },
   "src/systems/dnd5e/engine.ts": {
-    "mtime": 1784234274.9149027,
+    "mtime": 1785340162.7604344,
     "ast_hash": "2eccf478bd0528f2a948f9909250952e",
     "semantic_hash": "2eccf478bd0528f2a948f9909250952e"
   },
@@ -2245,7 +2245,7 @@
     "semantic_hash": "732725e7d92ee94607713935fd389618"
   },
   "src/systems/dnd5e/shared/activityState.ts": {
-    "mtime": 1784234274.9160714,
+    "mtime": 1785340100.6284306,
     "ast_hash": "ef9939eb6fb8ad1120ad7210dd0cf0e3",
     "semantic_hash": "ef9939eb6fb8ad1120ad7210dd0cf0e3"
   },
@@ -2350,7 +2350,7 @@
     "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/engine.ts": {
-    "mtime": 1784951483.916142,
+    "mtime": 1785340199.1924365,
     "ast_hash": "eed5c975cd00744d78c4903f655eadea",
     "semantic_hash": ""
   },
@@ -2475,12 +2475,12 @@
     "semantic_hash": ""
   },
   "src/systems/mam3e/derivedMath.ts": {
-    "mtime": 1784234274.9297686,
+    "mtime": 1785340340.3244448,
     "ast_hash": "5bd362d7d796b3965822fbe1e2c871f3",
     "semantic_hash": "5bd362d7d796b3965822fbe1e2c871f3"
   },
   "src/systems/mam3e/engine.ts": {
-    "mtime": 1784904360.9075089,
+    "mtime": 1785340372.808447,
     "ast_hash": "99fd2bff7366a76c75d7e9434f6f4512",
     "semantic_hash": ""
   },
@@ -2495,7 +2495,7 @@
     "semantic_hash": "74af6190b4577d13081c349b20bb76fb"
   },
   "src/systems/mam3e/powerMath.ts": {
-    "mtime": 1784234274.9297686,
+    "mtime": 1785340376.840447,
     "ast_hash": "c53d7b9d7d7decd5185be8847aa7dec9",
     "semantic_hash": "c53d7b9d7d7decd5185be8847aa7dec9"
   },
@@ -2530,12 +2530,12 @@
     "semantic_hash": ""
   },
   "src/systems/pf1e/derivedMath.ts": {
-    "mtime": 1784917242.6886551,
+    "mtime": 1785340305.2604427,
     "ast_hash": "2469f040573d8f6a1c1e46971897f22c",
     "semantic_hash": ""
   },
   "src/systems/pf1e/engine.ts": {
-    "mtime": 1784951483.916142,
+    "mtime": 1785340318.3764436,
     "ast_hash": "bb143126abfb1a2e53f45974327c1084",
     "semantic_hash": ""
   },
@@ -2605,7 +2605,7 @@
     "semantic_hash": "d8662bb98a846a7b11f991b75dd54664"
   },
   "src/systems/pf2e/data-model.ts": {
-    "mtime": 1784899102.4472437,
+    "mtime": 1785340378.9324472,
     "ast_hash": "5724b66cdabc16743604b6c9f0fd29a2",
     "semantic_hash": ""
   },
@@ -2615,12 +2615,12 @@
     "semantic_hash": ""
   },
   "src/systems/pf2e/derivedMath.ts": {
-    "mtime": 1784234274.9374406,
+    "mtime": 1785340430.0324502,
     "ast_hash": "41230ee0e1ece3e0c0c2e9a1ee44e46d",
     "semantic_hash": "41230ee0e1ece3e0c0c2e9a1ee44e46d"
   },
   "src/systems/pf2e/engine.ts": {
-    "mtime": 1784951483.916142,
+    "mtime": 1785340401.0484486,
     "ast_hash": "0a7b9ec4e6e22a9d1fd24a836ed8172b",
     "semantic_hash": ""
   },
@@ -2660,7 +2660,7 @@
     "semantic_hash": ""
   },
   "src/systems/shared/d20-helpers.ts": {
-    "mtime": 1784669554.12521,
+    "mtime": 1785340307.848443,
     "ast_hash": "4ec22f6875fdce9c37279b6e9bf4826b",
     "semantic_hash": ""
   },
@@ -2840,7 +2840,7 @@
     "semantic_hash": ""
   },
   "src/utils/classSpellcasting.ts": {
-    "mtime": 1784234274.955411,
+    "mtime": 1785340402.3284485,
     "ast_hash": "d02ea084254005474d741d65dbb19890",
     "semantic_hash": "d02ea084254005474d741d65dbb19890"
   },
@@ -2850,12 +2850,12 @@
     "semantic_hash": ""
   },
   "src/utils/derivedCasterMath.ts": {
-    "mtime": 1784669554.128131,
+    "mtime": 1785340389.2444477,
     "ast_hash": "1e7583d224354213b8831f0c2484cb26",
     "semantic_hash": ""
   },
   "src/utils/derivedCombatMath.ts": {
-    "mtime": 1784899102.4512436,
+    "mtime": 1785340450.4764514,
     "ast_hash": "aea4e8b55e5b39e1c3259b210c8bead0",
     "semantic_hash": ""
   },
@@ -2920,7 +2920,7 @@
     "semantic_hash": "64fd9e18daa2d72fdc1f0f49710ed7a4"
   },
   "src/utils/math.ts": {
-    "mtime": 1784234274.9574409,
+    "mtime": 1785340090.18043,
     "ast_hash": "51f21c044f93f47884244c74b8c1858f",
     "semantic_hash": ""
   },
@@ -2970,7 +2970,7 @@
     "semantic_hash": "b719c4b2ea23740a629948de9c1d420f"
   },
   "src/utils/spellSlots.ts": {
-    "mtime": 1784234274.9574409,
+    "mtime": 1785340187.0604358,
     "ast_hash": "209d4fc0d0d2f58e311001236a9e8118",
     "semantic_hash": "209d4fc0d0d2f58e311001236a9e8118"
   },
@@ -3095,12 +3095,12 @@
     "semantic_hash": ""
   },
   "docs/compute-register/mutation-anchors.ts": {
-    "mtime": 1784917242.672655,
-    "ast_hash": "af78eeb273573e9d03efe468a838644c",
+    "mtime": 1785339981.0244236,
+    "ast_hash": "7a0dbc932b56045cefa06629a2a1de0b",
     "semantic_hash": ""
   },
   "docs/generated/master-gap-ledger.json": {
-    "mtime": 1785337353.7682674,
+    "mtime": 1785346659.0968204,
     "ast_hash": "eff22a1ac80e40d095b2758b126d0e0f",
     "semantic_hash": ""
   },
@@ -3155,7 +3155,7 @@
     "semantic_hash": ""
   },
   "src/rules/dice.ts": {
-    "mtime": 1784234274.887711,
+    "mtime": 1785340143.7004333,
     "ast_hash": "67bcceb16a11c01478f597887dae4d6c",
     "semantic_hash": ""
   },
@@ -3170,22 +3170,22 @@
     "semantic_hash": ""
   },
   "src/rules/combatants/systemProfiles.ts": {
-    "mtime": 1784939309.0533576,
+    "mtime": 1785340113.0764313,
     "ast_hash": "4ca65cd3d93b101de4a5d791a67b85cd",
     "semantic_hash": ""
   },
   "src/rules/daggerheartDerived.ts": {
-    "mtime": 1784669554.11554,
+    "mtime": 1785340483.1844532,
     "ast_hash": "9584351e0484dedd258d4173d55fb388",
     "semantic_hash": ""
   },
   "src/rules/daggerheartInventory.ts": {
-    "mtime": 1784234274.887711,
+    "mtime": 1785340500.5964544,
     "ast_hash": "8d2b1411b3a4c536ad7b2b1907c1df4c",
     "semantic_hash": ""
   },
   "src/rules/resolver/pf2eDegree.ts": {
-    "mtime": 1784234274.8913975,
+    "mtime": 1785340396.492448,
     "ast_hash": "beaedc497b47a4d911d63257c9141694",
     "semantic_hash": ""
   },
@@ -3205,7 +3205,7 @@
     "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/backgroundTemplate.ts": {
-    "mtime": 1784234274.9160714,
+    "mtime": 1785340179.8804352,
     "ast_hash": "af69e905b5517c46f044d64d7a7b4f06",
     "semantic_hash": ""
   },
@@ -3225,7 +3225,7 @@
     "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/dnd5eMovement.ts": {
-    "mtime": 1784917242.6886551,
+    "mtime": 1785340141.720433,
     "ast_hash": "02c3f0cf9a57ac632a7fa29278393c74",
     "semantic_hash": ""
   },
@@ -3270,7 +3270,7 @@
     "semantic_hash": ""
   },
   "src/systems/shared/d20LegacySpellcasting.ts": {
-    "mtime": 1784234274.9441388,
+    "mtime": 1785340239.1924388,
     "ast_hash": "d0c85f748e410fd12cf998211cc26915",
     "semantic_hash": ""
   },
@@ -3745,7 +3745,7 @@
     "semantic_hash": ""
   },
   "src/rules/compile/defense.ts": {
-    "mtime": 1784951483.916142,
+    "mtime": 1785340380.7884471,
     "ast_hash": "42e2e55778d09088c57f5aefd2475e77",
     "semantic_hash": ""
   },
@@ -3760,22 +3760,22 @@
     "semantic_hash": ""
   },
   "src/rules/legality/dnd35e.ts": {
-    "mtime": 1784669554.117571,
+    "mtime": 1785340273.364441,
     "ast_hash": "1714affce79c3060bbde7d86f5e9dfb5",
     "semantic_hash": ""
   },
   "src/rules/legality/dnd5e.ts": {
-    "mtime": 1784917242.6842566,
+    "mtime": 1785340203.1044366,
     "ast_hash": "6b5363f6ff888e3d261a406daaf6c8e9",
     "semantic_hash": ""
   },
   "src/rules/legality/pf1e.ts": {
-    "mtime": 1784669554.1182964,
+    "mtime": 1785340323.096444,
     "ast_hash": "637039614f4d2b9926e5e062673e8d2f",
     "semantic_hash": ""
   },
   "src/rules/legality/pf2e.ts": {
-    "mtime": 1784669554.1182964,
+    "mtime": 1785340434.2844505,
     "ast_hash": "d3b2188cdc1916d68a9c4e603d4145e8",
     "semantic_hash": ""
   },
@@ -4450,7 +4450,7 @@
     "semantic_hash": ""
   },
   "src/systems/daggerheart/validation.ts": {
-    "mtime": 1784674824.6150005,
+    "mtime": 1785340498.6644542,
     "ast_hash": "156c2ef4ee11ee04019f5fa7f8e49383",
     "semantic_hash": ""
   },
@@ -4470,7 +4470,7 @@
     "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/dnd5eKnownSpells.ts": {
-    "mtime": 1784917242.6886551,
+    "mtime": 1785340144.9564333,
     "ast_hash": "eca486f11c2aff5347d09929cdf2d922",
     "semantic_hash": ""
   },

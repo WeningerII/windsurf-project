@@ -232,11 +232,23 @@ pf1e and pf2e stay at 100% because they were the two that genuinely already enum
 
 **61 entries survived the agent verifiers; 53 landed.** `check:rules-provenance` — a gate the agents never saw — then rejected 8 more on citations, which is the finding in `docs/GAPS.md` §24.2 worth carrying: an adversarial agent panel is not a substitute for the repo's own provenance gate.
 
-Still true, and now the actual queue: **every new verified entry should land with a Tier-B mutation anchor.** The 17 added here pass Tier A and are reported `mutation: 'unanchored'`, which the gate deliberately surfaces so the numerator is honest about which verifications are name+pass only versus mutation-proven. Anchoring them is the follow-on lane.
+**The Tier-B tail is closed too — `mutation: 'proven'` is now 247 of 247.** When this section was first rewritten, 28 verified entries were `unanchored`: Tier-A clean (a real, exactly-named, passing test) but never proven mutation-sensitive. 19 of those predated this lane. All 28 now carry an anchor and every one flips its linked assertion under `check:compute-register --mutate`.
+
+Nine were free: where the two 5e editions engine-wire the same shared helper, one perturbation flips both editions' tests. Daggerheart's L9 rows needed a different shape — they are legality predicates, not scalars, so each anchor moves the *boundary* (widen a cap, invert a comparison) rather than the arithmetic.
+
+**One anchor was demoted by the gate and had to be strengthened**, which is the useful detail: raising the Daggerheart consumable cap 5 → 6 left the linked test's quantity-9 fixture just as illegal, so nothing flipped. A boundary anchor has to clear the fixture's value, not merely move. 5 → 99 fixed it. The gate caught a weak anchor that looked correct — exactly what Tier B is for.
 
 Evidence and the adversarial method: `docs/GAPS.md` §24.
 
-### 3.2 L8 — damage types and resistance — **SHIPPED 2026-07-29 (engine + scene path); sheet surface still open**
+### 3.2 L8 — damage types and resistance — **DONE 2026-07-29 — engine, scene path, and the combat join that made it reachable**
+
+**The join landed 2026-07-29 and it is what makes the rest of this item real.** The engine, the mitigation transform and the 395 shipped resistance declarations were all in place, and none of them could fire from actual combat: `monsterDamageEffects` encodes a damage type into an effect CHANNEL (`damage.fire`, `damage.slashing`, or bare `damage` when the source asserts none — it never invents one), `resolveAttack` summed every channel into a single scalar, and `attackToDamageIntent` emitted `{tokenId, amount}` with the type already gone. **A fire elemental took full fire damage on the grid.**
+
+`AttackResolution` now carries `damageType`, and the one bridge function threads it into the intent — which covers the scene combat bridge and the tactical executor, its only three call sites.
+
+**Scoped narrowly on purpose.** The type is reported only when an attack resolves to exactly ONE typed channel and nothing untyped alongside it. An attack dealing "slashing plus fire" has two channels and one scalar total; splitting that total back apart needs a remainder rule so the parts still sum to the whole, and guessing one would silently change damage numbers. Multi-channel attacks therefore stay untyped and unmitigated — byte-identical to the previous behaviour, because untyped damage is never mitigated. **That split rule is the one piece still open here**, and it is a decision rather than a task.
+
+Pinned end to end by `src/__tests__/rules/sceneCombatBridge.test.ts`: a fire-resistant token takes 5 from a flat-10 fire attack while an unprofiled token takes 10, and the recorded event carries `type: 'fire'`, `mitigation: 'resistant'`, `raw: 10` so the log explains its own number. Verified red before the join (`expected 10 to be 5`) and green after.
 
 **The gap was never missing data, which changes what this item was.** `Monster` has declared `damageResistances`, `damageImmunities` and `damageVulnerabilities` since the type was written, and the shipped catalogs populate them **395 times**. Before this landed, the only references to those three fields anywhere outside `src/data/` and the tests were their own declarations in `src/types/creatures/monsters.ts` — **nothing read them.** A fire elemental took full fire damage on the grid; a skeleton took full bludgeoning. This was a wire-up, not a feature.
 
@@ -389,6 +401,23 @@ The `test.fixme` on the dialog/wizard scan is gone and the test runs. Its note s
 ### 6.5 Toolchain modernization — **READY**
 
 Risk-ordered, verified against `package.json`: React 18.2→19, Tailwind 3.3→4, Vite 7.3→8, `lucide-react` 0.294→1.17, `@types/node` 20→22, and runtime-pin reconciliation (`.nvmrc` pins 20.19.0 while `engines` already admits 22 and 24).
+
+**Surveyed 2026-07-29 — all six axes, each adversarially re-checked. Zero came back safe to land from this container, and the reason is uniform:** every one of them fails in a way `npm run verify` steps 1–21 cannot see, and step 22 (e2e) **cannot run here at all** — `/opt/pw-browsers` carries chromium 1194 against a toolchain wanting 1208, and there is no Firefox whatsoever while `playwright.config.ts` declares a firefox project. CI is the only gate that can judge any of this.
+
+| axis | state | the actual blocker |
+| --- | --- | --- |
+| **React 19** | code-CLEAN, budget-BLOCKED | Typechecked against real `@types/react@19.2.17` via a `paths` override: **exit 0 on both tsconfigs**, and all the classic breaks are absent (0 `defaultProps`, 0 legacy `ReactDOM.render`, 0 zero-arg `useRef`, 0 callback refs; `main.tsx` already uses `createRoot`). The blocker is **size**: react-dom 18→19 is ~+13.9 KB gzip, which breaks **two** budgets — eager shell ~187.7 KB vs the 180,224 B ceiling, and total JS ~1684.9 vs 1680 KiB. Raising them is a governance decision, not a bump. Also hard-blocked by `npm` ERESOLVE until lucide moves (below). |
+| **Tailwind 4** | defer | Codemod exists, but two **silent** preflight changes were found by diffing tarballs: v4 drops `button { cursor: pointer }` (172 `<button>` across 81 files, only 7 explicit `cursor-pointer`), and placeholder colour becomes a `color-mix()`. Neither is visible to any gate — there is no CSS budget and zero screenshot assertions. |
+| **Vite 8** | defer — **premise confirmed** | v8.1.5 is real, so this row was right. Two traps: `@vitejs/plugin-react` should go to **^5.2.0, not ^6** (its peer already admits vite 8), and vitest 4.0.18 pins vite as a *direct dependency* capped at `^6\|\|^7` — leaving it would silently nest a second Vite 7 and **run all 3,092 tests on the old toolchain while reporting green**. Also `build.target` defaults shift browser baselines with nothing in the chain watching. |
+| **lucide 1.x** | defer — needs human eyes | One hard break (`Github` removed; it is a brand glyph, so inline an SVG rather than substitute). The real issue: **47 of the 81 icons this repo imports have redesigned geometry**, including 4 of the 5 most-used. Invisible to every gate — no snapshots exist anywhere. |
+| **@types/node 26** | closest to landable | Low risk, caught by typecheck. The only axis whose survey survived refutation intact. |
+| **runtime pin** | ready, needs a version decision | See below. |
+
+**The runtime pin is scoped and one decision away.** The edit is narrow but *wider than it looks*: `.nvmrc`, `.node-version`, and **four** doc lines — the two "Runtime Pin" statements plus the two "Manual Fallback" lines. Everything else matching `20.19.0` is a **historical record** (the verification baseline, `MASTER_PLAN` §62, `STATUS`) that must NOT change, because it records what actually ran.
+
+Those two fallback lines were **ungated until 2026-07-29** — nothing in `docs/doc-drift.rules.ts` mentioned "fallback", while the two Runtime-Pin rules derive from `.nvmrc`. A bump would therefore have updated the gated lines, passed CI, and left both docs instructing new contributors to hand-install a dead runtime. Two `command_rule` entries now own them; proven by simulating exactly that half-landed bump and watching both fail.
+
+What remains is picking the target Node version — a real choice with CI and contributor consequences that should not be guessed, and `npm view node` is not authoritative for Node releases. Once chosen: bump the six lines, let the **full 22-step CI run** be the acceptance gate (this is precisely what puts Playwright on a Node line it has never run on here), and only then re-record the baseline with `npm run record:verify-baseline`.
 
 ### 6.7 ~~Wall-clock assertions flake under parallel workers~~ — **DONE 2026-07-28**
 

@@ -1233,4 +1233,200 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'proficiencyTotalValue > proficiencyBudget',
     replace: 'proficiencyTotalValue > proficiencyBudget + 100',
   },
+
+  // ───────────────── anchoring the unanchored tail (2026-07-29) ──────────────
+  // `check:compute-register` reported 28 Tier-A-clean entries with
+  // `mutation: 'unanchored'` — verified by name-and-pass only, never proven
+  // mutation-sensitive. WORK_PLAN §3.1 carries that as the follow-on lane; this
+  // block is it.
+  //
+  // The first nine are MIRRORS. Where the two 5e editions engine-wire the same
+  // shared helper, one perturbation flips both editions' linked tests, exactly
+  // as the passive-perception pair above already does. Reusing an identical
+  // `find` for a second entry id is safe: the "occurs exactly once" rule is
+  // about the FILE, not about how many entries point at it.
+
+  // 2014 side of the movement helpers already anchored for 2024.
+  'dnd5e2014.L6.carrying-capacity': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'Math.max(0, strengthScore) * 15',
+    replace: 'Math.max(0, strengthScore) * 16',
+  },
+  'dnd5e2014.L6.push-drag-lift': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'Math.max(0, strengthScore) * 30',
+    replace: 'Math.max(0, strengthScore) * 31',
+  },
+  'dnd5e2014.L6.long-jump': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'const full = Math.max(0, strengthScore);',
+    replace: 'const full = Math.max(0, strengthScore) + 1;',
+  },
+  'dnd5e2014.L6.high-jump': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'const full = Math.max(0, 3 + strengthMod);',
+    replace: 'const full = Math.max(0, 4 + strengthMod);',
+  },
+
+  // 2024 side of the rider/profile math already anchored for 2014.
+  'dnd5e2024.L3.extra-attack-count': {
+    file: 'src/rules/combatants/systemProfiles.ts',
+    find: '/^extra-attack(-\\d+)?$/',
+    replace: '/^extra-attackXX(-\\d+)?$/',
+  },
+  'dnd5e2024.L3.rage-damage': {
+    file: 'src/rules/conditions/dnd5eRiders.ts',
+    find: '[9, 3]',
+    replace: '[9, 2]',
+  },
+  'dnd5e2024.L3.sneak-attack-dice': {
+    file: 'src/rules/conditions/dnd5eRiders.ts',
+    find: 'Math.ceil(rogueLevel / 2)',
+    replace: 'Math.ceil(rogueLevel / 3)',
+  },
+  'dnd5e2024.L3.divine-smite-base': {
+    file: 'src/rules/conditions/dnd5eRiders.ts',
+    find: 'value: 8,',
+    replace: 'value: 9,',
+  },
+  'dnd5e2024.L8.exhaustion-clamp': {
+    file: 'src/systems/dnd5e/shared/engine.ts',
+    find: 'Math.min(6, Math.floor(data.exhaustionLevel))',
+    replace: 'Math.min(7, Math.floor(data.exhaustionLevel))',
+  },
+
+  // Concentration DC floors at 10; raising the floor to 11 moves every
+  // low-damage case. Both editions call the one shared helper.
+  'dnd5e2014.L8.concentration-dc': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: 'return Math.max(10, Math.floor(damageTaken / 2));',
+    replace: 'return Math.max(11, Math.floor(damageTaken / 2));',
+  },
+  'dnd5e2024.L8.concentration-dc': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: 'return Math.max(10, Math.floor(damageTaken / 2));',
+    replace: 'return Math.max(11, Math.floor(damageTaken / 2));',
+  },
+
+  // Armour check penalty = encumbrance load penalty + equipped gear penalty.
+  // Both d20 systems resolve through the one shared helper.
+  'dnd35e.L4.skill-check-penalty': {
+    file: 'src/systems/shared/d20-helpers.ts',
+    find: 'return load + gear;',
+    replace: 'return load + gear + 1;',
+  },
+  'pf1e.L4.skill-check-penalty': {
+    file: 'src/systems/shared/d20-helpers.ts',
+    find: 'return load + gear;',
+    replace: 'return load + gear + 1;',
+  },
+
+  // Encounter budgets: perturb the table lookup, and the pooled sum's seed.
+  'dnd5e2024.L10.xp-budget-per-character': {
+    file: 'src/scene/encounterDraft.ts',
+    find: 'return XP_BUDGET_PER_CHARACTER[clamped - 1][DIFFICULTY_COLUMN[difficulty]];',
+    replace: 'return XP_BUDGET_PER_CHARACTER[clamped - 1][DIFFICULTY_COLUMN[difficulty]] + 1;',
+  },
+  'dnd5e2024.L10.party-xp-budget': {
+    file: 'src/scene/encounterDraft.ts',
+    find: 'total + xpBudgetPerCharacter(level, difficulty), 0);',
+    replace: 'total + xpBudgetPerCharacter(level, difficulty), 1);',
+  },
+
+  // Daggerheart character levels run 1–10 (SRD 1.0: Leveling Up). Widening the
+  // ceiling makes a level-11 character legal and flips the range assertion.
+  'daggerheart.L9.level-range': {
+    file: 'src/systems/daggerheart/validation.ts',
+    find: 'const MAX_CHARACTER_LEVEL = 10;',
+    replace: 'const MAX_CHARACTER_LEVEL = 11;',
+  },
+
+  // Daggerheart's L9 rows are LEGALITY predicates, not scalars, so the
+  // perturbation has to move the boundary rather than the arithmetic: widen a
+  // cap, or inverting a comparison, so a build the test asserts is illegal
+  // becomes legal (or the reverse). Each still fails the linked assertion,
+  // which is what Tier B actually requires.
+  'daggerheart.L9.loadout-limit': {
+    file: 'src/systems/daggerheart/daggerheartSheetConstants.ts',
+    find: 'export const LOADOUT_LIMIT = 5;',
+    replace: 'export const LOADOUT_LIMIT = 6;',
+  },
+  // 5 -> 99, not 5 -> 6. The first attempt at this anchor was DEMOTED by the
+  // gate: the linked test's over-max fixture carries quantity 9, so nudging the
+  // cap to 6 left it just as illegal and nothing flipped. A boundary anchor has
+  // to clear the fixture's value, not merely move.
+  'daggerheart.L9.consumable-quantity-cap': {
+    file: 'src/rules/daggerheartInventory.ts',
+    find: 'export const MAX_DAGGERHEART_CONSUMABLE_QUANTITY = 5;',
+    replace: 'export const MAX_DAGGERHEART_CONSUMABLE_QUANTITY = 99;',
+  },
+  // Two hands total: burden > 2 is over-equipped. Widening to 3 admits the
+  // two-handed-primary-plus-secondary build the test expects to be flagged.
+  'daggerheart.L9.weapon-burden': {
+    file: 'src/systems/daggerheart/validation.ts',
+    find: 'if (activeBurden > 2) {',
+    replace: 'if (activeBurden > 3) {',
+  },
+  // A secondary weapon in the primary slot must warn; equating the categories
+  // makes the mismatch legal.
+  'daggerheart.L9.weapon-category-slots': {
+    file: 'src/systems/daggerheart/validation.ts',
+    find: 'if (weapon.category !== slot) {',
+    replace: 'if (weapon.category === slot) {',
+  },
+  // An out-of-domain card must warn; dropping the negation inverts it.
+  'daggerheart.L9.domain-card-domain-legality': {
+    file: 'src/systems/daggerheart/validation.ts',
+    find: '!selectedClass.domains.includes(card.domain)',
+    replace: 'selectedClass.domains.includes(card.domain)',
+  },
+  // A card above the character's level must warn; +10 puts every fixture under.
+  'daggerheart.L9.domain-card-level-legality': {
+    file: 'src/systems/daggerheart/validation.ts',
+    find: 'card.level > system.level',
+    replace: 'card.level > system.level + 10',
+  },
+  // The creation array is compared element-wise after sorting; forcing the
+  // match makes any deviation legal.
+  'daggerheart.L9.creation-trait-array-legality': {
+    file: 'src/systems/daggerheart/validation.ts',
+    find: 'sorted.length === baseline.length && sorted.every((value, index) => value === baseline[index]);',
+    replace: 'true;',
+  },
+  // Action roll total = Hope d12 + Fear d12 + trait modifier.
+  'daggerheart.L4.trait-roll-total': {
+    file: 'src/systems/daggerheart/engine.ts',
+    find: 'const total = hopeDie + fearDie + mod;',
+    replace: 'const total = hopeDie + fearDie + mod + 1;',
+  },
+
+  // Shaken's -2 on checks. `value: 2` appears many times in this file, so the
+  // find carries the following unique label line to pin exactly one occurrence.
+  // 3.5e and PF1e share the one OGL condition table, so this single
+  // perturbation flips the fold assertion for both systems.
+  'dnd35e.L8.condition-check-penalty': {
+    file: 'src/rules/conditions/d20LegacyConditions.ts',
+    find: "value: 2,\n      label: 'Shaken: -2 on saves, skill and ability checks',",
+    replace: "value: 3,\n      label: 'Shaken: -2 on saves, skill and ability checks',",
+  },
+  'pf1e.L8.condition-check-penalty': {
+    file: 'src/rules/conditions/d20LegacyConditions.ts',
+    find: "value: 2,\n      label: 'Shaken: -2 on saves, skill and ability checks',",
+    replace: "value: 3,\n      label: 'Shaken: -2 on saves, skill and ability checks',",
+  },
+
+  // A background grants its starting gold only on first application.
+  'dnd5e2014.L10.background-starting-gold': {
+    file: 'src/systems/dnd5e/shared/backgroundTemplate.ts',
+    find: 'sys.currency.gold = background.gold;',
+    replace: 'sys.currency.gold = background.gold + 1;',
+  },
+
+  // Non-PF2e, non-3.5e systems spend a monster's own XP award; 5e-2024 is the
+  // fall-through return.
+  'dnd5e2024.L10.encounter-spend': {
+    file: 'src/scene/encounterDraft.ts',
+    find: '  return monster.experiencePoints;',
+    replace: '  return monster.experiencePoints + 1;',
+  },
 };

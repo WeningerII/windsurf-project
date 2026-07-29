@@ -2817,14 +2817,33 @@ casting resource. A layer that does not exist for a system is a structural
 absence, not a gap, and the workflow was briefed to treat that answer as a win so
 that an agent under pressure to produce would not invent one.
 
-### 24.4 What is still open, stated plainly
+### 24.4 The Tier-B tail — closed the same day
 
-The 17 new verified entries are Tier-A clean but carry **no Tier-B mutation
-anchor**, so the gate reports them `mutation: 'unanchored'`. That is a deliberate
-design of the gate — the published numerator stays honest about which
-verifications are name-and-pass versus mutation-proven — and it means these
-entries are *less* proven than the anchored ones. `docs/WORK_PLAN.md` §3.1 carries
-the anchoring lane.
+This section originally ended by recording the new entries as `unanchored`:
+Tier-A clean, never proven mutation-sensitive. That tail is now closed, and it was
+larger than the entries added here — **28 verified entries were unanchored, 19 of
+them predating this lane**. All 28 now carry an anchor, and `mutation: 'proven'`
+is **247 of 247**.
+
+Nine anchors were free: where the two 5e editions engine-wire the same shared
+helper, one perturbation flips both editions' linked tests, as the existing
+passive-perception pair already did. Daggerheart's L9 rows needed a different
+shape — they are legality *predicates*, not scalars, so each anchor moves the
+BOUNDARY (widen a cap, invert a comparison) so that a build the test asserts is
+illegal becomes legal. That still fails the linked assertion, which is all Tier B
+requires.
+
+**One anchor was demoted, and that is the part worth keeping.** Raising
+Daggerheart's consumable cap from 5 to 6 looked like a correct perturbation and
+was not: the linked test's over-max fixture carries quantity **9**, so nudging the
+cap left it just as illegal and nothing flipped. `check:compute-register --mutate`
+demoted the entry rather than accepting it. 5 → 99 clears the fixture.
+
+The rule that generalises: **a boundary anchor has to clear the fixture's value,
+not merely move.** An arithmetic anchor can perturb by one because any change
+propagates; a predicate anchor only flips if the perturbation crosses the actual
+test data. The gate is what distinguishes the two, which is precisely why the
+register does not accept a hand-stamped `verified` on its own.
 
 Two further honest exclusions landed with the batch and are visible in the
 registers: 3 `flagged` (formula not verifiable from an open source) and 1

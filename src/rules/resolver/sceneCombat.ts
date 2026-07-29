@@ -29,7 +29,14 @@ export function attackToDamageIntent(
     type: 'apply-damage',
     actorId,
     cause,
-    damages: [{ tokenId: targetId, amount: resolution.damage }],
+    // Carry the resolved damage type through. This is the join that makes the
+    // scene's typed-damage mitigation reachable from real combat: the type is
+    // parsed from the statblock into a `damage.<type>` effect channel, and until
+    // this line it was summed away and dropped here, so a fire elemental took
+    // full fire damage on the grid. `damageType` is absent for untyped and for
+    // multi-channel attacks, and absent means unmitigated — identical to the
+    // previous behaviour.
+    damages: [{ tokenId: targetId, amount: resolution.damage, type: resolution.damageType }],
   };
 }
 

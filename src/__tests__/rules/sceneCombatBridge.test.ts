@@ -205,4 +205,73 @@ describe('area effect -> one scene damage event (N participants)', () => {
     expect(aTaken).toBe(area.sharedDamage); // full
     expect(bTaken).toBe(Math.floor(area.sharedDamage / 2)); // half
   });
+
+  /**
+   * The join that made §3.2's typed-damage engine reachable from real combat.
+   *
+   * The engine, the mitigation transform and the 395 resistance declarations in
+   * `src/data/` all shipped before this test existed — but `attackToDamageIntent`
+   * summed the `damage.<type>` effect channels into one scalar and dropped the
+   * type, so a fire-resistant creature took FULL fire damage on the grid. This
+   * drives the whole loop: typed effect -> resolver -> intent -> validated event
+   * -> halved HP.
+   */
+  it('halves a resisted attack end to end, and leaves an unresisted one whole', () => {
+    const fireResistant = {
+      ...combatant('resistant', 40),
+      damageProfile: { resistances: ['fire' as const] },
+    };
+    const plain = combatant('plain', 40);
+    let scene = sceneWith(fireResistant, plain);
+
+    // One typed damage channel: a flat 10 fire. `damage.fire`, not `damage`.
+    const fireDamage: EffectInstance[] = [
+      {
+        id: makeEffectId(SID, 'damage.fire', 'src', 'burn', 'flat', 0, 0),
+        systemId: SID,
+        target: 'damage.fire',
+        operation: 'add',
+        value: 10,
+        stackPolicy: 'sum',
+        source: { kind: 'custom', id: 'src', label: 'burn' },
+        label: 'burn',
+      },
+    ];
+
+    const resolveBurn = () =>
+      resolveAttack({
+        attackEffects: [],
+        damageEffects: fireDamage,
+        targetValue: 0, // always hits, so the test is about mitigation only
+        rng: createSeededRng('burn'),
+      });
+
+    const resolution = resolveBurn();
+    expect(resolution.isHit).toBe(true);
+    expect(resolution.damage).toBe(10);
+    // The type survives resolution now — this is the field that was missing.
+    expect(resolution.damageType).toBe('fire');
+
+    scene = applyIntent(scene, attackToDamageIntent('src', 'resistant', resolveBurn())!, 'd-1');
+    scene = applyIntent(scene, attackToDamageIntent('src', 'plain', resolveBurn())!, 'd-2');
+
+    expect(40 - hp(scene, 'resistant')).toBe(5); // halved by resistance
+    expect(40 - hp(scene, 'plain')).toBe(10); // no profile, untouched
+
+    // The event explains its own number rather than just recording the result.
+    const damaged = scene.events.filter((e) => e.type === 'token.damaged');
+    const resisted = damaged.find((e) =>
+      (e.payload as { damages: Array<{ tokenId: string }> }).damages.some(
+        (d) => d.tokenId === 'resistant'
+      )
+    );
+    const entry = (
+      resisted!.payload as {
+        damages: Array<{ mitigation?: string; raw?: number; type?: string }>;
+      }
+    ).damages[0];
+    expect(entry.type).toBe('fire');
+    expect(entry.mitigation).toBe('resistant');
+    expect(entry.raw).toBe(10);
+  });
 });
