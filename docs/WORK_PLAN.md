@@ -196,7 +196,7 @@ Every scalar divergence the fidelity baseline itemised has been re-transcribed f
 - **The 5e-2024 backgrounds' open-content exposure (GAPS §15(c)) is untouched.** Their proficiency sets are now SRD 5.2, but the 2014 structural model — `suggestedCharacteristics`, background `feature`, language grants — is still shipped under an `SRD 5.2` tag, and three of the four bodies of text are PHB content. This needs a `Background` type that can express the 2024 model, and it is a licensing item, not a tidiness one.
 - **Bucket placement.** Seven entries had a wrong `challengeRating`; they were corrected in place and now sit in CR-bucket files named for their old CR. Nothing enforces the correspondence.
 
-### 2.5 Remaining denominator work — **READY**
+### 2.5 Remaining denominator work — **READY — 1 of 3 open**
 
 - `p1.wire-remaining-denominators` — 3.5e classes and feats are wired against the core-only olimot chapters and the feat list is now **closed**: `scripts/encode-35e-feats.mjs` transcribes the feats chapter (hand-written entries keep winning), so the gap the coverage report used to itemise is gone. 3.5e **equipment** stays closed-by-no-source — the olimot equipment tables interleave services/lodging/mounts outside the loader's scope, and a scrape would poison the denominator. Current numbers live in `docs/generated/srd-coverage.md`.
 - `p1.monster-denominator-fix` — 3.5e's denominator still inflated by container-like rows.
@@ -244,7 +244,7 @@ PF2e read `Full` with zero entries while naming a manual focus-spell surface in 
 
 The label was not downgraded to `Partial`, and the reason matters: PF2e's remaining non-boundary debt is content fidelity, which four of seven systems share and which `docs/generated/srd-coverage.md` already measures. Singling PF2e out would have swapped one mislabel for another. Now gated by `src/__tests__/manualExclusionRegistry.test.ts`.
 
-### 4.3 Sheet eviction — ~~the dual-home is not transient~~ **DONE, four wrappers kept with reasons**
+### 4.3 Sheet eviction — ~~the dual-home is not transient~~ **EXECUTED; ratification of the four kept wrappers is an OPEN owner decision**
 
 Six of the ten in-sheet browser wrappers are deleted and every affected tab grid is collapsed: `Dnd5eFeatBrowserTab`, `Pf2eFeatBrowserTab`, `Pf2eEquipmentBrowserTab`, `D20FeatBrowserTab`, `D20EquipmentBrowserTab`, `MamEquipmentBrowserTab`. Each re-hosted the same shared browser over the same loader the Dock already calls for that system, so the sheet copy was a true duplicate. The equipped-armour controls that shared the PF2e and d20-legacy equipment-browser tab moved onto Inventory instead of dying with it.
 
@@ -388,7 +388,7 @@ reached that conclusion once, for `check:keepalive-budget`, and the reasoning
 was recorded in `MASTER_PLAN` while a second gate shipped with the same defect.
 Nothing pointed from one to the other.
 
-### 6.6 Shared formatters lie about shape across systems — **READY, CHEAP**
+### 6.6 Shared formatters lie about shape across systems — ~~READY, CHEAP~~ **DONE 2026-07-28**
 
 A defect *class*, not a defect. Two instances have now shipped and been fixed one commit apart, which is what makes it worth a plan item rather than a bug report.
 
@@ -499,7 +499,18 @@ code the harness reported instead of npm's.
 
 ---
 
-## 7. Dead code and hygiene — **READY, CHEAP**
+## 7. Dead code and hygiene — ~~READY, CHEAP~~ **DONE; §7.2 keeps two standing notes**
+
+> **Corrected 2026-07-29, and only by hand.** This heading read `READY, CHEAP`
+> while §7.0, §7.1 and §7.2 were all closed — it advertised dispatchable work
+> that did not exist. `heading_status_rule` catches the sibling case (§6.6) but
+> **not this one**: it keys on the repo's explicit `~~**The work:**~~ **DONE**`
+> idiom, and "every subsection beneath this heading is resolved" is not
+> reliably mechanizable without matching ordinary prose. Narrowing was
+> deliberate — an earlier draft that matched any `**DONE` in a body fired on
+> §2.5, where one of three bullets is closed and the section is genuinely open.
+> A gate that cries wolf gets weakened. So: one of the two real cases is gated,
+> the other is documented as not gated.
 
 ### 7.0 ~~Confirmed dead — delete~~ — **DONE 2026-07-26**
 

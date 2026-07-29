@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { registerAllSystems } from '../../systems';
 import { systemRegistry } from '../../registry';
 import type { SystemDataModel } from '../../types/core/document';
@@ -129,5 +129,17 @@ describe('ChoiceStepView option loading vs. the async working document', () => {
     // than on a timeout, so a regression fails for the right reason.
     await screen.findByTestId('creation-choice-lineage', undefined, { timeout: 5000 });
     expect(screen.queryByTestId('creation-choice-loading')).not.toBeInTheDocument();
+
+    // Releasing the gate also releases the validation pass behind it, which
+    // lazily imports SRD data. Ending the test here tears the worker down
+    // mid-import and Vitest reports `Closing rpc while "fetch" was pending` as
+    // an unhandled rejection — green tests, red run. Same guard, same reason, as
+    // `creationWizard.test.tsx` and the a11y suite; this file needed it too and
+    // the full-suite run is what surfaced that.
+    await waitFor(
+      () =>
+        expect(screen.getByTestId('creation-validation')).not.toHaveTextContent('Checking build'),
+      { timeout: 20000 }
+    );
   });
 });
