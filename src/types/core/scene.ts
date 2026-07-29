@@ -1,3 +1,5 @@
+import type { DamageType } from './common';
+
 export type SceneGridType = 'square';
 export type SceneTokenKind = 'character' | 'monster' | 'npc' | 'object';
 export type SceneMarkerKind = 'terrain' | 'hazard';
@@ -48,6 +50,12 @@ export interface SceneToken {
    * these into attack resolution.
    */
   conditions?: string[];
+  /**
+   * Typed-damage resistances/immunities/vulnerabilities, copied from the source
+   * creature at placement. Additive — tokens without a profile take every damage
+   * type at face value, exactly as before this field existed.
+   */
+  damageProfile?: SceneDamageProfile;
   /**
    * When true, the autonomous round (Run Round) does not act for this token —
    * the human plays its turn. Defaults to false (engine-driven). Character
@@ -203,10 +211,54 @@ export type SceneEventType =
  * Positive `amount` is damage, negative is healing. The event stores the
  * already-resolved amount (RNG happens before the event is created), so the fold
  * stays pure and replay-deterministic.
+ *
+ * `amount` is post-mitigation for exactly that reason. Typed-damage resistance
+ * is resolved when the event is BUILT, alongside RNG, never in the fold — see
+ * `src/rules/resolver/damageMitigation.ts`. The fold is unchanged by the
+ * addition of damage types, so every event recorded before they existed replays
+ * to the identical number.
  */
 export interface SceneTokenDamage {
   tokenId: string;
   amount: number;
+  /**
+   * Damage type, when the source declared one. Absent means untyped, which is
+   * never mitigated — that is what makes this field additive rather than a
+   * behaviour change for existing logs.
+   */
+  type?: DamageType;
+  /**
+   * Which mitigation branch produced `amount`, and the pre-mitigation figure.
+   * Both are recorded rather than recomputed so the log explains its own number
+   * without the reader having to know the rule or re-resolve a profile that may
+   * have changed since. Absent on untyped damage and on any event predating
+   * this field.
+   */
+  mitigation?: DamageMitigationOutcome;
+  raw?: number;
+}
+
+/**
+ * How a typed damage amount was mitigated. Mirrors `DamageMitigation` in
+ * `src/rules/resolver/damageMitigation.ts` structurally rather than importing
+ * it, keeping the core scene types free of a rules-module dependency — the same
+ * split `SceneTerrainEffect` already makes.
+ */
+export type DamageMitigationOutcome = 'immune' | 'resistant' | 'vulnerable' | 'none';
+
+/**
+ * A token's standing typed-damage profile, copied from its source creature when
+ * the token is placed.
+ *
+ * Snapshotted rather than looked up at resolve time, because RFC 006 promises
+ * byte-identical replay: reading resistances out of `src/data/` during replay
+ * would make a months-old scene's outcome depend on the SRD data as it exists
+ * today. Same reasoning as `hp`, which is also copied onto the token.
+ */
+export interface SceneDamageProfile {
+  resistances?: DamageType[];
+  immunities?: DamageType[];
+  vulnerabilities?: DamageType[];
 }
 
 export interface SceneEventBase<TType extends SceneEventType, TPayload> {

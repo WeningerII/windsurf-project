@@ -214,9 +214,19 @@ L1–L10 is complete for **2 of 7** systems. L10 is owed by 3, L5–L6 by one, L
 
 Every new verified entry must land with its Tier-B mutation anchor.
 
-### 3.2 L8 — damage types and resistance — **READY**
+### 3.2 L8 — damage types and resistance — **SHIPPED 2026-07-29 (engine + scene path); sheet surface still open**
 
-`src/scene/runtime.ts` types damage as `{tokenId, amount}` with no damage type, and no resistance transform exists in `src/rules/resolver/`. This is the substantive rules gap behind the L8 layer debt.
+**The gap was never missing data, which changes what this item was.** `Monster` has declared `damageResistances`, `damageImmunities` and `damageVulnerabilities` since the type was written, and the shipped catalogs populate them **395 times**. Before this landed, the only references to those three fields anywhere outside `src/data/` and the tests were their own declarations in `src/types/creatures/monsters.ts` — **nothing read them.** A fire elemental took full fire damage on the grid; a skeleton took full bludgeoning. This was a wire-up, not a feature.
+
+**What shipped:**
+
+- `src/rules/resolver/damageMitigation.ts` — the pure transform. Immunity zeroes, resistance halves (rounding down), vulnerability doubles. Only two SRD sentences are encoded; the both-resistant-and-vulnerable case is **derived** from the stated ordering rule ("resistance and then vulnerability are applied after all other modifiers" → halve, then double → unchanged) rather than invented, and is reported honestly as `none`.
+- `SceneTokenDamage` gains optional `type`, `mitigation` and `raw`; `SceneToken` gains an optional `damageProfile`. All additive.
+- **Mitigation is resolved when the event is BUILT, never in the fold** — beside RNG, exactly as `SceneTokenDamage`'s existing contract already required ("the event stores the already-resolved amount... so the fold stays pure and replay-deterministic"). The fold is untouched, so RFC 006's byte-identical replay holds and **every event recorded before damage types existed replays to the identical number** (untyped damage is never mitigated). Pinned by a test.
+- Profiles are **snapshotted onto the token at placement**, not looked up at resolve time. Looking them up would make a months-old scene's outcome depend on the SRD data as it exists at replay time — regenerating a catalog would silently rewrite history. Same reasoning as `hp`. Wired at both monster-token sites (`tokenPlacement.ts`, `encounterBuilder.ts`).
+- 14 tests in `src/__tests__/rules/damageMitigation.test.ts`, including that healing is never mitigated under any branch (a fire-immune creature is not immune to being healed — the signed `amount` makes this the likeliest place for a sign bug).
+
+**Still open, and deliberately not claimed:** no UI surfaces the damage type — nothing in the app yet lets a user *say* "10 fire", so in practice mitigation only fires for callers that pass a type. The sheet/scene damage-entry affordance and the L8 compute-register rows are the remaining work. The engine and the scene path are done and gated; the input surface is not.
 
 ---
 
