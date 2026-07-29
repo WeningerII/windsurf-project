@@ -1340,4 +1340,59 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'const MAX_CHARACTER_LEVEL = 10;',
     replace: 'const MAX_CHARACTER_LEVEL = 11;',
   },
+
+  // Daggerheart's L9 rows are LEGALITY predicates, not scalars, so the
+  // perturbation has to move the boundary rather than the arithmetic: widen a
+  // cap, or inverting a comparison, so a build the test asserts is illegal
+  // becomes legal (or the reverse). Each still fails the linked assertion,
+  // which is what Tier B actually requires.
+  'daggerheart.L9.loadout-limit': {
+    file: 'src/systems/daggerheart/daggerheartSheetConstants.ts',
+    find: 'export const LOADOUT_LIMIT = 5;',
+    replace: 'export const LOADOUT_LIMIT = 6;',
+  },
+  'daggerheart.L9.consumable-quantity-cap': {
+    file: 'src/rules/daggerheartInventory.ts',
+    find: 'export const MAX_DAGGERHEART_CONSUMABLE_QUANTITY = 5;',
+    replace: 'export const MAX_DAGGERHEART_CONSUMABLE_QUANTITY = 6;',
+  },
+  // Two hands total: burden > 2 is over-equipped. Widening to 3 admits the
+  // two-handed-primary-plus-secondary build the test expects to be flagged.
+  'daggerheart.L9.weapon-burden': {
+    file: 'src/systems/daggerheart/validation.ts',
+    find: 'if (activeBurden > 2) {',
+    replace: 'if (activeBurden > 3) {',
+  },
+  // A secondary weapon in the primary slot must warn; equating the categories
+  // makes the mismatch legal.
+  'daggerheart.L9.weapon-category-slots': {
+    file: 'src/systems/daggerheart/validation.ts',
+    find: 'if (weapon.category !== slot) {',
+    replace: 'if (weapon.category === slot) {',
+  },
+  // An out-of-domain card must warn; dropping the negation inverts it.
+  'daggerheart.L9.domain-card-domain-legality': {
+    file: 'src/systems/daggerheart/validation.ts',
+    find: '!selectedClass.domains.includes(card.domain)',
+    replace: 'selectedClass.domains.includes(card.domain)',
+  },
+  // A card above the character's level must warn; +10 puts every fixture under.
+  'daggerheart.L9.domain-card-level-legality': {
+    file: 'src/systems/daggerheart/validation.ts',
+    find: 'card.level > system.level',
+    replace: 'card.level > system.level + 10',
+  },
+  // The creation array is compared element-wise after sorting; forcing the
+  // match makes any deviation legal.
+  'daggerheart.L9.creation-trait-array-legality': {
+    file: 'src/systems/daggerheart/validation.ts',
+    find: 'sorted.length === baseline.length && sorted.every((value, index) => value === baseline[index]);',
+    replace: 'true;',
+  },
+  // Action roll total = Hope d12 + Fear d12 + trait modifier.
+  'daggerheart.L4.trait-roll-total': {
+    file: 'src/systems/daggerheart/engine.ts',
+    find: 'const total = hopeDie + fearDie + mod;',
+    replace: 'const total = hopeDie + fearDie + mod + 1;',
+  },
 };
