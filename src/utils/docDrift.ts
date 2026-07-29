@@ -476,6 +476,91 @@ export function validateLedgerStatus(rootDir: string): string[] {
   return issues;
 }
 
+/** Statuses a heading uses to advertise remaining work. */
+const HEADING_OPEN_CLAIM = /\b(READY|CHEAP|BLOCKED|TODO)\b/;
+/**
+ * A heading that already quantifies what is left is HONEST, not stale — an open
+ * section is allowed to contain finished bullets. `§2.5 … **READY — 1 of 3
+ * open**` is the correct shape and must not be flagged.
+ */
+const HEADING_SELF_QUALIFIES = /\b\d+\s+of\s+\d+\s+open\b|still open|remains? open|partly|half/i;
+/**
+ * The repo's explicit "this whole item is finished" idiom: the section's own
+ * work statement struck through and replaced with a completion marker, e.g.
+ * `~~**The work:**~~ **DONE 2026-07-28.**`
+ *
+ * Deliberately narrow. An earlier draft flagged any `**DONE` anywhere in the
+ * body and immediately false-positived on §2.5, where one of three bullets is
+ * closed and the section is legitimately still open. Matching a mere mention of
+ * completion is the gate crying wolf, which is worse than no gate because it
+ * trains the next person to weaken it — the same lesson `validateLedgerStatus`
+ * records above.
+ */
+const BODY_ANNOUNCES_DONE = /~~\*\*[^~]*\*\*~~\s*\*\*(DONE|CLOSED|RESOLVED|SHIPPED)\b/;
+
+/**
+ * A heading whose own body contradicts it.
+ *
+ * The third and last member of the status family, added 2026-07-29 after the
+ * other two both missed the same drift. `ledger_status_rule` compares a ledger
+ * entry against itself; `ledger_ref_rule` compares plan prose against the
+ * ledger. Neither compares a HEADING against the body directly underneath it —
+ * so `§6.6 … — **READY, CHEAP**` sat above a body opening
+ * `~~**The work:**~~ **DONE 2026-07-28.**`, and `§7 Dead code and hygiene —
+ * **READY, CHEAP**` sat above three subsections that were all closed. Both
+ * advertised dispatchable work that did not exist.
+ *
+ * This is cheap to detect precisely because the repo already has a convention:
+ * a heading that has been resolved strikes its old status through
+ * (`~~READY~~ **DONE**`). So the rule is narrow — flag a heading that claims
+ * open work, does NOT strike that claim through, and whose body announces its
+ * own completion.
+ *
+ * Scoped to the plan surfaces only. `docs/GAPS.md` is deliberately NOT covered:
+ * it uses a different and already-disciplined convention (a `**Status:**` line
+ * that qualifies itself — `PARTLY CLOSED`, `CLOSED for the run itself; two
+ * residuals named at the end are OPEN`), and every one of its 22 status lines
+ * was checked by hand when this rule was written. Pointing a heading-shaped rule
+ * at it would produce noise, and a gate that cries wolf gets weakened.
+ */
+export function validateHeadingStatus(rootDir: string, relativePath: string): string[] {
+  const issues: string[] = [];
+  const lines = readText(rootDir, relativePath).split(/\r?\n/);
+
+  const headings: Array<{ level: number; text: string; line: number }> = [];
+  lines.forEach((line, index) => {
+    const match = /^(#{2,4})\s+(.*)$/.exec(line);
+    if (match) headings.push({ level: match[1].length, text: match[2], line: index });
+  });
+
+  headings.forEach((heading, index) => {
+    // A struck-through claim is the CORRECTED form, not the defect.
+    const claim = heading.text.replace(/~~[^~]*~~/g, '');
+    if (!HEADING_OPEN_CLAIM.test(claim)) return;
+    if (RESOLVED_SECTION_MARKERS.test(claim)) return;
+    if (HEADING_SELF_QUALIFIES.test(claim)) return;
+
+    // Body runs to the next heading of the same or higher level.
+    let end = lines.length;
+    for (let next = index + 1; next < headings.length; next++) {
+      if (headings[next].level <= heading.level) {
+        end = headings[next].line;
+        break;
+      }
+    }
+
+    const body = lines.slice(heading.line + 1, end);
+    if (body.some((line) => BODY_ANNOUNCES_DONE.test(line))) {
+      issues.push(
+        `${relativePath}:${heading.line + 1} heading claims open work ("${heading.text.trim()}") ` +
+          'but its own body announces completion. Strike the stale status through, or say what remains.'
+      );
+    }
+  });
+
+  return issues;
+}
+
 /**
  * The other direction of `validateLedgerStatus`, and the hole it left.
  *
@@ -759,6 +844,12 @@ export async function runDocDriftCheck(rootDir = process.cwd()): Promise<DocDrif
           rule: 'ledger_status_rule',
           message,
         });
+      }
+    }
+
+    if (surface.rules.includes('heading_status_rule')) {
+      for (const message of validateHeadingStatus(rootDir, surface.path)) {
+        issues.push({ path: surface.path, rule: 'heading_status_rule', message });
       }
     }
 

@@ -34,7 +34,14 @@ export type DocDriftRuleType =
   // ledger entry that contradicts itself; this catches plan prose that queues
   // work the ledger already records as done — the drift that actually costs a
   // lane, because the plan is where you look to find out what is left.
-  | 'ledger_ref_rule';
+  | 'ledger_ref_rule'
+  // Added 2026-07-29, and the two rules above are why it had to be. Both compare
+  // a status against something ELSEWHERE — a ledger entry against itself, plan
+  // prose against the ledger — so neither could see a heading contradicted by
+  // the body directly underneath it. Two did: §6.6 read `**READY, CHEAP**` over
+  // a body opening `~~**The work:**~~ **DONE**`, and §7 read the same over three
+  // closed subsections.
+  | 'heading_status_rule';
 
 export interface DocDriftSurface {
   path: string;
@@ -109,7 +116,7 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     // filler. **CHEAP**" while the ledger already recorded it CLOSED with four
     // verified entries. blocked_ref_rule could not see it — that rule reads
     // section refs inside this file; this one reads the ledger.
-    rules: ['path_ref_rule', 'blocked_ref_rule', 'ledger_ref_rule'],
+    rules: ['path_ref_rule', 'blocked_ref_rule', 'ledger_ref_rule', 'heading_status_rule'],
   },
   {
     path: 'docs/MASTER_PLAN.md',
@@ -122,6 +129,10 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
       'command_rule',
       'path_ref_rule',
       'capability_phrase_rule',
+      // Prospective: both of these carry per-phase status headings, and neither
+      // has a violation today. Added anyway — WORK_PLAN accumulated two before
+      // anyone noticed, and the cost of the rule on a clean file is zero.
+      'heading_status_rule',
     ],
   },
   {
@@ -134,6 +145,7 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
       'verification_rule',
       'path_ref_rule',
       'capability_phrase_rule',
+      'heading_status_rule',
     ],
   },
   {

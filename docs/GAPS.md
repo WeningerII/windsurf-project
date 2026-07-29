@@ -2683,6 +2683,38 @@ Three unit tests pin it, including the false-positive guard that killed the firs
 draft of `ledger_status_rule`: struck-through and `**DONE**`-marked citations
 must stay silent, and open items must stay silent regardless of wording.
 
+### 23.6 …and a third hole, between a heading and the body under it
+
+Both rules above compare a status against something **elsewhere** — a ledger
+entry against itself, plan prose against the ledger. Neither compares a HEADING
+against the body directly beneath it, and two headings had drifted that way:
+
+| heading | body underneath |
+| --- | --- |
+| `§6.6 … — **READY, CHEAP**` | opens `~~**The work:**~~ **DONE 2026-07-28.**` |
+| `§7 Dead code and hygiene — **READY, CHEAP**` | §7.0, §7.1 and §7.2 all closed |
+
+Both advertised dispatchable work that did not exist. A scan of every heading in
+`WORK_PLAN`, `MASTER_PLAN`, `STATUS`, `VISION` and both design docs found only
+these two, plus one in the **opposite and more dangerous** direction: `§4.3 Sheet
+eviction — **DONE, four wrappers kept with reasons**` sat above a body whose
+first item is an open owner decision. All four headings are corrected.
+
+**`heading_status_rule` gates one of the three, and the limit is the point.** It
+keys on this repo's explicit `~~**The work:**~~ **DONE**` idiom. An earlier draft
+matched any `**DONE` anywhere in a body and immediately false-positived on §2.5 —
+one of three bullets closed, section legitimately open — which is the gate crying
+wolf, and the same mistake `ledger_status_rule`'s first draft made. Narrowing it
+means "every subsection beneath this heading is resolved" (§7) and "this DONE
+heading hides an open decision" (§4.3) stay **ungated and documented as
+ungated**, rather than gated badly.
+
+`docs/GAPS.md` is deliberately outside this rule. Its convention is a
+self-qualifying `**Status:**` line (`PARTLY CLOSED`, `CLOSED for the run itself;
+two residuals named at the end are OPEN`), and all 22 were checked by hand while
+writing this — none contradicted its section. A heading-shaped rule pointed at it
+would produce noise and nothing else.
+
 ---
 
 ## Where the largest open work is

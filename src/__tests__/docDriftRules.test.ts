@@ -10,6 +10,7 @@ import {
   validateDocumentedNpmCommands,
   validateHistoricalHeader,
   validateLedgerReferences,
+  validateHeadingStatus,
   validateLedgerStatus,
   validateMarkdownLinks,
   validateRepoCodePaths,
@@ -267,6 +268,69 @@ describe('docDrift helpers', () => {
     );
 
     expect(validateLedgerReferences(rootDir, 'docs/WORK_PLAN.md')).toEqual([]);
+  });
+
+  /**
+   * All three fixtures are the ACTUAL headings this rule was written from:
+   * WORK_PLAN §6.6 read `**READY, CHEAP**` over a body announcing its own
+   * completion, and §2.5 is the false positive that forced the rule to narrow.
+   */
+  function planWithHeading(rootDir: string, markdown: string): void {
+    mkdirSync(path.join(rootDir, 'docs'), { recursive: true });
+    writeFileSync(path.join(rootDir, 'docs/WORK_PLAN.md'), markdown);
+  }
+
+  it('flags a heading claiming open work whose body announces completion', () => {
+    const rootDir = makeTempDir();
+    planWithHeading(
+      rootDir,
+      [
+        '### 6.6 Shared formatters lie about shape across systems — **READY, CHEAP**',
+        '',
+        'A defect class, not a defect.',
+        '',
+        '~~**The work:**~~ **DONE 2026-07-28.** The audit ran against the loaders.',
+      ].join('\n')
+    );
+
+    const issues = validateHeadingStatus(rootDir, 'docs/WORK_PLAN.md');
+    expect(issues).toHaveLength(1);
+    expect(issues[0]).toContain('READY, CHEAP');
+    expect(issues[0]).toContain('announces completion');
+  });
+
+  it('accepts a heading that has struck its stale status through', () => {
+    const rootDir = makeTempDir();
+    planWithHeading(
+      rootDir,
+      [
+        '### 6.6 Shared formatters — ~~READY, CHEAP~~ **DONE 2026-07-28**',
+        '',
+        '~~**The work:**~~ **DONE 2026-07-28.** The audit ran.',
+      ].join('\n')
+    );
+
+    expect(validateHeadingStatus(rootDir, 'docs/WORK_PLAN.md')).toEqual([]);
+  });
+
+  it('does not flag an open section that merely CONTAINS a finished item', () => {
+    // The false positive that narrowed this rule. §2.5 is legitimately open —
+    // one of its three bullets is closed and two are not — and a heading that
+    // quantifies what remains is the honest shape, not a stale one. An earlier
+    // draft matched any `**DONE` in the body and fired here immediately.
+    const rootDir = makeTempDir();
+    planWithHeading(
+      rootDir,
+      [
+        '### 2.5 Remaining denominator work — **READY — 1 of 3 open**',
+        '',
+        '- `p1.wire-remaining-denominators` — closed by no source.',
+        '- `p1.monster-denominator-fix` — denominator still inflated.',
+        '- ~~`p1.single-entry-gaps`~~ — **DONE 2026-07-28.** All four ship.',
+      ].join('\n')
+    );
+
+    expect(validateHeadingStatus(rootDir, 'docs/WORK_PLAN.md')).toEqual([]);
   });
 
   it('passes the real repo doc-drift audit', async () => {
