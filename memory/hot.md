@@ -4,44 +4,57 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-28. `main` at `e517a1c` (PR #111 merged). Unmerged work
-sits on `claude/master-plan-unfinished-s1lsya`.
+**Last updated:** 2026-07-29. `main` at `e9437f8` — **PRs #112 and #113 both
+merged**. Nothing unmerged; `claude/master-plan-unfinished-s1lsya` was reset onto
+the new main.
 
-## In flight on the branch
+## What landed (#112, #113)
 
-Two commits, both about gates that could not fail:
+- **The Phase-4 drag acceptance had never executed.** `e2e/scene-drag.spec.ts`
+  skips on `VITE_SCENE_DRAG_ENABLED` and no workflow set it, so it reported green
+  while proving nothing. Its first run failed on a shipped defect: `Dock` keyed
+  `activeSystemId` off the open *sheet*, so dragging a monster into a scene of a
+  different system silently placed nothing. New `scene-drag` CI job builds
+  flag-on and **asserts from the JSON report that nothing was skipped** — verified
+  passing on #112 in 1m13s, parallel to Verify, off the critical path.
+- **`CLAUDE.md` is now inside the doc-drift gate** (it was outside
+  `ROOT_DOC_FILES` entirely and had drifted). Its numbers are gated — change the
+  code and let the gate tell you; do not hand-edit them.
+- **`ledger_ref_rule`** — plan prose citing a `done` ledger item now fails CI.
+- **L8 typed damage (§3.2)** — see below.
 
-1. **The Phase-4 drag acceptance had never run.** `e2e/scene-drag.spec.ts` skips
-   on `VITE_SCENE_DRAG_ENABLED` and no workflow set it, so from the day it was
-   written it reported green while proving nothing (Playwright exits 0 on a fully
-   skipped file). Its first execution failed on a **shipped defect**: `Dock` keyed
-   `activeSystemId` off the open *sheet*, so with a scene of a different system
-   open, dragging a monster in silently placed nothing. Fixed in `src/App.tsx`.
-   New `scene-drag` CI job builds flag-on and **asserts from the JSON report that
-   nothing was skipped** — the exit code is the signal that missed this.
-2. **Technical-debt sweep** (`docs/GAPS.md` §23, `WORK_PLAN` §6.9). Type surface
-   came back clean: 0 `as any`, 0 TODO/FIXME, 1 genuine `any`. The real findings
-   were claims nothing checked — below.
+## Facts established (do not re-derive)
 
-## Facts established this session (do not re-derive)
+- **`knip.jsonc`'s `.claude/` ignore does NOT prevent the worktree OOM.** Measured
+  with the entry present: 41 worktrees → `FATAL ERROR: Reached heap limit`;
+  worktrees removed → exit 0 in 7.8s. **The remedy is `git worktree remove`**,
+  which does not delete branches (113 before, 113 after).
+- **Monster resistance data ships and was read by nothing.**
+  `damageResistances`/`damageImmunities`/`damageVulnerabilities` are populated
+  **395 times** in `src/data/`; before §3.2 the only references outside data and
+  tests were their own declarations.
+- **§3.2 design constraints, both load-bearing:** mitigation resolves when the
+  event is BUILT (beside RNG), never in the fold, so RFC 006 byte-identical
+  replay holds and untyped historical events are unaffected; and damage profiles
+  are SNAPSHOTTED onto tokens, never looked up, so replay does not depend on the
+  SRD data as it exists at replay time.
+- **`ChoiceStepView` could hang a choice step on its skeleton forever** — effect
+  guarded on a null document but keyed only on `[step]`. Fixed with a BOOLEAN
+  `hasDocument` dep (depending on `document` would reload the list on every
+  selection). I misdiagnosed this twice as slowness/double-mount; an
+  already-resolved promise cannot take 10s, so the load had never started.
+- **`@ai-sdk/anthropic` vanishes from `node_modules` after a container recycle.**
+  Run `npm ci`; the lockfile is fine.
+- **Harness landmine:** a backgrounded `cmd > log; echo "EXIT=$?"` reports the
+  *echo's* exit code. Write the exit to its own file.
 
-- **`CLAUDE.md` is now inside the doc-drift gate.** It was outside `ROOT_DOC_FILES`
-  entirely and had drifted (`505 files` vs 512; an RFC range stopping at 006 when
-  007 exists). New derived truths `dataFileCount` / `verifyGateCount`; all five new
-  rules were mutation-tested. **Its numbers are gated — do not hand-edit them,
-  change the code and let the gate tell you.**
-- **`knip.jsonc`'s `.claude/` ignore does NOT prevent the worktree OOM.** Its old
-  comment said it did. Measured with the entry present: 41 worktrees → `FATAL
-  ERROR: Reached heap limit`; worktrees removed → exit 0 in 7.8s. **The remedy is
-  `git worktree remove`.** Removal does not delete branches (113 before, 113 after).
-- Worktrees cleared, 5.9 GB → 24 KB. The one dirty tree was the over-inclusion
-  audit, proven strictly superseded by `main` before removal; diff archived in the
-  session scratchpad.
-- **`@ai-sdk/anthropic` goes missing from `node_modules` after a container recycle.**
-  The lockfile is fine. Run `npm ci`; do not touch `anthropicAdapter.mts`.
-- **Harness landmine:** a backgrounded `cmd > log; echo "EXIT=$?" >> log` reports the
-  *echo's* exit code. It made a failing verify look green. Write the exit to its
-  own file and read that file.
+## Next up
+
+§3.2's **input surface is still open** — no UI lets a user say "10 fire", so
+mitigation only fires for callers passing a type; the L8 compute-register rows
+are also unwritten. Other READY lanes: §3.1 register layers, §6.5 toolchain
+(React 18→19, Tailwind 3→4, Vite 7→8), §2.5 `p1.monster-denominator-fix` (moves
+published numbers), the five-job CI split (needs `check:ci-parity` first).
 
 ## Awaiting the owner — decisions, not work
 
@@ -66,13 +79,15 @@ decisions; `GAPS` §20–§23 holds this week's evidence.
   counterparts (25%). Verify every figure locally (GAPS §18.7).
 - **Container recycles mid-session** kill background work and wipe the scratchpad.
   Commit and push per slice.
-- **Playwright:** `/opt/pw-browsers` has rev **1194**, the toolchain wants **1208**.
-  Build a bridge dir in the scratchpad symlinking 1208 → 1194 and point
-  `PLAYWRIGHT_BROWSERS_PATH` at it. Rebuild `dist` before testing a `src` change —
-  preview serves `dist`. NEVER `playwright install`.
+- **Playwright:** `/opt/pw-browsers` has rev **1194**, the toolchain wants **1208**,
+  and there is no Firefox at all — so `npm run verify` always dies at step 22
+  locally and **firefox e2e cannot be run in this container**. Build a bridge dir
+  in the scratchpad symlinking 1208 → 1194, point `PLAYWRIGHT_BROWSERS_PATH` at
+  it, and run `--project=chromium` (41 passed / 2 skipped is the clean baseline).
+  Rebuild `dist` first — preview serves `dist`. NEVER `playwright install`.
 - **compute-register --mutate REFUSES a dirty tree.** Commit first, then mutate.
 - **doc-drift pins verbatim phrases** — preserve exact strings when editing paired
-  docs. Quoting a stale path inside backticks trips `path_ref_rule`; describe it in
-  prose instead. The verification baseline is generated, not hand-edited.
+  docs. Quoting a stale path inside backticks trips `path_ref_rule`; describe it
+  in prose instead.
 - **Merge policy:** merge-to-main, force-push, and remote branch deletion need
   explicit, specific user consent.
