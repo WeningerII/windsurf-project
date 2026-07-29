@@ -2,8 +2,12 @@
 
 Multi-system tabletop RPG character sheet + scene toolkit. TypeScript + React 18 +
 Vite + Tailwind; Supabase sync; Netlify deploy; Vitest + Playwright. Deterministic
-rules core shared by 7 game systems. ~400k LOC, but most of it is generated SRD
-data — orient with the knowledge graph (see "graphify" section below), not grep.
+rules core shared by 7 registered game systems. Most of the line count is
+generated SRD data (512 files under `src/data/`) — orient with the knowledge
+graph (see "graphify" section below), not grep.
+
+Numbers in this file are gated by `npm run check:doc-drift` (see
+`docs/doc-drift.rules.ts`), so they are current or CI is red. Prose is not.
 
 ## Memory protocol — read this first
 
@@ -33,11 +37,14 @@ If `graphify` is not on PATH: `pip3 install --user graphifyy`, then use
 
 ## Architecture map
 
-- `src/systems/<id>/` — per-system engines and sheets: `dnd5e`, `dnd5e-2024`,
-  `dnd35e`, `pf1e`, `pf2e`, `mam3e`, `daggerheart`, `d20-legacy`, `shared`
-- `src/data/` — GENERATED SRD data tables (505 files, the bulk of the LOC).
-  Never hand-edit; regenerate via the `src/scripts/` encoders. Deliberately
-  excluded from the knowledge graph (`.graphifyignore`).
+- `src/systems/<id>/` — per-system engines and sheets. The seven registered
+  systems are `dnd5e`, `dnd5e-2024`, `dnd35e`, `pf1e`, `pf2e`, `mam3e`,
+  `daggerheart` (`GameSystemId` in `src/types/game-systems.ts` is the authority).
+  `d20-legacy` and `shared` are also directories here but are NOT registered
+  systems — they are engine code the d20-family systems share.
+- `src/data/` — GENERATED SRD data tables, the bulk of the line count. Never
+  hand-edit; regenerate via the `src/scripts/` encoders. Deliberately excluded
+  from the knowledge graph (`.graphifyignore`).
 - `src/rules/` — deterministic rules IR and combat resolution
 - `src/scene/` — scene/encounter runtime (RFC 006)
 - `src/ai/` — AI control plane (RFC 002): the model proposes, deterministic
@@ -46,7 +53,7 @@ If `graphify` is not on PATH: `pip3 install --user graphifyy`, then use
 
 ## Where decisions and state live
 
-- `docs/rfc/001–006` — architecture decision records
+- `docs/rfc/` — architecture decision records, currently 001 through 007
 - `docs/MASTER_PLAN.md`, `docs/STATUS.md`, `docs/GAPS.md` — plan and current state
 - `docs/generated/` — machine-generated metrics; never hand-edit (enforced by
   `npm run check:generated-docs` and `npm run check:doc-drift`)

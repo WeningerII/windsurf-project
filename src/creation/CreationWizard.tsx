@@ -287,6 +287,20 @@ function ChoiceStepView<T extends SystemDataModel>({
   const [error, setError] = useState(false);
   const maxSelections = step.maxSelections ?? 1;
 
+  // The working document is built ASYNCHRONOUSLY by the wizard, so it is null
+  // for a window after mount. Keying this effect on `[step]` alone meant that
+  // reaching a choice step inside that window ran the effect once, hit the
+  // early return below, and never retried — `step` does not change again — so
+  // `options` stayed null and the step showed its loading skeleton FOREVER.
+  // No error, no retry, no way out but navigating away and back.
+  //
+  // That shipped, and surfaced as a CI-only flake in
+  // `src/__tests__/a11y/creationWizard.a11y.test.tsx` that was twice
+  // misdiagnosed as slowness (the second "fix" raised the wait to 10s and it
+  // failed again at 10,181ms). It was never slow: that suite's `loadOptions`
+  // returns an already-resolved promise, so the load had simply never started.
+  // Pinned by `src/__tests__/creation/choiceStepDocumentRace.test.tsx`.
+  const hasDocument = document !== null;
   useEffect(() => {
     if (!document) return;
     let cancelled = false;
@@ -305,10 +319,20 @@ function ChoiceStepView<T extends SystemDataModel>({
     return () => {
       cancelled = true;
     };
-    // document identity changes on every rebuild; loadOptions only depends on
-    // the system id, which is stable, so keying on step is sufficient.
+    // `hasDocument` is a BOOLEAN, not the document itself, and that is the whole
+    // design. Depending on `document` would re-run this on every rebuild — and
+    // the document is rebuilt on every selection — so picking an option would
+    // blank the list back to a skeleton and reload it under the user. Depending
+    // on the boolean re-runs exactly once, when the document first arrives,
+    // which is the only transition the early return above can strand.
+    //
+    // `document` itself is still omitted deliberately. Every shipped
+    // `loadOptions` takes no parameters (5e-2024, PF2e and d20-legacy creation
+    // plans are all `async (): Promise<CreationOption[]>`), so none of them can
+    // observe a stale document. If one ever reads it, this dependency list is
+    // what has to change — not the guard.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step]);
+  }, [step, hasDocument]);
 
   const toggle = useCallback(
     (id: string) => {

@@ -9,6 +9,7 @@ import type { CharacterDocument, SystemDataModel } from '../types/core/document'
 import type { Monster } from '../types/creatures/monsters';
 import type { SceneAllegiance, SceneToken, SceneTokenKind } from '../types/core/scene';
 import { buildCharacterCombatant, monsterAverageHitPoints } from '../rules';
+import { snapshotDamageProfile } from '../rules/resolver/damageMitigation';
 import { getSceneTokenSize } from './encounterBuilder';
 
 export interface PlaceTokenInput {
@@ -45,6 +46,7 @@ export function buildPlacedToken(input: PlaceTokenInput): SceneToken | null {
   let hp: SceneToken['hp'];
   let size = 1;
   let refId: string | undefined;
+  let damageProfile: SceneToken['damageProfile'];
   if (linkedDoc) {
     const built = buildCharacterCombatant(linkedDoc, { tokenId: linkedDoc.id, position });
     hp = built.supported ? built.combatant.token.hp : undefined;
@@ -54,6 +56,9 @@ export function buildPlacedToken(input: PlaceTokenInput): SceneToken | null {
     hp = { current: max, max, temp: 0 };
     size = getSceneTokenSize(statblock.size);
     refId = statblock.id;
+    // Snapshotted beside `hp`, and for the same reason: the scene must stay
+    // replayable without re-reading the SRD catalog it was built from.
+    damageProfile = snapshotDamageProfile(statblock);
   }
 
   return {
@@ -64,6 +69,7 @@ export function buildPlacedToken(input: PlaceTokenInput): SceneToken | null {
     size,
     ...(refId ? { refId } : {}),
     ...(hp ? { hp } : {}),
+    ...(damageProfile ? { damageProfile } : {}),
     ...(kind === 'character' ? { playerControlled: true } : {}),
     ...(kind === 'npc' ? { allegiance: tokenAllegiance } : {}),
   };

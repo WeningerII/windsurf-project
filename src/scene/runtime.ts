@@ -8,7 +8,14 @@ import type {
   SceneMarker,
   SceneState,
   SceneToken,
+  SceneTokenDamage,
 } from '../types/core/scene';
+// The only value import this module takes from outside `src/scene/`. It is a
+// pure function over plain data, in the same shape as the scene-local
+// `resolveCheck`/`resolveOracle` helpers below, and it lives in `src/rules/`
+// because typed-damage mitigation is a rules concern the sheet and combat bridge
+// will want too — not a scene-runtime detail.
+import { mitigateDamage } from '../rules/resolver/damageMitigation';
 import { cellKey, footprintCells, footprintWithinGrid } from './grid';
 import { createSeededRng } from './seededRng';
 import { resolveCheck } from './check';
@@ -543,7 +550,12 @@ function buildEventFromIntent(
         ...base,
         type: 'token.damaged',
         payload: {
-          damages: intent.damages.map((damage) => ({ ...damage })),
+          // Typed-damage mitigation is resolved HERE, at event-build time,
+          // beside RNG — never in the fold. `SceneTokenDamage.amount` is
+          // contractually the already-resolved figure, so baking mitigation in
+          // keeps the fold pure and leaves every pre-existing event replaying to
+          // the identical number (untyped damage is never mitigated).
+          damages: intent.damages.map((damage) => mitigateSceneDamage(state, damage)),
           cause: intent.cause,
         },
       };
@@ -1008,6 +1020,31 @@ function cloneToken(token: SceneToken): SceneToken {
     hp: token.hp ? { ...token.hp } : undefined,
     conditions: token.conditions ? [...token.conditions] : undefined,
   };
+}
+
+/**
+ * Resolve one requested damage against its target's standing damage profile.
+ *
+ * Runs once, when the event is built. The resulting event carries the
+ * post-mitigation `amount` plus enough provenance (`type`, `mitigation`, `raw`)
+ * for the log to explain the number without re-deriving it — which matters
+ * because the profile is a snapshot and the creature's SRD entry may have moved
+ * since.
+ *
+ * An unknown `tokenId` is left alone rather than rejected here: `validateDamages`
+ * owns that error, and duplicating the check would report it twice.
+ */
+function mitigateSceneDamage(state: SceneState, damage: SceneTokenDamage): SceneTokenDamage {
+  const profile = state.tokens[damage.tokenId]?.damageProfile;
+  const { amount, mitigation } = mitigateDamage(damage.amount, profile, damage.type);
+
+  // Untyped or unmitigated damage records exactly what it always did, so the
+  // shape of an ordinary event is unchanged and diffs stay readable.
+  if (mitigation === 'none' && amount === damage.amount) {
+    return { ...damage };
+  }
+
+  return { ...damage, amount, mitigation, raw: damage.amount };
 }
 
 /**

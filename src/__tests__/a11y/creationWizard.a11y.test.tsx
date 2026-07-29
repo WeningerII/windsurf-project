@@ -138,20 +138,30 @@ describe('guided-creation wizard a11y — shared shell', () => {
   // raised the wait to 10s. That second failure is what rules out "the second
   // render just needed longer" — ten seconds is not a scheduling shave.
   //
-  // What the evidence actually supports, stated no more strongly than that:
-  // every SINGLE-mount test in this file is reliable, including the one
-  // directly above which does the same click-then-query-a-listbox sequence.
-  // The double mount was the only structural difference, so it is the thing
-  // removed here. `useCreationDraft` reads its persisted draft synchronously at
-  // first render and writes it from an effect, and `buildWorkingDocument` is
-  // async, so a second mount has several ways to observe state the first one
-  // left behind — I could not reproduce the failure locally (it passes 10/10
-  // pinned to 2 cores, and passed on 2 of 4 CI runs), so I am NOT claiming to
-  // know which of them fired.
+  // RESOLVED 2026-07-29, and the two paragraphs above are both WRONG diagnoses
+  // kept on purpose, because how they were wrong is the useful part.
   //
-  // One mount per test, so `afterEach` does the teardown it already exists to
-  // do. Same two assertions, unchanged. If this flakes again, the next step is
-  // a real reproduction — not another timeout.
+  // Splitting the double mount did not fix it either; it failed a third time,
+  // here, on CI. What finally settled it was noticing that this file's
+  // `loadOptions` is `() => Promise.resolve([...])` — an ALREADY-RESOLVED
+  // promise. It cannot take ten seconds. The load had never STARTED, which is a
+  // different failure from a slow one and immune to every timeout.
+  //
+  // The real cause was a product bug, not a test problem. `ChoiceStepView`'s
+  // option-loading effect opened with `if (!document) return;` and keyed only on
+  // `[step]`, while the wizard builds its working document asynchronously — so
+  // arriving at a choice step before that document resolved ran the effect once,
+  // returned early, and never retried. The skeleton was permanent, for users as
+  // well as for this test. Fixed in `src/creation/CreationWizard.tsx` and pinned
+  // deterministically by `src/__tests__/creation/choiceStepDocumentRace.test.tsx`,
+  // which holds the document unresolved instead of racing it.
+  //
+  // The transferable bit: two "fixes" shipped here that had never been observed
+  // failing before and passing after. Both were hypotheses. A CI-only failure
+  // whose stated cause cannot explain the numbers (10s for a resolved promise)
+  // is evidence the cause is wrong, not that the wait is short.
+  //
+  // The one-mount-per-test split is kept — it is better structure regardless.
   it('does not declare a single-select listbox as multi-selectable', async () => {
     renderSyntheticWizard(1);
     await screen.findByTestId('creation-wizard');

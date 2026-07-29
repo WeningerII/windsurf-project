@@ -9,6 +9,7 @@ import {
   validateBlockedReferences,
   validateDocumentedNpmCommands,
   validateHistoricalHeader,
+  validateLedgerReferences,
   validateLedgerStatus,
   validateMarkdownLinks,
   validateRepoCodePaths,
@@ -209,6 +210,63 @@ describe('docDrift helpers', () => {
     );
 
     expect(validateLedgerStatus(rootDir)).toEqual([]);
+  });
+
+  /**
+   * The drift these three pin is the one that actually cost time:
+   * `p1.single-entry-gaps` sat in WORK_PLAN §2.5 as "small, itemised, good
+   * filler. **CHEAP**" while the ledger already recorded it CLOSED. Neither
+   * existing rule could see it — `ledger_status_rule` checks the ledger against
+   * itself, `blocked_ref_rule` resolves section refs inside the plan.
+   */
+  function ledgerFixture(rootDir: string, planLine: string): void {
+    mkdirSync(path.join(rootDir, 'docs'), { recursive: true });
+    writeFileSync(
+      path.join(rootDir, 'docs/master-gap-ledger.source.ts'),
+      [
+        'export const ITEMS = [',
+        '  {',
+        "    id: 'p1.single-entry-gaps',",
+        "    detail: 'CLOSED 2026-07-28 — all four ship.',",
+        "    status: 'done',",
+        '  },',
+        '  {',
+        "    id: 'p1.monster-denominator-fix',",
+        "    detail: 'Container-like rows still inflate the denominator.',",
+        "    status: 'missing',",
+        '  },',
+        '];',
+      ].join('\n')
+    );
+    writeFileSync(path.join(rootDir, 'docs/WORK_PLAN.md'), `# Plan\n\n${planLine}\n`);
+  }
+
+  it('flags plan prose that queues work the ledger records as done', () => {
+    const rootDir = makeTempDir();
+    ledgerFixture(rootDir, '- `p1.single-entry-gaps` — small, itemised, good filler. **CHEAP**');
+
+    const issues = validateLedgerReferences(rootDir, 'docs/WORK_PLAN.md');
+    expect(issues.some((issue) => issue.includes('p1.single-entry-gaps'))).toBe(true);
+  });
+
+  it('accepts a done item the plan has struck through or marked resolved', () => {
+    const struck = makeTempDir();
+    ledgerFixture(struck, '- ~~`p1.single-entry-gaps`~~ — all four verified against the loaders.');
+    expect(validateLedgerReferences(struck, 'docs/WORK_PLAN.md')).toEqual([]);
+
+    const marked = makeTempDir();
+    ledgerFixture(marked, '- `p1.single-entry-gaps` — **DONE 2026-07-28.** Four entries verified.');
+    expect(validateLedgerReferences(marked, 'docs/WORK_PLAN.md')).toEqual([]);
+  });
+
+  it('leaves open ledger items alone — listing those is what a plan is for', () => {
+    const rootDir = makeTempDir();
+    ledgerFixture(
+      rootDir,
+      "- `p1.monster-denominator-fix` — 3.5e's denominator is still inflated."
+    );
+
+    expect(validateLedgerReferences(rootDir, 'docs/WORK_PLAN.md')).toEqual([]);
   });
 
   it('passes the real repo doc-drift audit', async () => {

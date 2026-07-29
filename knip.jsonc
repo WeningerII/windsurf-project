@@ -15,18 +15,32 @@
   ],
   "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "netlify/functions/**/*.mts"],
   // `.claude/worktrees/` holds agent worktrees — full nested checkouts of this
-  // repo. Without this, knip walks every worktree's copy of src/ and exhausts
-  // the heap: measured twice at ~80s then `FATAL ERROR: Reached heap limit`
-  // (exit 134), which aborts `npm run verify` at step 15 of 22 so the last
-  // seven gates never run locally. The identical tree with the worktrees absent
-  // completes in 8.0s. Same defect vitest.config.ts and eslint.config.js each
-  // carry an exclude for.
+  // repo. When they accumulate, knip walks every worktree's copy of src/ and
+  // exhausts the heap: `FATAL ERROR: Reached heap limit` (exit 134), which
+  // aborts `npm run verify` at check:dead-code so the remaining gates never run
+  // locally. Same defect vitest.config.ts and eslint.config.js each carry an
+  // exclude for.
+  //
+  // CORRECTED 2026-07-28. This comment used to claim the `.claude/**` entry
+  // below PREVENTS that OOM, and that the entry is therefore load-bearing and
+  // must never be removed. That is not what happens. Measured on this tree with
+  // the entry present the whole time:
+  //
+  //   41 agent worktrees present (5.9 GB) -> FATAL heap limit, exit 134
+  //   the same tree with the worktrees removed -> exit 0 in 7.8s
+  //
+  // So the ignore entry does not stop knip from traversing them. **The actual
+  // remedy is to remove the worktrees** (`git worktree list`, then
+  // `git worktree remove` the stale ones and `git worktree prune`) — removal
+  // does not delete the branches, which stay in .git and on origin.
+  //
+  // The two entries are KEPT because they still suppress reporting noise from
+  // any worktree that does exist, and they cost nothing. But they are not the
+  // safeguard the old comment claimed, and nobody should rely on them as one.
   //
   // knip prints "Configuration hints (2) — remove from ignore" for these two
-  // whenever no worktree happens to exist. That is expected and the entries
-  // must STAY: they are load-bearing the moment an agent worktree appears
-  // again, and the failure they prevent is an OOM abort that silently skips
-  // every gate after this one. Hints are informational; knip still exits 0.
+  // whenever no worktree happens to exist. Hints are informational; knip still
+  // exits 0.
   "ignore": [
     ".claude/**",
     ".tmp/**",

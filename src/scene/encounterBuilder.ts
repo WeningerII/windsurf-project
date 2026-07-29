@@ -5,6 +5,7 @@ import { appendSceneEvent, foldSceneEvents, resolveSceneAction } from './runtime
 import { cellKey } from './grid';
 import { createSeededRng } from './seededRng';
 import { monsterAverageHitPoints } from '../rules/combatants/monsterCombatant';
+import { snapshotDamageProfile } from '../rules/resolver/damageMitigation';
 
 export interface EncounterMonsterSelection {
   monsterId: string;
@@ -232,6 +233,9 @@ export function buildEncounterSceneEvents({
       position,
       size,
       refId: monster.id,
+      // Snapshotted at placement, like `hp`, so a replayed encounter does not
+      // depend on the SRD catalog as it exists at replay time.
+      damageProfile: snapshotDamageProfile(monster),
       monster,
     };
   });
@@ -261,6 +265,9 @@ export function buildEncounterSceneEvents({
             const max = monsterAverageHitPoints(token.monster);
             return { current: max, max, temp: 0 };
           })(),
+          // Omitted entirely when the statblock declares none, so a scene with
+          // no resisting creatures serializes exactly as it did before.
+          ...(token.damageProfile ? { damageProfile: token.damageProfile } : {}),
         },
       },
       { eventId: eventIdFactory(), createdAt }
