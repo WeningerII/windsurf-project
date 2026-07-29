@@ -50,17 +50,17 @@
     "semantic_hash": "a1b8f23b1952493828f101c62cd3d27b"
   },
   "docs/doc-drift.manifest.ts": {
-    "mtime": 1785277372.9368176,
-    "ast_hash": "f2a5c3915a8636e58169a4e633d7a8a6",
+    "mtime": 1785282680.6491332,
+    "ast_hash": "6f11ee55bcc76676870fce034deb3635",
     "semantic_hash": ""
   },
   "docs/doc-drift.rules.ts": {
-    "mtime": 1785277372.9368176,
-    "ast_hash": "09c1a13a968101c29102341638bf063c",
+    "mtime": 1785282674.6291327,
+    "ast_hash": "bf10b570c3f41cdc9ac82009d7f0112a",
     "semantic_hash": ""
   },
   "docs/generated/roadmap-metrics.json": {
-    "mtime": 1785280354.2489948,
+    "mtime": 1785283150.6091611,
     "ast_hash": "07b547214595fa319149f3c856f1e3d2",
     "semantic_hash": ""
   },
@@ -685,9 +685,9 @@
     "semantic_hash": ""
   },
   "src/__tests__/docDriftManifest.test.ts": {
-    "mtime": 1784234274.6014407,
-    "ast_hash": "6cbaef21501e42245ef38fd376e6b32b",
-    "semantic_hash": "6cbaef21501e42245ef38fd376e6b32b"
+    "mtime": 1785282983.5691512,
+    "ast_hash": "1dced329cf7c3b176c9281d714feba32",
+    "semantic_hash": ""
   },
   "src/__tests__/docDriftRules.test.ts": {
     "mtime": 1785277372.9848175,
@@ -2860,8 +2860,8 @@
     "semantic_hash": ""
   },
   "src/utils/docDrift.ts": {
-    "mtime": 1785277373.0888176,
-    "ast_hash": "1e06bd20c8823dc1c36c2d7c5adde6c1",
+    "mtime": 1785282662.401132,
+    "ast_hash": "23a7d15b04c653786637a5aa87f19205",
     "semantic_hash": ""
   },
   "src/utils/documentMigrations.ts": {
@@ -3100,7 +3100,7 @@
     "semantic_hash": ""
   },
   "docs/generated/master-gap-ledger.json": {
-    "mtime": 1785280354.2489948,
+    "mtime": 1785283150.6091611,
     "ast_hash": "eff22a1ac80e40d095b2758b126d0e0f",
     "semantic_hash": ""
   },

@@ -57,6 +57,16 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     owner: 'engineering-workflow',
     rules: ['verification_rule', 'command_rule', 'path_ref_rule'],
   },
+  // Added 2026-07-28. Every other root document that names commands, paths and
+  // counts was gated; this one — the one loaded as project instructions at the
+  // start of every agent session, and therefore the one whose errors get acted
+  // on rather than just read — was not in scope at all. It had drifted.
+  {
+    path: 'CLAUDE.md',
+    kind: 'live',
+    owner: 'agent-onboarding',
+    rules: ['count_rule', 'command_rule', 'path_ref_rule'],
+  },
   {
     // The docs index: authority order, reading order, and the gate-defined order
     // of operations for changing a doc. Deliberately owns no counts and names no

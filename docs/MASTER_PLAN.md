@@ -27,6 +27,8 @@ Two habits caused the drift, and both are now rules rather than advice. **Narrat
 
 The failure mode is not carelessness. It is that a careful write-up of a fix *feels* like completion, and the write-up itself becomes the reason nobody looks for the next instance. The remedy is mechanical: before closing, search for the pattern, not the symptom.
 
+**A corollary, learned the hard way from row 1 of that very table (2026-07-28).** Copying the worktree exclusion into `knip.jsonc` looked like the sibling fix and was written up as one — in a long comment asserting the entry was load-bearing and must never be removed. It is not: measured with that entry present throughout, 41 agent worktrees still produce `FATAL ERROR: Reached heap limit`, and removing the worktrees produces exit 0 in 7.8s (`docs/GAPS.md` §23.3). The right sibling was found; the remedy did not work; and the confident write-up is what made it unlikely anyone would re-check. **A fix that has never been observed failing before and passing after is a hypothesis, and should be labelled as one.**
+
 | Section | What it answers |
 | --- | --- |
 | [Product North Star](#product-north-star) | What the product is for, and the all-seven-equal bar |

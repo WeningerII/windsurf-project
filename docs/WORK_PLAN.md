@@ -436,6 +436,46 @@ project always runs, so that test does execute — a legitimate per-project skip
 vacuous gate. Phase 6's flag (`VITE_SCENE_CANVAS_ENABLED`) still has no job, but that
 is not the same defect: its spec was never written, so nothing is claiming to gate it.
 
+### 6.9 Technical-debt sweep — **DONE 2026-07-28**
+
+Ran deliberately rather than opportunistically. Full evidence in `docs/GAPS.md` §23.
+
+**The classic metrics came back clean, and that is the finding.** Zero `as any`,
+zero `TODO`/`FIXME`/`HACK`, one genuine `any` (an idiomatic function-wrapper
+signature), four `@ts-expect-error` that are all deliberate negative type tests,
+and ten `eslint-disable` of which eight carry a written reason. The two
+`react-hooks/exhaustive-deps` suppressions were verified against the actual
+implementations rather than taken at their word, and both claims hold. **This
+repo's debt is not in its type surface** — it is in claims nothing checks, which
+is where the three real findings were:
+
+1. **`CLAUDE.md` was outside the doc-drift gate entirely** and had drifted twice
+   (`505 files` against 512; an RFC range ending at 006 when 007 exists). It is the one
+   root doc loaded as project instructions at the start of every agent session,
+   so its errors are *acted on*. Now gated with `count_rule` / `command_rule` /
+   `path_ref_rule`, on two new derived truths (`dataFileCount`,
+   `verifyGateCount`) that are computed and never transcribed. All five rules
+   mutation-tested individually, then restored.
+2. **`knip.jsonc` documented a safeguard that does not work.** Its `.claude/**`
+   ignore entry is described as preventing the worktree OOM; measured with the
+   entry present, 41 worktrees still produced `FATAL ERROR: Reached heap limit`,
+   and removing the worktrees produced exit 0 in 7.8s. Comment corrected, entries
+   kept for the reporting-noise suppression they actually provide. This mattered:
+   `check:dead-code` is step 16 of 22, so **no full local `npm run verify` was
+   possible** while the worktrees existed.
+3. **41 stale agent worktrees (5.9 GB)** removed after checking every one for
+   uncommitted and unpushed work. The single dirty one was the over-inclusion
+   audit, proven strictly superseded by `main` (24 worktree-only entries, all
+   `undetermined`; 84 entries re-classified on `main`; zero unique to the
+   worktree) and archived before removal. **113 local branches before, 113
+   after** — worktree removal does not delete branches.
+
+**Not repo defects, recorded so they are not re-diagnosed:** `@ai-sdk/anthropic`
+was missing from this container's `node_modules` after a recycle (`npm ci`
+restores it; the lockfile is correct), and one earlier "verify passed" report of
+mine was wrong because the backgrounded command ended in an `echo` whose exit
+code the harness reported instead of npm's.
+
 ---
 
 ## 7. Dead code and hygiene — **READY, CHEAP**

@@ -2539,6 +2539,120 @@ code, as §22.3 does.
 
 ---
 
+## 23. Technical-debt sweep — what was actually found (added 2026-07-28)
+
+**Status: CLOSED.** Recorded because two of the four findings are corrections to
+claims this repo had already written down and believed.
+
+### 23.1 The classic debt metrics are clean, and that is the useful result
+
+Measured rather than assumed, across `src/` excluding `src/data/` and tests:
+
+| metric | count | assessment |
+| --- | --- | --- |
+| `as any` | **0** | — |
+| genuine `: any` | **1** | `withErrorLogging<T extends (...args: any[]) => Promise<any>>` — the idiomatic signature for a function wrapper. |
+| `@ts-expect-error` / `@ts-ignore` | 4 | All in `shellReducer.test.ts`, all *deliberate negative type tests* asserting bad input fails typecheck. Not suppressions. |
+| `eslint-disable` | 10 | 8 carry a `--` reason. The 2 `react-hooks/exhaustive-deps` were read in full (below). |
+| `TODO` / `FIXME` / `HACK` | **0** | — |
+| skipped tests | 1 legitimate | See §22.4. |
+
+The two `exhaustive-deps` suppressions were checked against reality rather than
+taken at their word. `CreationWizard.tsx`'s says *"loadOptions only depends on
+the system id"* — and every shipped `loadOptions` (in `dnd5e`, `pf2e` and
+`d20-legacy` creation plans) is declared `async (): Promise<CreationOption[]>`
+with **zero parameters**, so it is true, and in fact stronger than stated. Left
+alone. **It is worth knowing this is convention, not enforcement:** the type
+permits `loadOptions(document)`, the effect passes the document, and a future
+implementation that reads it would go stale with nothing to catch it.
+
+**This repo's debt is not in its type surface.** It is in claims that nothing
+checks — which is what the rest of this section, and §21 and §22, are about.
+
+### 23.2 CLAUDE.md made checkable claims and was outside the gate
+
+`docs/doc-drift.manifest.ts` gates README.md and CONTRIBUTING.md. `CLAUDE.md`
+was not in `ROOT_DOC_FILES` at all, so **none** of its claims were checked —
+while it is the one root document injected verbatim as project instructions at
+the start of every agent session. Errors in it are acted on, not just read.
+
+It had drifted, in both directions the gate exists to catch:
+
+| claim | actual | kind |
+| --- | --- | --- |
+| `src/data/` holds **505 files** | **512** | count |
+| an RFC range ending at 006 | 001 through **007** exists | path/range |
+| "~400k LOC" | ~459k | count (removed rather than re-pinned; see below) |
+
+Its own text predicted this: *"`package.json` is the authority — this list is a
+summary and has drifted before."*
+
+**Now gated** with `count_rule`, `command_rule` and `path_ref_rule`. Three new
+count rules pin the system count, the data-file count, and the length of the
+verify chain, with two new derived truths (`dataFileCount`, `verifyGateCount`) —
+both computed, never transcribed. All five rules were **mutation-tested**: each
+was individually broken and confirmed to fail the gate, then restored.
+
+The LOC figure was deleted rather than corrected. It cannot be gated at
+reasonable cost (it moves on nearly every commit), and an ungated number in this
+file is precisely what created the problem. The sentence now makes the same
+point — most of the repo is generated data — using the gated file count.
+
+A fourth claim was ambiguous rather than wrong: the architecture map listed nine
+directories under `src/systems/` as "per-system engines and sheets" while the
+header said seven systems. `GameSystemId` has seven members; `d20-legacy` and
+`shared` are shared engine code. The map now says so explicitly.
+
+### 23.3 `knip.jsonc` documented a safeguard that does not work
+
+The config carried a long, confident comment stating that its `.claude/**`
+ignore entry PREVENTS knip from OOMing on agent worktrees, and that the entry
+was therefore load-bearing and must never be removed.
+
+**Measured on this tree, with that entry present throughout:**
+
+| state | result |
+| --- | --- |
+| 41 agent worktrees present (5.9 GB) | `FATAL ERROR: Reached heap limit`, exit 134 |
+| same tree, worktrees removed | exit 0 in **7.8s** |
+
+So the ignore entry does not stop the traversal it is documented to stop. The
+real remedy is removing the worktrees. The comment is corrected in place; the
+entries are kept, because they still suppress reporting noise and cost nothing —
+but they are no longer described as a safeguard.
+
+**This was not academic.** `check:dead-code` is step 16 of 22, and an OOM there
+aborts the chain, so steps 17–22 (coverage, keepalive-budget, compute-register,
+build, bundle-size, e2e) **could not be run locally at all** while the worktrees
+were present. A full local `npm run verify` was impossible and the failure looked
+like a knip problem rather than a disk-hygiene one.
+
+Cleanup was done conservatively: every worktree was checked for uncommitted and
+unpushed work first. One had 11 modified files (the over-inclusion audit), which
+was diffed against `main` and found **strictly superseded** — its 24
+worktree-only entries were all classified `undetermined`, `main` had 84 entries
+*re-classified* beyond it, and zero entries existed only in the worktree. It was
+archived anyway before removal. Local branch count was 113 before and 113 after:
+**removing a worktree does not delete its branch.**
+
+### 23.4 A missing dependency was hidden by a harness mistake, not by the repo
+
+`typecheck:netlify` failed with `TS2307: Cannot find module '@ai-sdk/anthropic'`.
+The package is declared in `package.json`, present in `package-lock.json`, and
+imported by `netlify/functions/anthropicAdapter.mts`; it was simply absent from
+this container's `node_modules` after a container recycle. `npm ci` restored it
+and the gate went green. **No repo defect** — recorded only so the next person
+who sees it reaches for `npm ci` instead of editing the adapter.
+
+The mistake worth recording is mine: the failure was initially reported as a
+**pass**, because the run was backgrounded as `npm run verify > log; echo
+"EXIT=$?" >> log` and the harness reported the exit code of the trailing `echo`.
+A command that always exits 0 will always look green. Same shape as §22 — the
+absence of a signal reading identically to a passing one — arrived at from the
+tooling side rather than the test side.
+
+---
+
 ## Where the largest open work is
 
 Not a section — a reading aid, kept last so it stays out of the numbering. It is
