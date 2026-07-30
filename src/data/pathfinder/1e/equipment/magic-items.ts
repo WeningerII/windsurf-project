@@ -222,36 +222,6 @@ export const portableHole: MagicItem = {
 
 // CLOAKS AND CAPES
 
-export const cloakOfInvisibility: MagicItem = {
-  id: 'cloak-of-invisibility',
-  name: 'Cloak of Invisibility',
-  system: 'pf1e',
-  source: 'Original Content (not SRD)',
-  type: 'magic-item',
-  rarity: 'rare',
-  weight: 1,
-  cost: { amount: 62000, currency: 'gp' },
-  requiresAttunement: false,
-  modifiers: [],
-  effects: ['Renders the wearer invisible when worn'],
-  description: 'When worn, this cloak renders the wearer invisible.',
-};
-
-export const cloakOfFlying: MagicItem = {
-  id: 'cloak-of-flying',
-  name: 'Cloak of Flying',
-  system: 'pf1e',
-  source: 'Original Content (not SRD)',
-  type: 'magic-item',
-  rarity: 'rare',
-  weight: 1,
-  cost: { amount: 55000, currency: 'gp' },
-  requiresAttunement: false,
-  modifiers: [],
-  effects: ['Allows the wearer to fly at will'],
-  description: 'This cloak allows the wearer to fly at will.',
-};
-
 // MAGIC WEAPONS
 
 export const longsword1: MagicItem = {
@@ -441,8 +411,6 @@ export const pf1eMagicItems: MagicItem[] = [
   wandOfFireball,
   bagOfHolding,
   portableHole,
-  cloakOfInvisibility,
-  cloakOfFlying,
   longsword1,
   longsword2,
   shortsword1,

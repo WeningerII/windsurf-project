@@ -59,13 +59,37 @@ published numbers), the five-job CI split (needs `check:ci-parity` first).
 ## Awaiting the owner — decisions, not work
 
 1. 62 remote branch deletions (`docs/history/2026-07-26-retired-branches.md`).
-2. WORK_PLAN §0.1 pile A — 31 records with no open-content counterpart. The only
-   genuine licensing exposure.
-3. Pile C — 78 wrong-edition records; honest re-tagging drops **75** via
-   `filterOpenContentBySource`. Not a cheap re-tag.
+2. ~~Pile A — records with no open-content counterpart.~~ **DECIDED 2026-07-30:
+   delete. Executed** — see below.
+3. Pile C — 68 wrong-edition records; honest re-tagging drops most via
+   `filterOpenContentBySource`. Not a cheap re-tag. **This is a different
+   question from pile A** — the content is genuinely OGL, just miscited, so
+   deleting would be the wrong remedy.
 4. GAPS §19.4 M&M adversaries — option (d), fetch `d20herosrd.com` once from an
-   unblocked connection. The blocker is the proxy, not licensing.
+   unblocked connection. The blocker is the proxy, not licensing. Option (b),
+   authoring them as labelled original content, is foreclosed.
 5. Ratification of the four kept sheet wrappers (WORK_PLAN §4.3).
+
+## The homebrew deletion (2026-07-30)
+
+Owner: *"delete all of the homebrew stuff."* Executed — **108 entries** and the
+policy channel that admitted them:
+
+- 106 tagged `Original Content (not SRD)`: 79 in the M&M `original-not-srd.ts`
+  module (deleted whole) + 27 individually tagged across 10 d20 catalog files.
+- 2 more — `Cloak of the Archmagi`, `Pegasus Boots` — the same invented content
+  still claiming `SRD 5.2` in the 2024 catalog. Their honestly-tagged 2014 twins
+  were in the 106.
+- `originalContentSources` and `isOriginalContentSource` are **deleted, not
+  emptied**, so a re-added self-written entry fails the gate rather than finding
+  a door. `ManifestEntryStatus` drops `'original'`; roadmap-metrics drops the
+  `Original (non-SRD)` column; `check:mam-equipment` now requires every entry to
+  come from an encoder-generated module.
+- **`genuine-non-open-content` 89 → 0.** Ledger total 1034 → 925. Catalog counts
+  fell honestly: 3.5e spells 609→607, pf2e spells 551→546, 5e-2024 equipment
+  497→494 (then 492), M&M equipment 192→113. The M&M `devices` category is gone
+  entirely — all 11 were self-authored and the Hero SRD prints no device row.
+- Record: `GAPS` §17.3.
 
 Read `docs/WORK_PLAN.md` first — it is the forward queue. `MASTER_PLAN` holds
 decisions; `GAPS` §20–§23 holds this week's evidence.

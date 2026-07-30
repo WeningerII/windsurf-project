@@ -187,18 +187,6 @@
       "class": "duplicate-alias",
       "evidence": "The SRD 3.5 spell chapters name the 6th-level spell plainly \"Globe of Invulnerability\" (the 4th-level one is \"Globe of Invulnerability, Lesser\"). The loader ships ALL THREE: the plain 6th-level SRD entry, the Lesser SRD entry, and this \"Greater\"-prefixed duplicate at the same level 6 / abjuration with the same \"functions like lesser globe of invulnerability\" text."
     },
-    "dnd-3.5e/spells|massmisdirection": {
-      "name": "Mass Misdirection",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "The SRD 3.5 spell chapters contain \"Misdirection\" (level 2 illusion, which the loader also ships) and no mass variant; the qualifier word-order normalization already folds \"Mass X\"/\"X, Mass\", so this is not a naming artifact. Shipped at level 7 tagged \"SRD 3.5\" with no source counterpart."
-    },
-    "dnd-3.5e/spells|reversaloffortune": {
-      "name": "Reversal of Fortune",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "No heading of this name in any of the nine olimot/srd-v3.5-md spell chapters, and no near name match at all. Shipped as a level-7 evocation tagged \"SRD 3.5\" with no source counterpart."
-    },
     "dnd-5e-2014/equipment|1longbow": {
       "name": "+1 Longbow",
       "taggedSource": "SRD 5.1",
@@ -240,24 +228,6 @@
       "taggedSource": "SRD 5.1",
       "class": "duplicate-alias",
       "evidence": "loadEquipmentForSystem('dnd-5e-2014') ALSO ships \"Blowgun needle\", which is the verbatim SRD 5.1 entry name in 5e-bits/5e-database; compared field-by-field the two rows are byte-identical. This is a duplicated catalog row, not a missing SRD entry — extending name normalization would HIDE the duplication rather than fix it."
-    },
-    "dnd-5e-2014/equipment|capofwaterbreathing": {
-      "name": "Cap of Water Breathing",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH open-content 5e sources checked: the 362-entry 5e-bits/5e-database SRD 5.1 magic-item list AND the 264-entry SRD 5.2.1 magic-items.md (downfallx/dnd-5e-srd-markdown). It is no known WotC counterpart — apparently invented. Shipped tagged \"SRD 5.1\"."
-    },
-    "dnd-5e-2014/equipment|cloakofbillowing": {
-      "name": "Cloak of Billowing",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH open-content 5e sources checked: the 362-entry 5e-bits/5e-database SRD 5.1 magic-item list AND the 264-entry SRD 5.2.1 magic-items.md (downfallx/dnd-5e-srd-markdown). It is a Xanathar’s Guide to Everything common item. Shipped tagged \"SRD 5.1\"."
-    },
-    "dnd-5e-2014/equipment|cloakofthearchmagi": {
-      "name": "Cloak of the Archmagi",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH open-content 5e sources checked: the 362-entry 5e-bits/5e-database SRD 5.1 magic-item list AND the 264-entry SRD 5.2.1 magic-items.md (downfallx/dnd-5e-srd-markdown). It is no known WotC counterpart — apparently invented (the SRD/DMG item is the Robe of the Archmagi, which also ships). Shipped tagged \"SRD 5.1\"."
     },
     "dnd-5e-2014/equipment|crossbowbolts20": {
       "name": "Crossbow Bolts (20)",
@@ -343,12 +313,6 @@
       "class": "duplicate-alias",
       "evidence": "loadEquipmentForSystem('dnd-5e-2014') ALSO ships \"Padded Armor\", which is the verbatim SRD 5.1 entry name in 5e-bits/5e-database; compared field-by-field the two rows are byte-identical. This is a duplicated catalog row, not a missing SRD entry — extending name normalization would HIDE the duplication rather than fix it."
     },
-    "dnd-5e-2014/equipment|pegasusboots": {
-      "name": "Pegasus Boots",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH open-content 5e sources checked: the 362-entry 5e-bits/5e-database SRD 5.1 magic-item list AND the 264-entry SRD 5.2.1 magic-items.md (downfallx/dnd-5e-srd-markdown). It is no known WotC counterpart — apparently invented (the SRD analogue Winged Boots also ships). Shipped tagged \"SRD 5.1\"."
-    },
     "dnd-5e-2014/equipment|plate": {
       "name": "Plate",
       "taggedSource": "SRD 5.1",
@@ -360,18 +324,6 @@
       "taggedSource": "SRD 5.1",
       "class": "duplicate-alias",
       "evidence": "loadEquipmentForSystem('dnd-5e-2014') ALSO ships \"Armor of Invulnerability\", which is the verbatim SRD 5.1 entry name in 5e-bits/5e-database; compared field-by-field the two rows are same rarity; weight 65 vs 0. This is a duplicated catalog row, not a missing SRD entry — extending name normalization would HIDE the duplication rather than fix it."
-    },
-    "dnd-5e-2014/equipment|potionofdragonsbreath": {
-      "name": "Potion of Dragon's Breath",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH open-content 5e sources checked: the 362-entry 5e-bits/5e-database SRD 5.1 magic-item list AND the 264-entry SRD 5.2.1 magic-items.md (downfallx/dnd-5e-srd-markdown). It is a Xanathar’s Guide to Everything potion. Shipped tagged \"SRD 5.1\"."
-    },
-    "dnd-5e-2014/equipment|ringofclumsinesscursed": {
-      "name": "Ring of Clumsiness (Cursed)",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "wrong-edition-attribution",
-      "evidence": "CORRECTED 2026-07-26 by adversarial re-verification. The prior record said \"no known WotC counterpart - apparently invented\"; that is false. \"Ring of Clumsiness\" is present in THIS AUDIT'S OWN pinned denominator scripts/data/srd-overinclusion-manifest.json .denominators[\"pf1e/magic-items\"].names, and is a D&D 3.5 SRD cursed item. Absence from SRD 5.1/5.2 is real, but the class requires absence from ANY cited open-content source, so this is a false citation of open content, not unlicensed content."
     },
     "dnd-5e-2014/equipment|robesofthearchmagi": {
       "name": "Robes of the Archmagi",
@@ -402,12 +354,6 @@
       "taggedSource": "SRD 5.1",
       "class": "generic-entry-instantiation",
       "evidence": "SRD 5.1 ships the GENERIC entry \"Spell Scroll (1st)\" (present in 5e-bits/5e-database) rather than pre-built instances; this row is one instance of it. The mechanics are open content; only the pre-instantiated NAME has no source counterpart."
-    },
-    "dnd-5e-2014/equipment|scrollofprotection": {
-      "name": "Scroll of Protection",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH open-content 5e sources checked: the 362-entry 5e-bits/5e-database SRD 5.1 magic-item list AND the 264-entry SRD 5.2.1 magic-items.md (downfallx/dnd-5e-srd-markdown). It is a Dungeon Master’s Guide item, and NOT a Spell Scroll instance. Shipped tagged \"SRD 5.1\"."
     },
     "dnd-5e-2014/equipment|scrollofremovecurse": {
       "name": "Scroll of Remove Curse",
@@ -505,18 +451,6 @@
       "class": "denominator-scope-defect",
       "evidence": "SRD 5.2.1 equipment.md DOES carry this as a named adventuring-gear entry (\"#### Arcane Focus (Varies)\"), but the 5e-bits/5e-database 2024 Equipment.json this row diffs against contains no entry matching /focus|symbol/ at all. The entry is in the cited source; the scraped slice is incomplete. Unlike the 2014 catalog (where the same names are category rollups), SRD 5.2 promotes them to real entries."
     },
-    "dnd-5e-2024/equipment|cloakofbillowing": {
-      "name": "Cloak of Billowing",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH the 264-entry SRD 5.2.1 magic-items.md and the 362-entry SRD 5.1 magic-item list. It is a Xanathar’s Guide to Everything common item. Shipped tagged \"SRD 5.2\"; the identical entry also ships in the 2014 catalog tagged \"SRD 5.1\"."
-    },
-    "dnd-5e-2024/equipment|cloakofthearchmagi": {
-      "name": "Cloak of the Archmagi",
-      "taggedSource": "SRD 5.2",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH the 264-entry SRD 5.2.1 magic-items.md and the 362-entry SRD 5.1 magic-item list. It is no known WotC counterpart — apparently invented (the SRD/DMG item is the Robe of the Archmagi, which also ships). Shipped tagged \"SRD 5.2\"; the identical entry also ships in the 2014 catalog tagged \"SRD 5.1\"."
-    },
     "dnd-5e-2024/equipment|druidicfocus": {
       "name": "Druidic Focus",
       "taggedSource": "SRD 5.2",
@@ -577,12 +511,6 @@
       "class": "duplicate-alias",
       "evidence": "loadEquipmentForSystem('dnd-5e-2024') ALSO ships \"Padded Armor\", the verbatim SRD 5.2 name; cost and weight are identical (only the alias carries an armorClass field, which is itself a defect in the SRD-named twin). A duplicated catalog row, not a missing SRD entry."
     },
-    "dnd-5e-2024/equipment|pegasusboots": {
-      "name": "Pegasus Boots",
-      "taggedSource": "SRD 5.2",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH the 264-entry SRD 5.2.1 magic-items.md and the 362-entry SRD 5.1 magic-item list. It is no known WotC counterpart — apparently invented (the SRD analogue Winged Boots also ships). Shipped tagged \"SRD 5.2\"; the identical entry also ships in the 2014 catalog tagged \"SRD 5.1\"."
-    },
     "dnd-5e-2024/equipment|piton": {
       "name": "Piton",
       "taggedSource": "SRD 5.1",
@@ -612,12 +540,6 @@
       "taggedSource": "SRD 5.2",
       "class": "denominator-shape-artifact",
       "evidence": "SRD 5.2.1 magic-items.md folds the tiers into ONE \"Potion of Healing\" entry whose table lists \"Potion of Healing (greater)\" and \"(supreme)\" as rows; the product ships them as separate catalog rows under SRD 5.1-style names. SRD 5.1 does name all four tiers as standalone entries, so this is a granularity/edition-naming mismatch, not missing provenance."
-    },
-    "dnd-5e-2024/equipment|ringofclumsinesscursed": {
-      "name": "Ring of Clumsiness (Cursed)",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "wrong-edition-attribution",
-      "evidence": "CORRECTED 2026-07-26. Same finding as the 2014 twin: \"Ring of Clumsiness\" appears verbatim in the pinned pf1e/magic-items denominator, so \"apparently invented\" was wrong. Open content of the d20/3.5 lineage, cited to SRD 5.2 which does not contain it."
     },
     "dnd-5e-2024/equipment|robesofthearchmagi": {
       "name": "Robes of the Archmagi",
@@ -654,12 +576,6 @@
       "taggedSource": "SRD 5.2",
       "class": "generic-entry-instantiation",
       "evidence": "SRD 5.2 ships the GENERIC entry \"Spell Scroll\", not pre-built instances; this row is one instance. SRD 5.2.1 magic-items.md even uses \"+1 Longsword\" as an EXAMPLE in its magic-item category table, confirming the pattern is open content while the instantiated name is not a source entry."
-    },
-    "dnd-5e-2024/equipment|scrollofprotection": {
-      "name": "Scroll of Protection",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH the 264-entry SRD 5.2.1 magic-items.md and the 362-entry SRD 5.1 magic-item list. It is a Dungeon Master’s Guide item, and NOT a Spell Scroll instance. Shipped tagged \"SRD 5.2\"; the identical entry also ships in the 2014 catalog tagged \"SRD 5.1\"."
     },
     "dnd-5e-2024/equipment|scrollofremovecurse": {
       "name": "Scroll of Remove Curse",
@@ -709,12 +625,6 @@
       "class": "wrong-edition-attribution",
       "evidence": "\"Bugbear\" is a verbatim SRD 5.1 monster name (present in 5e-bits/5e-database 2014) and is shipped by loadMonstersForSystem('dnd-5e-2014') too, but it has NO stat block in the SRD 5.2.1 bestiary — which names only qualified forms (Goblin Warrior, Priest Acolyte, Kobold Warrior, Warrior Veteran, …). GAPS §15.4 independently confirms the content is 5.1 content. Open content, FALSE citation: it ships tagged \"SRD 5.2\"."
     },
-    "dnd-5e-2024/monsters|captain": {
-      "name": "Captain",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "no bare \"Captain\" exists in SRD 5.1 or SRD 5.2.1 (5.1 has only Bandit Captain; 5.2 adds Guard/Hobgoblin/Pirate Captain). Shipped CR 2 / AC 16 does not match Bandit Captain (CR 2 / AC 15). Shipped tagged \"SRD 5.2\". GAPS §15.4 records the same three as having no 5.2.1 stat block under any name."
-    },
     "dnd-5e-2024/monsters|goblin": {
       "name": "Goblin",
       "taggedSource": "SRD 5.1",
@@ -733,18 +643,6 @@
       "class": "wrong-edition-attribution",
       "evidence": "\"Kobold\" is a verbatim SRD 5.1 monster name (present in 5e-bits/5e-database 2014) and is shipped by loadMonstersForSystem('dnd-5e-2014') too, but it has NO stat block in the SRD 5.2.1 bestiary — which names only qualified forms (Goblin Warrior, Priest Acolyte, Kobold Warrior, Warrior Veteran, …). GAPS §15.4 independently confirms the content is 5.1 content. Open content, FALSE citation: it ships tagged \"SRD 5.2\"."
     },
-    "dnd-5e-2024/monsters|necromancer": {
-      "name": "Necromancer",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "absent from SRD 5.1 and SRD 5.2.1; the 5e NPC of this name is Volo’s Guide to Monsters content. Shipped tagged \"SRD 5.2\". GAPS §15.4 records the same three as having no 5.2.1 stat block under any name."
-    },
-    "dnd-5e-2024/monsters|pixie": {
-      "name": "Pixie",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "wrong-edition-attribution",
-      "evidence": "CORRECTED 2026-07-26. \"Pixie\" is present in the pinned pf1e/monsters AND pf2e/monsters denominators and is a D&D 3.5 SRD stat block, so \"no counterpart in any cited open-content source\" is false. Separately, the shipped block (STR 3/DEX 18/INT 14/CHA 11, AC 15, CR 1/4) matches the SRD Sprite array rather than the 5e Monster Manual Pixie, so the prior \"Monster Manual content\" claim is also unsupported."
-    },
     "dnd-5e-2024/monsters|thug": {
       "name": "Thug",
       "taggedSource": "SRD 5.1",
@@ -762,480 +660,6 @@
       "taggedSource": "Hero's Handbook",
       "class": "denominator-scope-defect",
       "evidence": "'Improvised Weapon' is an official M&M 3e Hero's Handbook COMBAT, RANKED advantage on p.85 (PCGen mm_abilities.lst: 'Improvised Weapon ... TYPE:SpecialQuality.Advantage.Combat Advantage.Ranked ... SOURCEPAGE:p.85', text 'you use your Close Combat: Unarmed skill bonus for attack checks ... Additional ranks ... give you a +1 bonus to Damage with improvised weapons per rank ... limited by power level' — matching the shipped record's type 'combat', ranked true and near-verbatim benefit text); the frnprt/mm3e-character-creator ADVANTAGES array (js/data.js, 73 entries) simply omits it, carrying only the unrelated General advantage 'Improvised Tools'."
-    },
-    "mam3e/equipment|armoredspeedboat": {
-      "name": "Armored Speedboat",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|armoredtruck": {
-      "name": "Armored Truck",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|attackhelicopter": {
-      "name": "Attack Helicopter",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|axe": {
-      "name": "Axe",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|backpack": {
-      "name": "Backpack",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|bicycle": {
-      "name": "Bicycle",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|bombsuit": {
-      "name": "Bomb Suit",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|bugdetector": {
-      "name": "Bug Detector",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|bus": {
-      "name": "Bus",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|castle": {
-      "name": "Castle",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|climbinggear": {
-      "name": "Climbing Gear",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|combathelmet": {
-      "name": "Combat Helmet",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|combatstaff": {
-      "name": "Combat Staff",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|commercialjet": {
-      "name": "Commercial Jet",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|compactcar": {
-      "name": "Compact Car",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "generic-entry-instantiation",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. SRD ships the generic civilian car at cost 10; \"Compact Car\" is a smaller instance at cost 9. The generic row \"Car (Sedan)\" ships alongside it, so this is an instantiation, not absent content."
-    },
-    "mam3e/equipment|compoundbow": {
-      "name": "Compound Bow",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "generic-entry-instantiation",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. SRD \"Bow\" is the generic ranged weapon; \"Compound Bow\" is a modern instance. The generic row \"Bow\" ships alongside it, so this is an instantiation, not absent content."
-    },
-    "mam3e/equipment|dimensionalanchor": {
-      "name": "Dimensional Anchor",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|ducttape": {
-      "name": "Duct Tape",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|electronictoolkit": {
-      "name": "Electronic Toolkit",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "duplicate-alias",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"Toolkit (Basic)\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): cost 1 both; both grant the Technology-check bonus. A duplicated catalog row, not missing open content."
-    },
-    "mam3e/equipment|emergencybeacon": {
-      "name": "Emergency Beacon",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|energyshieldbracelet": {
-      "name": "Energy Shield Bracelet",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|evidencecollectionkit": {
-      "name": "Evidence Collection Kit",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "duplicate-alias",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"Toolkit (Forensic)\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): both +2 Investigation for forensics; cost 1 vs 2. A duplicated catalog row, not missing open content."
-    },
-    "mam3e/equipment|firestarter": {
-      "name": "Fire Starter",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|foodwater": {
-      "name": "Food & Water",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|forcefieldbelt": {
-      "name": "Force Field Belt",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|gravityboots": {
-      "name": "Gravity Boots",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|greatsword": {
-      "name": "Great Sword",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "generic-entry-instantiation",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. SRD \"Sword\" is the generic blade (Damage 3, cost 4); \"Great Sword\" is a named instance at the same cost. The generic row \"Sword\" ships alongside it, so this is an instantiation, not absent content."
-    },
-    "mam3e/equipment|heavybodyarmor": {
-      "name": "Heavy Body Armor",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|heavypowerarmor": {
-      "name": "Heavy Power Armor",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|helmet": {
-      "name": "Helmet",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|holographicprojector": {
-      "name": "Holographic Projector",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|hovercraft": {
-      "name": "Hovercraft",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|islandfortress": {
-      "name": "Island Fortress",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|jetpack": {
-      "name": "Jet Pack",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|largeapartment": {
-      "name": "Large Apartment",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|leatherjacket": {
-      "name": "Leather Jacket",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "duplicate-alias",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"Leather Armor\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): cost 1 both; \"minimal protection\" vs \"Protection 1\". A duplicated catalog row, not missing open content."
-    },
-    "mam3e/equipment|lightaircraft": {
-      "name": "Light Aircraft",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|lightbodyarmor": {
-      "name": "Light Body Armor",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|lightpowerarmor": {
-      "name": "Light Power Armor",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|machinegun": {
-      "name": "Machine Gun",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|magicwand": {
-      "name": "Magic Wand",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|mobilebase": {
-      "name": "Mobile Base",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|motorcyclehelmet": {
-      "name": "Motorcycle Helmet",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|mysticamulet": {
-      "name": "Mystic Amulet",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|net": {
-      "name": "Net",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|officebuilding": {
-      "name": "Office Building",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "generic-entry-instantiation",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. HQ rows are generic size tiers; \"Office Building\" is a themed instance of the Huge tier. The generic row \"HQ: Size – Huge (skyscraper)\" ships alongside it, so this is an instantiation, not absent content."
-    },
-    "mam3e/equipment|pickuptruck": {
-      "name": "Pickup Truck",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "generic-entry-instantiation",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. SRD ships the generic light truck at cost 12; \"Pickup Truck\" is an instance at cost 10. The generic row \"SUV/Truck\" ships alongside it, so this is an instantiation, not absent content."
-    },
-    "mam3e/equipment|pocketdimension": {
-      "name": "Pocket Dimension",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "undetermined",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. Nearest SRD row is a generic HQ size tier at cost 3; the shipped extradimensional HQ costs 20. The 6.7x cost gap and the extradimensional concept make the match too weak to assert either way. Kept visible rather than asserted either way."
-    },
-    "mam3e/equipment|portablecomputer": {
-      "name": "Portable Computer",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "duplicate-alias",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"Computer\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): cost 1 both; \"laptop or tablet\" vs \"standard computer with peripherals\". A duplicated catalog row, not missing open content."
-    },
-    "mam3e/equipment|portablemedkit": {
-      "name": "Portable Medkit",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "duplicate-alias",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"First Aid Kit\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): both +2 Treatment; cost 2 vs 1. A duplicated catalog row, not missing open content."
-    },
-    "mam3e/equipment|poweredarmor": {
-      "name": "Powered Armor",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|powerring": {
-      "name": "Power Ring",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|radio": {
-      "name": "Radio",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "duplicate-alias",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"Commlink\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): cost 1 both; \"handheld radio transceiver\" vs \"Radio Communication 1\". A duplicated catalog row, not missing open content."
-    },
-    "mam3e/equipment|riotarmor": {
-      "name": "Riot Armor",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|riotshield": {
-      "name": "Riot Shield",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|rope": {
-      "name": "Rope",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|secretlair": {
-      "name": "Secret Lair",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|semitruck": {
-      "name": "Semi Truck",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|smallapartment": {
-      "name": "Small Apartment",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|spaceshuttle": {
-      "name": "Space Shuttle",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|spacestation": {
-      "name": "Space Station",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|spyglasses": {
-      "name": "Spy Glasses",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|staff": {
-      "name": "Staff",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "undetermined",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. SRD has no Staff. Club (bludgeoning, Damage 2, cost 2) is the nearest row but a quarterstaff is a distinct weapon and the cost differs (1 vs 2); neither \"same entry\" nor \"no counterpart\" is established. Kept visible rather than asserted either way."
-    },
-    "mam3e/equipment|stealthjet": {
-      "name": "Stealth Jet",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|stunbaton": {
-      "name": "Stun Baton",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|submarine": {
-      "name": "Submarine",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|survivalkit": {
-      "name": "Survival Kit",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|tacticalbodyarmor": {
-      "name": "Tactical Body Armor",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|tacticalvest": {
-      "name": "Tactical Vest",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|tank": {
-      "name": "Tank",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|telepathicheadband": {
-      "name": "Telepathic Headband",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|throwingknife": {
-      "name": "Throwing Knife",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "generic-entry-instantiation",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. SRD \"Knife\" is the generic blade; \"Throwing Knife\" is a balanced-for-throwing instance. The generic row \"Knife\" ships alongside it, so this is an instantiation, not absent content."
-    },
-    "mam3e/equipment|trackingdevice": {
-      "name": "Tracking Device",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "duplicate-alias",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"Mini-Tracer\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): both a small radio/GPS tracker; cost 2 vs 1. A duplicated catalog row, not missing open content."
-    },
-    "mam3e/equipment|unarmed": {
-      "name": "Unarmed",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|undergroundbunker": {
-      "name": "Underground Bunker",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|underwaterbase": {
-      "name": "Underwater Base",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|utilitybelt": {
-      "name": "Utility Belt",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|webshooters": {
-      "name": "Web Shooters",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
-    },
-    "mam3e/equipment|yacht": {
-      "name": "Yacht",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/powers|alternateform": {
       "name": "Alternate Form",
@@ -1740,18 +1164,6 @@
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present in the pinned PSRD manifest under the Magic Items scope, not the scope this row diffs against. Both pf1e targets in src/scripts/srd-coverage.ts share one merged loader (loadEquipmentForSystem('pf1e'), 616 entries) but each diffs only half the manifest, so every entry in the other half prints as a false suspect."
-    },
-    "pf1e/equipment|cloakofflying": {
-      "name": "Cloak of Flying",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "No counterpart under any name: absent from the 590-entry PSRD PF1e Core manifest, from the D&D 3.5 SRD cloak list and its flight items (only Broom of Flying, Carpet of Flying, Wings of Flying), and from the SRD 5.2 cloak list; the nearest 3.5 analogue 'Wings of Flying' is 54,000 gp and is a cloak-that-becomes-wings, whereas the shipped item is a 55,000 gp 'Cloak of Flying' granting fly-at-will — apparently invented."
-    },
-    "pf1e/equipment|cloakofinvisibility": {
-      "name": "Cloak of Invisibility",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "wrong-edition-attribution",
-      "evidence": "Not in the PSRD PF1e Core item manifest and not in the D&D 3.5 SRD (whose complete cloak list is Arachnida / Charisma / Displacement / Elvenkind / Etherealness / Poisonousness / Resistance / the Bat / the Manta Ray), but it IS in the D&D SRD 5.1/5.2 magic-item list (scratchpad srd52-magic-items.md contains 'Cloak of Invisibility'); shipped in the pf1e catalog tagged source 'Core Rulebook' with an unsourced 62,000 gp price (the 5e SRD assigns no gp prices)."
     },
     "pf1e/equipment|cloakofresistance": {
       "name": "Cloak of Resistance",
@@ -3883,18 +3295,6 @@
       "class": "wrong-edition-attribution",
       "evidence": "Absent from the PSRD PF1e Core item manifest (PF1e replaced it with 'Headband of Alluring Charisma', which the loader ships at 4,000 gp) but present verbatim in the D&D 3.5 SRD ('Cloak of Charisma: ... adds a +2, +4, or +6 enhancement bonus to her Charisma score'; minor table 'Cloak of Charisma +2 — 4,000 gp'); shipped tagged source 'Core Rulebook' at an unsourced 30,000 gp."
     },
-    "pf1e/magic-items|cloakofflying": {
-      "name": "Cloak of Flying",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "No counterpart under any name: absent from the 590-entry PSRD PF1e Core manifest, from the D&D 3.5 SRD cloak list and its flight items (only Broom of Flying, Carpet of Flying, Wings of Flying), and from the SRD 5.2 cloak list; the nearest 3.5 analogue 'Wings of Flying' is 54,000 gp and is a cloak-that-becomes-wings, whereas the shipped item is a 55,000 gp 'Cloak of Flying' granting fly-at-will — apparently invented."
-    },
-    "pf1e/magic-items|cloakofinvisibility": {
-      "name": "Cloak of Invisibility",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "wrong-edition-attribution",
-      "evidence": "Not in the PSRD PF1e Core item manifest and not in the D&D 3.5 SRD (whose complete cloak list is Arachnida / Charisma / Displacement / Elvenkind / Etherealness / Poisonousness / Resistance / the Bat / the Manta Ray), but it IS in the D&D SRD 5.1/5.2 magic-item list (scratchpad srd52-magic-items.md contains 'Cloak of Invisibility'); shipped in the pf1e catalog tagged source 'Core Rulebook' with an unsourced 62,000 gp price (the 5e SRD assigns no gp prices)."
-    },
     "pf1e/magic-items|club": {
       "name": "Club",
       "taggedSource": "Core Rulebook",
@@ -5359,12 +4759,6 @@
       "class": "naming-variant",
       "evidence": "CRB has 'Chalk (10)' (items-crb.json, Adventuring Gear, 1 cp); shipped 'Chalk (10 pieces)' costs 1 cp - exact price match, only the quantity-suffix wording differs."
     },
-    "pf2e/equipment|chisel": {
-      "name": "Chisel",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "No chisel in items-crb.json, items/baseitems.json, any of the 90 Pf2eTools item files, the 3715-item PF1e PSRD corpus, or the D&D 5e SRD equipment/tools tables - apparently invented (a generic mundane tool, so no real licensing exposure)."
-    },
     "pf2e/equipment|club": {
       "name": "Club",
       "taggedSource": "Core Rulebook",
@@ -5448,18 +4842,6 @@
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
-    },
-    "pf2e/equipment|fieldplate": {
-      "name": "Field Plate",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "No 'Field Plate' in items-crb.json, items/baseitems.json (410 rows, all sources), any of the 90 Pf2eTools item files, the PF1e PSRD corpus (3715 items), or the D&D 5e SRD armor table. 'Field plate' is an AD&D 2nd Edition armor name; there is no open-content counterpart."
-    },
-    "pf2e/equipment|file": {
-      "name": "File",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "No file (tool) in items-crb.json, items/baseitems.json, any Pf2eTools item file, the PF1e PSRD corpus, or the D&D 5e SRD - apparently invented (a generic mundane tool, so no real licensing exposure)."
     },
     "pf2e/equipment|flail": {
       "name": "Flail",
@@ -6049,12 +5431,6 @@
       "class": "wrong-edition-attribution",
       "evidence": "D&D 5e SRD 'Tinderbox (5 SP)' - shipped cost is exactly 5 sp. PF2e CRB's fire-starter is 'Flint and Steel' (5 cp), which the loader does not ship; PF1e's is 'Tindertwig' (1 gp). No tinderbox in any Pathfinder source."
     },
-    "pf2e/equipment|tongs": {
-      "name": "Tongs",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "No tongs in items-crb.json, items/baseitems.json, any Pf2eTools item file, the PF1e PSRD corpus (substring 'tong' returns only Flame Tongue / Potion of Tongues), or the D&D 5e SRD - apparently invented (a generic mundane tool, so no real licensing exposure)."
-    },
     "pf2e/equipment|towershield": {
       "name": "Tower Shield",
       "taggedSource": "Core Rulebook",
@@ -6163,12 +5539,6 @@
       "class": "duplicate-alias",
       "evidence": "The loader already ships CRB Enlarge at src/data/pathfinder/2e/spells/level-2.ts:327 and this row at level-2.ts:367; the shipped description is verbatim spells-crb.json Enlarge entries ('Bolstered by magical power, the target grows to size Large... The creature is clumsy 1. Its reach increases by 5 feet'), same level 2 transmutation - the name is the D&D 5e style merge of PF2e's separate Enlarge and Shrink."
     },
-    "pf2e/spells|entreat": {
-      "name": "Entreat",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "No entry named Entreat exists in any of the 59 Pf2eTools spells/*.json files (2059 spells) nor in the 1543-spell PF1e PSRD corpus (book-cr/apg/uc/um/ue/acg/arg/...); its effect text ('compelled to comply with a reasonable request') loosely paraphrases CRB Command, which the loader already ships separately at level-1.ts:127 with the correct CRB text - apparently invented filler."
-    },
     "pf2e/spells|featherstep": {
       "name": "Feather Step",
       "taggedSource": "Pathfinder 1e Advanced Player's Guide",
@@ -6181,12 +5551,6 @@
       "class": "wrong-edition-attribution",
       "evidence": "PF1e/3.5 SRD 'Fire Storm' (PSRD book-cr.db section 226: druid 7 / cleric 8, 1d6 fire per caster level, Reflex save); shipped record is level 7 divine+primal cleric/druid with a Reflex save and an area given as 'five 10-foot cubes' - the N-10-foot-cubes area idiom is 3.5/PF1e Fire Storm's, and no Pf2eTools file contains any spell named Firestorm or Fire Storm."
     },
-    "pf2e/spells|floatingshroud": {
-      "name": "Floating Shroud",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from all 2059 Pf2eTools spells and from the 1543-spell PF1e PSRD corpus (substring search for 'shroud' returns only feats/abilities/magic items, no spell); shipped as a level 1 arcane abjuration granting concealment vs ranged attacks - no known counterpart, apparently invented."
-    },
     "pf2e/spells|forcecage": {
       "name": "Forcecage",
       "taggedSource": "SRD 5.1",
@@ -6198,24 +5562,6 @@
       "taggedSource": "Secrets of Magic",
       "class": "wrong-edition-attribution",
       "evidence": "Not in spells-crb.json under any name; the only PF2e Geyser is spells/spells-som.json (Secrets of Magic, level 5, 3d6 bludgeoning + 4d6 fire), while the shipped record (level 6, 7d12 fire, arcane+primal, druid/sorcerer/wizard, 'geyser of boiling water') tracks PF1e APG Geyser (PSRD book-apg.db section 131, 'Creates a geyser of boiling water', druid 4 / sorcerer 5 / wizard 5) - either way the 'Core Rulebook' source tag is wrong."
-    },
-    "pf2e/spells|harmlesshealing": {
-      "name": "Harmless Healing",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from all Pf2eTools spells files and from the PF1e PSRD corpus; the loader already ships CRB Heal at level-1.ts:450 (necromancy, 1 action, 1d8) while this record is conjuration/2-action/1d8 divine+primal - closest real analogue is PF1e Cure Light Wounds (conjuration healing, cleric 1/druid 1, 1d8) but the name matches nothing, so treat as invented."
-    },
-    "pf2e/spells|jumpingjack": {
-      "name": "Jumping Jack",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from all 2059 Pf2eTools spells and the 1543-spell PF1e PSRD corpus; it is defined at src/data/pathfinder/2e/spells/level-1.ts:567 immediately after the genuine CRB Jump entry (whose heightened-3rd text is verbatim CRB) - no known counterpart, apparently invented."
-    },
-    "pf2e/spells|misdirectionmass": {
-      "name": "Misdirection, Mass",
-      "taggedSource": "Original Content (not SRD)",
-      "class": "genuine-non-open-content",
-      "evidence": "The 'Name, Mass' title format and the body text 'affect one creature per caster level' are d20/PF1e idioms (PF2e has no caster level), and the base spell Misdirection is PF1e CRB level 2 (PSRD book-cr.db section 380) - but no Mass Misdirection exists in the PF1e PSRD corpus, the 3.5 SRD spell lists, or any Pf2eTools file, so this specific Mass variant appears fabricated on top of PF1e Misdirection."
     }
   }
 }

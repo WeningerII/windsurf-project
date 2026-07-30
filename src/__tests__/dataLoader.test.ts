@@ -153,7 +153,12 @@ describe('Data Loader Integration Tests', () => {
       // 502 -> 492: the provenance verdicts deleted 5 non-SRD magic items and
       // retagged 5 gear rows to their true 'SRD 5.1' source, which the 5.2-only
       // dnd-5e-2024 allowlist filters out (docs/GAPS.md §18).
-      expect(equipment.length).toBe(497);
+      // 497 -> 492: five deleted 2026-07-30. Three were tagged
+      // `Original Content (not SRD)` (Cloak of Billowing, Scroll of Protection,
+      // Ring of Clumsiness); two more — Cloak of the Archmagi and Pegasus Boots
+      // — were the same invented content still claiming `SRD 5.2` here, while
+      // their 2014 twins carried the honest tag.
+      expect(equipment.length).toBe(492);
       expect(new Set(equipment.map((e) => e.id)).size).toBe(equipment.length);
     });
   });
@@ -166,7 +171,9 @@ describe('Data Loader Integration Tests', () => {
       // appended focus-spell entries. srd:coverage verifies independently.
       // 551 -> 548: Forcecage, Geyser and Feather Step now carry their true
       // (non-CRB) source and are filtered by the pf2e allowlist.
-      expect(spells.length).toBe(551);
+      // 551 -> 546: five self-authored spells (Entreat, Floating Shroud,
+      // Harmless Healing, Jumping Jack, Mass Misdirection) deleted 2026-07-30.
+      expect(spells.length).toBe(546);
       expect(spells.every((spell) => spell.traditions && spell.traditions.length > 0)).toBe(true);
       expect(
         spells
@@ -212,7 +219,9 @@ describe('Data Loader Integration Tests', () => {
       const spells = await loadSpellsForSystem('dnd-3.5e');
       // 610 -> 609: Bleed is Pathfinder Core Rulebook content, not SRD 3.5, and
       // its truthful tag is not on the dnd-3.5e allowlist.
-      expect(spells.length).toBe(609);
+      // 609 -> 607: Mass Misdirection and Reversal of Fortune were written for
+      // this app rather than transcribed, and were deleted 2026-07-30.
+      expect(spells.length).toBe(607);
       const fingerprints = spells.map((spell) => {
         const {
           id: _id,

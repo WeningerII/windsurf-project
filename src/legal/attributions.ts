@@ -195,12 +195,10 @@ export const legalAttributions: LegalAttributions = {
         '(d20herosrd.com). The full §15 chain of title is reproduced below. The only ' +
         'Product Identity in the M&M game, the resource terms “Hero Points” and ' +
         '“Power Points”, is used here for identification and compatibility only and is ' +
-        'not claimed as Open Game Content. Not every M&M entry this app ships is ' +
-        'drawn from that Open Game Content: 79 equipment entries were written for ' +
-        'this application and have no Hero SRD counterpart. They are segregated in ' +
-        'src/data/mutants-and-masterminds/3e/equipment/original-not-srd.ts and cited ' +
-        '“Original Content (not SRD)” rather than being attributed to a book they ' +
-        'were not transcribed from.',
+        'not claimed as Open Game Content. Every M&M equipment entry this app ships is ' +
+        'drawn from that Open Game Content: 79 entries that had been written for this ' +
+        'application, with no Hero SRD counterpart, were deleted 2026-07-30 rather than ' +
+        'shipped alongside it.',
       section15: [
         OGL_SECTION_15,
         D20_SRD_SECTION_15,

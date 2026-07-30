@@ -55,15 +55,12 @@ silently dropped: the **62 remote branch deletions** (§0.2), the **orphaned
 feat-automation copy** (§4.3), and **ratification of the four kept sheet
 wrappers** (§4.3).
 
-### 0.1 Open-content licensing: two populations shipping under source tags they do not have
+### 0.1 ~~Open-content licensing: two populations shipping under source tags they do not have~~ — **M&M HALF DECIDED AND EXECUTED 2026-07-30; backgrounds still open**
 
-Two findings, same defect class, both remedy-is-owner's-call. The tooling has produced the evidence; the product decision is yours.
-
-- **5e-2024 backgrounds.** All four ship tagged `SRD 5.2` while carrying the *2014* model. SRD 5.1 contains exactly one background (Acolyte), so the Criminal / Sage / Soldier text is *Player's Handbook* content — not open. The name-based reverse diff cannot see this, because the names are legitimate SRD 5.2 names.
-- **M&M 3e equipment.** The audit sharpened this: **64** entries (not 79) have no Hero SRD counterpart — of the original 79 suspects, 7 turned out to be duplicate rows of an SRD entry that also ships, 6 pre-built instances of a generic SRD row, and 2 too ambiguous to call. The 64 are honestly labelled `Original Content (not SRD)` and machine-separated, so **nothing is currently mislabelled**. What remains is trade dress: names like `Power Ring`, `Web Shooters`, `Mystic Amulet` and `Magic Wand` evoke recognisable characters regardless of tagging. Whether they ship is a product judgment, not an engineering one.
+- ~~**M&M 3e equipment.**~~ **DONE.** The finding was that 64 entries had no Hero SRD counterpart (of the original 79 suspects, 7 were duplicate rows of an SRD entry that also ships, 6 pre-built instances of a generic SRD row, 2 too ambiguous to call). They were honestly labelled `Original Content (not SRD)` and machine-separated, so nothing was *mislabelled*; what remained was trade dress — `Power Ring`, `Web Shooters`, `Mystic Amulet`, `Magic Wand`. **Owner decision: delete.** All 79 entries in that module are gone, and so are the other 27 that shipped through the same `originalContentSources` channel across the d20 catalogs — 106 in total, plus 2 more (`Cloak of the Archmagi`, `Pegasus Boots`) that were the same invented content still carrying a false `SRD 5.2` tag in the 2024 catalog. The channel itself is deleted, so self-authored content now fails the gate instead of being admitted. `genuine-non-open-content` in the over-inclusion ledger went **89 → 0**. See `GAPS` §17.3.
+- **5e-2024 backgrounds — STILL OPEN.** All four ship tagged `SRD 5.2` while carrying the *2014* model. SRD 5.1 contains exactly one background (Acolyte), so the Criminal / Sage / Soldier text is *Player's Handbook* content — not open. The name-based reverse diff cannot see this, because the names are legitimate SRD 5.2 names. This is the `wrong-edition-attribution` class (§2.1), not the deleted-homebrew class: the remedy is a re-tag that drops them, or replacement with genuine SRD 5.2 origins.
 
 **Unblocks:** the Phase-1 content close-out, and `p7.release` — neither should ship with an unresolved licensing question.
-**Options:** keep as-is (already honestly labelled) · replace the three backgrounds with genuine SRD 5.2 origins · remove the invented M&M items · some combination.
 
 ### 0.2 ~~Which of the three unmerged shelf branches are live?~~ — **DECIDED 2026-07-26: delete deliberately**
 
@@ -133,7 +130,7 @@ Two separate features, same shape: **the expensive half is built and the cheap h
 
 A lane classified all 1,069 over-inclusion suspects across the seven systems and **died on a session limit before committing**. The work survived only as uncommitted changes in a container-local worktree on a branch never pushed to origin.
 
-Recovered in `544967c`, completed and enforced in `d34e776`. The gate now runs inside `npm run verify` and passes on all **1,045** current suspects (the population shrank because the M&M lane removed 24 entries). Full account in `GAPS.md` §18.
+Recovered in `544967c`, completed and enforced in `d34e776`. The gate now runs inside `npm run verify` and passes on all **925** current suspects (1,045 when this was written; the population shrank as the M&M lane removed 24 entries and the 2026-07-30 deletions removed 109 more). Full account in `GAPS.md` §18.
 
 Two things worth carrying forward:
 
@@ -148,17 +145,17 @@ The content denominator is mid-migration. Read §2.2 before starting anything el
 
 ### 2.1 `p1.provenance-over-inclusion-audit` — ~~BLOCKED on 1.1~~ **classification DONE, remedies are owner decisions**
 
-All 1,045 suspects are classified with evidence and held by a gate that is a proven ratchet (all five failure modes made to fire against a control run). What remains is **not** classification work:
+All 925 suspects are classified with evidence and held by a gate that is a proven ratchet (all five failure modes made to fire against a control run). What remains is **not** classification work:
 
-- **31 records ship content with no open-content counterpart anywhere — the licensing-exposure number.** Not 95: of the 95 `genuine-non-open-content` records, 64 are M&M originals that §17 already relabelled honestly to `Original Content (not SRD)`. They stay in the licensing class because absence of a counterpart is the *finding*, and because whether `Power Ring` / `Web Shooters` / `Mystic Amulet` ship at all is a trade-dress judgment — see §0.1, same owner decision.
-- **Separately, 78 `wrong-edition-attribution` records carry a false citation over genuinely open content** (§18.5.3). No licence exposure — the content is OGL — but the product asserts a provenance it does not have.
+- ~~**31 records ship content with no open-content counterpart anywhere — the licensing-exposure number.**~~ **CLOSED 2026-07-30: the number is 0.** The class stood at 89 `genuine-non-open-content` records after the 2026-07-29 re-record. Every one of them was content this project wrote rather than transcribed, so the owner's answer was to delete it: 106 entries admitted through the `originalContentSources` channel, plus `Cloak of the Archmagi` and `Pegasus Boots` which were the same invented content still claiming `SRD 5.2`. The channel is gone too. The ledger now reports **`genuine-non-open-content` = 0** and the total falls 1034 → 925. See `GAPS` §17.3.
+- **Separately, 68 `wrong-edition-attribution` records carry a false citation over genuinely open content** (§18.5.3; was 78, then 73 after the allowlists were widened to admit the books by their true names, then 68 once the deleted homebrew stopped shadowing rows). No licence exposure — the content is OGL — but the product asserts a provenance it does not have.
 
   **Correction, 2026-07-26: these are NOT a cheap re-tag.** Measured against the per-system allowlists in `src/utils/openContentPolicy.ts`, **75 of the 78 would be dropped from the product if re-tagged to their true source.** The reason is structural, not incidental: a wrong-edition record is by definition content from an edition the system's allowlist does not admit, so `filterOpenContentBySource` removes it the moment the tag becomes honest. `Cloak of Etherealness` ships in the 2024 catalog tagged `SRD 5.2`; its true source is SRD 5.1; the 2024 allowlist admits only 5.2 — so the honest tag deletes it. The sharpest case is PF2e equipment, where **47 of 188 rows** are PF1e/5e content tagged `Core Rulebook`.
 
   So this is an owner decision of the same class as the 31, not cleanup. Options: re-tag honestly and lose ~75 entries · widen the allowlists to admit cross-edition open content (weakens what the policy claims) · leave as-is · replace with genuine same-edition equivalents (most work, best product). GAPS §18.5 warned about exactly this; an earlier revision of this file called it "mechanical, no risk" and was wrong.
 - **Nothing was deleted or relabelled, deliberately.** `filterOpenContentBySource` drops any entry whose source leaves the allowlist, so re-tagging silently removes shipped content from the product. That is the owner's call, not a cleanup.
 - **Three measurement defects are diagnosed, not repaired** — repairing one moves published coverage percentages, so it is a deliberate, separately-scoped change.
-- **Two records are `undetermined` and say why** (§18.7): `Cap of Water Breathing` and `Captain`.
+- ~~**Two records are `undetermined` and say why** (§18.7): `Cap of Water Breathing` and `Captain`.~~ **Moot 2026-07-30 — both were self-authored entries and were deleted.** The class is now empty.
 
 **Known remainder:** 21 non-SRD M&M powers and 1 advantage still ship under `Hero's Handbook` — same defect class as the equipment finding, untreated. These now sit in the gate as `denominator-scope-defect` and are the obvious next tranche.
 
@@ -266,7 +263,7 @@ Pinned end to end by `src/__tests__/rules/sceneCombatBridge.test.ts`: a fire-res
 
 ## 4. Parity — the all-seven-equal spine
 
-### 4.1 `p4.parity-matrix` — close the 7×N matrix — **BLOCKED on 0.1-class decision, not on work**
+### 4.1 `p4.parity-matrix` — close the 7×N matrix — **held on an owner decision, not on work**
 
 Cannot be honestly closed while one system has no creature catalog. §2.3 (corrected 2026-07-28) establishes that the source **does** exist and is open — the obstacle is that CI cannot reach it, not that it is unavailable. So this is closable work, gated on the owner picking `GAPS.md` §19.4(d) (fetch once from an unblocked connection, pin, encode offline) or one of the fallbacks.
 
@@ -601,9 +598,9 @@ Small, real, and each found while checking something else.
 
 ---
 
-## 8. Release — `p7.release` — **BLOCKED on 0.1**
+## 8. Release — `p7.release` — **held for the wrong-edition attribution pile**
 
-Release engineering and launch. Should not begin while an open-content licensing question is unresolved.
+Release engineering and launch. Should not begin while an open-content licensing question is unresolved. The self-authored half is closed — that content is deleted and `genuine-non-open-content` is 0 — so what still holds release is the 68 `wrong-edition-attribution` records (§2.1) plus the four 5e-2024 backgrounds: real open content asserting a provenance it does not have.
 
 ---
 

@@ -185,9 +185,11 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
   },
   {
     // Item-by-item record of the M&M 3e equipment provenance repair (which
-    // hand-written entry was reconciled to which Hero SRD row, which were kept
-    // as original content). Names shipped encoder / gate / data paths, so
-    // path_ref_rule applies and keeps the record honest about what exists.
+    // hand-written entry was reconciled to which Hero SRD row, and which were
+    // segregated as original content and later deleted — 2026-07-30, GAPS
+    // §17.3). Names shipped encoder / gate / data paths, so path_ref_rule
+    // applies and keeps the record honest about what exists; that rule is what
+    // caught the stale `original-not-srd.ts` reference when the module went.
     path: 'docs/mam3e-equipment-provenance.md',
     kind: 'live',
     owner: 'mam3e-equipment-provenance',

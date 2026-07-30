@@ -218,7 +218,6 @@ async function loadSystemCatalogSummaryFromMetadataInternal(
           'equipment',
           'Equipment',
           mm3eMetadata.stats.equipment.vehicles +
-            mm3eMetadata.stats.equipment.devices +
             mm3eMetadata.stats.equipment.headquarters +
             mm3eMetadata.stats.equipment.weapons +
             mm3eMetadata.stats.equipment.armor +

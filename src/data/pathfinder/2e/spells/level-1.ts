@@ -164,41 +164,6 @@ export const level1Spells: Spell[] = withPf2eSpellTraits([
     classes: ['bard', 'cleric'],
   },
   {
-    id: 'entreat-pf2e',
-    name: 'Entreat',
-    system: 'pf2e',
-    source: 'Original Content (not SRD)',
-    level: 1,
-    school: 'enchantment',
-    traditions: ['divine', 'occult'],
-    castingTime: {
-      type: 'action',
-      amount: 2,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    savingThrow: {
-      attribute: 'wis',
-      success: 'none',
-    },
-    savingThrowText: 'Will save',
-    concentration: false,
-    ritual: false,
-    description:
-      'You make a request of a creature. The target must attempt a Will save. On a failure, it is compelled to comply with a reasonable request.',
-    classes: ['bard', 'cleric'],
-  },
-  {
     id: 'fear-pf2e',
     name: 'Fear',
     system: 'pf2e',
@@ -266,36 +231,6 @@ export const level1Spells: Spell[] = withPf2eSpellTraits([
     ritual: false,
     description: 'The target can move through difficult terrain without penalty for 1 minute.',
     classes: ['druid', 'ranger'],
-  },
-  {
-    id: 'floating-shroud-pf2e',
-    name: 'Floating Shroud',
-    system: 'pf2e',
-    source: 'Original Content (not SRD)',
-    level: 1,
-    school: 'abjuration',
-    traditions: ['arcane'],
-    castingTime: {
-      type: 'action',
-      amount: 2,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'minutes',
-      minutes: 10,
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'A shroud of mist surrounds the target, granting concealment against ranged attacks.',
-    classes: ['sorcerer', 'wizard'],
   },
   {
     id: 'grease-pf2e',
@@ -418,34 +353,6 @@ export const level1Spells: Spell[] = withPf2eSpellTraits([
     classes: ['druid', 'sorcerer', 'wizard'],
   },
   {
-    id: 'harmless-healing-pf2e',
-    name: 'Harmless Healing',
-    system: 'pf2e',
-    source: 'Original Content (not SRD)',
-    level: 1,
-    school: 'conjuration',
-    traditions: ['divine', 'primal'],
-    castingTime: {
-      type: 'action',
-      amount: 2,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    concentration: false,
-    ritual: false,
-    description: 'A creature you touch regains 1d8 hit points.',
-    classes: ['cleric', 'druid'],
-  },
-  {
     id: 'heal-pf2e',
     name: 'Heal',
     system: 'pf2e',
@@ -561,35 +468,6 @@ export const level1Spells: Spell[] = withPf2eSpellTraits([
       },
     },
     classes: ['druid', 'ranger', 'sorcerer', 'wizard'],
-  },
-  {
-    id: 'jumping-jack-pf2e',
-    name: 'Jumping Jack',
-    system: 'pf2e',
-    source: 'Original Content (not SRD)',
-    level: 1,
-    school: 'transmutation',
-    traditions: ['arcane'],
-    castingTime: {
-      type: 'action',
-      amount: 2,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'minutes',
-      minutes: 1,
-    },
-    concentration: false,
-    ritual: false,
-    description: 'The target can jump twice as far as normal.',
-    classes: ['sorcerer', 'wizard'],
   },
   {
     id: 'lock-pf2e',

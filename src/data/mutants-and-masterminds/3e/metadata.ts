@@ -19,23 +19,15 @@ import { skillAdvantages } from './advantages/skill';
 import { skills } from './skills/index';
 import { complications } from './complications/index';
 import { mm3eArchetypes } from './archetypes/index';
-// Equipment ships in two provenance tiers (see ./equipment/index.ts): the
-// encoder-generated Hero SRD set and the hand-written original set. The counts
-// below are the union, so the product totals stay honest about everything a
-// player can actually browse.
+// Equipment ships in exactly one provenance tier (see ./equipment/index.ts):
+// the encoder-generated Hero SRD set. The hand-written original set — and with
+// it the only `devices` this catalog ever had — was deleted 2026-07-30, so
+// these counts are the whole browsable catalog.
 import { mam3eSrdWeapons } from './equipment/srd-weapons';
 import { mam3eSrdArmor } from './equipment/srd-armor';
 import { mam3eSrdVehicles } from './equipment/srd-vehicles';
 import { mam3eSrdGear } from './equipment/srd-gear';
 import { mam3eSrdHeadquarters } from './equipment/srd-headquarters';
-import {
-  mam3eOriginalWeapons,
-  mam3eOriginalArmor,
-  mam3eOriginalVehicles,
-  mam3eOriginalDevices,
-  mam3eOriginalGear,
-  mam3eOriginalHeadquarters,
-} from './equipment/original-not-srd';
 
 export const mm3eMetadata = {
   system: 'mam3e',
@@ -79,12 +71,11 @@ export const mm3eMetadata = {
     },
 
     equipment: {
-      vehicles: mam3eSrdVehicles.length + mam3eOriginalVehicles.length,
-      devices: mam3eOriginalDevices.length,
-      headquarters: mam3eSrdHeadquarters.length + mam3eOriginalHeadquarters.length,
-      weapons: mam3eSrdWeapons.length + mam3eOriginalWeapons.length,
-      armor: mam3eSrdArmor.length + mam3eOriginalArmor.length,
-      gear: mam3eSrdGear.length + mam3eOriginalGear.length,
+      vehicles: mam3eSrdVehicles.length,
+      headquarters: mam3eSrdHeadquarters.length,
+      weapons: mam3eSrdWeapons.length,
+      armor: mam3eSrdArmor.length,
+      gear: mam3eSrdGear.length,
     },
 
     archetypes: {
@@ -117,7 +108,6 @@ export function getProgress(): number {
     stats.skills.count +
     stats.complications.count +
     stats.equipment.vehicles +
-    stats.equipment.devices +
     stats.equipment.headquarters +
     stats.equipment.weapons +
     stats.equipment.armor +

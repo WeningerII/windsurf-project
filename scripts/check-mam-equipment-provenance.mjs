@@ -22,15 +22,16 @@
  *      SRD and is not in it — the original defect — fails here.
  *   B. FULL COVERAGE, RATCHETED. Every one of the manifest's entries must ship.
  *      Deleting or renaming a generated SRD entry fails.
- *   C. HONEST NON-SRD LABEL. Entries outside the SRD set must carry a declared
- *      `originalContentSources` label for mam3e, never an open-content one, and
- *      must live in the non-SRD module. A label nobody declared fails.
+ *   C. NOTHING BUT THE SRD. Every shipped entry must cite a Hero SRD source.
+ *      There is no second tier any more: ./original-not-srd.ts held 79
+ *      hand-written entries under `Original Content (not SRD)` and was deleted
+ *      2026-07-30 (owner decision — this app transcribes open documents, it does
+ *      not author game content). A re-added self-written entry fails here no
+ *      matter how it is labelled, which is the point of asserting it rather than
+ *      trusting the directory to stay empty.
  *   D. NO DUPLICATES. No repeated id and no repeated name across the whole
  *      equipment tree. `Plate Armor` and `Chain Mail` each shipped TWICE under
  *      different ids, which id-based dedupe could not see.
- *   E. THE POLICY AND THE DATA AGREE. The label the data module exports
- *      (`MAM3E_ORIGINAL_SOURCE`) must be one the policy declares, so the two
- *      cannot drift apart.
  *
  * Run: npm run check:mam-equipment
  * Refresh the manifest: node scripts/encode-mam-equipment.mjs
@@ -40,7 +41,6 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { strictOpenContentPolicy } from '../src/utils/openContentPolicy.ts';
 import * as equipment from '../src/data/mutants-and-masterminds/3e/equipment/index.ts';
-import { MAM3E_ORIGINAL_SOURCE } from '../src/data/mutants-and-masterminds/3e/equipment/original-not-srd.ts';
 
 const root = process.cwd();
 const MANIFEST = 'scripts/data/mam3e-equipment-manifest.json';
@@ -63,24 +63,9 @@ const normalizeName = (s) =>
     .replace(/[^a-z0-9]+/g, '');
 
 const srdSources = new Set(policy.allowedSources.map(normalizeSource));
-const originalSources = new Set((policy.originalContentSources ?? []).map(normalizeSource));
 
-// E. The label the data exports must be one the policy declares as original
-// content — and must NOT also be an open-content label.
-if (!originalSources.has(normalizeSource(MAM3E_ORIGINAL_SOURCE))) {
-  fail(
-    `MAM3E_ORIGINAL_SOURCE "${MAM3E_ORIGINAL_SOURCE}" is not declared in ` +
-      `strictOpenContentPolicy.mam3e.originalContentSources`
-  );
-}
-if (srdSources.has(normalizeSource(MAM3E_ORIGINAL_SOURCE))) {
-  fail(
-    `MAM3E_ORIGINAL_SOURCE "${MAM3E_ORIGINAL_SOURCE}" is also listed as ` +
-      `open-content provenance — the two tiers must stay distinguishable`
-  );
-}
-
-// Which exported arrays are the generated SRD tier vs the hand-written tier.
+// Every exported array must be a generated SRD module. Anything else is a
+// hand-written tier growing back.
 const SRD_EXPORTS = new Set([
   'mam3eSrdWeapons',
   'mam3eSrdArmor',
@@ -104,30 +89,23 @@ if (shipped.length === 0) {
 
 const manifestByName = new Map(manifest.entries.map((e) => [normalizeName(e.name), e]));
 
-// A. No false SRD citation, and the SRD tier must actually be cited as SRD.
+// A + C. Every entry ships from a generated SRD module and cites the Hero SRD.
 const seenSrdNames = new Set();
 for (const item of shipped) {
   const source = typeof item.source === 'string' ? item.source : '';
-  const isSrdCite = srdSources.has(normalizeSource(source));
-  const isOriginalCite = originalSources.has(normalizeSource(source));
 
-  if (!isSrdCite && !isOriginalCite) {
-    fail(`PROVENANCE ${item.id}: source "${source}" is on neither mam3e source list`);
+  if (item.tier !== 'srd') {
+    fail(
+      `PROVENANCE ${item.id}: ships from "${item.exportName}", which is not one of the ` +
+        `encoder-generated Hero SRD modules — the hand-written tier was deleted 2026-07-30`
+    );
     continue;
   }
 
-  if (item.tier === 'srd' && !isSrdCite) {
-    fail(`PROVENANCE ${item.id}: generated SRD entry cites "${source}", not a Hero SRD source`);
+  if (!srdSources.has(normalizeSource(source))) {
+    fail(`PROVENANCE ${item.id}: cites "${source}", which is not a Hero SRD source`);
+    continue;
   }
-  // C. A hand-written entry may never claim the SRD.
-  if (item.tier === 'original' && isSrdCite) {
-    fail(
-      `PROVENANCE ${item.id}: hand-written entry in ${item.exportName} claims Hero SRD ` +
-        `source "${source}" — hand-written entries must not cite the SRD`
-    );
-  }
-
-  if (!isSrdCite) continue;
 
   const key = normalizeName(item.name);
   const srd = manifestByName.get(key);
@@ -164,20 +142,17 @@ for (const item of shipped) {
   else byName.set(key, item.id);
 }
 
-const srdShipped = shipped.filter((i) => i.tier === 'srd').length;
-const originalShipped = shipped.length - srdShipped;
-console.log(`manifest:            ${manifest.entries.length} Hero SRD equipment entries`);
-console.log(`shipped (SRD tier):  ${srdShipped}`);
-console.log(`shipped (original):  ${originalShipped}`);
-console.log(`coverage:            ${seenSrdNames.size}/${manifest.entries.length}`);
+console.log(`manifest:  ${manifest.entries.length} Hero SRD equipment entries`);
+console.log(`shipped:   ${shipped.length}`);
+console.log(`coverage:  ${seenSrdNames.size}/${manifest.entries.length}`);
 
 if (failures.length > 0) {
   console.error(`\n${failures.length} M&M equipment provenance failure(s):`);
   for (const failure of failures) console.error(`  - ${failure}`);
   console.error(
-    '\nRegenerate the SRD tier with `node scripts/encode-mam-equipment.mjs`, or move ' +
-      'non-SRD entries into src/data/mutants-and-masterminds/3e/equipment/original-not-srd.ts ' +
-      'with the declared original-content source label.'
+    '\nRegenerate with `node scripts/encode-mam-equipment.mjs`. Entries with no Hero SRD ' +
+      'counterpart do not belong in this catalog: this app transcribes open documents, it ' +
+      'does not author game content (owner decision, 2026-07-30).'
   );
   process.exit(1);
 }
