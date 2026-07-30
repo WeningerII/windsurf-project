@@ -671,7 +671,7 @@ export const level7Spells: Spell[] = [
     id: 'mass-misdirection-35e',
     name: 'Mass Misdirection',
     system: 'dnd-3.5e',
-    source: 'SRD 3.5',
+    source: 'Original Content (not SRD)',
     level: 7,
     school: 'illusion',
     castingTime: {
@@ -931,7 +931,7 @@ export const level7Spells: Spell[] = [
     id: 'reversal-of-fortune-35e',
     name: 'Reversal of Fortune',
     system: 'dnd-3.5e',
-    source: 'SRD 3.5',
+    source: 'Original Content (not SRD)',
     level: 7,
     school: 'evocation',
     castingTime: {

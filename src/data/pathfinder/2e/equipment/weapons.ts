@@ -333,7 +333,7 @@ export const handaxe: Weapon = {
   weight: 1,
   cost: { amount: 5, currency: 'sp' },
   description: 'A light throwing axe.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 
@@ -551,7 +551,7 @@ export const pike: Weapon = {
   weight: 4,
   cost: { amount: 1, currency: 'gp' },
   description: 'A long infantry spear.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 
@@ -606,7 +606,7 @@ export const warPick: Weapon = {
   weight: 3,
   cost: { amount: 5, currency: 'sp' },
   description: 'A heavy piercing weapon.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 
@@ -700,7 +700,7 @@ export const net: Weapon = {
   weight: 1,
   cost: { amount: 1, currency: 'gp' },
   description: 'A net for entangling (restrains on hit).',
-  source: 'Core Rulebook',
+  source: "Pathfinder 2e Advanced Player's Guide",
   requiresAttunement: false,
 };
 
@@ -901,7 +901,7 @@ export const orcDoubleAxe: Weapon = {
   weight: 7,
   cost: { amount: 6, currency: 'gp' },
   description: 'A double-headed orcish axe.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -973,7 +973,7 @@ export const siangham: Weapon = {
   weight: 1,
   cost: { amount: 3, currency: 'sp' },
   description: 'A pointed weapon for monks.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -1045,7 +1045,7 @@ export const cestus: Weapon = {
   weight: 1,
   cost: { amount: 5, currency: 'sp' },
   description: 'A studded glove.',
-  source: 'Core Rulebook',
+  source: "Pathfinder 1e Advanced Player's Guide",
   requiresAttunement: false,
 };
 
@@ -1135,7 +1135,7 @@ export const earthBreaker: Weapon = {
   weight: 7,
   cost: { amount: 4, currency: 'gp' },
   description: 'A massive two-handed hammer.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Ultimate Equipment',
   requiresAttunement: false,
 };
 
@@ -1171,7 +1171,7 @@ export const wakizashi: Weapon = {
   weight: 2,
   cost: { amount: 3, currency: 'gp' },
   description: 'A short companion sword.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Ultimate Combat',
   requiresAttunement: false,
 };
 
@@ -1208,7 +1208,7 @@ export const bola: Weapon = {
   weight: 1,
   cost: { amount: 5, currency: 'sp' },
   description: 'Weighted cords for entangling.',
-  source: 'Core Rulebook',
+  source: 'SRD 3.5',
   requiresAttunement: false,
 };
 
@@ -1227,7 +1227,7 @@ export const chakram: Weapon = {
   weight: 1,
   cost: { amount: 1, currency: 'gp' },
   description: 'A circular throwing blade.',
-  source: 'Core Rulebook',
+  source: "Pathfinder 1e Advanced Player's Guide",
   requiresAttunement: false,
 };
 
@@ -1265,7 +1265,7 @@ export const throwingAxe: Weapon = {
   weight: 1,
   cost: { amount: 8, currency: 'sp' },
   description: 'An axe balanced for throwing.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -1284,7 +1284,7 @@ export const boomerang: Weapon = {
   weight: 1,
   cost: { amount: 3, currency: 'sp' },
   description: 'A curved throwing stick.',
-  source: 'Core Rulebook',
+  source: "Pathfinder 1e Advanced Player's Guide",
   requiresAttunement: false,
 };
 
@@ -1303,7 +1303,7 @@ export const atlatl: Weapon = {
   weight: 1,
   cost: { amount: 2, currency: 'sp' },
   description: 'A spear-throwing device.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Ultimate Combat',
   requiresAttunement: false,
 };
 
@@ -1321,7 +1321,7 @@ export const boar: Weapon = {
   weight: 4,
   cost: { amount: 5, currency: 'sp' },
   description: 'A spear for hunting boar.',
-  source: 'Core Rulebook',
+  source: "Pathfinder 1e Advanced Player's Guide",
   requiresAttunement: false,
 };
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T14:57:41.985Z",
+  "generatedAt": "2026-07-30T15:42:05.600Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -7,36 +7,62 @@
         "SRD",
         "System Reference Document 5.1"
       ],
-      "allowMissingSourceFor": []
+      "allowMissingSourceFor": [],
+      "originalContentSources": [
+        "Original Content (not SRD)"
+      ]
     },
     "dnd-5e-2024": {
       "allowedSources": [
         "SRD 5.2",
-        "System Reference Document 5.2"
+        "System Reference Document 5.2",
+        "SRD 5.1"
       ],
-      "allowMissingSourceFor": []
+      "allowMissingSourceFor": [],
+      "originalContentSources": [
+        "Original Content (not SRD)"
+      ]
     },
     "dnd-3.5e": {
       "allowedSources": [
         "SRD 3.5"
       ],
-      "allowMissingSourceFor": []
+      "allowMissingSourceFor": [],
+      "originalContentSources": [
+        "Original Content (not SRD)"
+      ]
     },
     "pf1e": {
       "allowedSources": [
         "Core Rulebook",
         "CRB",
-        "Bestiary"
+        "Bestiary",
+        "Pathfinder 1e Advanced Player's Guide",
+        "SRD 3.5"
       ],
-      "allowMissingSourceFor": []
+      "allowMissingSourceFor": [],
+      "originalContentSources": [
+        "Original Content (not SRD)"
+      ]
     },
     "pf2e": {
       "allowedSources": [
         "Core Rulebook",
         "CRB",
-        "B1"
+        "B1",
+        "Pathfinder 1e Core Rulebook",
+        "Pathfinder 1e Advanced Player's Guide",
+        "Pathfinder 1e Ultimate Combat",
+        "Pathfinder 1e Ultimate Equipment",
+        "Pathfinder 2e Advanced Player's Guide",
+        "Secrets of Magic",
+        "SRD 3.5",
+        "SRD 5.1"
       ],
-      "allowMissingSourceFor": []
+      "allowMissingSourceFor": [],
+      "originalContentSources": [
+        "Original Content (not SRD)"
+      ]
     },
     "mam3e": {
       "allowedSources": [
@@ -74,7 +100,7 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 335,
-      "equipment": 657,
+      "equipment": 654,
       "feats": 1,
       "advantages": 0,
       "powerModifiers": 0
@@ -89,13 +115,13 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 340,
-      "equipment": 502,
+      "equipment": 497,
       "feats": 19,
       "advantages": 0,
       "powerModifiers": 0
     },
     "dnd-3.5e": {
-      "spells": 610,
+      "spells": 609,
       "classes": 26,
       "species": 7,
       "backgrounds": 0,
@@ -134,7 +160,7 @@
       "archetypes": 5,
       "complications": 0,
       "monsters": 413,
-      "equipment": 188,
+      "equipment": 186,
       "feats": 93,
       "advantages": 0,
       "powerModifiers": 0
@@ -181,7 +207,7 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 335,
-      "equipment": 657,
+      "equipment": 654,
       "feats": 1,
       "advantages": 0,
       "powerModifiers": 0
@@ -196,13 +222,13 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 340,
-      "equipment": 502,
+      "equipment": 497,
       "feats": 19,
       "advantages": 0,
       "powerModifiers": 0
     },
     "dnd-3.5e": {
-      "spells": 610,
+      "spells": 609,
       "classes": 26,
       "species": 7,
       "backgrounds": 0,
@@ -241,7 +267,7 @@
       "archetypes": 5,
       "complications": 0,
       "monsters": 413,
-      "equipment": 188,
+      "equipment": 186,
       "feats": 93,
       "advantages": 0,
       "powerModifiers": 0
@@ -797,14 +823,15 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 657,
-        "uniqueCount": 657,
+        "rawCount": 654,
+        "uniqueCount": 654,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
+        "originalContentCount": 7,
         "sourceCounts": {
-          "SRD 5.1": 657
+          "SRD 5.1": 647,
+          "Original Content (not SRD)": 7
         }
       }
     },
@@ -904,9 +931,11 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
+        "originalContentCount": 3,
         "sourceCounts": {
-          "SRD 5.2": 340
+          "SRD 5.2": 330,
+          "SRD 5.1": 7,
+          "Original Content (not SRD)": 3
         }
       }
     },
@@ -916,14 +945,16 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 502,
-        "uniqueCount": 502,
+        "rawCount": 497,
+        "uniqueCount": 497,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
+        "originalContentCount": 3,
         "sourceCounts": {
-          "SRD 5.2": 502
+          "SRD 5.2": 489,
+          "SRD 5.1": 5,
+          "Original Content (not SRD)": 3
         }
       }
     },
@@ -950,14 +981,15 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 610,
-        "uniqueCount": 610,
+        "rawCount": 609,
+        "uniqueCount": 609,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
+        "originalContentCount": 2,
         "sourceCounts": {
-          "SRD 3.5": 610
+          "SRD 3.5": 607,
+          "Original Content (not SRD)": 2
         }
       }
     },
@@ -1142,9 +1174,11 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
+        "originalContentCount": 2,
         "sourceCounts": {
-          "Core Rulebook": 617
+          "Core Rulebook": 613,
+          "SRD 3.5": 2,
+          "Original Content (not SRD)": 2
         }
       }
     },
@@ -1176,9 +1210,13 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
+        "originalContentCount": 5,
         "sourceCounts": {
-          "Core Rulebook": 551
+          "Core Rulebook": 543,
+          "Original Content (not SRD)": 5,
+          "Pathfinder 1e Advanced Player's Guide": 1,
+          "Secrets of Magic": 1,
+          "SRD 5.1": 1
         }
       }
     },
@@ -1273,14 +1311,22 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 188,
-        "uniqueCount": 188,
+        "rawCount": 186,
+        "uniqueCount": 186,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
+        "originalContentCount": 4,
         "sourceCounts": {
-          "Core Rulebook": 188
+          "Core Rulebook": 137,
+          "Pathfinder 1e Core Rulebook": 15,
+          "SRD 5.1": 14,
+          "Pathfinder 1e Advanced Player's Guide": 6,
+          "SRD 3.5": 6,
+          "Original Content (not SRD)": 4,
+          "Pathfinder 1e Ultimate Combat": 2,
+          "Pathfinder 2e Advanced Player's Guide": 1,
+          "Pathfinder 1e Ultimate Equipment": 1
         }
       }
     },

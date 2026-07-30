@@ -119,7 +119,7 @@ export const level8Spells: Spell[] = withPf2eSpellTraits([
     id: 'misdirection-mass-8-pf2e',
     name: 'Misdirection, Mass',
     system: 'pf2e',
-    source: 'Core Rulebook',
+    source: 'Original Content (not SRD)',
     level: 8,
     school: 'illusion',
     traditions: ['arcane', 'occult'],
