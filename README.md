@@ -274,9 +274,9 @@ psionics and epic content.
 Native point-buy sheet with SRD-verified powers and advantages, loader-backed
 reference archetypes with in-sheet pinning, SRD complications with insertion into
 the character document, and a power-modifier catalog surfaced in reporting and the
-reference browser. Equipment ships in two clearly separated tiers: entries encoded
-from the Hero SRD and cited to it, and original entries labelled
-`Original Content (not SRD)` — see `docs/mam3e-equipment-provenance.md`.
+reference browser. All 113 equipment entries are encoded from the Hero SRD and
+cited to it; the 79 entries that had been written for this app rather than
+transcribed were deleted 2026-07-30 — see `docs/mam3e-equipment-provenance.md`.
 
 **Status**: Archetypes remain reference-only and do not auto-build characters.
 

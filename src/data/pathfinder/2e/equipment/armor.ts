@@ -301,23 +301,6 @@ export const ringMail: Armor = {
   requiresAttunement: false,
 };
 
-export const fieldPlate: Armor = {
-  id: 'field-plate',
-  name: 'Field Plate',
-  system: 'pf2e',
-  type: 'armor',
-  armorType: 'heavy',
-  rarity: 'common',
-  armorClass: 6,
-  dexBonusMax: 0,
-  stealthDisadvantage: true,
-  weight: 9,
-  cost: { amount: 25, currency: 'gp' },
-  description: 'Battle-ready plate armor.',
-  source: 'Original Content (not SRD)',
-  requiresAttunement: false,
-};
-
 export const armoredCoat: Armor = {
   id: 'armored-coat',
   name: 'Armored Coat',
@@ -351,7 +334,6 @@ export const pf2eArmor = {
   splintMail,
   halfPlate,
   fullPlate,
-  fieldPlate,
   buckler,
   woodenShield,
   steelShield,

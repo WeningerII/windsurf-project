@@ -3,57 +3,6 @@ import { Monster } from '../../../../../types/creatures/monsters';
 // D&D 5e-2024 Humanoids - CR 6-10 (SRD 5.2)
 // Powerful NPCs and humanoid leaders
 
-export const captain: Monster = {
-  id: 'captain-2024',
-  name: 'Captain',
-  system: 'dnd-5e-2024',
-  source: 'Original Content (not SRD)',
-  size: 'medium',
-  type: 'humanoid',
-  alignment: 'lawful neutral',
-  armorClass: 16,
-  hitPoints: { count: 8, die: 'd8', modifier: 16, notation: '8d8+16' },
-  speed: { walk: 30 },
-  abilities: { str: 16, dex: 12, con: 14, int: 12, wis: 11, cha: 15 },
-  savingThrows: { str: 5, dex: 3, wis: 2 },
-  skills: { Athletics: 5, Deception: 4, Perception: 2 },
-  senses: ['passive Perception 12'],
-  languages: ['Common'],
-  challengeRating: 2,
-  experiencePoints: 450,
-  specialAbilities: [
-    {
-      name: 'Brave',
-      description: 'The captain has advantage on saving throws against being frightened.',
-    },
-  ],
-  actions: [
-    {
-      name: 'Multiattack',
-      description:
-        'The captain makes three melee attacks: two with its longsword and one with its dagger. Or the captain makes two ranged attacks with its crossbows.',
-    },
-    {
-      name: 'Longsword',
-      description:
-        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) slashing damage.',
-    },
-    {
-      name: 'Dagger',
-      description:
-        'Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 5 (1d4 + 3) piercing damage.',
-    },
-  ],
-  reactions: [
-    {
-      name: 'Parry',
-      description:
-        'The captain adds 2 to its AC against one melee attack that would hit it. To do so, the captain must see the attacker and be wielding a melee weapon.',
-    },
-  ],
-  environment: ['urban', 'any'],
-};
-
 export const mage: Monster = {
   id: 'mage-2024',
   name: 'Mage',
@@ -97,40 +46,4 @@ export const mage: Monster = {
 // be verified against the SRD 5.2 monster index, so it was deleted rather than
 // shipped with an unverified citation. See docs/srd-manifest/dnd5e-2024.ts.
 
-export const necromancer: Monster = {
-  id: 'necromancer-2024',
-  name: 'Necromancer',
-  system: 'dnd-5e-2024',
-  source: 'Original Content (not SRD)',
-  size: 'medium',
-  type: 'humanoid',
-  alignment: 'chaotic evil',
-  armorClass: 12,
-  hitPoints: { count: 11, die: 'd8', modifier: 22, notation: '11d8+22' },
-  speed: { walk: 30 },
-  abilities: { str: 9, dex: 14, con: 14, int: 17, wis: 12, cha: 11 },
-  savingThrows: { int: 6, wis: 4 },
-  skills: { Arcana: 9, Religion: 6 },
-  damageResistances: ['necrotic'],
-  senses: ['passive Perception 11'],
-  languages: ['Common', 'two other languages'],
-  challengeRating: 9,
-  experiencePoints: 5000,
-  specialAbilities: [
-    {
-      name: 'Spellcasting',
-      description:
-        'The necromancer is a 13th-level spellcaster. Its spellcasting ability is Intelligence (spell save DC 16, +8 to hit with spell attacks). The necromancer has the following wizard spells prepared: Cantrips (at will): chill touch, mage hand, prestidigitation; 1st level (4 slots): detect magic, magic missile, shield; 2nd level (3 slots): blindness/deafness, scorching ray; 3rd level (3 slots): animate dead, counterspell, dispel magic; 4th level (3 slots): blight, dimension door; 5th level (2 slots): cloudkill, cone of cold; 6th level (1 slot): circle of death.',
-    },
-  ],
-  actions: [
-    {
-      name: 'Dagger',
-      description:
-        'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 2 (1d4) piercing damage.',
-    },
-  ],
-  environment: ['underdark', 'tower'],
-};
-
-export const humanoidsCR6to10: Monster[] = [captain, mage, necromancer];
+export const humanoidsCR6to10: Monster[] = [mage];

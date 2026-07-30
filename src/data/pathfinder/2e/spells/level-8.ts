@@ -116,37 +116,6 @@ export const level8Spells: Spell[] = withPf2eSpellTraits([
     classes: ['sorcerer', 'wizard'],
   },
   {
-    id: 'misdirection-mass-8-pf2e',
-    name: 'Misdirection, Mass',
-    system: 'pf2e',
-    source: 'Original Content (not SRD)',
-    level: 8,
-    school: 'illusion',
-    traditions: ['arcane', 'occult'],
-    castingTime: {
-      type: 'action',
-      amount: 2,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'hours',
-      hours: 1,
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'This spell functions like misdirection, except that it can affect one creature per caster level.',
-    classes: ['bard', 'sorcerer', 'wizard'],
-  },
-  {
     id: 'polar-ray-pf2e',
     name: 'Polar Ray',
     system: 'pf2e',

@@ -18,11 +18,10 @@ type SpellModule = {
   allSpells: Spell[];
 };
 
-const DND35E_SOURCE_BLOCKED_SPELL_IDS = [
-  'bleed-35e',
-  'mass-misdirection-35e',
-  'reversal-of-fortune-35e',
-] as const;
+// Mass Misdirection and Reversal of Fortune were also on this list — they had no
+// d20srd source page because they had no d20srd entry: this project wrote them.
+// Both were deleted 2026-07-30 along with the rest of the self-authored content.
+const DND35E_SOURCE_BLOCKED_SPELL_IDS = ['bleed-35e'] as const;
 
 // These AoN source pages do not expose a Saving Throw row. Keep this list
 // explicit so source-backed PF1e save coverage cannot regress silently.

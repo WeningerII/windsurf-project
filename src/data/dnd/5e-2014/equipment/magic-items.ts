@@ -29,20 +29,6 @@ export const boots: Item = {
   requiresAttunement: true,
 };
 
-export const cloak: Item = {
-  id: 'cloak-of-billowing',
-  name: 'Cloak of Billowing',
-  system: 'dnd-5e-2014',
-  source: 'Original Content (not SRD)',
-  type: 'magic-item',
-  rarity: 'common',
-  weight: 1,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    'While wearing this cloak, you can use a bonus action to make it billow dramatically. Observers within 60 feet of you that can see the cloak must succeed on a Dexterity saving throw against your spell save DC or be frightened until the end of your next turn.',
-  requiresAttunement: false,
-};
-
 export const ringOfProtection: Item = {
   id: 'ring-of-protection',
   name: 'Ring of Protection',
@@ -286,20 +272,6 @@ export const potionOfGiantStrength: Item = {
 };
 
 // Scrolls
-export const scrollOfProtection: Item = {
-  id: 'scroll-of-protection',
-  name: 'Scroll of Protection',
-  system: 'dnd-5e-2014',
-  source: 'Original Content (not SRD)',
-  type: 'consumable',
-  rarity: 'rare',
-  weight: 0,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    'A scroll of protection grants a +2 bonus to AC and saving throws for 8 hours when read aloud.',
-  requiresAttunement: false,
-};
-
 export const scrollOfFireball: Item = {
   id: 'scroll-of-fireball',
   name: 'Scroll of Fireball',
@@ -516,20 +488,6 @@ export const beltOfGiantStrength: Item = {
   requiresAttunement: true,
 };
 
-export const cloakOfTheArchmagi: Item = {
-  id: 'cloak-of-the-archmagi',
-  name: 'Cloak of the Archmagi',
-  system: 'dnd-5e-2014',
-  source: 'Original Content (not SRD)',
-  type: 'magic-item',
-  rarity: 'legendary',
-  weight: 1,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    'Your Intelligence score increases by 2, to a maximum of 20. While wearing the cloak, you have advantage on saving throws against spells and magical effects.',
-  requiresAttunement: true,
-};
-
 export const robesOfTheArchmagi: Item = {
   id: 'robes-of-the-archmagi',
   name: 'Robes of the Archmagi',
@@ -644,20 +602,6 @@ export const ringOfSpellStoring: Item = {
 };
 
 // Additional Potions
-export const potionOfDragonsBreath: Item = {
-  id: 'potion-of-dragons-breath',
-  name: "Potion of Dragon's Breath",
-  system: 'dnd-5e-2014',
-  source: 'Original Content (not SRD)',
-  type: 'consumable',
-  rarity: 'uncommon',
-  weight: 0.5,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    "When you drink this potion, you can cast the dragon's breath spell without expending a spell slot. The spell uses your spell save DC and spell attack bonus.",
-  requiresAttunement: false,
-};
-
 export const potionOfClairvoyance: Item = {
   id: 'potion-of-clairvoyance',
   name: 'Potion of Clairvoyance',
@@ -685,20 +629,6 @@ export const amuletOfHealth: Item = {
   description:
     'Your Constitution score is 19 while you wear this amulet. It has no effect on you if your Constitution is already 19 or higher.',
   requiresAttunement: true,
-};
-
-export const capOfWaterBreathing: Item = {
-  id: 'cap-of-water-breathing',
-  name: 'Cap of Water Breathing',
-  system: 'dnd-5e-2014',
-  source: 'Original Content (not SRD)',
-  type: 'magic-item',
-  rarity: 'uncommon',
-  weight: 0,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    'While wearing this cap underwater, you can speak its command word as an action to create a bubble of air around your head. You can breathe normally underwater. The bubble stays with you until you speak the command word again.',
-  requiresAttunement: false,
 };
 
 export const cloakOfArachnida: Item = {
@@ -740,20 +670,6 @@ export const gauntletsOfOgrePower: Item = {
   cost: { amount: 0, currency: 'gp' },
   description:
     'Your Strength score is 19 while you wear these gauntlets. They have no effect on you if your Strength is already 19 or higher.',
-  requiresAttunement: true,
-};
-
-export const pegasusBoots: Item = {
-  id: 'pegasus-boots',
-  name: 'Pegasus Boots',
-  system: 'dnd-5e-2014',
-  source: 'Original Content (not SRD)',
-  type: 'magic-item',
-  rarity: 'rare',
-  weight: 1,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    'While you wear these boots, you have a flying speed equal to your walking speed. You can use the boots to fly for up to 4 hours each day, all the time spent flying need not be consecutive.',
   requiresAttunement: true,
 };
 
@@ -1352,20 +1268,6 @@ export const scrollOfWallOfFire: Item = {
   requiresAttunement: false,
 };
 
-export const cursedRingOfClumsiness: Item = {
-  id: 'cursed-ring-of-clumsiness',
-  name: 'Ring of Clumsiness (Cursed)',
-  system: 'dnd-5e-2014',
-  source: 'Original Content (not SRD)',
-  type: 'magic-item',
-  rarity: 'rare',
-  weight: 0,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    'This ring appears to be a ring of protection. However, once worn, it curses the wearer, reducing their Dexterity score by 4 (to a minimum of 3). The ring cannot be removed unless the curse is broken.',
-  requiresAttunement: true,
-};
-
 export const cursedArmorOfVulnerability: Item = {
   id: 'cursed-armor-of-vulnerability',
   name: 'Armor of Vulnerability (Cursed)',
@@ -1400,7 +1302,6 @@ export const bagOfDevouring: Item = {
 export const dnd5eMagicItems: Item[] = [
   bag,
   boots,
-  cloak,
   ringOfProtection,
   wandOfMissiles,
   scrollOfMissiles,
@@ -1417,7 +1318,6 @@ export const dnd5eMagicItems: Item[] = [
   potionOfSupremeHealing,
   potionOfInvisibility,
   potionOfGiantStrength,
-  scrollOfProtection,
   scrollOfFireball,
   cloakOfDisplacement,
   bootsOfSpeed,
@@ -1433,7 +1333,6 @@ export const dnd5eMagicItems: Item[] = [
   potionOfFlyingSpeed,
   potionOfMindReading,
   beltOfGiantStrength,
-  cloakOfTheArchmagi,
   robesOfTheArchmagi,
   swordPlus1,
   swordPlus2,
@@ -1442,14 +1341,11 @@ export const dnd5eMagicItems: Item[] = [
   ringOfXRayVision,
   ringOfWarmth,
   ringOfSpellStoring,
-  potionOfDragonsBreath,
   potionOfClairvoyance,
   amuletOfHealth,
-  capOfWaterBreathing,
   cloakOfArachnida,
   eyesOfCharming,
   gauntletsOfOgrePower,
-  pegasusBoots,
   cloakOfProtection,
   cloakOfElvenkind,
   cloakOfTheBat,
@@ -1492,7 +1388,6 @@ export const dnd5eMagicItems: Item[] = [
   scrollOfHaste,
   scrollOfDimensionDoor,
   scrollOfWallOfFire,
-  cursedRingOfClumsiness,
   cursedArmorOfVulnerability,
   bagOfDevouring,
 ];

@@ -3,7 +3,7 @@
 Multi-system tabletop RPG character sheet + scene toolkit. TypeScript + React 18 +
 Vite + Tailwind; Supabase sync; Netlify deploy; Vitest + Playwright. Deterministic
 rules core shared by 7 registered game systems. Most of the line count is
-generated SRD data (512 files under `src/data/`) — orient with the knowledge
+generated SRD data (511 files under `src/data/`) — orient with the knowledge
 graph (see "graphify" section below), not grep.
 
 Numbers in this file are gated by `npm run check:doc-drift` (see

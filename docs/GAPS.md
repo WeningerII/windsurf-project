@@ -71,7 +71,7 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | [14](#14-p5infra-gaps--inventory-what-was-closed-and-what-is-deliberately-not-built-added-2026-07-25) | `p5.infra-gaps` | 14.4 — Sentry release/env, server 5xx, durable rate-limit store |
 | [15](#15-field-level-srd-fidelity--audit-result--the-gate-that-now-guards-it-added-2026-07-25) | Field-level SRD fidelity | **(b)** fixed 2026-07-28 for every gated scalar; **(c)** still an open-content exposure |
 | [16](#16-lazy-per-system-engines--what-was-reclaimed-and-exactly-what-blocks-the-rest-added-2026-07-25) | Lazy per-system engines | CLOSED 2026-07-28 — reclaimed via the preload design, so the authorization question never had to be answered (16.5) |
-| [18](#18-provenance-over-inclusion--the-audit-result-and-the-gate-that-now-bounds-it-added-2026-07-25) | Provenance over-inclusion — 1,045 classified + gated | 31 records carry a false citation (owner decision); 3 measurement defects diagnosed, not repaired |
+| [18](#18-provenance-over-inclusion--the-audit-result-and-the-gate-that-now-bounds-it-added-2026-07-25) | Provenance over-inclusion — 925 classified + gated | Licensing class CLOSED (§17.3, 89 → 0); 68 wrong-edition records and 3 measurement defects remain |
 
 **Closed, decided, or standing reference — kept for the evidence trail:**
 
@@ -1545,12 +1545,18 @@ the throwaway stub also elided.
 has since landed and is verifiable in the tree (2026-07-26):
 `scripts/encode-mam-equipment.mjs`, the offline
 `scripts/check-mam-equipment-provenance.mjs` gate with its ratchet manifest, the
-generated `equipment/srd-{weapons,armor,vehicles,gear,headquarters}.ts` tier
-alongside `original-not-srd.ts` with the six hand-written modules gone, the
-`originalContentSources` channel and exported `isOriginalContentSource`
-(`src/utils/openContentPolicy.ts:39,94,185`), and the item-by-item record in
-`docs/mam3e-equipment-provenance.md`. **17.2 lists the residuals**, of which the
-last is a live defect of the same class in the *other* M&M data sets.
+generated `equipment/srd-{weapons,armor,vehicles,gear,headquarters}.ts` tier, and
+the item-by-item record in `docs/mam3e-equipment-provenance.md`. **17.2 lists the
+residuals**, of which the last is a live defect of the same class in the *other*
+M&M data sets.
+
+**SUPERSEDED IN PART 2026-07-30.** This repair *kept* the 79 non-SRD entries,
+segregated into `equipment/original-not-srd.ts` under an
+`originalContentSources` policy channel, on the ground that deleting shipped
+content was the owner's call. The owner made it: the 79 entries, the module and
+the channel are all deleted, along with the 27 entries the same channel admitted
+across the five d20 catalogs (106 in total). What follows describes the repair as
+it landed; where it says the entries are kept, they are not. See §17.3.
 
 This section also supersedes the interim M&M equipment coverage bullet in §1,
 which cross-references here.
@@ -1656,10 +1662,12 @@ also shipped **twice under different ids** — `Plate Armor`
 - **17 entries changed type `device` → `gear`** (Binoculars, Commlink, Grapple
   Gun, First Aid Kit, …). The SRD prints them under "General Equipment";
   `device` in M&M means a power-bearing Device, which they are not.
-- **`original-not-srd.ts` stays hand-written and unaudited.** There is no upstream
-  to encode it from and nothing to check its stat blocks against. The gate proves
-  only that it does not *claim* the SRD. Whether those 79 entries should ship at
-  all is the repository owner's call, not an audit's.
+- ~~**`original-not-srd.ts` stays hand-written and unaudited.**~~ **RESOLVED
+  2026-07-30 (§17.3).** There was no upstream to encode it from and nothing to
+  check its stat blocks against; the gate proved only that it did not *claim* the
+  SRD. Whether the 79 entries should ship at all was flagged here as the
+  repository owner's call. The owner made it: delete. The gate now fails any
+  entry that does not come from a generated Hero SRD module.
 - **The eager shell grew 67 bytes** (86,839 → 86,906 gzip; headroom 201 → 134 of
   the 85 KiB budget). The equipment data itself stayed lazy — the `mam3e-data`
   chunk went 31.3 → 32.4 KiB. The 67 bytes are the `originalContentSources`
@@ -1670,6 +1678,56 @@ also shipped **twice under different ids** — `Plate Armor`
   still reports non-SRD powers and a non-SRD advantage shipping under
   `Hero's Handbook`; that is the same defect class, unaddressed. This is the one
   genuinely open item in an otherwise closed section.
+
+### 17.3 The original-content channel, and its deletion (2026-07-30)
+
+**Owner decision, executed.** §17.1 built a second admission channel —
+`originalContentSources` on `SystemOpenContentPolicy` — so that content this
+project wrote could ship under a truthful label instead of a borrowed one. That
+was the right fix for the *labelling* defect and the wrong answer to the
+underlying question. A second channel made shipping self-written content a
+one-line addition, and by 2026-07-30 **106 entries had gone through it**:
+
+| Where | Count |
+|---|---:|
+| `mutants-and-masterminds/3e/equipment/original-not-srd.ts` | 79 |
+| `dnd/5e-2014/equipment/magic-items.ts` | 7 |
+| `pathfinder/2e/spells/level-1.ts` | 4 |
+| `dnd/5e-2024/equipment/magic-items.ts` | 3 |
+| `pathfinder/2e/equipment/adventuring-gear.ts` | 3 |
+| `dnd/3.5e/spells/level-7.ts` | 2 |
+| `dnd/5e-2024/monsters/humanoids/cr-6-10.ts` | 2 |
+| `pathfinder/1e/equipment/magic-items.ts` | 2 |
+| `dnd/5e-2024/monsters/fey/cr-0-5.ts` | 1 |
+| `pathfinder/2e/equipment/armor.ts` | 1 |
+| `pathfinder/2e/spells/level-8.ts` | 1 |
+| **Total** | **106** |
+
+All 106 are deleted, and so is the channel. `SystemOpenContentPolicy` is now
+`allowedSources` + `allowMissingSourceFor` and nothing else;
+`isOriginalContentSource` is gone; `isOpenContentCompliant` admits open-content
+provenance only. A new self-written entry therefore has nowhere to be admitted
+from and fails the gate — which is the point of removing the channel rather than
+merely emptying it.
+
+Consequences, stated rather than implied:
+
+- **Catalog counts fall.** dnd-3.5e spells 609 → 607, pf2e spells 551 → 546,
+  dnd-5e-2024 equipment 497 → 494, mam3e equipment 192 → 113. These are honest
+  reductions: the removed rows were never open content.
+- **The `devices` M&M equipment category disappears entirely** — all 11 were
+  self-authored, and the Hero SRD prints no `device` row. `mm3eMetadata.stats
+  .equipment` no longer carries the key.
+- **Three published surfaces simplify.** The `Original (non-SRD)` column and
+  `Open-Content Pop.` denominator are removed from
+  `docs/generated/roadmap-metrics.md` (the population they corrected for is
+  empty); `ManifestEntryStatus` drops `'original'`; and
+  `src/legal/attributions.ts` no longer discloses an M&M split, because there
+  is none.
+- **The `check:mam-equipment` gate got stricter, not looser.** Assertion C used
+  to say "a hand-written entry may not claim the SRD"; it now says every shipped
+  entry must come from an encoder-generated Hero SRD module and cite a Hero SRD
+  source. An emptied directory would have been a convention; this is a check.
 
 ---
 
@@ -1699,13 +1757,19 @@ The reported number was never a measure of the problem, and 173 is a **lower
 bound, not a measure** — §15(c) already proved a name diff cannot see the worst
 case (18.5.3).
 
-**Of the 95 `genuine-non-open-content` records, 64 are M&M 3e equipment that is
+**Of the 95 `genuine-non-open-content` records, 64 are M&M 3e equipment that was
 already honestly labelled** `Original Content (not SRD)` and segregated by §17 —
-no false citation remains on them. They stay in the licensing class because the
-*finding* (no open-content counterpart) is what the class records, and because
-whether names like `Power Ring`, `Web Shooters` and `Mystic Amulet` should ship at
-all is a trade-dress judgment reserved to the owner (§17.2). **31 records carry a
-false citation today**; that is the number that describes live exposure, not 95.
+no false citation remained on them. They stayed in the licensing class because
+the *finding* (no open-content counterpart) is what the class records, and
+because whether names like `Power Ring`, `Web Shooters` and `Mystic Amulet` should
+ship at all was a trade-dress judgment reserved to the owner (§17.2). **31 records
+carried a false citation**; that was the number describing live exposure, not 95.
+
+**RESOLVED 2026-07-30 (§17.3): the exposure is zero on both counts.** The 31
+false citations were retagged to their true sources by the provenance work, and
+every entry that could then only be described as this project's own writing —
+106 of them, the 79 M&M items and 27 across the d20 catalogs — was deleted. There
+is no longer a population of shipped entries with no open-content counterpart.
 
 ### 18.1 The gate
 
@@ -1721,7 +1785,8 @@ with evidence.
   `npm run srd:overinclusion:write` (networked; commit the result).
 - The diff uses the same `src/scripts/srdCoverageShape.ts` helpers as the
   networked report, so the offline gate and `srd:coverage` cannot disagree about
-  what a suspect is. Both report the same 1,045 today, and
+  what a suspect is. Both report the same count (1,045 when this was written;
+  **925** after the 2026-07-30 deletions, §17.3), and
   `docs/generated/srd-coverage.md` regenerates **byte-identical** after this
   lane's refactor.
 - `scripts/data/srd-overinclusion-classification.json` is the audit ledger: one
@@ -2259,17 +2324,14 @@ owner decision.
   a poisoned denominator, so no target was wired). Cost: M&M 3e stays the one
   system with no fieldable opposition, and §3 never reaches CLOSED on content.
   Reversible the day a source appears.
-- **(b) Ship clearly-labelled original content, the way §17 did for equipment.**
-  The machinery exists and is proven: the `originalContentSources` channel
-  (`src/utils/openContentPolicy.ts:94`), the `Original Content (not SRD)` label,
-  the `original` manifest status that keeps such entries out of the open-content
-  denominator, and the NOTICE/attribution split. Adversaries authored against
-  the *rules* — which are Open Game Content — rather than transcribed from any
-  book would be legitimate on the same footing as the 79 original equipment
-  entries. §17.2 already states that footing's cost, though:
-  `original-not-srd.ts` is hand-written and unaudited with no upstream to check
-  it against, and whether it should ship at all is explicitly the owner's call.
-  Option (b) doubles that surface rather than shrinking it.
+- ~~**(b) Ship clearly-labelled original content, the way §17 did for
+  equipment.**~~ **FORECLOSED 2026-07-30 (§17.3).** This option rested on the
+  `originalContentSources` channel, the `Original Content (not SRD)` label and
+  the `original` manifest status. All three are deleted, along with the 106
+  entries that used them, by owner decision: this app transcribes open documents
+  and does not author game content. The concern §17.2 raised about that
+  footing — hand-written, unaudited, no upstream to check against — is exactly
+  why. Authoring adversaries is not on the table; (d) or (a) is the choice.
 - **(c) Repair 19.3 first, independently.** The 15 archetypes should stop citing
   per-page d20HeroSRD URLs for content that is not on those pages — either
   re-sourced (blocked by 19.1's reachability finding) or relabelled through

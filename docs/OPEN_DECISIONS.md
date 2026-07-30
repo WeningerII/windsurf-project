@@ -23,11 +23,11 @@ good they are, because the inputs are preference and risk appetite, not evidence
 
 | # | Decision | Where | Why it is yours |
 | --- | --- | --- | --- |
-| **A1** | **31 records ship content with no open-content counterpart anywhere.** The real licensing exposure number (not the headline 95 — of those, 64 are M&M originals with a cited DHH basis). | `WORK_PLAN` §0.1, `GAPS` §18.5.2 | Legal risk appetite. Options are keep, re-tag, or delete shipped content. |
+| ~~**A1**~~ | ~~**31 records ship content with no open-content counterpart anywhere.**~~ **DECIDED AND EXECUTED 2026-07-30: delete.** The class stood at 89 records; all of them were content this project wrote rather than transcribed. All 106 entries admitted through the `originalContentSources` channel are deleted, plus `Cloak of the Archmagi` and `Pegasus Boots` (same invented content, still claiming `SRD 5.2`). The channel is deleted too, so this cannot recur silently. `genuine-non-open-content` = **0**. | `GAPS` §17.3 | — |
 | **A2** | **OC-1 — Great Weapon Master / Sharpshooter cite SRD 5.1, which does not contain them.** SRD 5.1 opens exactly one feat (Grappler); both are 2014 PHB content. The gate records the evidence and stops. | `GAPS` §11, §OC-1 (L837) | Same class as A1, and `GAPS` L2866 calls it "cheap to make, and it is blocking a" downstream item. |
-| **A3** | **Pile C — 78 wrong-edition records.** Honest re-tagging drops **~75 entries** from shipped catalogs, because `filterOpenContentBySource` silently removes anything whose source leaves the allowlist. | `WORK_PLAN` §0.1 | Re-tagging is a *product* change disguised as a data cleanup. |
+| **A3** | **Pile C — 68 wrong-edition records** (was 78; 73 after the allowlists were widened to admit the books by their true names, 68 once the deleted homebrew stopped shadowing rows). Honest re-tagging drops most of them from shipped catalogs, because `filterOpenContentBySource` silently removes anything whose source leaves the allowlist. | `WORK_PLAN` §2.1 | Re-tagging is a *product* change disguised as a data cleanup. |
 | **A4** | **Ratify (or reject) the four kept sheet wrappers.** Phase 5 assumed the Dock covered every catalog; it does not. Keeping them was decided by a lane, not by you, and leaves two browse routes indefinitely. | `WORK_PLAN` §4.3 (L299) | Accept the split as the shipped design, or fund the Dock capability work that closes it. |
-| **A5** | **M&M 3e adversaries — nothing was encoded.** Recommended option (d): fetch `d20herosrd.com` once from an unblocked connection. **The blocker is the sandbox proxy, not licensing.** | `GAPS` §19, §19.4 | Needs someone with network access willing to vouch for the source. |
+| **A5** | **M&M 3e adversaries — nothing was encoded.** Recommended option (d): fetch `d20herosrd.com` once from an unblocked connection. **The blocker is the sandbox proxy, not licensing.** Option (b) — author them as labelled original content — was **foreclosed 2026-07-30** with the rest of the homebrew; the choice is (d) or (a). | `GAPS` §19, §19.4 | Needs someone with network access willing to vouch for the source. |
 | **A6** | **62 remote branch deletions.** 63 branches recorded as retired; 65 remote refs exist. | `docs/history/2026-07-26-retired-branches.md` | Destructive and irreversible-ish. Never done without explicit consent. |
 | **A7** | **Raise the two bundle budgets, or don't ship React 19.** react-dom 18→19 is ~+13.9 KB gzip; eager shell lands ~187.7 KB against a 180,224 B ceiling and total JS ~1684.9 vs 1680 KiB. | `WORK_PLAN` §6.5 | `scripts/check-bundle-size.mjs` states the next climb must be paid by *structural reclaim*, not another bump. Overriding that is governance. |
 | **A8** | **Pick the target Node version for the runtime pin.** Everything else about the bump is scoped and gated. | `WORK_PLAN` §6.5 | Changes CI's runtime and every contributor's environment. |
@@ -85,10 +85,18 @@ Recorded so these stop resurfacing as if open.
 
 ## The honest summary
 
-**Nine items are actually yours (A).** Four of those — A1, A2, A3, A5 — are the same
-underlying question in different clothes: *what does this project do about content it
-ships but cannot cite to an open source?* Answering that one question collapses most
-of section A.
+**Nine items were actually yours (A).** Four of those — A1, A2, A3, A5 — were the
+same underlying question in different clothes: *what does this project do about
+content it ships but cannot cite to an open source?*
+
+**You answered it on 2026-07-30: delete it.** That closed **A1** outright
+(`genuine-non-open-content` 89 → 0), foreclosed option (b) of **A5**, and left
+**A2** and **A3** as the residue — which are a different question, not the same
+one. A1 was *we wrote this and shipped it*; A2/A3 are *this is real open content
+wearing the wrong citation*. Deleting was right for the first and would be wrong
+for the second: the content is legitimately OGL/CC-BY, so the honest remedy is a
+re-tag, and the decision left is whether to accept the ~68 entries a truthful tag
+drops out of the catalogs or to replace them with same-edition equivalents.
 
 **Seven were mine and I should have just decided them (B).** I will, unless you say
 otherwise.

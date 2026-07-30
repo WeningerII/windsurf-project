@@ -767,45 +767,6 @@ export const saw: Item = {
   requiresAttunement: false,
 };
 
-export const chisel: Item = {
-  id: 'chisel',
-  name: 'Chisel',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 0,
-  cost: { amount: 5, currency: 'sp' },
-  description: 'A metal chisel.',
-  source: 'Original Content (not SRD)',
-  requiresAttunement: false,
-};
-
-export const file: Item = {
-  id: 'file',
-  name: 'File',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 0,
-  cost: { amount: 5, currency: 'sp' },
-  description: 'A metal file.',
-  source: 'Original Content (not SRD)',
-  requiresAttunement: false,
-};
-
-export const tongs: Item = {
-  id: 'tongs',
-  name: 'Tongs',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 1,
-  cost: { amount: 5, currency: 'sp' },
-  description: 'Metal tongs for handling hot items.',
-  source: 'Original Content (not SRD)',
-  requiresAttunement: false,
-};
-
 export const block_tackle: Item = {
   id: 'block-tackle',
   name: 'Block and Tackle',
@@ -1009,9 +970,6 @@ export const pf2eGear = {
   pickaxe,
   sledgehammer,
   saw,
-  chisel,
-  file,
-  tongs,
   block_tackle,
   caltrops,
   marbles,

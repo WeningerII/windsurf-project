@@ -1,5 +1,16 @@
 # M&M 3e equipment — provenance repair, item by item
 
+> **SUPERSEDED IN PART, 2026-07-30.** The repair below segregated 79 non-SRD
+> entries into `equipment/original-not-srd.ts` rather than deleting them, on the
+> stated ground that removing shipped content was the owner's call. The owner
+> made that call: **all 79 are deleted**, the module is gone, and the
+> `originalContentSources` policy channel that admitted them is gone with it.
+> This app transcribes open documents; it does not author game content.
+> What still ships is the generated Hero SRD tier, 113/113. The group (b) table
+> below is now a record of what was removed, not of what is segregated — read it
+> that way. Everything about group (a), the fidelity findings and the duplicate
+> findings is unaffected.
+
 Companion record for the change that replaced the hand-written mam3e equipment
 modules with an encoder (`scripts/encode-mam-equipment.mjs`) plus a segregated
 non-SRD module. This file exists so every reclassification is reviewable
@@ -56,14 +67,18 @@ names as well as duplicate ids.
 - **113/113 Hero SRD entries are generated and cited** (`M&M 3e Hero SRD`) into
   `equipment/srd-{weapons,armor,vehicles,gear,headquarters}.ts`. Re-running the
   encoder on unchanged input produces a byte-identical tree.
-- **Nothing was deleted.** The 104 non-SRD entries split into two groups below.
+- **Nothing was deleted *by this repair*.** The 104 non-SRD entries split into
+  the two groups below; group (b) was deleted later, on 2026-07-30, by the
+  decision recorded in the banner at the top of this file.
 - Group **(a)** — 25 entries that are demonstrably the SRD's own item under a
   different name — are **reconciled**: the SRD name, cost and type win, and the
   hand-written duplicate is gone from the hand-written surface. The item still
   ships; it ships under its real name with its real stats.
-- Group **(b)** — 79 entries with no SRD counterpart at all — are **kept**, moved
-  to `equipment/original-not-srd.ts`, and relabelled
-  `source: 'Original Content (not SRD)'`. They keep every stat field they had.
+- Group **(b)** — 79 entries with no SRD counterpart at all — were **kept**,
+  moved to `equipment/original-not-srd.ts`, and relabelled
+  `source: 'Original Content (not SRD)'`, keeping every stat field they had.
+  **They were deleted on 2026-07-30** (see the banner); the list below is the
+  record of what went.
 
 The data model has no alias/`aka` field, so no group (a) entry carries its old
 name forward; inventing a field for that was out of scope. The pre-change names
@@ -118,11 +133,13 @@ are close — `Tracking Device` ("GPS tracker and receiver") is **not** the SRD'
 
 (29 rows, 25 distinct shipped entries plus the 4 duplicate copies.)
 
-## Group (b) — kept, relabelled `Original Content (not SRD)` (79)
+## Group (b) — no Hero SRD counterpart; DELETED 2026-07-30 (79)
 
-These have no Hero SRD counterpart. They live in
-`src/data/mutants-and-masterminds/3e/equipment/original-not-srd.ts` and keep
-every field they had; only `source` changed.
+These had no Hero SRD counterpart. The repair relabelled them
+`source: 'Original Content (not SRD)'` and moved them to
+`equipment/original-not-srd.ts`, keeping every field. That module and all 79
+entries were deleted on 2026-07-30. The list is kept as the record of what the
+product stopped shipping.
 
 **Weapons (10)** — Unarmed, Great Sword, Axe, Staff, Throwing Knife, Machine Gun,
 Combat Staff, Net, Stun Baton, Compound Bow.
@@ -168,21 +185,22 @@ Dimension, Mobile Base, Underwater Base, Castle.
 Note: the SRD models HQs as a size row plus separately-bought feature rows; these
 eleven are pre-built bases, which the SRD does not print.
 
-## The source label, and why the policy needed a new channel
+## The source label, and why the channel is gone
 
-`Original Content (not SRD)` is admitted through a **new**
-`originalContentSources` field on `SystemOpenContentPolicy`
-(`src/utils/openContentPolicy.ts`), not through `allowedSources`.
+`Original Content (not SRD)` was admitted through an `originalContentSources`
+field on `SystemOpenContentPolicy` (`src/utils/openContentPolicy.ts`), separate
+from `allowedSources`. That separation was right as far as it went: folding the
+label into `allowedSources` would have made the whitelist mean two things at once
+— "transcribed from an open document" and "we wrote this" — which is how the
+original defect became invisible in the first place.
 
-Adding it to `allowedSources` would have made the whitelist mean two different
-things at once — "transcribed from an open document" and "we wrote this" — which
-is how the original defect became invisible in the first place. `check-legal-notices`
-does not inspect data sources at all (it gates the NOTICE / license texts /
-in-app reachability), so it neither blesses nor blocks the label; what actually
-governs whether an entry ships is `isOpenContentCompliant`, and that now accepts
-either channel while keeping them distinguishable. `NOTICE` and
-`src/legal/attributions.ts` disclose the split explicitly, so the M&M attribution
-no longer implies that every shipped M&M row is Open Game Content.
+What it got wrong was staying in the product at all. A second admission channel
+made shipping self-authored content a one-line addition, and 106 entries across
+six systems took it. Both the content and the channel were removed on 2026-07-30.
+`isOpenContentCompliant` now admits `allowedSources` and nothing else, so an
+entry this project wrote has nowhere to be admitted from and fails the gate.
+`NOTICE` and `src/legal/attributions.ts` no longer disclose a split, because
+there is none: every M&M row that ships is Open Game Content.
 
 ## Residual — stated, not implied
 
@@ -204,9 +222,11 @@ no longer implies that every shipped M&M row is Open Game Content.
   Extinguisher, First Aid Kit and Grapple Gun are printed by the SRD under
   "General Equipment". `device` in M&M means a power-bearing Device, which these
   are not, so the previous typing was part of the same hand-authored drift.
-- **`original-not-srd.ts` stays hand-written and stays unaudited.** There is no
-  upstream to encode it from and nothing to check its stat blocks against. The
-  gate only proves it does not *claim* the SRD.
+- ~~**`original-not-srd.ts` stays hand-written and stays unaudited.**~~
+  **RESOLVED 2026-07-30** by deletion. The residual existed because there was no
+  upstream to encode that module from and nothing to check its stat blocks
+  against — which is the same reason it should not have shipped. The gate now
+  fails any entry that does not come from a generated Hero SRD module.
 - **Entry ids changed** where the SRD name differs from the old name (e.g.
   `gps` → `gps-receiver`, `flash-bang` → `grenade-flash-bang`). `Mam3eDataModel`
   has no equipment field, so no saved character references these ids.

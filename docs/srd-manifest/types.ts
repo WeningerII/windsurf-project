@@ -90,18 +90,14 @@ export type ManifestCategory =
  *                  denominator and surfaced for human review. NEVER invent.
  *   - `excluded` : intentionally out of scope (see docs/srd-manifest/_exclusions.ts);
  *                  excluded from the denominator. Must cite a reason.
- *   - `original` : SHIPS, and its citation is honest, but the entry was AUTHORED
- *                  by this project rather than transcribed from an open document
- *                  (a source declared in `originalContentSources`,
- *                  src/utils/openContentPolicy.ts). Enumerated here so the
- *                  catalog stays a complete inventory of what ships, but
- *                  excluded from the OPEN-CONTENT denominator — this manifest's
- *                  denominator answers "how much open content should we have",
- *                  and self-authored entries are not an answer to that. Folding
- *                  them in would restate a non-open-content population as
- *                  open-content parity. See docs/mam3e-equipment-provenance.md.
+ *
+ * A sixth status, `original`, existed between 2026-07-28 and 2026-07-30 for
+ * entries this project AUTHORED rather than transcribed. It was removed with the
+ * content it described: all 106 self-authored entries were deleted and the
+ * `originalContentSources` policy channel that admitted them is gone, so the
+ * loaders can no longer ship an entry that would need it.
  */
-export type ManifestEntryStatus = 'encoded' | 'missing' | 'flagged' | 'excluded' | 'original';
+export type ManifestEntryStatus = 'encoded' | 'missing' | 'flagged' | 'excluded';
 
 export interface SrdManifestEntry {
   /** Stable id; matches the loader data id once `encoded`. */
@@ -123,8 +119,7 @@ export interface SystemManifest {
 }
 
 /**
- * An entry belongs to the OPEN-CONTENT population unless flagged, excluded, or
- * `original` (self-authored — cited and shipping, but not open content).
+ * An entry belongs to the OPEN-CONTENT population unless flagged or excluded.
  *
  * This is a provenance predicate, NOT a denominator. The `categoryProgress`
  * helper that used to sit beside it — returning `{denominator, numerator}` per

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T15:42:05.600Z",
+  "generatedAt": "2026-07-30T16:18:57.214Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -7,10 +7,7 @@
         "SRD",
         "System Reference Document 5.1"
       ],
-      "allowMissingSourceFor": [],
-      "originalContentSources": [
-        "Original Content (not SRD)"
-      ]
+      "allowMissingSourceFor": []
     },
     "dnd-5e-2024": {
       "allowedSources": [
@@ -18,19 +15,13 @@
         "System Reference Document 5.2",
         "SRD 5.1"
       ],
-      "allowMissingSourceFor": [],
-      "originalContentSources": [
-        "Original Content (not SRD)"
-      ]
+      "allowMissingSourceFor": []
     },
     "dnd-3.5e": {
       "allowedSources": [
         "SRD 3.5"
       ],
-      "allowMissingSourceFor": [],
-      "originalContentSources": [
-        "Original Content (not SRD)"
-      ]
+      "allowMissingSourceFor": []
     },
     "pf1e": {
       "allowedSources": [
@@ -40,10 +31,7 @@
         "Pathfinder 1e Advanced Player's Guide",
         "SRD 3.5"
       ],
-      "allowMissingSourceFor": [],
-      "originalContentSources": [
-        "Original Content (not SRD)"
-      ]
+      "allowMissingSourceFor": []
     },
     "pf2e": {
       "allowedSources": [
@@ -59,10 +47,7 @@
         "SRD 3.5",
         "SRD 5.1"
       ],
-      "allowMissingSourceFor": [],
-      "originalContentSources": [
-        "Original Content (not SRD)"
-      ]
+      "allowMissingSourceFor": []
     },
     "mam3e": {
       "allowedSources": [
@@ -73,10 +58,7 @@
         "M&M 3e Hero SRD",
         "d20herosrd"
       ],
-      "allowMissingSourceFor": [],
-      "originalContentSources": [
-        "Original Content (not SRD)"
-      ]
+      "allowMissingSourceFor": []
     },
     "daggerheart": {
       "allowedSources": [
@@ -100,7 +82,7 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 335,
-      "equipment": 654,
+      "equipment": 647,
       "feats": 1,
       "advantages": 0,
       "powerModifiers": 0
@@ -114,14 +96,14 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 340,
-      "equipment": 497,
+      "monsters": 337,
+      "equipment": 492,
       "feats": 19,
       "advantages": 0,
       "powerModifiers": 0
     },
     "dnd-3.5e": {
-      "spells": 609,
+      "spells": 607,
       "classes": 26,
       "species": 7,
       "backgrounds": 0,
@@ -145,13 +127,13 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 332,
-      "equipment": 617,
+      "equipment": 615,
       "feats": 86,
       "advantages": 0,
       "powerModifiers": 0
     },
     "pf2e": {
-      "spells": 551,
+      "spells": 546,
       "classes": 12,
       "species": 6,
       "backgrounds": 16,
@@ -160,7 +142,7 @@
       "archetypes": 5,
       "complications": 0,
       "monsters": 413,
-      "equipment": 186,
+      "equipment": 182,
       "feats": 93,
       "advantages": 0,
       "powerModifiers": 0
@@ -175,7 +157,7 @@
       "archetypes": 15,
       "complications": 28,
       "monsters": 0,
-      "equipment": 192,
+      "equipment": 113,
       "feats": 0,
       "advantages": 74,
       "powerModifiers": 99
@@ -207,7 +189,7 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 335,
-      "equipment": 654,
+      "equipment": 647,
       "feats": 1,
       "advantages": 0,
       "powerModifiers": 0
@@ -221,14 +203,14 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 340,
-      "equipment": 497,
+      "monsters": 337,
+      "equipment": 492,
       "feats": 19,
       "advantages": 0,
       "powerModifiers": 0
     },
     "dnd-3.5e": {
-      "spells": 609,
+      "spells": 607,
       "classes": 26,
       "species": 7,
       "backgrounds": 0,
@@ -252,13 +234,13 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 332,
-      "equipment": 617,
+      "equipment": 615,
       "feats": 86,
       "advantages": 0,
       "powerModifiers": 0
     },
     "pf2e": {
-      "spells": 551,
+      "spells": 546,
       "classes": 12,
       "species": 6,
       "backgrounds": 16,
@@ -267,7 +249,7 @@
       "archetypes": 5,
       "complications": 0,
       "monsters": 413,
-      "equipment": 186,
+      "equipment": 182,
       "feats": 93,
       "advantages": 0,
       "powerModifiers": 0
@@ -282,7 +264,7 @@
       "archetypes": 15,
       "complications": 28,
       "monsters": 0,
-      "equipment": 192,
+      "equipment": 113,
       "feats": 0,
       "advantages": 74,
       "powerModifiers": 99
@@ -725,7 +707,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 319
         }
@@ -742,7 +723,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 12
         }
@@ -759,7 +739,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 9
         }
@@ -776,7 +755,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 1
         }
@@ -793,7 +771,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 106
         }
@@ -810,7 +787,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 296,
           "SRD": 39
@@ -823,15 +799,13 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 654,
-        "uniqueCount": 654,
+        "rawCount": 647,
+        "uniqueCount": 647,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 7,
         "sourceCounts": {
-          "SRD 5.1": 647,
-          "Original Content (not SRD)": 7
+          "SRD 5.1": 647
         }
       }
     },
@@ -846,7 +820,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 1
         }
@@ -863,7 +836,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.2": 339
         }
@@ -880,7 +852,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.2": 12
         }
@@ -897,7 +868,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.2": 9
         }
@@ -914,7 +884,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.2": 4
         }
@@ -926,16 +895,14 @@
       "category": "monsters",
       "categoryLabel": "Monsters",
       "metrics": {
-        "rawCount": 340,
-        "uniqueCount": 340,
+        "rawCount": 337,
+        "uniqueCount": 337,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 3,
         "sourceCounts": {
           "SRD 5.2": 330,
-          "SRD 5.1": 7,
-          "Original Content (not SRD)": 3
+          "SRD 5.1": 7
         }
       }
     },
@@ -945,16 +912,14 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 497,
-        "uniqueCount": 497,
+        "rawCount": 492,
+        "uniqueCount": 492,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 3,
         "sourceCounts": {
-          "SRD 5.2": 489,
-          "SRD 5.1": 5,
-          "Original Content (not SRD)": 3
+          "SRD 5.2": 487,
+          "SRD 5.1": 5
         }
       }
     },
@@ -969,7 +934,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.2": 19
         }
@@ -981,15 +945,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 609,
-        "uniqueCount": 609,
+        "rawCount": 607,
+        "uniqueCount": 607,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 2,
         "sourceCounts": {
-          "SRD 3.5": 607,
-          "Original Content (not SRD)": 2
+          "SRD 3.5": 607
         }
       }
     },
@@ -1004,7 +966,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 3.5": 26
         }
@@ -1021,7 +982,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 3.5": 7
         }
@@ -1038,7 +998,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 3.5": 188
         }
@@ -1055,7 +1014,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 3.5": 207
         }
@@ -1072,7 +1030,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 3.5": 118
         }
@@ -1089,7 +1046,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 625
         }
@@ -1106,7 +1062,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 18
         }
@@ -1123,7 +1078,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 7
         }
@@ -1140,7 +1094,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 12
         }
@@ -1157,7 +1110,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Bestiary": 332
         }
@@ -1169,16 +1121,14 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 617,
-        "uniqueCount": 617,
+        "rawCount": 615,
+        "uniqueCount": 615,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 2,
         "sourceCounts": {
           "Core Rulebook": 613,
-          "SRD 3.5": 2,
-          "Original Content (not SRD)": 2
+          "SRD 3.5": 2
         }
       }
     },
@@ -1193,7 +1143,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "CRB": 86
         }
@@ -1205,15 +1154,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 551,
-        "uniqueCount": 551,
+        "rawCount": 546,
+        "uniqueCount": 546,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 5,
         "sourceCounts": {
           "Core Rulebook": 543,
-          "Original Content (not SRD)": 5,
           "Pathfinder 1e Advanced Player's Guide": 1,
           "Secrets of Magic": 1,
           "SRD 5.1": 1
@@ -1231,7 +1178,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 12
         }
@@ -1248,7 +1194,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 6
         }
@@ -1265,7 +1210,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 16
         }
@@ -1282,7 +1226,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 5
         }
@@ -1299,7 +1242,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "B1": 413
         }
@@ -1311,19 +1253,17 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 186,
-        "uniqueCount": 186,
+        "rawCount": 182,
+        "uniqueCount": 182,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 4,
         "sourceCounts": {
           "Core Rulebook": 137,
           "Pathfinder 1e Core Rulebook": 15,
           "SRD 5.1": 14,
           "Pathfinder 1e Advanced Player's Guide": 6,
           "SRD 3.5": 6,
-          "Original Content (not SRD)": 4,
           "Pathfinder 1e Ultimate Combat": 2,
           "Pathfinder 2e Advanced Player's Guide": 1,
           "Pathfinder 1e Ultimate Equipment": 1
@@ -1341,7 +1281,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 93
         }
@@ -1358,7 +1297,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 61
         }
@@ -1375,7 +1313,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 15
         }
@@ -1392,7 +1329,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 28
         }
@@ -1404,15 +1340,13 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 192,
-        "uniqueCount": 192,
+        "rawCount": 113,
+        "uniqueCount": 113,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 79,
         "sourceCounts": {
-          "M&M 3e Hero SRD": 113,
-          "Original Content (not SRD)": 79
+          "M&M 3e Hero SRD": 113
         }
       }
     },
@@ -1427,7 +1361,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 74
         }
@@ -1444,7 +1377,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 99
         }
@@ -1461,7 +1393,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Daggerheart SRD 1.0": 9
         }
@@ -1478,7 +1409,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Daggerheart SRD 1.0": 19
         }
@@ -1495,7 +1425,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Daggerheart SRD 1.0": 9
         }
@@ -1512,7 +1441,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Daggerheart SRD 1.0": 353
         }
@@ -1530,7 +1458,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 61
         }
@@ -1546,7 +1473,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 74
         }
@@ -1562,7 +1488,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 15
         }
@@ -1578,7 +1503,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 28
         }
@@ -1594,7 +1518,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 99
         }
@@ -1610,7 +1533,6 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
-        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 5
         }

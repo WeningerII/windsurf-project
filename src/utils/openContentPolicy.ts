@@ -18,37 +18,33 @@ export type OpenContentCategory =
   | 'complications'
   | 'powerModifiers';
 
+/**
+ * `allowedSources` is the WHOLE admission list. There is deliberately no second
+ * channel.
+ *
+ * There used to be one — `originalContentSources`, which admitted content this
+ * project authored itself under the label "Original Content (not SRD)". It was
+ * introduced for an honest reason (tagging self-written entries with an SRD
+ * label to sneak them past `allowedSources` is a false attribution, the exact
+ * defect the M&M equipment audit found) and it did keep "transcribed" and
+ * "written here" machine-distinguishable. But it also made shipping homebrew a
+ * one-line addition, and 106 entries took that door — 79 M&M equipment items,
+ * 27 spells/items/stat blocks across the five d20 catalogs.
+ *
+ * All 106 were deleted 2026-07-30 and the channel with them (owner decision).
+ * This application transcribes open documents; it does not author game content.
+ * With only `allowedSources` left, a new self-written entry has nowhere to be
+ * admitted from, so it fails the gate instead of quietly widening the corpus.
+ */
 type SystemOpenContentPolicy = {
   allowedSources: readonly string[];
   allowMissingSourceFor: readonly OpenContentCategory[];
-  /**
-   * Sources that are NOT open-content provenance: content authored for this
-   * application rather than transcribed from a published open document.
-   *
-   * This channel exists because the alternative is worse. Content this project
-   * wrote itself is shippable — but tagging it with an SRD/book label to get it
-   * past `allowedSources` is a false attribution, which is exactly the defect
-   * the M&M equipment audit found (150 hand-written entries, all citing
-   * "Hero's Handbook", only 45 of which the Hero SRD contains). Keeping the two
-   * lists separate means "we transcribed this from an open document" and "we
-   * wrote this" stay distinguishable by machine, not just by intent.
-   *
-   * Entries admitted here are still subject to every other gate; they simply do
-   * not claim an open-content pedigree they do not have.
-   */
-  originalContentSources?: readonly string[];
 };
 
 export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPolicy> = {
   'dnd-5e-2014': {
     allowedSources: ['SRD 5.1', 'SRD', 'System Reference Document 5.1'],
     allowMissingSourceFor: [],
-    // The over-inclusion audit (docs/GAPS.md §18) resolved seven 5e-2014 magic
-    // items as content this project wrote rather than SRD 5.1 transcription
-    // (Cloak of Billowing, Scroll of Protection, Cloak of the Archmagi,
-    // Potion of Dragon's Breath, Cap of Water Breathing, Pegasus Boots, Ring of
-    // Clumsiness). They used to claim 'SRD 5.1'; they now say what they are.
-    originalContentSources: ['Original Content (not SRD)'],
   },
   'dnd-5e-2024': {
     // 'SRD 5.1' admitted 2026-07-29: 12 entries in the 2024 catalog (5 items of
@@ -59,10 +55,6 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     // toward a false 5.2 claim. The tag now names the edition it came from.
     allowedSources: ['SRD 5.2', 'System Reference Document 5.2', 'SRD 5.1'],
     allowMissingSourceFor: [],
-    // Same channel as 5e-2014: six 2024-catalog entries (three magic items,
-    // three stat blocks — Captain, Necromancer, Pixie) have no SRD 5.2
-    // counterpart and are this project's own writing.
-    originalContentSources: ['Original Content (not SRD)'],
   },
   'dnd-3.5e': {
     // Only the open-licensed System Reference Document qualifies. Closed-book
@@ -70,10 +62,6 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     // provenance and are rejected.
     allowedSources: ['SRD 3.5'],
     allowMissingSourceFor: [],
-    // Mass Misdirection and Reversal of Fortune are not in the SRD 3.5 spell
-    // chapters under any name; they are this project's own content and no
-    // longer claim otherwise.
-    originalContentSources: ['Original Content (not SRD)'],
   },
   pf1e: {
     // 'Bestiary' is PSRD-Data's source string for Bestiary 1 entries (PRD
@@ -95,9 +83,6 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
       'SRD 3.5',
     ],
     allowMissingSourceFor: [],
-    // Cloak of Flying and Cloak of Invisibility have no PRD counterpart; they
-    // are this project's own writing rather than Core Rulebook transcription.
-    originalContentSources: ['Original Content (not SRD)'],
   },
   pf2e: {
     // 'B1' is Pf2eTools' tag for Bestiary 1 (OGL-era PF2e content) — see
@@ -143,9 +128,6 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
       'SRD 5.1',
     ],
     allowMissingSourceFor: [],
-    // Nine pf2e entries (Chisel, Field Plate, File, Tongs and five spells) have
-    // no counterpart in the cited open source and are this project's own.
-    originalContentSources: ['Original Content (not SRD)'],
   },
   mam3e: {
     // M&M 3e is Open Game Content. Green Ronin designates essentially the entire
@@ -167,11 +149,6 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
       'd20herosrd',
     ],
     allowMissingSourceFor: [],
-    // The mam3e equipment set ships 79 entries with no Hero SRD counterpart
-    // (Power Ring, Web Shooters, Space Station, …) in
-    // src/data/mutants-and-masterminds/3e/equipment/original-not-srd.ts. They
-    // used to claim "Hero's Handbook"; they now say what they are.
-    originalContentSources: ['Original Content (not SRD)'],
   },
   daggerheart: {
     allowedSources: [
@@ -248,28 +225,6 @@ function isSourceAllowed(systemId: GameSystemId, source: string): boolean {
 }
 
 /**
- * True when the citation names this project's own original content rather than
- * an open document. Such entries are shippable but are NOT open-content
- * provenance — see `SystemOpenContentPolicy.originalContentSources`.
- *
- * EXPORTED because `isOpenContentCompliant` is the SHIPPING gate (open content
- * OR declared original content), which is the wrong predicate for anything
- * *measuring* open-content compliance. `generate-roadmap-metrics.ts` uses this
- * to keep the two populations separate in the published Content Integrity
- * table instead of reporting self-authored entries as compliant open content.
- *
- * Scanned rather than pre-indexed: every declaring system lists exactly one
- * label, and the eager shell is ~130 bytes from its gzip budget, so a seventh
- * module-level Set map is not worth the first-paint cost.
- */
-export function isOriginalContentSource(systemId: GameSystemId, source: string): boolean {
-  const declared = strictOpenContentPolicy[systemId].originalContentSources;
-  if (!declared) return false;
-  const normalized = normalizeSource(source);
-  return declared.some((candidate) => normalizeSource(candidate) === normalized);
-}
-
-/**
  * Species can nest subraces that come from a different (possibly closed) book
  * than the parent species. When a nested subrace declares its own source, that
  * attribution must pass the same whitelist as the parent; otherwise the whole
@@ -293,11 +248,16 @@ function nestedSubracesCompliant(systemId: GameSystemId, item: unknown): boolean
 }
 
 /**
- * The shipping gate for a data entry's citation. An entry passes when its source
- * is either open-content provenance for that system (`allowedSources`) or a
- * declared original-content label (`originalContentSources`). Anything else —
- * including a closed-book citation or an unrecognised label — is filtered out of
- * the loaded corpus.
+ * The shipping gate for a data entry's citation. An entry passes only when its
+ * source is open-content provenance for that system (`allowedSources`).
+ * Anything else — a closed-book citation, an unrecognised label, or content this
+ * project wrote itself — is filtered out of the loaded corpus.
+ *
+ * This is also the MEASUREMENT predicate now. It used to be neither: it admitted
+ * declared original content too, so measuring compliance with it would have
+ * reported self-authored entries as compliant open content, and callers had to
+ * subtract that population back out. With the original-content channel gone the
+ * two questions have the same answer again.
  */
 export function isOpenContentCompliant(
   systemId: GameSystemId,
@@ -309,7 +269,7 @@ export function isOpenContentCompliant(
     if (!allowMissingSourceBySystemAndCategory[systemId].has(category)) {
       return false;
     }
-  } else if (!isSourceAllowed(systemId, source) && !isOriginalContentSource(systemId, source)) {
+  } else if (!isSourceAllowed(systemId, source)) {
     return false;
   }
 

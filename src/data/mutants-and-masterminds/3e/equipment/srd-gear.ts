@@ -3,8 +3,8 @@
 // EQUIPMENT_LIST — Open Game Content under OGL 1.0a; see docs/srd-sources.md).
 //
 // DO NOT HAND-EDIT. Re-run the encoder; a hand-edit here is exactly the defect
-// this file exists to remove. Entries with no Hero SRD counterpart live in
-// ./original-not-srd.ts under a non-SRD source label.
+// this file exists to remove. Entries with no Hero SRD counterpart do not ship
+// at all (deleted 2026-07-30) — see docs/mam3e-equipment-provenance.md.
 
 import { MaMEquipment } from '../../../../types/mam/equipment';
 
