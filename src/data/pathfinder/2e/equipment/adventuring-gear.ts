@@ -269,7 +269,7 @@ export const pouch: Item = {
   weight: 0,
   cost: { amount: 5, currency: 'cp' },
   description: 'A belt pouch for small items.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 
@@ -321,7 +321,7 @@ export const ink: Item = {
   weight: 0,
   cost: { amount: 1, currency: 'gp' },
   description: 'A vial of black ink.',
-  source: 'Core Rulebook',
+  source: 'SRD 3.5',
   requiresAttunement: false,
 };
 
@@ -334,7 +334,7 @@ export const pen: Item = {
   weight: 0,
   cost: { amount: 2, currency: 'cp' },
   description: 'A writing implement.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 
@@ -347,7 +347,7 @@ export const parchment: Item = {
   weight: 0,
   cost: { amount: 1, currency: 'sp' },
   description: 'A sheet of parchment.',
-  source: 'Core Rulebook',
+  source: 'SRD 3.5',
   requiresAttunement: false,
 };
 
@@ -360,7 +360,7 @@ export const sealing_wax: Item = {
   weight: 0,
   cost: { amount: 1, currency: 'sp' },
   description: 'Wax for sealing letters.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -373,7 +373,7 @@ export const vial: Item = {
   weight: 0,
   cost: { amount: 1, currency: 'gp' },
   description: 'A small glass vial.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -386,7 +386,7 @@ export const flask: Item = {
   weight: 0,
   cost: { amount: 3, currency: 'cp' },
   description: 'A leather or metal flask.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -399,7 +399,7 @@ export const jug: Item = {
   weight: 1,
   cost: { amount: 3, currency: 'cp' },
   description: 'A ceramic jug.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -412,7 +412,7 @@ export const bucket: Item = {
   weight: 1,
   cost: { amount: 5, currency: 'cp' },
   description: 'A wooden bucket.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 
@@ -490,7 +490,7 @@ export const blanket: Item = {
   weight: 1,
   cost: { amount: 5, currency: 'sp' },
   description: 'A wool blanket.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -516,7 +516,7 @@ export const tinderbox: Item = {
   weight: 0,
   cost: { amount: 5, currency: 'sp' },
   description: 'Flint and steel for starting fires.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 
@@ -529,7 +529,7 @@ export const bell: Item = {
   weight: 0,
   cost: { amount: 1, currency: 'gp' },
   description: 'A small bell.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -542,7 +542,7 @@ export const horn: Item = {
   weight: 1,
   cost: { amount: 3, currency: 'sp' },
   description: 'A signaling horn.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 
@@ -620,7 +620,7 @@ export const net_fishing: Item = {
   weight: 2,
   cost: { amount: 1, currency: 'gp' },
   description: 'A fishing net.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -633,7 +633,7 @@ export const trap: Item = {
   weight: 3,
   cost: { amount: 5, currency: 'gp' },
   description: 'A mechanical trap for hunting.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 
@@ -659,7 +659,7 @@ export const basket: Item = {
   weight: 1,
   cost: { amount: 4, currency: 'sp' },
   description: 'A woven basket.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -672,7 +672,7 @@ export const bottle: Item = {
   weight: 1,
   cost: { amount: 2, currency: 'gp' },
   description: 'A glass bottle.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -685,7 +685,7 @@ export const scrollCase: Item = {
   weight: 0,
   cost: { amount: 1, currency: 'gp' },
   description: 'A leather tube for maps.',
-  source: 'Core Rulebook',
+  source: 'SRD 3.5',
   requiresAttunement: false,
 };
 
@@ -711,7 +711,7 @@ export const rope_silk: Item = {
   weight: 0,
   cost: { amount: 10, currency: 'gp' },
   description: 'Strong silk rope.',
-  source: 'Core Rulebook',
+  source: 'SRD 3.5',
   requiresAttunement: false,
 };
 
@@ -724,7 +724,7 @@ export const shovel: Item = {
   weight: 2,
   cost: { amount: 2, currency: 'gp' },
   description: 'A digging tool.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -737,7 +737,7 @@ export const pickaxe: Item = {
   weight: 3,
   cost: { amount: 3, currency: 'gp' },
   description: 'A mining tool.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -750,7 +750,7 @@ export const sledgehammer: Item = {
   weight: 4,
   cost: { amount: 2, currency: 'gp' },
   description: 'A heavy hammer for breaking.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 
@@ -763,7 +763,7 @@ export const saw: Item = {
   weight: 1,
   cost: { amount: 4, currency: 'sp' },
   description: 'A woodcutting saw.',
-  source: 'Core Rulebook',
+  source: "Pathfinder 1e Advanced Player's Guide",
   requiresAttunement: false,
 };
 
@@ -776,7 +776,7 @@ export const chisel: Item = {
   weight: 0,
   cost: { amount: 5, currency: 'sp' },
   description: 'A metal chisel.',
-  source: 'Core Rulebook',
+  source: 'Original Content (not SRD)',
   requiresAttunement: false,
 };
 
@@ -789,7 +789,7 @@ export const file: Item = {
   weight: 0,
   cost: { amount: 5, currency: 'sp' },
   description: 'A metal file.',
-  source: 'Core Rulebook',
+  source: 'Original Content (not SRD)',
   requiresAttunement: false,
 };
 
@@ -802,7 +802,7 @@ export const tongs: Item = {
   weight: 1,
   cost: { amount: 5, currency: 'sp' },
   description: 'Metal tongs for handling hot items.',
-  source: 'Core Rulebook',
+  source: 'Original Content (not SRD)',
   requiresAttunement: false,
 };
 
@@ -815,7 +815,7 @@ export const block_tackle: Item = {
   weight: 2,
   cost: { amount: 5, currency: 'gp' },
   description: 'Pulley system for lifting.',
-  source: 'Core Rulebook',
+  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -841,7 +841,7 @@ export const marbles: Item = {
   weight: 1,
   cost: { amount: 1, currency: 'sp' },
   description: 'Glass marbles.',
-  source: 'Core Rulebook',
+  source: "Pathfinder 1e Advanced Player's Guide",
   requiresAttunement: false,
 };
 
@@ -854,7 +854,7 @@ export const ball_bearings: Item = {
   weight: 1,
   cost: { amount: 1, currency: 'gp' },
   description: 'Metal ball bearings.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 
@@ -867,7 +867,7 @@ export const dice: Item = {
   weight: 0,
   cost: { amount: 1, currency: 'sp' },
   description: 'Gaming dice.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 
@@ -880,7 +880,7 @@ export const playing_cards: Item = {
   weight: 0,
   cost: { amount: 5, currency: 'sp' },
   description: 'A deck of playing cards.',
-  source: 'Core Rulebook',
+  source: 'Lost Omens: Pathfinder Society Guide',
   requiresAttunement: false,
 };
 
@@ -945,7 +945,7 @@ export const herbalism_kit: Item = {
   weight: 1,
   cost: { amount: 5, currency: 'gp' },
   description: 'Tools for identifying and preparing herbs.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 

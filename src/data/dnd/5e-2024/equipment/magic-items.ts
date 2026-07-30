@@ -1,20 +1,6 @@
 import { Item } from '../../../../types/equipment/items';
 
 // Common Magic Items
-export const alchemy: Item = {
-  id: 'alchemy-jug',
-  name: 'Alchemy Jug',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  type: 'magic-item',
-  rarity: 'uncommon',
-  weight: 3,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    'This ceramic jug appears to be able to hold a gallon of liquid and weighs 2 pounds whether full or empty. Sloshing sounds can be heard whenever the jug is shaken, as if it is full of liquid. The jug has two stoppers, on top and bottom. The jug weighs 2 pounds.',
-  requiresAttunement: false,
-};
-
 export const bag: Item = {
   id: 'bag-of-holding',
   name: 'Bag of Holding',
@@ -47,7 +33,7 @@ export const cloak: Item = {
   id: 'cloak-of-billowing',
   name: 'Cloak of Billowing',
   system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
+  source: 'Original Content (not SRD)',
   type: 'magic-item',
   rarity: 'common',
   weight: 1,
@@ -312,7 +298,7 @@ export const scrollOfProtection: Item = {
   id: 'scroll-of-protection',
   name: 'Scroll of Protection',
   system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
+  source: 'Original Content (not SRD)',
   type: 'consumable',
   rarity: 'rare',
   weight: 0,
@@ -348,20 +334,6 @@ export const cloakOfDisplacement: Item = {
   cost: { amount: 0, currency: 'gp' },
   description:
     'While you wear this cloak, it projects an illusion that makes you appear to be standing in a place near your actual location, causing any creature to have disadvantage on attack rolls against you.',
-  requiresAttunement: true,
-};
-
-export const cloakOfEtherealness: Item = {
-  id: 'cloak-of-etherealness',
-  name: 'Cloak of Etherealness',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  type: 'magic-item',
-  rarity: 'rare',
-  weight: 1,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    "While wearing this cloak, you can use it to cast the etherealness spell. Once used, the cloak can't be used this way again until the next dawn.",
   requiresAttunement: true,
 };
 
@@ -690,20 +662,6 @@ export const ringOfSpellStoring: Item = {
 };
 
 // Additional Potions
-export const potionOfDragonsBreath: Item = {
-  id: 'potion-of-dragons-breath',
-  name: "Potion of Dragon's Breath",
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  type: 'consumable',
-  rarity: 'uncommon',
-  weight: 0.5,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    "When you drink this potion, you can cast the dragon's breath spell without expending a spell slot. The spell uses your spell save DC and spell attack bonus.",
-  requiresAttunement: false,
-};
-
 export const potionOfClairvoyance: Item = {
   id: 'potion-of-clairvoyance',
   name: 'Potion of Clairvoyance',
@@ -731,20 +689,6 @@ export const amuletOfHealth: Item = {
   description:
     'Your Constitution score is 19 while you wear this amulet. It has no effect on you if your Constitution is already 19 or higher.',
   requiresAttunement: true,
-};
-
-export const capOfWaterBreathing: Item = {
-  id: 'cap-of-water-breathing',
-  name: 'Cap of Water Breathing',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  type: 'magic-item',
-  rarity: 'uncommon',
-  weight: 0,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    'While wearing this cap underwater, you can speak its command word as an action to create a bubble of air around your head. You can breathe normally underwater. The bubble stays with you until you speak the command word again.',
-  requiresAttunement: false,
 };
 
 export const cloakOfArachnida: Item = {
@@ -1402,7 +1346,7 @@ export const cursedRingOfClumsiness: Item = {
   id: 'cursed-ring-of-clumsiness',
   name: 'Ring of Clumsiness (Cursed)',
   system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
+  source: 'Original Content (not SRD)',
   type: 'magic-item',
   rarity: 'rare',
   weight: 0,
@@ -1426,20 +1370,6 @@ export const cursedArmorOfVulnerability: Item = {
   requiresAttunement: true,
 };
 
-export const cursedSwordOfVengeance: Item = {
-  id: 'cursed-sword-of-vengeance',
-  name: 'Sword of Vengeance (Cursed)',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  type: 'magic-item',
-  rarity: 'uncommon',
-  weight: 3,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    "This longsword appears to be a +1 weapon. However, once attuned, it curses the wielder. The wielder must make a DC 15 Wisdom saving throw whenever they take damage in combat. On a failed save, they must attack the creature that damaged them until it drops to 0 hit points or the wielder can't reach it. The sword cannot be discarded unless the curse is broken.",
-  requiresAttunement: true,
-};
-
 export const bagOfDevouring: Item = {
   id: 'bag-of-devouring',
   name: 'Bag of Devouring (Cursed)',
@@ -1456,7 +1386,6 @@ export const bagOfDevouring: Item = {
 
 export const dnd5e2024MagicItems: Item[] = [
   // Common Magic Items
-  alchemy,
   bag,
   boots,
   cloak,
@@ -1508,7 +1437,6 @@ export const dnd5e2024MagicItems: Item[] = [
   potionOfGrowth,
   potionOfWaterBreathing,
   potionOfResistance,
-  potionOfDragonsBreath,
   potionOfClairvoyance,
   // Scrolls
   scrollOfProtection,
@@ -1528,7 +1456,6 @@ export const dnd5e2024MagicItems: Item[] = [
   cloakOfProtection,
   cloakOfElvenkind,
   cloakOfDisplacement,
-  cloakOfEtherealness,
   cloakOfTheBat,
   cloakOfArachnida,
   cloakOfTheArchmagi,
@@ -1558,7 +1485,6 @@ export const dnd5e2024MagicItems: Item[] = [
   bracersOfArchery,
   // Wondrous Items - Eyes
   eyesOfCharming,
-  capOfWaterBreathing,
   // Wondrous Items - Robes & Misc
   pearlOfPower,
   robeOfUsefulItems,
@@ -1572,6 +1498,5 @@ export const dnd5e2024MagicItems: Item[] = [
   // Cursed Items
   cursedRingOfClumsiness,
   cursedArmorOfVulnerability,
-  cursedSwordOfVengeance,
   bagOfDevouring,
 ];

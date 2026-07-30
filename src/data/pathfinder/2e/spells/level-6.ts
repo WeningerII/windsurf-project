@@ -136,7 +136,7 @@ export const level6Spells: Spell[] = withPf2eSpellTraits([
     id: 'geyser-pf2e',
     name: 'Geyser',
     system: 'pf2e',
-    source: 'Core Rulebook',
+    source: 'Secrets of Magic',
     level: 6,
     school: 'evocation',
     traditions: ['arcane', 'primal'],

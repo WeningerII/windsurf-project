@@ -1,20 +1,6 @@
 import { Item } from '../../../../types/equipment/items';
 
 // Common Magic Items
-export const alchemy: Item = {
-  id: 'alchemy-jug',
-  name: 'Alchemy Jug',
-  system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
-  type: 'magic-item',
-  rarity: 'uncommon',
-  weight: 3,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    'This ceramic jug appears to be able to hold a gallon of liquid and weighs 2 pounds whether full or empty. Sloshing sounds can be heard whenever the jug is shaken, as if it is full of liquid. The jug has two stoppers, on top and bottom. The jug weighs 2 pounds.',
-  requiresAttunement: false,
-};
-
 export const bag: Item = {
   id: 'bag-of-holding',
   name: 'Bag of Holding',
@@ -47,7 +33,7 @@ export const cloak: Item = {
   id: 'cloak-of-billowing',
   name: 'Cloak of Billowing',
   system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
+  source: 'Original Content (not SRD)',
   type: 'magic-item',
   rarity: 'common',
   weight: 1,
@@ -304,7 +290,7 @@ export const scrollOfProtection: Item = {
   id: 'scroll-of-protection',
   name: 'Scroll of Protection',
   system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
+  source: 'Original Content (not SRD)',
   type: 'consumable',
   rarity: 'rare',
   weight: 0,
@@ -340,20 +326,6 @@ export const cloakOfDisplacement: Item = {
   cost: { amount: 0, currency: 'gp' },
   description:
     'While you wear this cloak, it projects an illusion that makes you appear to be standing in a place near your actual location, causing any creature to have disadvantage on attack rolls against you.',
-  requiresAttunement: true,
-};
-
-export const cloakOfEtherealness: Item = {
-  id: 'cloak-of-etherealness',
-  name: 'Cloak of Etherealness',
-  system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
-  type: 'magic-item',
-  rarity: 'rare',
-  weight: 1,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    "While wearing this cloak, you can use it to cast the etherealness spell. Once used, the cloak can't be used this way again until the next dawn.",
   requiresAttunement: true,
 };
 
@@ -548,7 +520,7 @@ export const cloakOfTheArchmagi: Item = {
   id: 'cloak-of-the-archmagi',
   name: 'Cloak of the Archmagi',
   system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
+  source: 'Original Content (not SRD)',
   type: 'magic-item',
   rarity: 'legendary',
   weight: 1,
@@ -676,7 +648,7 @@ export const potionOfDragonsBreath: Item = {
   id: 'potion-of-dragons-breath',
   name: "Potion of Dragon's Breath",
   system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
+  source: 'Original Content (not SRD)',
   type: 'consumable',
   rarity: 'uncommon',
   weight: 0.5,
@@ -719,7 +691,7 @@ export const capOfWaterBreathing: Item = {
   id: 'cap-of-water-breathing',
   name: 'Cap of Water Breathing',
   system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
+  source: 'Original Content (not SRD)',
   type: 'magic-item',
   rarity: 'uncommon',
   weight: 0,
@@ -775,7 +747,7 @@ export const pegasusBoots: Item = {
   id: 'pegasus-boots',
   name: 'Pegasus Boots',
   system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
+  source: 'Original Content (not SRD)',
   type: 'magic-item',
   rarity: 'rare',
   weight: 1,
@@ -1384,7 +1356,7 @@ export const cursedRingOfClumsiness: Item = {
   id: 'cursed-ring-of-clumsiness',
   name: 'Ring of Clumsiness (Cursed)',
   system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
+  source: 'Original Content (not SRD)',
   type: 'magic-item',
   rarity: 'rare',
   weight: 0,
@@ -1408,20 +1380,6 @@ export const cursedArmorOfVulnerability: Item = {
   requiresAttunement: true,
 };
 
-export const cursedSwordOfVengeance: Item = {
-  id: 'cursed-sword-of-vengeance',
-  name: 'Sword of Vengeance (Cursed)',
-  system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
-  type: 'magic-item',
-  rarity: 'uncommon',
-  weight: 3,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    "This longsword appears to be a +1 weapon. However, once attuned, it curses the wielder. The wielder must make a DC 15 Wisdom saving throw whenever they take damage in combat. On a failed save, they must attack the creature that damaged them until it drops to 0 hit points or the wielder can't reach it. The sword cannot be discarded unless the curse is broken.",
-  requiresAttunement: true,
-};
-
 export const bagOfDevouring: Item = {
   id: 'bag-of-devouring',
   name: 'Bag of Devouring (Cursed)',
@@ -1440,7 +1398,6 @@ export const bagOfDevouring: Item = {
 // hand-maintained list silently omitted 45 of the 100 defined items —
 // Bag of Holding included — leaving them unreachable from the product.
 export const dnd5eMagicItems: Item[] = [
-  alchemy,
   bag,
   boots,
   cloak,
@@ -1463,7 +1420,6 @@ export const dnd5eMagicItems: Item[] = [
   scrollOfProtection,
   scrollOfFireball,
   cloakOfDisplacement,
-  cloakOfEtherealness,
   bootsOfSpeed,
   glovesOfMissileSnaring,
   helmetOfTelepathy,
@@ -1538,6 +1494,5 @@ export const dnd5eMagicItems: Item[] = [
   scrollOfWallOfFire,
   cursedRingOfClumsiness,
   cursedArmorOfVulnerability,
-  cursedSwordOfVengeance,
   bagOfDevouring,
 ];

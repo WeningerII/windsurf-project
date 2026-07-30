@@ -7,7 +7,7 @@ export const pixie: Monster = {
   id: 'pixie-2024',
   name: 'Pixie',
   system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
+  source: 'Original Content (not SRD)',
   size: 'tiny',
   type: 'fey',
   alignment: 'chaotic good',

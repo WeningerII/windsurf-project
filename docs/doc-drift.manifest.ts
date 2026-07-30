@@ -154,6 +154,18 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     owner: 'vision',
     rules: ['path_ref_rule'],
   },
+  // Added 2026-07-29. An INDEX of every open decision, block and deferral,
+  // built by sweeping all 248 tracked markdown files. It restates items whose
+  // authority lives elsewhere, which is exactly the shape that rots — so it
+  // carries `ledger_ref_rule`: the moment a ledger item it lists as open is
+  // marked done, this file fails CI instead of quietly misdirecting whoever
+  // reads it to decide what to work on.
+  {
+    path: 'docs/OPEN_DECISIONS.md',
+    kind: 'live',
+    owner: 'decision-index',
+    rules: ['path_ref_rule', 'ledger_ref_rule'],
+  },
   {
     // Retired 2026-07-26. All seven phases complete, and it survived only by
     // being hand-mirrored into MASTER_PLAN.md — a mirror that demonstrably

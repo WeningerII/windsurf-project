@@ -77,42 +77,6 @@ Concretely, the experiences this is aimed at:
 When provider keys are absent or a model call fails, all of it must still work
 as a deterministic, manual tool. AI is leverage, never a dependency.
 
-## The hard part, stated honestly
-
-There is a tempting version of this thesis that is **wrong**, and it is worth
-writing down so we do not drift into it:
-
-> "If we hard-code enough systems, the patterns that make a game will simply
-> *emerge*, and we will be able to synthesize new content — a balanced new
-> species, spell, or subclass — by reading off those patterns."
-
-The accumulation does not produce the abstraction on its own. This repository
-is the proof: it already encodes **seven** systems faithfully, and the shared
-grammar has *not* fallen out of the pile. Each engine encodes its own system
-idiomatically. The only place commonality has been factored into a reusable
-shape is where someone **deliberately designed it** — the small shared d20
-helper layer, and now the RFC 003 rules IR: a shared resolver and condition
-catalogs that reach all seven systems, with a compile layer the five
-additive-shaped engines route through.
-
-The lesson: **a cross-system rules grammar has to be built, not discovered.**
-Faithful per-system data is the *corpus* — necessary, expensive, and now
-largely paid for. But turning a corpus into a grammar is a modeling act: an
-explicit intermediate representation of what an *effect*, a *condition*, an
-*action*, a *modifier*, and a *terrain feature* are, independent of any one
-system, that every engine maps onto. That representation was deliberately
-designed — not discovered — in `docs/rfc/003-rules-ir-and-effects.md`
-(Accepted; the IR, resolver, and per-system compile layer have begun
-shipping), proving the point: the shared grammar appeared exactly where it
-was explicitly built, and nowhere else.
-
-Synthesis of new content — the original dream — is therefore correctly the
-*last* thing, not the first. It is not a feature to bolt on; it is the
-**emergent payoff** of having built the grammar. Build the intermediate
-representation, the validators, and the provenance ledger, and synthesizing a
-balanced, rules-legal, clearly-labeled-as-homebrew species becomes tractable.
-Skip them, and no amount of additional hard-coded data will make it real.
-
 ## The bet, in one line
 
 Encode the rules faithfully; make them executable; design the grammar that

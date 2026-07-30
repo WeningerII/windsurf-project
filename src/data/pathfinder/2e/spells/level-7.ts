@@ -173,7 +173,7 @@ export const level7Spells: Spell[] = withPf2eSpellTraits([
     id: 'forcecage-7-pf2e',
     name: 'Forcecage',
     system: 'pf2e',
-    source: 'Core Rulebook',
+    source: 'SRD 5.1',
     level: 7,
     school: 'evocation',
     traditions: ['arcane'],

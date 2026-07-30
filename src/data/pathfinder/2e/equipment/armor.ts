@@ -279,7 +279,7 @@ export const bandedMail: Armor = {
   weight: 5,
   cost: { amount: 10, currency: 'gp' },
   description: 'Overlapping metal bands.',
-  source: 'Core Rulebook',
+  source: 'SRD 3.5',
   requiresAttunement: false,
 };
 
@@ -297,7 +297,7 @@ export const ringMail: Armor = {
   weight: 8,
   cost: { amount: 10, currency: 'gp' },
   description: 'Armor made of interlocking rings.',
-  source: 'Core Rulebook',
+  source: 'SRD 5.1',
   requiresAttunement: false,
 };
 
@@ -314,7 +314,7 @@ export const fieldPlate: Armor = {
   weight: 9,
   cost: { amount: 25, currency: 'gp' },
   description: 'Battle-ready plate armor.',
-  source: 'Core Rulebook',
+  source: 'Original Content (not SRD)',
   requiresAttunement: false,
 };
 
@@ -331,7 +331,7 @@ export const armoredCoat: Armor = {
   weight: 3,
   cost: { amount: 3, currency: 'gp' },
   description: 'A reinforced coat providing protection.',
-  source: 'Core Rulebook',
+  source: 'Lost Omens: Knights of Lastwall',
   requiresAttunement: false,
 };
 

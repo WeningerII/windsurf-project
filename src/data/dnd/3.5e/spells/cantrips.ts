@@ -90,7 +90,7 @@ export const cantrips: Spell[] = [
     id: 'bleed-35e',
     name: 'Bleed',
     system: 'dnd-3.5e',
-    source: 'SRD 3.5',
+    source: 'Pathfinder 1e Core Rulebook',
     level: 0,
     school: 'necromancy',
     castingTime: {
