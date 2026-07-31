@@ -8,11 +8,11 @@ interface CurrencyEntry {
 }
 
 const DND_CURRENCIES: CurrencyEntry[] = [
-  { key: 'copper', label: 'CP', color: 'text-orange-600' },
-  { key: 'silver', label: 'SP', color: 'text-slate-400' },
-  { key: 'electrum', label: 'EP', color: 'text-blue-400' },
-  { key: 'gold', label: 'GP', color: 'text-amber-500' },
-  { key: 'platinum', label: 'PP', color: 'text-slate-200' },
+  { key: 'copper', label: 'CP', color: 'text-orange-700 dark:text-orange-400' },
+  { key: 'silver', label: 'SP', color: 'text-slate-600 dark:text-slate-300' },
+  { key: 'electrum', label: 'EP', color: 'text-blue-600 dark:text-blue-400' },
+  { key: 'gold', label: 'GP', color: 'text-amber-700 dark:text-amber-400' },
+  { key: 'platinum', label: 'PP', color: 'text-slate-700 dark:text-slate-200' },
 ];
 
 interface Props<T extends Record<string, number>> {

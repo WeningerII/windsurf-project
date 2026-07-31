@@ -121,7 +121,7 @@ export const FeatureOptionBrowser: React.FC<FeatureOptionBrowserProps> = ({
                             disabled={isSelected}
                             className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs transition-colors ${
                               isSelected
-                                ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700'
+                                ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
                                 : 'border-input hover:border-primary/50 hover:bg-background'
                             }`}
                           >

@@ -95,7 +95,7 @@ export function LibraryBestiaryView() {
               id="bestiary-system"
               value={selectedSystem}
               onChange={(e) => setSelectedSystem(e.target.value as GameSystemId)}
-              className="px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               aria-label="Select game system"
             >
               {systemIds.map((systemId) => (

@@ -342,7 +342,7 @@ function DockPanel({
             id="dock-system"
             value={selectedSystem}
             onChange={(event) => onSelectSystem(event.target.value as GameSystemId)}
-            className="rounded-md border border-input px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            className="rounded-md border border-input bg-background text-foreground px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           >
             {systemIds.map((systemId) => (
               <option key={systemId} value={systemId}>
