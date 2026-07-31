@@ -212,6 +212,77 @@ const ALLOWLIST = [
     reason:
       '"Powers — Power Cost" is the Power Cost SECTION of the Hero\'s Handbook Powers chapter, not a power effect named "Power Cost"; the shipped mam3e power corpus (loadSpellsForSystem) is a list of power EFFECTS, so the name cannot resolve. The citation is sound; the parser cannot distinguish a chapter section from an entry without a denominator of section titles.',
   },
+
+  // The mam3e L5 rows added 2026-07-31 are all the SAME SHAPE as
+  // register:mam3e.L9.power-cost above: each cites a section of the Hero's
+  // Handbook Powers chapter (Duration, Effect Ranks, Power Cost, Modifiers),
+  // and the shipped mam3e corpus is a list of power EFFECTS, so a section title
+  // can never resolve against it. Listed individually rather than pattern-matched
+  // so each remains a reviewable claim — a wildcard here would let a genuinely
+  // fabricated citation in under cover of the real ones.
+  //
+  // NOTE, separately: whether these rows belong in L5 at all is an open question.
+  // docs/compute-register/types.ts defines L5 as "spellcasting economy" and M&M
+  // has no spellcasting, so siting the EFFECT economy there is a reinterpretation
+  // that moves the published completeness number. That is a scope decision, and
+  // it is not settled by this allowlist — this only records that the citations
+  // name real chapter sections.
+  {
+    id: 'register:mam3e.L5.continuous-effect-no-activation',
+    assertion: 'B/named-entry',
+    citation:
+      "M&M 3e Hero's Handbook (DHH OGC): Powers — Duration (Continuous, Permanent); Action & Adventure — Action Types",
+    verdict: 'chapter-section',
+    gapsAnchor: 'OC-2',
+    reason:
+      '"Powers — Duration" is the Duration SECTION of the Powers chapter; Continuous and Permanent are duration VALUES within it, not power effects. Cannot resolve against a corpus of effect names.',
+  },
+  {
+    id: 'register:mam3e.L5.effect-rank',
+    assertion: 'B/named-entry',
+    citation: "M&M 3e Hero's Handbook (DHH OGC): Powers — Effect Ranks",
+    verdict: 'chapter-section',
+    gapsAnchor: 'OC-2',
+    reason:
+      '"Effect Ranks" is a section of the Powers chapter describing how rank scales an effect, not an effect named "Effect Ranks".',
+  },
+  {
+    id: 'register:mam3e.L5.flat-effect-rank',
+    assertion: 'B/named-entry',
+    citation: "M&M 3e Hero's Handbook (DHH OGC): Powers — Power Cost (flat versus per-rank effects)",
+    verdict: 'chapter-section',
+    gapsAnchor: 'OC-2',
+    reason:
+      'Same Power Cost section as register:mam3e.L9.power-cost, narrowed to the flat-versus-per-rank distinction. A section, not an effect.',
+  },
+  {
+    id: 'register:mam3e.L5.modifier-applied-rank',
+    assertion: 'B/named-entry',
+    citation: "M&M 3e Hero's Handbook (DHH OGC): Powers — Modifiers (ranked extras and flaws)",
+    verdict: 'chapter-section',
+    gapsAnchor: 'OC-2',
+    reason:
+      '"Modifiers" is the extras-and-flaws SECTION of the Powers chapter. Individual modifiers ship in the modifier corpus, not the power-effect corpus this assertion resolves against.',
+  },
+  {
+    id: 'register:mam3e.L5.sustained-effect-upkeep',
+    assertion: 'B/named-entry',
+    citation: "M&M 3e Hero's Handbook (DHH OGC): Powers — Duration (Sustained)",
+    verdict: 'chapter-section',
+    gapsAnchor: 'OC-2',
+    reason:
+      'Sustained is a duration VALUE in the Powers chapter Duration section, not a power effect. Note the row itself is recorded `missing`: costForAction takes only an action type, so sustained upkeep is genuinely not modelled.',
+  },
+  {
+    id: 'register:mam3e.L5.no-per-use-resource-economy',
+    assertion: 'B/named-entry',
+    citation:
+      "M&M 3e Hero's Handbook (DHH OGC): Powers — Duration (effects are instant/concentration/sustained/continuous/permanent; none are expendable uses)",
+    verdict: 'chapter-section',
+    gapsAnchor: 'OC-2',
+    reason:
+      'Cites the Duration section to evidence an ABSENCE — M&M has no per-use/slot economy to model. An absence claim can never resolve to a named corpus entry by construction.',
+  },
 ];
 
 const ALLOWED_BY_ID = new Map(ALLOWLIST.map((entry) => [entry.id, entry]));
