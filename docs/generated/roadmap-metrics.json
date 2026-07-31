@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T16:18:57.214Z",
+  "generatedAt": "2026-07-31T05:40:35.414Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -456,9 +456,9 @@
     {
       "systemId": "dnd-3.5e",
       "systemLabel": "D&D 3.5e",
-      "verified": 32,
-      "inScope": 37,
-      "percent": 86.5,
+      "verified": 36,
+      "inScope": 41,
+      "percent": 87.8,
       "byLayer": {
         "L1": {
           "verified": 4,
@@ -497,16 +497,16 @@
           "inScope": 2
         },
         "L10": {
-          "verified": 0,
-          "inScope": 5
+          "verified": 4,
+          "inScope": 9
         }
       }
     },
     {
       "systemId": "pf1e",
       "systemLabel": "Pathfinder 1e",
-      "verified": 33,
-      "inScope": 33,
+      "verified": 37,
+      "inScope": 37,
       "percent": 100,
       "byLayer": {
         "L1": {
@@ -522,8 +522,8 @@
           "inScope": 7
         },
         "L10": {
-          "verified": 1,
-          "inScope": 1
+          "verified": 5,
+          "inScope": 5
         },
         "L4": {
           "verified": 4,
@@ -554,13 +554,13 @@
     {
       "systemId": "mam3e",
       "systemLabel": "Mutants & Masterminds 3e",
-      "verified": 26,
-      "inScope": 34,
-      "percent": 76.5,
+      "verified": 35,
+      "inScope": 44,
+      "percent": 79.5,
       "byLayer": {
         "L1": {
-          "verified": 1,
-          "inScope": 1
+          "verified": 5,
+          "inScope": 5
         },
         "L3": {
           "verified": 5,
@@ -593,6 +593,10 @@
         "L6": {
           "verified": 0,
           "inScope": 8
+        },
+        "L5": {
+          "verified": 5,
+          "inScope": 6
         }
       }
     },
