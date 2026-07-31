@@ -85,7 +85,9 @@ export function UserMenu({
                 </p>
               )}
               {syncState === 'error' && <p className="text-xs text-red-500 mt-0.5">Sync failed</p>}
-              {syncState === 'offline' && <p className="text-xs text-amber-700 mt-0.5">Offline</p>}
+              {syncState === 'offline' && (
+                <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">Offline</p>
+              )}
             </div>
 
             {onSyncNow && (

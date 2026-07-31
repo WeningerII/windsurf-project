@@ -5,9 +5,9 @@ import type { SystemSupportLevel } from '../../types/system-catalog';
  * GameSystemSelector and SystemStatusDashboard.
  */
 export const supportBadgeStyles: Record<SystemSupportLevel, string> = {
-  full: 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20',
-  partial: 'bg-amber-500/10 text-amber-700 border border-amber-500/20',
-  scaffold: 'bg-slate-500/10 text-slate-700 border border-slate-500/20',
+  full: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20',
+  partial: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20',
+  scaffold: 'bg-slate-500/10 text-slate-700 dark:text-slate-300 border border-slate-500/20',
 };
 
 export const supportBadgeLabels: Record<SystemSupportLevel, string> = {

@@ -30,9 +30,9 @@ const DISPOSITION_LABEL: Record<SceneReactionDisposition, string> = {
 
 const DISPOSITION_BADGE: Record<SceneReactionDisposition, string> = {
   hostile: 'bg-destructive/15 text-destructive font-semibold',
-  unfriendly: 'bg-amber-500/15 text-amber-700 dark:text-amber-400',
+  unfriendly: 'bg-amber-500/15 text-amber-800 dark:text-amber-400',
   indifferent: 'bg-muted text-muted-foreground',
-  friendly: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
+  friendly: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400',
   helpful: 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-semibold',
 };
 

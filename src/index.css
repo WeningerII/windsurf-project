@@ -51,8 +51,29 @@
     --muted-foreground: 215 20.2% 65.1%;
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    /* The light theme's --destructive was AA-tuned above; this one had been left
+       at the stock 30.6% L (#7f1d1d, red-900) and never was. That is a text token
+       here far more than a surface one — `text-destructive` appears in 55 files
+       and `bg-destructive/*` tints in 31, while SOLID `bg-destructive` exists in
+       exactly two places (Button and Badge variants). Red-900 on the dark
+       background is 2.00:1, and on the destructive/10 tint 1.95:1 — the
+       Monsters browser's CR badges and the encounter-budget warning were both
+       shipping at roughly a third of AA.
+
+       No single value can serve both roles in dark mode: clearing 4.5:1 against
+       #020817 needs relative luminance >= 0.196, and carrying a near-white label
+       needs <= 0.176. So the PAIR flips, which is what a dark theme is supposed
+       to do. red-400 gives 7.23:1 as text on the background and 6.54 / 6.10 /
+       5.63 on the /10, /15 and /20 tints; the label moves to the same value dark
+       --primary-foreground already uses, for 6.45:1 on the solid button and
+       5.34:1 on its /90 hover. red-500 also technically passes but lands at 4.46
+       on the /20 tint and FAILS the hover at 3.96, so it is not the pick.
+
+       Visible consequence, deliberately: solid destructive buttons and badges in
+       dark mode become light red with a dark label instead of dark red with a
+       white one. */
+    --destructive: 0 90.6% 70.8%;
+    --destructive-foreground: 222.2 47.4% 11.2%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;

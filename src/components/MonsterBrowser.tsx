@@ -149,7 +149,7 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({
           placeholder="Search monsters by name or ability..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          className="w-full pl-10 pr-4 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           aria-label="Search monsters"
         />
       </div>
@@ -162,7 +162,7 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({
           <select
             value={selectedType ?? ''}
             onChange={(e) => setSelectedType(e.target.value || null)}
-            className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             aria-label="Filter by creature type"
           >
             <option value="">All Types</option>
@@ -180,7 +180,7 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({
           <select
             value={selectedCR ?? ''}
             onChange={(e) => setSelectedCR(e.target.value || null)}
-            className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             aria-label="Filter by challenge rating"
           >
             <option value="">All CRs</option>
@@ -198,7 +198,7 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({
           <select
             value={selectedSize ?? ''}
             onChange={(e) => setSelectedSize(e.target.value || null)}
-            className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
             aria-label="Filter by creature size"
           >
             <option value="">All Sizes</option>
