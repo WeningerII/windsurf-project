@@ -20,6 +20,11 @@
 import { createSeededRng, type SeededRng } from '../../scene/seededRng';
 import { resolveAttack, type AttackResolution } from './attackResolution';
 import { resolveEffects, type ResolveContext } from './resolve';
+import {
+  collectDamageChannels,
+  splitDamageAcrossChannels,
+  type DamageChannelAmount,
+} from './damageChannelSplit';
 import type { EffectInstance } from '../ir/types';
 
 /**
@@ -147,6 +152,16 @@ export interface AreaEffectOutcome {
   saveTotal: number;
   saved: boolean;
   damageTaken: number;
+  /**
+   * `damageTaken` broken down by damage channel, summing exactly to it.
+   *
+   * Split PER PARTICIPANT rather than once for the whole effect, because the save
+   * is what decides the total each one takes — halving first and splitting the
+   * halved figure keeps the SRD order (save, then resistance) and means the parts
+   * still sum to the number this outcome reports. Absent when the effect declared
+   * no positive damage channels.
+   */
+  damageChannels?: DamageChannelAmount[];
 }
 
 export interface AreaEffectResult {
@@ -178,13 +193,25 @@ export function resolveAreaEffect(input: AreaEffectInput): AreaEffectResult {
     }
   }
 
+  // The channels are shared (the damage was rolled once); only the TOTAL differs
+  // per participant, so the weights are collected once and re-split per outcome.
+  const channels = collectDamageChannels(damageResolved.byTarget);
+
   const perTarget = input.participants.map((participant): AreaEffectOutcome => {
     const rng = participantRng(input.seed, input.sourceId, participant.targetId, 'save');
     const saveRoll = rng.rollDie(20);
     const saveTotal = saveRoll + participant.saveBonus;
     const saved = saveTotal >= input.saveDC;
     const damageTaken = saved ? (halfOnSave ? Math.floor(sharedDamage / 2) : 0) : sharedDamage;
-    return { targetId: participant.targetId, saveRoll, saveTotal, saved, damageTaken };
+    return {
+      targetId: participant.targetId,
+      saveRoll,
+      saveTotal,
+      saved,
+      damageTaken,
+      damageChannels:
+        channels.length > 0 ? splitDamageAcrossChannels(damageTaken, channels) : undefined,
+    };
   });
 
   return {

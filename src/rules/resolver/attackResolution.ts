@@ -25,6 +25,11 @@ import { pf2eDegreeOfSuccess, type Pf2eDegreeOfSuccess } from './pf2eDegree';
 import { d20CriticalConfirmed, d20CriticalDamage } from '../../utils/derivedCombatMath';
 import type { EffectInstance } from '../ir/types';
 import type { DamageType } from '../../types/core/common';
+import {
+  collectDamageChannels,
+  splitDamageAcrossChannels,
+  type DamageChannelAmount,
+} from './damageChannelSplit';
 
 export interface AttackResolutionInput {
   /** Compiled attack-roll effects (proficiency, ability, item, feat bonuses…). */
@@ -98,14 +103,28 @@ export interface AttackResolution {
    * mitigation could never fire for a real attack.
    *
    * Set ONLY for a single typed channel, deliberately. An attack that deals
-   * "slashing plus fire" has two channels and one scalar total; splitting that
-   * total back apart needs a remainder rule so the parts still sum to the whole,
-   * and guessing one would silently change damage numbers. Multi-channel attacks
-   * therefore stay untyped and unmitigated — the same behaviour as before this
-   * field existed — until that rule is decided. Untyped damage is never
-   * mitigated, so leaving it absent is the safe direction.
+   * "slashing plus fire" has two channels and one scalar total, and no single
+   * type describes it honestly — so this field stays absent there and
+   * `damageChannels` carries the breakdown instead. Kept as-is rather than
+   * widened so every existing caller reading a lone `damageType` keeps seeing
+   * exactly what it saw before.
    */
   damageType?: DamageType;
+  /**
+   * The full per-channel breakdown of `damage`, in declaration order, summing
+   * EXACTLY to `damage`.
+   *
+   * This is what makes typed mitigation reachable for multi-channel attacks. The
+   * channel weights are each channel's own resolved total; the split runs against
+   * the FINAL `damage` scalar, after crit math, so a doubled crit distributes
+   * proportionally across the channels instead of landing on one of them. The
+   * remainder rule and its tie-breaks live in `damageChannelSplit.ts`.
+   *
+   * Absent when the attack rolled no damage channels at all. Present with a
+   * single entry for an ordinary single-channel attack, where it is simply the
+   * whole total — callers that only understand `damageType` may keep ignoring it.
+   */
+  damageChannels?: DamageChannelAmount[];
   /** Individual damage dice rolled (empty on a miss or with no dice). */
   damageDiceTerms: number[];
   damageBonus: number;
@@ -166,6 +185,7 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
   let damageDiceTerms: number[] = [];
   let damageBonus = 0;
   let damageType: DamageType | undefined;
+  let damageChannels: DamageChannelAmount[] | undefined;
   let criticalConfirmed: boolean | undefined;
   let confirmationRoll: number | undefined;
 
@@ -187,6 +207,10 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
         damageDiceTerms = [...damageDiceTerms, ...resolved.diceTerms];
       }
     }
+    // The channel WEIGHTS are the breakdown that summing into one scalar
+    // destroys. Collected here, applied at the bottom of this block once crit
+    // math has settled the final total.
+    const channels = collectDamageChannels(damageResolved.byTarget);
     // Exactly one typed channel and nothing untyped alongside it: the whole
     // total belongs to that type, so it can be reported without any split.
     const untypedTotal = damageResolved.byTarget.damage?.total ?? 0;
@@ -222,6 +246,15 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
       }
     }
 
+    // Split LAST, against the final scalar. Every crit model above rewrites
+    // `damage` as a whole (pf2e doubles it, confirm-multiply multiplies it,
+    // double-dice adds the dice back), so distributing proportionally here is
+    // what carries that multiplication onto the individual channels — and the
+    // parts still sum exactly to the number the rest of the engine reports.
+    if (channels.length > 0) {
+      damageChannels = splitDamageAcrossChannels(damage, channels);
+    }
+
     ledger.push(...damageResolved.ledger);
   }
 
@@ -240,6 +273,7 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
     degreeOfSuccess,
     damage,
     damageType,
+    damageChannels,
     damageDiceTerms,
     damageBonus,
     ledger,
