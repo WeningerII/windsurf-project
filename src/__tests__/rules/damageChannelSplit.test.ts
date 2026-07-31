@@ -16,7 +16,19 @@ import {
 import { createSeededRng } from '../../scene/seededRng';
 import type { EffectInstance } from '../../rules/ir/types';
 import type { DamageType } from '../../types/core/common';
-import type { SceneDocument, SceneToken } from '../../types/core/scene';
+import type { SceneActionIntent, SceneDocument, SceneToken } from '../../types/core/scene';
+
+/**
+ * `SceneActionIntent` is a union and only its apply-damage arm carries `damages`,
+ * so reading the field needs the same discriminant narrowing the sibling suites
+ * use (see manualDamage.test.ts and roundDriver.test.ts). Asserting the
+ * discriminant rather than casting means a bridge that silently started emitting
+ * a different intent kind fails here instead of type-erroring at the read.
+ */
+function damagesOf(intent: SceneActionIntent | undefined) {
+  expect(intent?.type).toBe('apply-damage');
+  return intent?.type === 'apply-damage' ? intent.damages : [];
+}
 
 /**
  * WORK_PLAN §3.2 decision B1 — the multi-channel damage split.
@@ -104,9 +116,7 @@ describe('splitDamageAcrossChannels — the post-condition', () => {
   });
 
   it('rejects a non-integer total rather than silently rounding', () => {
-    expect(() => splitDamageAcrossChannels(7.5, channelsOfWeights(1, 1))).toThrow(
-      /finite integer/
-    );
+    expect(() => splitDamageAcrossChannels(7.5, channelsOfWeights(1, 1))).toThrow(/finite integer/);
     expect(() => splitDamageAcrossChannels(Number.NaN, channelsOfWeights(1, 1))).toThrow(
       /finite integer/
     );
@@ -375,10 +385,7 @@ describe('multi-channel damage reaching the grid', () => {
   it('records provenance per channel so the log explains its own numbers', () => {
     let scene = sceneWith(token('resistant', 60, { resistances: ['fire'] }));
     const intent = attackToDamageIntent('hero', 'resistant', flameTongue())!;
-    scene = appendSceneEvent(
-      scene,
-      resolveSceneAction(scene, intent, { eventId: 'hit' }).event!
-    );
+    scene = appendSceneEvent(scene, resolveSceneAction(scene, intent, { eventId: 'hit' }).event!);
 
     const damaged = scene.events.find((event) => event.type === 'token.damaged')!;
     const entries = (
@@ -401,7 +408,7 @@ describe('multi-channel damage reaching the grid', () => {
       rng: createSeededRng('burn'),
     });
     expect(resolution.damageType).toBe('fire');
-    expect(attackToDamageIntent('hero', 'orc', resolution)!.damages).toEqual([
+    expect(damagesOf(attackToDamageIntent('hero', 'orc', resolution))).toEqual([
       { tokenId: 'orc', amount: 10, type: 'fire' },
     ]);
   });
@@ -415,7 +422,7 @@ describe('multi-channel damage reaching the grid', () => {
     });
     expect(resolution.damageType).toBeUndefined();
     expect(resolution.damageChannels).toEqual([{ type: undefined, amount: 9 }]);
-    expect(attackToDamageIntent('hero', 'orc', resolution)!.damages).toEqual([
+    expect(damagesOf(attackToDamageIntent('hero', 'orc', resolution))).toEqual([
       { tokenId: 'orc', amount: 9, type: undefined },
     ]);
   });
