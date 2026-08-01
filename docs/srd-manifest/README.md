@@ -35,8 +35,14 @@ per-system rollup of it, read offline from the `srd-coverage.json` sidecar.
 | `dnd5e-2014.ts`, `dnd5e-2024.ts`, `dnd35e.ts`, `pf1e.ts`, `pf2e.ts`, `mam3e.ts`, `daggerheart.ts` | **Generated on demand and gitignored.** Absent from a clean checkout. Run `npm run srd:manifests` to materialize them. |
 
 The generated manifests answer provenance questions — which shipped entries
-claim which source, and which are self-authored (status `original`) rather than
-transcribed from an open document. They answer no coverage question.
+claim which source. They answer no coverage question.
+
+A `ManifestEntryStatus` of `original` existed between 2026-07-28 and 2026-07-30
+to mark self-authored entries rather than ones transcribed from an open
+document. It was removed with the content it described: all 106 self-authored
+entries were deleted and the `originalContentSources` policy channel that
+admitted them is gone, so the loaders can no longer ship an entry that would
+need it (`docs/GAPS.md` §17.3).
 
 ## If you are here to fix the drift
 

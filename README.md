@@ -386,7 +386,7 @@ This project uses only open-license reference content, filtered at load time by 
 - ✅ Daggerheart content is limited to **Daggerheart SRD 1.0** / **System Reference Document 1.0** source strings
 - ✅ No product-identity text is intentionally shipped outside the allowed open-content sources
 - ✅ Loader-backed content is source-filtered before reaching the product UI
-- ✅ Original (non-SRD) content ships only under an explicit non-SRD label, through a channel separate from the SRD allowlist, and is disclosed in `src/legal/attributions.ts`
+- ✅ **No original (non-SRD) content ships at all.** Until 2026-07-30 it did — under an explicit non-SRD label, through a channel separate from the SRD allowlist. All 106 such entries and the channel itself were deleted (owner decision): this application transcribes open documents, it does not author game content. `strictOpenContentPolicy` now has a single admission list, so a self-written entry has nowhere to be admitted from and fails the gate rather than widening the corpus.
 
 Upstream source URLs and licenses for every system are catalogued in
 `docs/srd-sources.md`. See also `src/utils/openContentPolicy.ts` and
