@@ -171,7 +171,16 @@ The demotion was worth doing precisely because it *moved numbers downward*: **PF
 
 **Unblocked:** every content% number in the repo is now measured against something external to it.
 
-### 2.3 M&M 3e adversaries — **BLOCKED ON A DECISION, and the blocker is network access, not licensing** (corrected 2026-07-28)
+### 2.3 M&M 3e adversaries — **CLOSED 2026-08-01 as a recorded SOURCE LIMITATION: the data was found and refused on licensing grounds**
+
+**Option (d) — fetch `d20herosrd.com` from an unblocked connection — was attempted and is exhausted.** The owner could not locate NPC stat blocks on the site, and a systematic sweep of every GitHub-reachable source followed (`raw.githubusercontent.com` is this sandbox's only fetch route; `d20herosrd.com`, `d20pfsrd.com`, `aonprd.com`, `web.archive.org` and every proxy return 000).
+
+Result, with evidence in `GAPS` §19.5: **every** Foundry VTT M&M 3e system on GitHub ships **empty** compendium packs — four `system.json` files fetched, `"packs": []` or no packs field. The one repo holding real stat blocks is an unlicensed digitization of the entire Deluxe Hero's Handbook with no LICENSE, no OGL statement, and named Product Identity mixed in. **106 entries were deleted on 2026-07-30 for weaker cause than that**, so it is refused.
+
+**The gap's real shape, now established:** the stat blocks that exist are for the SAME 16 archetypes already shipped as build templates. The gap is *our archetypes have no scores, and the only reachable copy of those scores is a scrape* — and nothing reachable can even establish whether that chapter is OGC.
+
+Reopens immediately if someone pins a licensed copy; the archetypes are already wired and would need only their scores.
+
 
 `loadMonstersForSystem` returns `[]` for `mam3e`. 5 of 7 systems have loader-backed creature catalogs; M&M has none.
 
@@ -295,7 +304,7 @@ The remainder rule this section left open is implemented: **largest-remainder (H
 
 ## 4. Parity — the all-seven-equal spine
 
-### 4.1 `p4.parity-matrix` — close the 7×N matrix — **held on an owner decision, not on work**
+### 4.1 `p4.parity-matrix` — close the 7×N matrix — **UNBLOCKED 2026-08-01: close it at 6 of 7, by the §2.3 source limitation**
 
 Cannot be honestly closed while one system has no creature catalog. §2.3 (corrected 2026-07-28) establishes that the source **does** exist and is open — the obstacle is that CI cannot reach it, not that it is unavailable. So this is closable work, gated on the owner picking `GAPS.md` §19.4(d) (fetch once from an unblocked connection, pin, encode offline) or one of the fallbacks.
 

@@ -2343,6 +2343,56 @@ What is **not** an option: encoding from `Humans-and-Heroes`, from a Hero's
 Handbook PDF, or from recall. Each of those produces exactly the artifact §15 and
 §18 were opened to remove, and this time it would be produced knowingly.
 
+### 19.5 The search was run to exhaustion 2026-08-01 — option (d) is dead
+
+The owner attempted (d) directly and could not locate NPC stat blocks on the
+site. A systematic search of every GitHub-reachable source followed, since
+`raw.githubusercontent.com` is the only fetch route this sandbox has
+(`d20herosrd.com`, `d20pfsrd.com`, `aonprd.com`, `web.archive.org` and every
+proxy tried all return 000).
+
+**Every Foundry VTT M&M 3e system on GitHub ships EMPTY compendium packs.**
+Verified by fetching each `system.json`: `jonnyguio/foundryvtt-mutants-and-masterminds`,
+`matthewswar/foundryvtt-mutants-and-masterminds` (`"packs": []`),
+`Deyzeria/foundrymnm3e` (`"packs": []`), `Zakarik/foundry-mm3` (no `packs` field).
+Nobody has published an M&M 3e bestiary for the one platform whose whole format
+is shipping creature compendia. The character builders are the same story —
+`mcherm/hero-sheet` LINKS OUT to `d20herosrd.com` rather than embedding content.
+
+**One repo does carry real stat blocks, and it is disqualified — this is the
+finding worth keeping.** `thomasjeffreyandersontwin/mm3e-online-holistic`
+(`context/HeroesHandbook-statblocks.md`, 221 KB) holds Battlesuit, Paragon,
+Powerhouse, Speedster and ~44 more with full numeric traits. It is unusable:
+
+- **No `LICENSE`, `NOTICE` or `OGL.txt`** — all 404. README is a blank stub. The
+  strings "Open Game Content", "OGL" and "d20herosrd" appear nowhere in the repo.
+- `context/rules/` chunks the **entire Deluxe Hero's Handbook** into ~260 RAG
+  fragments. That is a digitization of the whole copyrighted book, not a curated
+  OGC excerpt.
+- The stat-block file itself interleaves named **Product Identity** — `Dr. Simian`,
+  `Marmo-Set` and setting narrative — which is proof no OGC/PI distinction was
+  ever drawn. It is an OCR dump of a purchased book.
+- `GuiMayer/mm3e-builder` carries an independent copy of the same chapter under
+  the same absent licence.
+
+Using either would be exactly the artifact this section already refuses, and a
+worse one than §17's: that content at least had a truthful label. **106 entries
+were deleted on 2026-07-30 for weaker cause than this.**
+
+**The sharper form of the gap, now established.** The stat blocks that exist are
+for the SAME 16 archetypes this product already ships as build templates. So the
+gap is not "M&M has no adversaries" — it is **"our archetypes have no stats, and
+the only reachable copy of those stats is an unlicensed scrape."** Worse, nothing
+reachable can establish whether that chapter is Open Game Content at all: no repo
+mirrors or enumerates d20herosrd's OGC boundary, so even the scrape gives no
+evidence either way about the licence.
+
+**Consequence: option (d) is exhausted and option (a) is taken** — see §19.4.
+Recorded as a source limitation rather than a search failure, because the data
+was FOUND and REFUSED on licensing grounds. If someone later establishes that the
+archetype chapter is OGC and pins a licensed copy, this reopens immediately; the
+16 archetypes are already wired and would only need their scores.
+
 ---
 
 ## 20. The first full-chain green run — what twelve never-executed gates actually proved (added 2026-07-28)
