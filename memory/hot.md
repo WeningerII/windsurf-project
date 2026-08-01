@@ -4,11 +4,31 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-31. Branch `claude/master-plan-unfinished-s1lsya`
-pushed through the homebrew deletion + **six parallel lanes**. `npm run verify`
-is 21/22 — only step 22 (e2e) fails, on the container's Playwright revision
-mismatch; run via the bridge it is 45 passed / 2 skipped, exit 0. Unit tests
-3138 → **3261**. Compute register 247 → **264**, no demotions.
+**Last updated:** 2026-08-01. Branch `claude/master-plan-unfinished-s1lsya`
+pushed through the homebrew deletion, **six parallel lanes**, and the
+**wrong-edition close**. `npm run verify` is 22/23 — only step 23 (e2e) fails,
+on the container's Playwright revision mismatch; run via the bridge it is 45
+passed / 2 skipped, exit 0. Unit tests **3261**. Compute register **264**.
+
+## The over-inclusion audit's licensing tail is now EMPTY (2026-08-01, GAPS §26)
+
+`check:provenance-over-inclusion` prints `licensing-class total: none`.
+`wrong-edition-attribution` **68 → 0**; `genuine-non-open-content` was already 0.
+
+The owner ruled REPLACE (not re-tag-and-drop). Executing it showed the premise
+held for only part of the population: **15** rows had a genuine same-edition
+entry, **13** duplicated an edition-correct row the catalog ALREADY shipped, and
+**40 had nothing to replace them with** — PF2e has no Basket, Bell, Blanket,
+Bucket, Jug, Flask, Vial, Sealing Wax, Shovel, Saw, Ring Mail, Banded Mail,
+Siangham, Cestus or Boar Spear under any name in any book. Removed.
+
+Do not re-litigate; the evidence is pinned in GAPS §26. Counts moved: pf2e
+equipment 182 → 148, pf2e spells 546 → 543, 2024 monsters 337 → 330, 2024
+equipment 492 → 489, pf1e equipment 615 → 613.
+
+**Release's licensing hold is LIFTED.** What still holds it is the four
+5e-2024 backgrounds — *Player's Handbook* text under legitimate SRD 5.2 names,
+invisible to a name diff (GAPS §15(c), §18.5.4).
 
 ## The six lanes (2026-07-31)
 
@@ -33,6 +53,23 @@ mismatch; run via the bridge it is 45 passed / 2 skipped, exit 0. Unit tests
   consequence: solid destructive buttons in dark are light-red with a dark label.
 
 ## Facts established (do not re-derive)
+
+- **PF2e content sources that work, with licence metadata.**
+  `Pf2eToolsOrg/Pf2eTools` `data/items/{items-crb,baseitems,items-apg,items-som,items-gmg}.json`
+  and `data/spells/spells-{crb,apg,som}.json` — 1,027 distinct item names, 888
+  spell names. `baseitems.json` holds the mundane weapons/armour with a per-book
+  `source` and keeps BOTH printings of anything the Remaster reissued, so an OGL
+  citation is always available. `foundryvtt/pf2e` `packs/equipment/<slug>.json`
+  (master; the `packs/pf2e/...` paths in GitHub's search index are a different
+  branch) carries `system.publication.license` = **OGL | ORC** per item — that is
+  what admitted Treasure Vault and keeps Player Core out.
+- **Assert a content absence only when TWO independent datasets come back empty.**
+  Pf2eTools name index + a Foundry per-slug probe. A slug 404 alone is a naming
+  artefact, not evidence.
+- **A dead string on an allowlist is a door nobody is watching.** The pf2e list
+  was widened 2026-07-29 to admit the PF1e line and the d20 SRDs so wrong-edition
+  rows would name their real source — diagnosis, not a resting state. All six
+  strings, plus pf1e's `SRD 3.5`, were REMOVED once no row used them.
 
 - **`splitDamageAcrossChannels` post-condition:** an empty channel list with a
   non-zero total now THROWS. It used to return `[]` (destroying damage) because
@@ -149,7 +186,11 @@ decisions; `GAPS` §20–§23 holds this week's evidence.
 
 - **Never delete or relabel shipped content on your own** — `filterOpenContentBySource`
   silently drops any entry whose source leaves the allowlist, so a re-tag is a
-  product change. Owner's call (GAPS §11 / OC-1).
+  product change. Owner's call (GAPS §11 / OC-1). The 2026-08-01 deletions were
+  executing an explicit owner ruling, not an exception to this.
+- **Check that an "equivalent" EXISTS before calling a replacement plan a plan.**
+  The wrong-edition ruling was sound and its premise still failed for 40 of 68
+  rows. Per-record, against a real source, before scoping.
 - **Agents fabricate content data.** A verifier panel invented 5 of 20 M&M
   counterparts (25%). Verify every figure locally (GAPS §18.7).
 - **Container recycles mid-session** kill background work and wipe the scratchpad.
@@ -167,7 +208,10 @@ decisions; `GAPS` §20–§23 holds this week's evidence.
       between revisions, and the parent dir name is chrome-headless-shell-linux64,
       not chrome-linux64).
     ffmpeg-1011 -> ffmpeg-1011
-  Then `PLAYWRIGHT_BROWSERS_PATH=$BR npx playwright test --project=chromium`.
+  Building it IN PLACE under `/opt/pw-browsers` works and needs no
+  `PLAYWRIGHT_BROWSERS_PATH` override (confirmed 2026-08-01); `ffmpeg-1011`
+  already exists, so only the two chromium dirs need creating. Then just
+  `npx playwright test --project=chromium`.
   **45 passed / 2 skipped is the clean baseline** (41 + 4 dark-theme a11y tests).
   Rebuild `dist` first — preview serves `dist`. NEVER run `playwright install`.
   **The scratchpad is wiped by a container rollback, so the bridge must be rebuilt

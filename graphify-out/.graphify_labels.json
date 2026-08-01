@@ -207,6 +207,8 @@
   "205": "typescript-eslint",
   "206": "vite",
   "207": "sceneConditionOptions.ts",
+  "208": "sceneTerrain.ts",
+  "209": "@vitest/coverage-v8",
   "212": "aiSdkAdapter.test.mts",
   "213": "spikeViewport.ts",
   "222": "guided-creation.spec.ts",
