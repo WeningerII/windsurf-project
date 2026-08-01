@@ -120,7 +120,9 @@ Two separate features, same shape: **the expensive half is built and the cheap h
 
 **`character-draft` — DONE 2026-07-27.** Reachable from the new-character dialog's "Draft with AI" mode, rendered only when `isAiEnabled()`, loaded by dynamic import so the AI-off eager chunk is unchanged. The draft applies through the system's *own* creation plan and is gated on its own `registry.validateDocument`, and the proposal is shown before anything is created — model proposes, validators decide. It also gave `makeMeAGameFlow` a shared seam instead of a second inline copy of that logic.
 
-**Phase 10 — still open, and this is the decision that remains.** Build the `analyze-map` task plus a MapPanel affordance (~1 day), or close Phase 10 formally and reclassify the validator as a permanent documented seam. **Do not delete the validator** — it is the careful half, and the retired shelf branch's version was strictly worse. One prerequisite for whoever builds it: `MapPanel` never learns the image's pixel dimensions, and the shipped validator requires `image: { widthPx, heightPx }`.
+**Phase 10 — DECIDED 2026-08-01: BUILD IT.** The owner chose the `analyze-map` task plus a MapPanel affordance (~1 day) over closing it as a documented seam. Original framing follows.
+
+**Phase 10 — was still open, and this was the decision that remained.** Build the `analyze-map` task plus a MapPanel affordance (~1 day), or close Phase 10 formally and reclassify the validator as a permanent documented seam. **Do not delete the validator** — it is the careful half, and the retired shelf branch's version was strictly worse. One prerequisite for whoever builds it: `MapPanel` never learns the image's pixel dimensions, and the shipped validator requires `image: { widthPx, heightPx }`.
 
 ---
 
@@ -323,7 +325,9 @@ Six of the ten in-sheet browser wrappers are deleted and every affected tab grid
 
 **What the eviction left, one still open:**
 
-1. **DECIDE — the four kept wrappers need ratification.** The Phase-5 spec assumed the Dock covered every catalog and it does not (the three capability gaps above). Keeping the wrappers was the right call *given* that, but it was made by the lane, not by you, and it leaves the product with two browse routes indefinitely. Either ratify the split as the shipped design or fund the Dock capability work that would close it.
+1. ~~**DECIDE — the four kept wrappers need ratification.**~~ **DECIDED 2026-08-01: NOT ratified — build the Dock capability instead.** The owner declined to accept two browse routes as the shipped design. Build the Advantage tab, the Power-Modifier tab, and a seam letting a sheet publish a catalog filter the Dock applies; then delete the four wrappers, restoring the single browse route Phase 5 intended. Original framing follows.
+
+   Original: The Phase-5 spec assumed the Dock covered every catalog and it does not (the three capability gaps above). Keeping the wrappers was the right call *given* that, but it was made by the lane, not by you, and it leaves the product with two browse routes indefinitely. Either ratify the split as the shipped design or fund the Dock capability work that would close it.
 2. ~~**DECIDE — one string of user-facing copy is now orphaned.**~~ **RESOLVED 2026-07-28: deleted, not re-homed.** `DND5E_FEAT_COPY.browserSupport` is gone from `src/utils/documentationCopy.ts`.
 
    Re-homing it in the Dock's Feats tab was the obvious move and is wrong on inspection. That tab is shared-layer and browses **all seven** systems' feat catalogs, so a blanket caption about ability score increases and proficiencies — a 5e concept — would be false on the 3.5e, PF1e, PF2e and M&M catalogs shown by the same surface. And the information is already delivered better: the Dock stamps a per-feat **"Manual"** badge through `shouldShowDnd5eManualFeatBadge` (`src/dock/Dock.tsx`), marking the individual feats whose riders the engine cannot apply rather than asserting it across a whole catalog.
@@ -670,7 +674,7 @@ Small, real, and each found while checking something else.
 
 ---
 
-## 8. Release — `p7.release` — **held for the wrong-edition attribution pile**
+## 8. Release — `p7.release` — **held for the wrong-edition pile; the remedy is now DECIDED (2026-08-01)**
 
 Release engineering and launch. Should not begin while an open-content licensing question is unresolved. The self-authored half is closed — that content is deleted and `genuine-non-open-content` is 0 — so what still holds release is the 68 `wrong-edition-attribution` records (§2.1) plus the four 5e-2024 backgrounds: real open content asserting a provenance it does not have.
 

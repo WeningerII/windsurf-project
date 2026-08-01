@@ -53,6 +53,37 @@ defensible right answer, and the cost of being wrong is a revert, not a lawsuit.
 
 ---
 
+## A-DECIDED. Owner rulings, 2026-08-01 — recorded verbatim
+
+Four decisions taken. **On three of four the owner chose the more expensive
+option than the one recommended**, which is recorded here because the cheap
+option was argued for and rejected, not overlooked.
+
+| # | Decision | Ruling |
+| --- | --- | --- |
+| **A2/A3, §8** | The 68 `wrong-edition-attribution` records | **REPLACE with same-edition equivalents.** Not the recommended re-tag-and-drop. Every record gets a genuine entry transcribed from its own edition's open source, so the catalogs keep their rows AND every citation becomes true. |
+| **A4, §4.3** | The four kept sheet wrappers | **FUND THE DOCK CAPABILITY WORK.** Not ratification. Build the Advantage tab, the Power-Modifier tab, and a sheet→Dock catalog-filter seam, then delete the four wrappers, restoring the single browse route Phase 5 intended. |
+| **A5, §2.3** | M&M 3e adversaries | **OWNER FETCHES `d20herosrd.com` once**; the encoder then runs offline against a pinned copy, as `scripts/encode-mam-equipment.mjs` already does. Unblocks §4.1. |
+| **§0.6** | Phase 10 grid-geometry validator | **BUILD `analyze-map` + a MapPanel affordance (~1 day).** Not the recommended close-as-seam. |
+
+### Feasibility, measured rather than assumed (2026-08-01)
+
+The replacement ruling is the one that could have been undeliverable here, so
+reachability was tested before starting:
+
+| source | status |
+| --- | --- |
+| `raw.githubusercontent.com` (Pf2eTools, 5e-database, PSRD-Data) | **200 — reachable** |
+| `d20srd.org` | 000 — proxy-blocked |
+| `2e.aonprd.com` | 000 — proxy-blocked |
+| `d20herosrd.com` | 000 — proxy-blocked (this is why A5 needs the owner) |
+
+All three systems carrying wrong-edition records — pf2e (50), dnd-5e-2024 (14),
+pf1e (4) — have GitHub-mirrored open sources, so the work is executable in this
+environment. The blocked hosts affect only M&M adversaries.
+
+---
+
 ## C. Blocked on work, not on anyone
 
 No decision required. These are queued and unstarted.
