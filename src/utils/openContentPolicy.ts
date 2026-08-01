@@ -71,49 +71,51 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     // as the Core Rulebook is; the earlier Core-only scoping of this list
     // simply had not enumerated it, which forced APG-derived entries to carry a
     // false 'Core Rulebook' tag. Naming the book is the truthful fix.
-    // 'SRD 3.5' admitted 2026-07-29: PF1e is a derivative of the 3.5 SRD under
-    // OGL v1.0a, and 4 records here (Amulet of Health, Cloak of Charisma) are
-    // straight 3.5 SRD inheritances. Both documents are OGC; naming the real
-    // one is truthful and costs nothing.
-    allowedSources: [
-      'Core Rulebook',
-      'CRB',
-      'Bestiary',
-      "Pathfinder 1e Advanced Player's Guide",
-      'SRD 3.5',
-    ],
+    // 'SRD 3.5' was admitted 2026-07-29 because PF1e is a derivative of the 3.5
+    // SRD under OGL v1.0a and 4 records here were straight 3.5 SRD inheritances.
+    // Those 4 records (Amulet of Health and Cloak of Charisma, each appearing in
+    // both the equipment and magic-items views) were DELETED 2026-08-01 under the
+    // wrong-edition ruling: PF1e prints its own replacements — Belt of Mighty
+    // Constitution and Headband of Alluring Charisma — which the loader already
+    // ships at the correct 4,000 gp, while the 3.5 rows carried an unsourced
+    // 30,000 gp. The string is REMOVED with them. It admitted nothing once they
+    // were gone, and leaving a dead string on an allowlist is how the next
+    // 3.5-tagged row gets in without anyone deciding to let it.
+    allowedSources: ['Core Rulebook', 'CRB', 'Bestiary', "Pathfinder 1e Advanced Player's Guide"],
     allowMissingSourceFor: [],
   },
   pf2e: {
     // 'B1' is Pf2eTools' tag for Bestiary 1 (OGL-era PF2e content) — see
     // docs/srd-sources.md.
     //
-    // WIDENED 2026-07-29, and the reason matters more than the list.
+    // WIDENED 2026-07-29, then NARROWED BACK 2026-08-01. Both moves were the
+    // same decision, and the second one is only possible because of the first.
     //
     // This field was doing two different jobs at once: "is this content legally
     // open?" and "is this book inside the product's declared scope?" Those are
     // not the same question, and conflating them produced a WORSE outcome than
-    // either — because the only tag that passed was the wrong one.
-    //
-    // Concretely: 15 gear rows in this catalog are transcribed from the
-    // PATHFINDER 1e Core Rulebook. Normalizing them to the bare 'Core Rulebook'
-    // (which this list accepted) made them compliant while naming the wrong
-    // book — a false attribution that PASSED the gate. That is precisely the
-    // defect docs/GAPS.md §11 exists to catch, reintroduced by a scope rule
+    // either — because the only tag that passed was the wrong one. Concretely:
+    // 15 gear rows here were transcribed from the PATHFINDER 1e Core Rulebook,
+    // and normalizing them to the bare 'Core Rulebook' (which this list already
+    // accepted) made them compliant while naming the wrong book — a false
+    // attribution that PASSED the gate. That is precisely the defect
+    // docs/GAPS.md §11 exists to catch, reintroduced by a scope rule
     // masquerading as a licence rule.
     //
-    // Every string added below is Open Game Content under OGL v1.0a, verified
-    // per book — the PF1e line (Core Rulebook, APG, Ultimate Combat, Ultimate
-    // Equipment), the OGL-era PF2e books (APG, Secrets of Magic), and the d20
-    // SRDs. Admitting them lets each record name its ACTUAL source, so a
-    // wrong-edition attribution stays visible as a wrong edition instead of
-    // being laundered into a right-looking one.
+    // So the PF1e line (Core Rulebook, APG, Ultimate Combat, Ultimate Equipment)
+    // and the d20 SRDs (3.5, 5.1) were admitted — not because a PF2e catalog
+    // should ship PF1e content, but so that every wrong-edition row would name
+    // its ACTUAL source and stay VISIBLE as a wrong edition instead of being
+    // laundered into a right-looking one. That was diagnosis, not a resting
+    // state.
     //
-    // The Lost Omens line is deliberately NOT admitted: it is Paizo's setting
-    // line and carries substantial Product Identity, so its open status is not
-    // something this file should assert. Those records keep their true tag
-    // and are filtered — the conservative treatment for content whose licence I
-    // could not establish.
+    // 2026-08-01 the diagnosis was acted on: all 44 wrong-edition rows were
+    // replaced with PF2e's own entries or removed where PF2e has no such item
+    // (docs/GAPS.md §26). Zero pf2e records carry any of those six strings now,
+    // so they are GONE from this list. A dead string on an allowlist is not
+    // harmless — it is a door nobody is watching. The scope question and the
+    // licence question are finally separate here: everything below is both
+    // open-licensed AND actually PF2e.
     //
     // 'Pathfinder 2e Treasure Vault' admitted 2026-08-01 for the three weapons
     // (Atlatl, Boomerang, Earthbreaker) that PF2e prints only in that book. It is
@@ -123,6 +125,13 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     // Paizo's move to the ORC licence. The PF1e tags those rows used to carry
     // named the wrong game entirely.
     //
+    // The Lost Omens line is deliberately NOT admitted: it is Paizo's setting
+    // line and carries substantial Product Identity, so its open status is not
+    // something this file should assert. Chakram and Marbles are PF2e entries
+    // from Lost Omens: The Grand Bazaar; they keep that true tag and are
+    // filtered out of the loaded corpus, joining the two Lost Omens rows already
+    // treated this way. Truthful citation, conservative admission.
+    //
     // The Remaster line (Player Core 1 and successors) is NOT admitted and should
     // not be: it is ORC-licensed, not OGL, and every PF2e entry here that the
     // Remaster reprinted is cited to its original OGL printing (CRB or APG)
@@ -131,15 +140,9 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
       'Core Rulebook',
       'CRB',
       'B1',
-      'Pathfinder 1e Core Rulebook',
-      "Pathfinder 1e Advanced Player's Guide",
-      'Pathfinder 1e Ultimate Combat',
-      'Pathfinder 1e Ultimate Equipment',
       "Pathfinder 2e Advanced Player's Guide",
       'Pathfinder 2e Treasure Vault',
       'Secrets of Magic',
-      'SRD 3.5',
-      'SRD 5.1',
     ],
     allowMissingSourceFor: [],
   },

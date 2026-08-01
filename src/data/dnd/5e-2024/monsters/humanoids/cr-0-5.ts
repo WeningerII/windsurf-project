@@ -148,202 +148,21 @@ export const noble: Monster = {
   environment: ['urban'],
 };
 
-export const goblin: Monster = {
-  id: 'goblin-2024',
-  name: 'Goblin',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.1',
-  size: 'small',
-  type: 'humanoid',
-  alignment: 'neutral evil',
-  armorClass: 15,
-  hitPoints: { count: 2, die: 'd6', notation: '2d6' },
-  speed: { walk: 30 },
-  abilities: { str: 8, dex: 14, con: 10, int: 10, wis: 8, cha: 8 },
-  skills: { Stealth: 6 },
-  senses: ['darkvision 60 ft.', 'passive Perception 9'],
-  languages: ['Common', 'Goblin'],
-  challengeRating: 0.25,
-  experiencePoints: 50,
-  specialAbilities: [
-    {
-      name: 'Nimble Escape',
-      description:
-        'The goblin can take the Disengage or Hide action as a bonus action on each of its turns.',
-    },
-  ],
-  actions: [
-    {
-      name: 'Scimitar',
-      description:
-        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) slashing damage.',
-    },
-    {
-      name: 'Shortbow',
-      description:
-        'Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
-    },
-  ],
-  environment: ['forest', 'hill', 'underdark'],
-};
+// NOTE: The former 2024 entries for Acolyte, Bugbear, Goblin, Hobgoblin, Kobold
+// and Veteran were removed. Each was an SRD 5.1 stat block shipped under an
+// SRD 5.1 tag inside the 2024 catalog, and SRD 5.2.1 renamed all six to
+// qualified forms — Priest Acolyte, Bugbear Warrior, Goblin Warrior, Hobgoblin
+// Warrior, Kobold Warrior, Warrior Veteran — every one of which THIS CATALOG
+// ALREADY SHIPS, generated from SRD 5.2 (srd-cr-0-1.ts, srd-cr-2-5.ts). So the
+// same-edition equivalent was already present and these six were duplicates of
+// it in an older edition's clothing, not content the catalog would lose. See
+// docs/GAPS.md §26.
 
 // NOTE: The former 'orc-2024' entry was removed. The 2024 rules dropped orc
 // monster statblocks (orcs are a player species in the 2024 core), so this
 // SRD 5.1-era statblock cannot be verified against SRD 5.2; it was deleted
 // rather than shipped with an unverified citation. See
 // docs/srd-manifest/dnd5e-2024.ts.
-
-export const acolyte: Monster = {
-  id: 'acolyte-2024',
-  name: 'Acolyte',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.1',
-  size: 'medium',
-  type: 'humanoid',
-  alignment: 'lawful neutral',
-  armorClass: 10,
-  hitPoints: { count: 2, die: 'd8', notation: '2d8' },
-  speed: { walk: 30 },
-  abilities: { str: 10, dex: 10, con: 10, int: 10, wis: 14, cha: 11 },
-  skills: { Medicine: 4, Religion: 2 },
-  senses: ['passive Perception 12'],
-  languages: ['Common'],
-  challengeRating: 0.25,
-  experiencePoints: 50,
-  actions: [
-    {
-      name: 'Club',
-      description:
-        'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d4) bludgeoning damage.',
-    },
-  ],
-  environment: ['urban', 'temple'],
-};
-
-export const kobold: Monster = {
-  id: 'kobold-2024',
-  name: 'Kobold',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.1',
-  size: 'small',
-  type: 'humanoid',
-  alignment: 'lawful evil',
-  armorClass: 12,
-  hitPoints: { count: 2, die: 'd6', notation: '2d6' },
-  speed: { walk: 30 },
-  abilities: { str: 7, dex: 15, con: 9, int: 8, wis: 7, cha: 8 },
-  senses: ['darkvision 60 ft.', 'passive Perception 8'],
-  languages: ['Common', 'Draconic'],
-  challengeRating: 0.125,
-  experiencePoints: 25,
-  specialAbilities: [
-    {
-      name: 'Sunlight Sensitivity',
-      description:
-        'While in sunlight, the kobold has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight.',
-    },
-    {
-      name: 'Pack Tactics',
-      description:
-        "The kobold has advantage on an attack roll against a creature if at least one of the kobold's allies is within 5 feet of the creature and the ally isn't incapacitated.",
-    },
-  ],
-  actions: [
-    {
-      name: 'Dagger',
-      description:
-        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage.',
-    },
-    {
-      name: 'Sling',
-      description:
-        'Ranged Weapon Attack: +4 to hit, range 30/120 ft., one target. Hit: 4 (1d4 + 2) bludgeoning damage.',
-    },
-  ],
-  environment: ['underdark', 'forest'],
-};
-
-export const hobgoblin: Monster = {
-  id: 'hobgoblin-2024',
-  name: 'Hobgoblin',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.1',
-  size: 'medium',
-  type: 'humanoid',
-  alignment: 'lawful evil',
-  armorClass: 18,
-  hitPoints: { count: 2, die: 'd8', modifier: 2, notation: '2d8+2' },
-  speed: { walk: 30 },
-  abilities: { str: 13, dex: 12, con: 12, int: 10, wis: 10, cha: 9 },
-  senses: ['darkvision 60 ft.', 'passive Perception 10'],
-  languages: ['Common', 'Goblin'],
-  challengeRating: 0.5,
-  experiencePoints: 100,
-  specialAbilities: [
-    {
-      name: 'Martial Advantage',
-      description:
-        "Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn't incapacitated.",
-    },
-  ],
-  actions: [
-    {
-      name: 'Longsword',
-      description:
-        'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 5 (1d8 + 1) slashing damage, or 6 (1d10 + 1) slashing damage if used with two hands.',
-    },
-    {
-      name: 'Longbow',
-      description:
-        'Ranged Weapon Attack: +3 to hit, range 150/600 ft., one target. Hit: 5 (1d8 + 1) piercing damage.',
-    },
-  ],
-  environment: ['forest', 'mountain'],
-};
-
-export const bugbear: Monster = {
-  id: 'bugbear-2024',
-  name: 'Bugbear',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.1',
-  size: 'medium',
-  type: 'humanoid',
-  alignment: 'chaotic evil',
-  armorClass: 16,
-  hitPoints: { count: 5, die: 'd8', modifier: 5, notation: '5d8+5' },
-  speed: { walk: 30 },
-  abilities: { str: 15, dex: 14, con: 13, int: 8, wis: 11, cha: 9 },
-  skills: { Stealth: 6, Survival: 2 },
-  senses: ['darkvision 60 ft.', 'passive Perception 10'],
-  languages: ['Common', 'Goblin'],
-  challengeRating: 1,
-  experiencePoints: 200,
-  specialAbilities: [
-    {
-      name: 'Brute',
-      description:
-        'A melee weapon deals one extra die of its damage when the bugbear hits with it (included in the attack).',
-    },
-    {
-      name: 'Surprise Attack',
-      description:
-        'If the bugbear surprises a creature and hits it with an attack during the first round of combat, the target takes an extra 7 (2d6) damage from the attack.',
-    },
-  ],
-  actions: [
-    {
-      name: 'Morningstar',
-      description:
-        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 11 (2d8 + 2) piercing damage.',
-    },
-    {
-      name: 'Javelin',
-      description:
-        'Melee or Ranged Weapon Attack: +4 to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 9 (2d6 + 2) piercing damage in melee or 5 (1d6 + 2) piercing damage at range.',
-    },
-  ],
-  environment: ['forest', 'underdark'],
-};
 
 export const scout: Monster = {
   id: 'scout-2024',
@@ -444,90 +263,11 @@ export const spy: Monster = {
   environment: ['urban'],
 };
 
-export const thug: Monster = {
-  id: 'thug-2024',
-  name: 'Thug',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.1',
-  size: 'medium',
-  type: 'humanoid',
-  alignment: 'neutral evil',
-  armorClass: 11,
-  hitPoints: { count: 5, die: 'd8', modifier: 5, notation: '5d8+5' },
-  speed: { walk: 30 },
-  abilities: { str: 15, dex: 11, con: 14, int: 10, wis: 10, cha: 11 },
-  skills: { Intimidation: 2 },
-  senses: ['passive Perception 10'],
-  languages: ['Common'],
-  challengeRating: 0.5,
-  experiencePoints: 100,
-  specialAbilities: [
-    {
-      name: 'Pack Tactics',
-      description:
-        "The thug has advantage on an attack roll against a creature if at least one of the thug's allies is within 5 feet of the creature and the ally isn't incapacitated.",
-    },
-  ],
-  actions: [
-    {
-      name: 'Multiattack',
-      description: 'The thug makes two melee attacks.',
-    },
-    {
-      name: 'Mace',
-      description:
-        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) bludgeoning damage.',
-    },
-    {
-      name: 'Heavy Crossbow',
-      description:
-        'Ranged Weapon Attack: +2 to hit, range 100/400 ft., one target. Hit: 5 (1d10) piercing damage.',
-    },
-  ],
-  environment: ['urban'],
-};
-
-export const veteran: Monster = {
-  id: 'veteran-2024',
-  name: 'Veteran',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.1',
-  size: 'medium',
-  type: 'humanoid',
-  alignment: 'true neutral',
-  armorClass: 17,
-  hitPoints: { count: 9, die: 'd8', modifier: 18, notation: '9d8+18' },
-  speed: { walk: 30 },
-  abilities: { str: 16, dex: 13, con: 14, int: 10, wis: 11, cha: 10 },
-  skills: { Athletics: 5, Perception: 2 },
-  senses: ['passive Perception 12'],
-  languages: ['Common'],
-  challengeRating: 3,
-  experiencePoints: 700,
-  actions: [
-    {
-      name: 'Multiattack',
-      description:
-        'The veteran makes two longsword attacks. If it has a shortsword drawn, it can also make a shortsword attack.',
-    },
-    {
-      name: 'Longsword',
-      description:
-        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) slashing damage, or 8 (1d10 + 3) slashing damage if used with two hands.',
-    },
-    {
-      name: 'Shortsword',
-      description:
-        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) piercing damage.',
-    },
-    {
-      name: 'Heavy Crossbow',
-      description:
-        'Ranged Weapon Attack: +3 to hit, range 100/400 ft., one target. Hit: 6 (1d10 + 1) piercing damage.',
-    },
-  ],
-  environment: ['urban', 'any'],
-};
+// NOTE: The former 'thug-2024' entry was removed. The SRD 5.2.1 bestiary has no
+// Thug stat block under any name (grep -i thug: zero hits; Bandit and Bandit
+// Captain are different creatures), so this SRD 5.1-era statblock cannot be
+// verified against SRD 5.2; it was deleted rather than shipped with an
+// unverified citation. See docs/srd-manifest/dnd5e-2024.ts.
 
 export const berserker: Monster = {
   id: 'berserker-2024',
@@ -800,15 +540,8 @@ export const humanoidsCR0to5: Monster[] = [
   bandit,
   cultist,
   noble,
-  goblin,
-  acolyte,
-  kobold,
-  hobgoblin,
-  bugbear,
   scout,
   spy,
-  thug,
-  veteran,
   berserker,
   druid,
   priest,

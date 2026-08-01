@@ -155,19 +155,6 @@ export const bedroll: Item = {
   requiresAttunement: false,
 };
 
-export const rope: Item = {
-  id: 'rope-hempen-2024',
-  name: 'Rope, Hempen (50 feet)',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.1',
-  type: 'gear',
-  rarity: 'common',
-  weight: 10,
-  cost: { amount: 1, currency: 'gp' },
-  description: 'Rope has 2 hit points and can be burst with a DC 17 Strength check.',
-  requiresAttunement: false,
-};
-
 export const torch: Item = {
   id: 'torch-2024',
   name: 'Torch',
@@ -288,19 +275,6 @@ export const piton: Item = {
   weight: 0.25,
   cost: { amount: 5, currency: 'cp' },
   description: 'A metal spike used for climbing or securing rope.',
-  requiresAttunement: false,
-};
-
-export const tent: Item = {
-  id: 'tent-2024',
-  name: 'Tent, Two-Person',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  type: 'gear',
-  rarity: 'common',
-  weight: 20,
-  cost: { amount: 2, currency: 'gp' },
-  description: 'A simple and portable canvas shelter.',
   requiresAttunement: false,
 };
 
@@ -467,19 +441,6 @@ export const manacles: Item = {
   cost: { amount: 2, currency: 'gp' },
   description:
     'These metal restraints can bind a Small or Medium creature. Escaping requires a DC 20 Dexterity check. Breaking requires a DC 20 Strength check.',
-  requiresAttunement: false,
-};
-
-export const mirror: Item = {
-  id: 'mirror-steel-2024',
-  name: 'Mirror, Steel',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  type: 'gear',
-  rarity: 'common',
-  weight: 0.5,
-  cost: { amount: 5, currency: 'gp' },
-  description: 'A polished steel mirror.',
   requiresAttunement: false,
 };
 
@@ -694,7 +655,6 @@ export const dnd5e2024Gear: Item[] = [
   // Essential items
   backpack,
   bedroll,
-  rope,
   torch,
   rations,
   waterskin,
@@ -712,7 +672,6 @@ export const dnd5e2024Gear: Item[] = [
   disguiseKit,
   poisonersKit,
   // Containers
-  tent,
   pouch,
   chest,
   sack,
@@ -730,7 +689,6 @@ export const dnd5e2024Gear: Item[] = [
   chain,
   lockItem,
   manacles,
-  mirror,
   ink,
   inkPen,
   parchment,

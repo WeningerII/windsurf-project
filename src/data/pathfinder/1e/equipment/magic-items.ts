@@ -6,21 +6,6 @@ import { MagicItem } from '../../../../types/equipment/items';
 
 // WONDROUS ITEMS
 
-export const amuletOfHealth: MagicItem = {
-  id: 'amulet-of-health',
-  name: 'Amulet of Health',
-  system: 'pf1e',
-  source: 'SRD 3.5',
-  type: 'magic-item',
-  rarity: 'uncommon',
-  weight: 0.5,
-  cost: { amount: 30000, currency: 'gp' },
-  requiresAttunement: false,
-  modifiers: [{ value: 2, type: 'enhancement', source: 'Amulet of Health' }],
-  effects: ['+2 enhancement bonus to Constitution'],
-  description: 'This amulet grants the wearer a +2 enhancement bonus to Constitution.',
-};
-
 export const beltOfStrength: MagicItem = {
   id: 'belt-of-strength',
   name: 'Belt of Strength',
@@ -64,21 +49,6 @@ export const cloakOfResistance: MagicItem = {
   modifiers: [{ value: 1, type: 'saving-throw', source: 'Cloak of Resistance' }],
   effects: ['+1 resistance bonus to all saving throws'],
   description: 'This cloak grants the wearer a +1 bonus to all saving throws.',
-};
-
-export const cloakOfCharisma: MagicItem = {
-  id: 'cloak-of-charisma',
-  name: 'Cloak of Charisma',
-  system: 'pf1e',
-  source: 'SRD 3.5',
-  type: 'magic-item',
-  rarity: 'uncommon',
-  weight: 1,
-  cost: { amount: 30000, currency: 'gp' },
-  requiresAttunement: false,
-  modifiers: [{ value: 2, type: 'enhancement', source: 'Cloak of Charisma' }],
-  effects: ['+2 enhancement bonus to Charisma'],
-  description: 'This cloak grants the wearer a +2 enhancement bonus to Charisma.',
 };
 
 // RINGS
@@ -398,11 +368,9 @@ export const shockLongsword: MagicItem = {
 
 // Collected array
 export const pf1eMagicItems: MagicItem[] = [
-  amuletOfHealth,
   beltOfStrength,
   bootsOfSpeed,
   cloakOfResistance,
-  cloakOfCharisma,
   ringOfProtection,
   ringOfSustenance,
   ringOfInvisibility,

@@ -202,7 +202,7 @@ describe('description parsing — statblocks that carry attacks only in prose', 
     expect(longRange!.reachCells).toBe(24); // 120 ft / 5
 
     // The dual form keeps winning when both appear ("reach 5 ft. or range
-    // 20/60 ft." — shipped 2024 hobgoblin/scout shape parses reach first).
+    // 20/60 ft." — shipped 2024 guard/scout shape parses reach first).
     const dual = parseAttackFromDescription(
       'Ranged Weapon Attack: +3 to hit, range 150/600 ft., one target. Hit: 5 (1d8 + 1) piercing damage.'
     );
@@ -261,27 +261,31 @@ describe('description parsing — statblocks that carry attacks only in prose', 
     expect(parsed!.attackBonus).toBe(7);
   });
 
-  it('REGRESSION (05-H2): a SHIPPED versatile monster compiles to a single damage clause (2024 Hobgoblin)', () => {
+  it('REGRESSION (05-H2): a SHIPPED versatile monster compiles to a single damage clause (2024 Dryad)', () => {
     // Same versatile shape, still shipped (prose-only action — no structured
-    // attackBonus/damage fields, so the parser is the only source).
-    const hobgoblin = dnd5e2024MonstersById['hobgoblin-2024'];
-    const longsword = hobgoblin.actions.find((action) => action.name === 'Longsword')!;
-    expect(longsword.description).toBe(
-      'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 5 (1d8 + 1) slashing damage, or 6 (1d10 + 1) slashing damage if used with two hands.'
+    // attackBonus/damage fields, so the parser is the only source). This used
+    // to pin the 2024 Hobgoblin; that entry was an SRD 5.1 duplicate of the
+    // shipped SRD 5.2 'Hobgoblin Warrior' and was deleted. The Dryad is a
+    // stricter fixture anyway: its modifier is NEGATIVE, so summing the two
+    // clauses would also have to get the sign right to look plausible.
+    const dryad = dnd5e2024MonstersById['dryad-2024'];
+    const quarterstaff = dryad.actions.find((action) => action.name === 'Quarterstaff')!;
+    expect(quarterstaff.description).toBe(
+      'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d6 - 1) bludgeoning damage, or 3 (1d8 - 1) bludgeoning damage if used with two hands.'
     );
 
-    const parsed = parseAttackFromDescription(longsword.description);
-    expect(parsed!.damage).toEqual([{ count: 1, faces: 8, modifier: 1, type: 'slashing' }]);
+    const parsed = parseAttackFromDescription(quarterstaff.description);
+    expect(parsed!.damage).toEqual([{ count: 1, faces: 6, modifier: -1, type: 'bludgeoning' }]);
 
     // And the compiled combatant deals exactly one die + one flat bonus
-    // (previously 1d8 + 1d10 + 2 — roughly double RAW).
-    const combatant = buildMonsterCombatant(hobgoblin, { tokenId: 'h', position: { x: 0, y: 0 } });
+    // (previously 1d6 + 1d8 - 2 — roughly double RAW).
+    const combatant = buildMonsterCombatant(dryad, { tokenId: 'd', position: { x: 0, y: 0 } });
     const dice = combatant.damageEffects.filter((e) => e.operation === 'add-die');
     const flats = combatant.damageEffects.filter((e) => e.operation === 'add');
     expect(dice).toHaveLength(1);
-    expect(dice[0].value).toBe(8);
+    expect(dice[0].value).toBe(6);
     expect(flats).toHaveLength(1);
-    expect(flats[0].value).toBe(1);
+    expect(flats[0].value).toBe(-1);
   });
 
   it('REGRESSION (05-H2): multiple ", or" alternatives collapse to the first clause (2024 Druid quarterstaff)', () => {

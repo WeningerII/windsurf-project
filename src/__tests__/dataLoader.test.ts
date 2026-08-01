@@ -158,7 +158,12 @@ describe('Data Loader Integration Tests', () => {
       // Ring of Clumsiness); two more — Cloak of the Archmagi and Pegasus Boots
       // — were the same invented content still claiming `SRD 5.2` here, while
       // their 2014 twins carried the honest tag.
-      expect(equipment.length).toBe(492);
+      // 492 -> 489: three wrong-edition gear rows carrying SRD 5.1 names
+      // (Rope, Hempen (50 feet); Tent, Two-Person; Mirror, Steel) deleted
+      // 2026-08-01. Each was a duplicate of the SRD 5.2 row the generated
+      // srd-equipment.ts already ships (Rope / Tent / Mirror), so the catalog
+      // keeps the item and loses only the foreign-edition name and stats.
+      expect(equipment.length).toBe(489);
       expect(new Set(equipment.map((e) => e.id)).size).toBe(equipment.length);
     });
   });
@@ -166,14 +171,16 @@ describe('Data Loader Integration Tests', () => {
   describe('Pathfinder 2e Loaders', () => {
     it('should load spells for pf2e', async () => {
       const spells = await loadSpellsForSystem('pf2e');
-      // Full CRB coverage: the catalog's 537 spells (129 hand-written + 408
+      // Full CRB coverage: the catalog's 534 spells (126 hand-written + 408
       // encoder-generated, scripts/encode-pf2e-spells.mjs) plus the loader's
       // appended focus-spell entries. srd:coverage verifies independently.
-      // 551 -> 548: Forcecage, Geyser and Feather Step now carry their true
-      // (non-CRB) source and are filtered by the pf2e allowlist.
       // 551 -> 546: five self-authored spells (Entreat, Floating Shroud,
       // Harmless Healing, Jumping Jack, Mass Misdirection) deleted 2026-07-30.
-      expect(spells.length).toBe(546);
+      // 546 -> 543: three wrong-edition rows with no PF2e counterpart (Delayed
+      // Blast Fireball, Firestorm, Feather Step) deleted 2026-08-01. Forcecage
+      // and Geyser were replaced in place by the real PF2e Force Cage (APG,
+      // rank 7) and Geyser (Secrets of Magic, rank 5), so they still count.
+      expect(spells.length).toBe(543);
       expect(spells.every((spell) => spell.traditions && spell.traditions.length > 0)).toBe(true);
       expect(
         spells

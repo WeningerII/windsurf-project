@@ -3,54 +3,6 @@ import { withPf2eSpellTraits } from './traits';
 
 export const level7Spells: Spell[] = withPf2eSpellTraits([
   {
-    id: 'delayed-blast-fireball-7-pf2e',
-    name: 'Delayed Blast Fireball',
-    system: 'pf2e',
-    source: 'Core Rulebook',
-    level: 7,
-    school: 'evocation',
-    traditions: ['arcane'],
-    castingTime: {
-      type: 'action',
-      amount: 2,
-    },
-    range: {
-      type: 'ranged',
-      feet: 500,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'rounds',
-      rounds: 1,
-    },
-    areaOfEffect: {
-      type: 'sphere',
-      radius: 20,
-    },
-    savingThrow: {
-      attribute: 'dex',
-      success: 'half',
-    },
-    savingThrowText: 'basic Reflex save',
-    damage: {
-      base: {
-        count: 10,
-        die: 'd6',
-        notation: '10d6',
-      },
-      type: 'fire',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      'A fireball explodes at a point you designate. You can delay the explosion for up to 5 rounds. Each creature takes 10d6 fire damage with a basic Reflex save.',
-    classes: ['sorcerer', 'wizard'],
-  },
-  {
     id: 'energy-aegis-pf2e',
     name: 'Energy Aegis',
     system: 'pf2e',
@@ -127,79 +79,44 @@ export const level7Spells: Spell[] = withPf2eSpellTraits([
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
   },
   {
-    id: 'firestorm-7-pf2e',
-    name: 'Firestorm',
+    id: 'force-cage-7-pf2e',
+    name: 'Force Cage',
     system: 'pf2e',
-    source: 'Core Rulebook',
+    source: "Pathfinder 2e Advanced Player's Guide",
     level: 7,
     school: 'evocation',
-    traditions: ['divine', 'primal'],
+    traditions: ['arcane', 'occult'],
     castingTime: {
       type: 'action',
-      amount: 2,
+      amount: 3,
     },
     range: {
       type: 'ranged',
-      feet: 500,
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
     },
     duration: {
-      type: 'instant',
+      type: 'minutes',
+      minutes: 1,
+    },
+    areaOfEffect: {
+      type: 'cube',
+      feet: 20,
     },
     savingThrow: {
       attribute: 'dex',
       success: 'none',
     },
     savingThrowText: 'Reflex save',
-    damage: {
-      base: {
-        count: 14,
-        die: 'd6',
-        notation: '14d6',
-      },
-      type: 'fire',
-    },
-    concentration: false,
+    concentration: true,
     ritual: false,
     description:
-      'You call down a massive firestorm. Creatures in five 10-foot cubes within range must attempt a Reflex save, taking 14d6 fire damage on a failure or half on a success.',
-    classes: ['cleric', 'druid'],
-  },
-  {
-    id: 'forcecage-7-pf2e',
-    name: 'Forcecage',
-    system: 'pf2e',
-    source: 'SRD 5.1',
-    level: 7,
-    school: 'evocation',
-    traditions: ['arcane'],
-    castingTime: {
-      type: 'action',
-      amount: 2,
-    },
-    range: {
-      type: 'ranged',
-      feet: 120,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'hours',
-      hours: 1,
-    },
-    effect: 'An invisible, immobile, cube-shaped prison of magical force',
-    concentration: false,
-    ritual: false,
-    description:
-      'An invisible, immobile, cube-shaped prison of magical force springs into being. Nothing can pass through the barrier from either side.',
-    classes: ['sorcerer', 'wizard'],
+      'You create an immobile, invisible prison of sheer force: a 20-foot cube made of bands of force a half inch thick and a half inch apart that extend to the Ethereal Plane. Each creature in the area must attempt a Reflex save, becoming trapped inside the cage on a failure or pushed outside it on a success. The cage has AC 10, Hardness 20, and 40 Hit Points, and it is destroyed automatically by a disintegrate spell of any level.',
+    classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
     id: 'plane-shift-pf2e',

@@ -644,7 +644,7 @@ describe('Spell Data Validation', () => {
   it('stores browser-visible metadata for the curated high-rank PF2e parity set', () => {
     const curatedPf2eHighRankMetadataIds = [
       'energy-aegis-pf2e',
-      'forcecage-7-pf2e',
+      'force-cage-7-pf2e',
       'plane-shift-pf2e',
       'power-word-blind-7-pf2e',
       'regenerate-7-pf2e',
