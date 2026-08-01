@@ -138,7 +138,7 @@ export const skillAdvantages: Advantage[] = [
   },
   {
     id: 'jack-of-all-trades',
-    name: 'Jack-of-all-Trades',
+    name: 'Jack-of-all-trades',
     system: 'mam3e',
     source: "Hero's Handbook",
     type: 'skill',
