@@ -125,6 +125,23 @@ policy channel that admitted them:
   entirely — all 11 were self-authored and the Hero SRD prints no device row.
 - Record: `GAPS` §17.3.
 
+## Reclassified 2026-07-31 — M&M L5
+
+The register lane filed M&M's effect economy under L5 "spellcasting economy".
+`WORK_PLAN` §3.1 had ALREADY recorded that mam3e L5 is legitimately absent. Undone:
+activation/upkeep → **L8** (turn economy), rank helpers → **L9** (cost assembly,
+beside `cost-abilities`), and ONE `excluded` row stays at L5 as the not-applicable
+marker. **No number moved** — still 35/44, gate still 264. Root cause: nine layers
+are named by FUNCTION, L5 alone by a MECHANIC.
+
+## Container rolled back TWICE this session
+
+Both times: local HEAD reverted to the 2026-07-28 snapshot, task list reset, 42
+agent worktrees restored (knip OOMs at ~42 → `git worktree remove`, branches
+survive: 184 before/after). **Both times everything was intact on origin** because
+it had been pushed immediately. Recovery is `git fetch` + `git merge --ff-only`.
+Symptom to watch for: a commit SHA you just made reporting `bad revision`.
+
 Read `docs/WORK_PLAN.md` first — it is the forward queue. `MASTER_PLAN` holds
 decisions; `GAPS` §20–§23 holds this week's evidence.
 

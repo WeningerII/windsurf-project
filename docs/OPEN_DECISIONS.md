@@ -43,11 +43,11 @@ defensible right answer, and the cost of being wrong is a revert, not a lawsuit.
 
 | # | Item | Where | My call |
 | --- | --- | --- | --- |
-| **B1** | Multi-channel damage split — how to divide one scalar total across `slashing + fire` so the parts sum to the whole. | `WORK_PLAN` §3.2 | Largest-remainder distribution over channel proportions, biggest channel absorbs the remainder. Deterministic and total-preserving. |
-| **B2** | The five-job CI split (~2m30s–3m30s saving). | `memory/hot.md`, §6.5 | Do it, but land `check:ci-parity` first — asserting the workflow's `npm run` multiset equals the verify chain — because otherwise a step added to `package.json` silently never runs in CI. That is this repo's documented failure mode. |
+| ~~**B1**~~ **EXECUTED 2026-07-31** | Multi-channel damage split — how to divide one scalar total across `slashing + fire` so the parts sum to the whole. | `WORK_PLAN` §3.2 | Largest-remainder distribution over channel proportions, biggest channel absorbs the remainder. Deterministic and total-preserving. |
+| **B2** — *unblocked; `check:ci-parity` landed 2026-07-31 (`WORK_PLAN` §6.10)* | The five-job CI split (~2m30s–3m30s saving). | `memory/hot.md`, §6.5 | Do it, but land `check:ci-parity` first — asserting the workflow's `npm run` multiset equals the verify chain — because otherwise a step added to `package.json` silently never runs in CI. That is this repo's documented failure mode. |
 | **B3** | Tailwind 4 / lucide 1.x / Vite 8 sequencing. | `WORK_PLAN` §6.5 | Vite 8 first (loudest failures, caught by steps 1–21), then lucide, then Tailwind last. All three gated on CI e2e, none landed from this container. |
 | **B4** | `p1.monster-denominator-fix` — 3.5e denominator inflated by container-like rows. | `WORK_PLAN` §2.5 | Fix it; it moves a published number *downward toward honesty*, which is the same direction as today's compute-register work. |
-| **B5** | graphify index staleness. | `WORK_PLAN` §7.2 | Add a warn-only staleness check, not a gate — the artifacts are committed, so a hard gate would either fail every `src/` PR or rewrite tracked files mid-chain. |
+| ~~**B5**~~ **EXECUTED 2026-07-31** (`scripts/check-graph-staleness.mjs`, warn-only, exits 0) | graphify index staleness. | `WORK_PLAN` §7.2 | Add a warn-only staleness check, not a gate — the artifacts are committed, so a hard gate would either fail every `src/` PR or rewrite tracked files mid-chain. |
 | **B6** | Phase-6 `VITE_SCENE_CANVAS_ENABLED` has no CI job and `e2e/scene-canvas.spec.ts` was never written. | `WORK_PLAN` §6.2 | Write the spec and the job, mirroring the `scene-drag` pattern that caught a real defect. |
 | **B7** | The "every subsection resolved" heading shape stays ungated. | `WORK_PLAN` §7 | Leave it. Narrowing was deliberate — the broad version false-positived, and a gate that cries wolf gets weakened. |
 
@@ -65,7 +65,16 @@ No decision required. These are queued and unstarted.
 - **Phase 7 remaining** — hash-sync restore-on-reload, seam catalogue, chrome-dominance gate (genuinely blocked on Phase 6's tray).
 - **Build-spec open questions** — `useSheetClickToAdd` registration shape across pf2e/d20/mam3e (L340); Generate-NPC re-home once `PlacementMode` is deleted (L403); marker drag source location (L406); seam-context of-record location (L430).
 - **Prose fidelity is unaudited in all seven systems.** Every fidelity finding so far is scalar; descriptions, traits and actions are unchecked. Scoping it is itself a lane.
-- **Tier-B anchors** — *closed 2026-07-29*, 247/247 mutation-proven. Listed only because it appears as open in older prose.
+- **Tier-B anchors** — *closed 2026-07-29*, 247/247 mutation-proven; **264/264 after the 2026-07-31 tranche**. Listed only because it appears as open in older prose.
+
+### Surfaced 2026-07-31 by the six-lane run — all work, no decisions
+
+- **Wire the area-effect path to typed damage.** `areaEffectToDamageIntent` and `multiTargetAttackToDamageIntent` have no callers outside tests and the barrel; the shipped fireball path builds an untyped intent inline at `src/rules/combat/sceneCombat.ts:503`. Until that is wired, **a fireball on a fire elemental does not mitigate.** `WORK_PLAN` §3.2.
+- **The dark a11y gate reaches 4 of ~17 touched files** — proven by a control that was NOT caught. Either scan surfaces that render the affected components, or add a static contrast lint over Tailwind classes lacking a `dark:` variant. `WORK_PLAN` §6.4.
+- **`normalizeLegacyEquipment` launders 8 non-coin 3.5e prices** (`'Varies'`, `'3 cp/mile'`) into a well-formed `0 gp`. Unfixable in the formatter — indistinguishable there from a legitimately free pf2e item. `src/utils/dataLoader.ts`.
+- **The L8 compute-register rows** the damage-split work now owes.
+- **Rename compute layer L5.** Nine of the ten layers are named by FUNCTION; L5 alone by a MECHANIC ("spellcasting economy"), which is why it is the only layer a non-magic system cannot fill honestly. M&M's rows were mis-filed there and reclassified to L8/L9 on 2026-07-31 with no number movement; renaming the layer would stop it recurring, but it changes the meaning for all seven systems.
+- **`wip/lane-snapshot`** — a superseded recovery branch on the remote. Verified to hold nothing unique. **This sandbox's git proxy refuses branch deletion** (`the remote end hung up unexpectedly`, both syntaxes) and no delete-branch tool is available, so it needs deleting from the GitHub UI.
 
 ---
 
@@ -100,3 +109,18 @@ drops out of the catalogs or to replace them with same-edition equivalents.
 
 **Seven were mine and I should have just decided them (B).** I will, unless you say
 otherwise.
+
+**Four are now executed** (2026-07-31): **B1** the largest-remainder damage split,
+**B5** the warn-only graph-staleness check, plus **B4** and the `check:ci-parity`
+precondition that unblocks **B2**. **B6** (the Phase-6 canvas acceptance) and
+**B3** (toolchain sequencing) remain — B3 gated on the bundle budgets, which is
+**A7**, which is yours.
+
+One correction worth keeping, because it recurred three times in one session:
+**a "checked and fine" claim is only as good as the question the check asked.**
+§6.6 probed whether a field was PRESENT when the defect was its SHAPE; §6.4
+checked contrast in light mode only and shipped a dark-mode regression; and the
+dark gate built to catch that reaches a quarter of the files it was meant to
+cover. Each time the code passed the measure applied and failed the measure that
+mattered. Where a claim of "verified" appears in these documents, the useful
+question is *verified against what*.
