@@ -111,9 +111,22 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     //
     // The Lost Omens line is deliberately NOT admitted: it is Paizo's setting
     // line and carries substantial Product Identity, so its open status is not
-    // something this file should assert. Those two records keep their true tag
+    // something this file should assert. Those records keep their true tag
     // and are filtered — the conservative treatment for content whose licence I
     // could not establish.
+    //
+    // 'Pathfinder 2e Treasure Vault' admitted 2026-08-01 for the three weapons
+    // (Atlatl, Boomerang, Earthbreaker) that PF2e prints only in that book. It is
+    // held to the same evidence standard as every other string here: Foundry's
+    // pf2e system data carries per-item licence metadata, and each of the three
+    // reads `{"license":"OGL","remaster":false}` — Treasure Vault shipped before
+    // Paizo's move to the ORC licence. The PF1e tags those rows used to carry
+    // named the wrong game entirely.
+    //
+    // The Remaster line (Player Core 1 and successors) is NOT admitted and should
+    // not be: it is ORC-licensed, not OGL, and every PF2e entry here that the
+    // Remaster reprinted is cited to its original OGL printing (CRB or APG)
+    // instead. Pf2eTools keeps both printings, so the OGL one is always available.
     allowedSources: [
       'Core Rulebook',
       'CRB',
@@ -123,6 +136,7 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
       'Pathfinder 1e Ultimate Combat',
       'Pathfinder 1e Ultimate Equipment',
       "Pathfinder 2e Advanced Player's Guide",
+      'Pathfinder 2e Treasure Vault',
       'Secrets of Magic',
       'SRD 3.5',
       'SRD 5.1',
