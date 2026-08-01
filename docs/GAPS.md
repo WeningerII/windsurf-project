@@ -55,6 +55,7 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | --- | --- |
 | [11](#11-provenance-over-inclusion-outside-srcdata-added-2026-07-25) | OC-1 awaits an owner decision; the gate's honest residual is unclosed |
 | [19](#19-mm-3e-adversaries--the-source-search-and-why-nothing-was-encoded-added-2026-07-28) | The open-content M&M adversary source exists but this sandbox cannot reach it; options recorded, owner decides |
+| [25](#25-six-parallel-lanes--what-running-them-concurrently-actually-proved-added-2026-07-31) | Lane code CLOSED; three coverage limits OPEN — typed damage covers single attacks only, the dark a11y gate reaches 4 of ~17 files, and 3.5e prices are laundered into a false `0 gp` |
 | [20](#20-the-first-full-chain-green-run--what-twelve-never-executed-gates-actually-proved-added-2026-07-28) | Run itself CLOSED; the orphaned feat-automation copy is OPEN (the shared-formatter contract is now pinned — WORK_PLAN §6.6) |
 | [21](#21-wall-clock-assertions-cannot-be-gates-under-parallel-workers-added-2026-07-28) | CLOSED — `gateBudget` re-instrumented from wall-clock to counted DOM mutations plus scale-invariance |
 
@@ -2945,3 +2946,41 @@ false since the sources were wired: §1's own opening records the blocker as
 resolved and all 7 systems as measured. The note was also physically stranded
 between §15 and §16, so it read as a closing summary of a file it stopped
 halfway through.
+
+---
+
+## 25. Six parallel lanes — what running them concurrently actually proved (added 2026-07-31)
+
+**Status: the code work is CLOSED; three coverage limits it exposed are OPEN and named below.** Recorded because the lanes' findings were mostly *not* the work they were dispatched to do, and because the failure pattern repeated often enough to be a rule.
+
+### 25.1 The rule, stated first because it is the reusable part
+
+**A "checked and fine" claim is only as good as the question the check asked.** Three separate sections of `docs/WORK_PLAN.md` carried a DONE verdict that a later, differently-shaped check falsified. In every case the code passed the measure applied and failed the measure that mattered:
+
+| claim | the question it asked | the question that mattered |
+| --- | --- | --- |
+| §6.6 *"formatRange and formatDuration were checked and are fine"* | is the field PRESENT? | is it the SHAPE the function switches on? |
+| §6.4 *"Dark mode was already compliant, so only the light value moved"* | does the fixed element pass? | do the OTHER 12 call sites carry a `dark:` override? |
+| §6.4's new dark scan *"closes the coverage hole"* | does the gate fail when I break a token? | does it reach the COMPONENTS the fix touched? |
+
+The third is the sharpest, because it was caught by its own verifier: the first revert control (dropping a `supportBadges` dark override at 1.79:1, catastrophic) produced **8 passed, exit 0**. The badge renders on none of the scanned surfaces.
+
+### 25.2 Defects found outside the lanes' briefs
+
+- **7 low-CR 3.5e monsters could not be placed in an encounter at all.** `DND35E_EL_VALUE` keys CR 1/6 and 1/3 as exact fractions; `src/data/dnd/3.5e/monsters/` encodes them as `0.166`/`0.33`. The lookup missed, returned 0, and cost 0 makes `validateEncounterSpec` reject with `no-xp-cost`. 8 of 188 monsters had no cost; 7 were this. Now 1 — Titan at CR 21, genuinely above the table. Found while ENUMERATING a register layer, not while looking for bugs.
+- **The entire M&M catalog rendered `Unknown`** for range and duration. Silent, so nothing caught it: `'Unknown'` is a well-formed string, and the existing shape test asserted only that no formatter throws or leaks `undefined`.
+- **Dark `--destructive` was 2.00:1** — a third of AA — across the 56 files using `text-destructive`. Its light counterpart had been AA-tuned; the dark one never was. `CurrencyEditor` platinum measured **1.23:1**.
+- **`splitDamageAcrossChannels(5, [])` returned `[]`** — sum 0 against a total of 5, silently destroying damage — while its docstring promised the parts always sum to the whole. The early return preceded the post-condition, so the self-check could not see it. **The test named "no channels yields no parts" was pinning the bug.**
+
+### 25.3 The three open coverage limits
+
+1. **Typed damage covers single attacks only.** `areaEffectToDamageIntent` and `multiTargetAttackToDamageIntent` have no callers outside tests and the barrel; the shipped fireball path builds an untyped intent inline at `src/rules/combat/sceneCombat.ts:503`. **A fireball on a fire elemental does not mitigate.**
+2. **The dark a11y gate reaches 4 of ~17 touched files** (25.1). Closing it means scanning surfaces that render those components, or a static contrast lint over Tailwind classes lacking a `dark:` variant.
+3. **`normalizeLegacyEquipment` launders 8 non-coin 3.5e prices** into a well-formed `0 gp`. Unfixable in the formatter — indistinguishable there from a legitimately free pf2e item.
+
+### 25.4 Method notes worth keeping
+
+- **Per-lane green does not substitute for the combined gate.** Lanes were barred from `tsc`/`lint`/`verify` because siblings' half-written files were in the tree. Vitest transpiles without typechecking, so **577 tests passed over code that did not compile** — a `SceneActionIntent` union read without narrowing, caught only by `typecheck:test` at integration.
+- **The full gate took seven passes**, stopping at steps 3 → 7 → 11 → 12 → 13 → 16 → 22. Only one failure was in lane work; the rest were integration-surface: a missing dependency, regenerated numbers, a doc count invalidated by adding a chain step, and a knip OOM from 42 restored worktrees.
+- **A lane contradicted a decision the plan had already recorded.** §3.1 states `mam3e` L5 is legitimately absent; the register lane filed M&M's effect economy there anyway. Reclassified to L8/L9 with **no number movement**, which is the tell that the rows were real work and only the filing was wrong.
+- **Concurrent Playwright runs share one `vite preview` server.** Whichever finishes first tears it down; three runs returned 3, 7 and 40 failures, every one a connection refusal with zero assertion failures.
