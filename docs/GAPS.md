@@ -2033,6 +2033,12 @@ flight items are Broom / Carpet / Wings of Flying) and from SRD 5.2. Shipped at
 
 #### 18.5.3 `wrong-edition-attribution` — 78 records, 73 distinct entries
 
+> **RESOLVED 2026-08-01 — this class is now EMPTY (§26).** The count below is
+> the population as first audited; it fell to 68 as the allowlists were widened
+> to admit books by their true names and the deleted homebrew stopped shadowing
+> rows, then to 0 when those 68 were replaced or removed. The itemisation is
+> kept as the record of what was found, not as current state.
+
 Open content, **false citation**. No licence exposure, but the product asserts a
 provenance it does not have — the same defect class as §15(c).
 
@@ -3034,3 +3040,108 @@ The third is the sharpest, because it was caught by its own verifier: the first 
 - **The full gate took seven passes**, stopping at steps 3 → 7 → 11 → 12 → 13 → 16 → 22. Only one failure was in lane work; the rest were integration-surface: a missing dependency, regenerated numbers, a doc count invalidated by adding a chain step, and a knip OOM from 42 restored worktrees.
 - **A lane contradicted a decision the plan had already recorded.** §3.1 states `mam3e` L5 is legitimately absent; the register lane filed M&M's effect economy there anyway. Reclassified to L8/L9 with **no number movement**, which is the tell that the rows were real work and only the filing was wrong.
 - **Concurrent Playwright runs share one `vite preview` server.** Whichever finishes first tears it down; three runs returned 3, 7 and 40 failures, every one a connection refusal with zero assertion failures.
+
+## 26. The wrong-edition tail — replacing 68 records exposed that most of them had nothing to replace them with (added 2026-08-01)
+
+**Status: CLOSED.** `check:provenance-over-inclusion` now reports
+`licensing-class total: none`. `wrong-edition-attribution` 68 → 0; with
+`genuine-non-open-content` already 0 since §17.3, the audit's entire licensing
+tail is empty.
+
+### 26.1 The rule, first
+
+**A remedy that presumes an equivalent exists must go find out, one record at a
+time, before it is called a plan.** The owner's ruling (`docs/OPEN_DECISIONS.md`
+A2/A3) was the expensive and correct one — *replace* each false-cited record with
+a genuine entry from its own edition, rather than re-tag and let
+`filterOpenContentBySource` drop it. The ruling was made on the reasonable
+assumption that a PF2e Basket exists. It does not. **PF2e has no Basket, Bell,
+Blanket, Bucket, Jug, Flask, Vial, Sealing Wax, Shovel, Saw, Ring Mail, Banded
+Mail, Siangham, Cestus or Boar Spear under any name in any book.** The 2e
+revision consolidated adventuring gear; those rows were never PF2e content that
+got mislabelled.
+
+So the population split three ways, and only the first was the job as briefed:
+
+| | rows | what happened |
+| --- | ---: | --- |
+| The edition HAS the item | 15 | replaced with its real stats and its true book |
+| The edition's own version ALREADY SHIPPED alongside it | 13 | the duplicate deleted |
+| No edition has the item | 40 | deleted |
+
+### 26.2 Absence is a claim, so it was made to two independent sources
+
+Every "PF2e does not have this" assertion here required BOTH to come back empty:
+the 1,027 distinct item names across `Pf2eToolsOrg/Pf2eTools` (`items-crb`,
+`baseitems`, `items-apg`, `items-som`, `items-gmg`), and a per-slug probe of
+`foundryvtt/pf2e`'s equipment pack. Two community datasets built from the same
+books by different people, disagreeing about naming but not about existence.
+
+Foundry's data turned out to carry something Pf2eTools does not:
+`system.publication.license`, per item, reading `OGL` or `ORC`. That is what let
+Treasure Vault be admitted on evidence rather than on belief — Atlatl, Boomerang
+and Earthbreaker each read `{"license":"OGL","remaster":false}` — and it is what
+keeps the Remaster line out, since Player Core reads `ORC`. Pf2eTools keeps both
+printings of every reprinted item, so an OGL citation is always available for
+anything the Remaster reissued; Hatchet and Pick are cited to Core Rulebook
+p.280/281, not to Player Core.
+
+### 26.3 The finding that settles whether these were a labelling problem
+
+They were not. **`Banded Mail` shipped in the PF2e catalog as `armorClass: 4,
+dexBonusMax: 1`, and `Ring Mail` as `5 / 0`** — numbers matching no row in a
+system whose heavy armour is Splint Mail, Half Plate and Full Plate. The `Bell`
+cost 1 gp, which is PF1e's price. These are d20 rows wearing a `system: 'pf2e'`
+field, and a PF2e sheet offering the player Banded Mail at Dex cap +1 is a
+defect, not content. Re-tagging them truthfully would have left the defect in
+place with an accurate label on it.
+
+The same shape appeared in the 2024 catalog from the other direction: the six
+flagged monsters (`Acolyte`, `Bugbear`, `Goblin`, `Hobgoblin`, `Kobold`,
+`Veteran`) had a same-edition equivalent all along — SRD 5.2.1's `Priest
+Acolyte`, `Bugbear Warrior`, `Goblin Warrior`, `Hobgoblin Warrior`, `Kobold
+Warrior`, `Warrior Veteran` — **and this catalog was already shipping every one
+of them**, generated from 5.2. The remedy was not to transcribe anything. It was
+to notice the duplicate. `Thug` is the one exception: zero hits in the 5.2.1
+bestiary under any name, and Bandit (CR 1/8) and Bandit Captain (CR 2) are
+different creatures, so it was deleted.
+
+### 26.4 The allowlists narrow back, and that is the point
+
+`src/utils/openContentPolicy.ts` widened the `pf2e` list on 2026-07-29 to admit
+the PF1e line and the d20 SRDs. That was never meant to be a resting state. The
+field had been doing two jobs — *is this open?* and *is this in scope?* — and the
+conflation produced the worst available outcome, because the only tag that passed
+the gate was the wrong one: 15 PF1e gear rows normalised to a bare
+`'Core Rulebook'` were compliant **and** falsely attributed. Widening made each
+row name its actual source so the wrong edition would stay visible as a wrong
+edition instead of being laundered into a right-looking one. Diagnosis, not cure.
+
+With the rows resolved, zero `pf2e` records carry any of those six strings, and
+zero `pf1e` records carry `'SRD 3.5'`. All seven are removed. **A dead string on
+an allowlist is a door nobody is watching** — it admits nothing today and admits
+the next wrong-edition row silently. The scope question and the licence question
+are finally separate in that file: everything remaining is both open-licensed and
+actually the right game.
+
+Two rows go the other way. `Chakram` and `Marbles` are genuine PF2e content from
+*Lost Omens: The Grand Bazaar*, which Foundry marks OGL — but the standing policy
+refuses the whole Lost Omens line as Paizo's setting line, and two rows already
+sit filtered under that rule. They keep the true tag and are dropped from the
+loaded corpus rather than having the line quietly admitted for their sake. True
+citation, conservative admission, no policy change smuggled in as a data fix.
+
+### 26.5 Side effects worth knowing
+
+- The 05-H2 versatile-damage regression fixture pinned the deleted 2024
+  Hobgoblin. It now pins the shipped SRD 5.2 **Dryad**, which is a stricter test:
+  its modifier is *negative* (`2 (1d6 - 1), or 3 (1d8 - 1)`), so a parser that
+  summed both clauses would also have to get the sign right to look plausible.
+- Four 2024 gear rows — `Hammer`, `Mess Kit`, `Piton`, `Soap` — were reclassified
+  rather than touched. Their `SRD 5.1` tag is true and admitted for that system,
+  and SRD 5.2.1 genuinely dropped them (pitons folded into the Climber's Kit).
+  They are `denominator-scope-defect`: the wired denominator is the 5.2 list
+  alone, so a truthfully-5.1-tagged row can never appear in it.
+- Product-reachable counts moved: pf2e equipment 182 → 148, pf2e spells 546 →
+  543, 2024 monsters 337 → 330, 2024 equipment 492 → 489, pf1e equipment
+  615 → 613. Every removal is a row the catalog was wrong to be offering.
