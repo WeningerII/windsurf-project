@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-31T05:40:36.267Z",
+  "generatedAt": "2026-08-01T20:09:52.706Z",
   "summary": {
     "total": 23,
     "byStatus": {
@@ -244,13 +244,13 @@
       "phase": 3,
       "track": "B-compute",
       "title": "Mutation-anchor rollout (verified → mutation-proven)",
-      "detail": "Complete: check:compute-register --mutate proves all 190 of the 190 verified entries across every system (each carries a real formula mutation anchor whose perturbation flips a linked, register-independent test from pass to fail). \"verified\" has graduated from test-linked-and-passing (Tier A) to mutation-proven (Tier B) for the entire register. New verified entries must land with their anchor to keep the numerator at 100%.",
+      "detail": "Complete and held at parity through two later tranches: check:compute-register --mutate proves all 264 of the 264 verified entries across every system (190 when this item closed; 247 after the layer gaps closed 2026-07-29; 264 after the mam3e/3.5e/pf1e tranche 2026-07-31, zero demotions at every step) (each carries a real formula mutation anchor whose perturbation flips a linked, register-independent test from pass to fail). \"verified\" has graduated from test-linked-and-passing (Tier A) to mutation-proven (Tier B) for the entire register. New verified entries must land with their anchor to keep the numerator at 100%.",
       "status": "done",
       "tags": [
         "rollout",
         "engineering"
       ],
-      "evidence": "docs/compute-register/mutation-anchors.ts (190 anchors); docs/generated/compute-register-gate.json (Tier A+B, 0 demotions); check:compute-register:mutate"
+      "evidence": "docs/compute-register/mutation-anchors.ts (264 anchors, 1:1 with verified entries); docs/generated/compute-register-gate.json (Tier A+B, 0 demotions); check:compute-register:mutate"
     },
     {
       "id": "p3.L3-damage-assembly",
