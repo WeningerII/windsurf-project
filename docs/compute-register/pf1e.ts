@@ -97,6 +97,89 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       testRef: 'src/__tests__/derivation/pf1eDerivedQuantities.test.ts :: pf1e.L10.wealth-by-level',
     },
     {
+      id: 'pf1e.L10.average-party-level',
+      layer: 'L10',
+      quantity: 'Average Party Level (APL)',
+      formula:
+        'round(mean(party levels)); +1 when the party is six or more; −1 when three or fewer; floored at 1',
+      inputs: ['party levels'],
+      edgeCases: [
+        'rounds to the NEAREST whole number (avg 4.5 → APL 5), not down',
+        'six level-4 characters → APL 5',
+        'three level-4 characters → APL 3',
+        'clamped to a minimum of 1',
+        'empty party → no APL (budget short-circuits to 0)',
+      ],
+      exceptions: [
+        'The party-size ±1 adjustment is PF1e-only — the 3.5e sibling (dnd35eEncounterBudget, src/scene/encounterDraft.ts:245) deliberately has no party-size term.',
+        'Rounding to nearest is an explicit exception to the d20 round-down default, called out in the engine comment at src/scene/encounterDraft.ts:103-111.',
+      ],
+      source: `${CRB}: Gamemastering — Designing Encounters (Average Party Level)`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/scene/encounterDraft.test.ts :: target CR = APL + difficulty offset, XP from the awards table',
+      note: 'Computed inside pf1eEncounterXpBudget (src/scene/encounterDraft.ts:117-121). Registered separately from the budget because APL is its own named CRB quantity and carries the two PF1e divergences above; the budget row pins the CR/award stage that consumes it.',
+    },
+    {
+      id: 'pf1e.L10.encounter-xp-budget',
+      layer: 'L10',
+      quantity: 'Encounter XP budget (target CR from APL + difficulty band)',
+      formula:
+        'targetCR = min(25, APL + {easy −1, average 0, challenging +1}); budget = the Total XP award for targetCR, with targetCR ≤ 0 floored to CR 1/2',
+      inputs: ['APL', 'difficulty band'],
+      edgeCases: [
+        'APL 4 → easy CR 3 = 800 XP, average CR 4 = 1,200 XP, challenging CR 5 = 1,600 XP',
+        'CRB floor: easy at APL 1 → CR 1/2 = 200 XP, not CR 0',
+        'target CR clamps at 25 (the last row of the awards table)',
+        'a target CR absent from the table yields 0 rather than a guessed award',
+        'empty party → 0',
+      ],
+      exceptions: [
+        'PF1e sizes a fight by ONE target CR\'s printed award, not by a summed per-character budget (5e, partyXpBudget at src/scene/encounterDraft.ts:62) nor a party-of-four base + per-character table (PF2e, :139).',
+      ],
+      source: `${CRB}: Gamemastering — Designing Encounters (Table: Encounter Design) and Table: Experience Point Awards`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/scene/encounterDraft.test.ts :: target CR = APL + difficulty offset, XP from the awards table',
+      note: 'Shipped as pf1eEncounterXpBudget (src/scene/encounterDraft.ts:112) and wired to the runtime: encounterPartyBudget feeds the drafter, the encounter-spec validator (src/scene/encounterSpec.ts:88), and the scene Encounter panel (src/components/scene/useSceneEncounter.ts:240). It lives in src/scene/ rather than src/systems/pf1e/ because it is party-scoped GM math the layer boundary keeps out of the system module — the same placement pf2e.L10.encounter-budget documents.',
+    },
+    {
+      id: 'pf1e.L10.encounter-spend',
+      layer: 'L10',
+      quantity: "One monster's cost against the encounter budget",
+      formula: "the monster's own printed Total XP award (monster.experiencePoints)",
+      inputs: ['monster XP award'],
+      edgeCases: [
+        'a 700-XP monster costs 700 whatever the party levels are',
+        'the cost is party-independent, so the same monster prices identically in every PF1e draft',
+      ],
+      exceptions: [
+        'PF1e (like 5e) spends the printed award; PF2e rescales by creature-level-minus-party-level (src/scene/encounterDraft.ts:165) and 3.5e prices off its derived EL-value scale (:230). PF1e takes the fall-through return at :332.',
+      ],
+      source: `${CRB}: Gamemastering — Table: Experience Point Awards`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/scene/encounterSpec.test.ts :: monsterEncounterCost uses XP for 5e/PF1e, party-relative for PF2e, EL-value for 3.5e',
+      note: 'monsterEncounterCost is shared by the drafter and the validator so the spend math cannot diverge between drafting and validation.',
+    },
+    {
+      id: 'pf1e.L10.budget-dispatch',
+      layer: 'L10',
+      quantity: 'PF1e routing of the shared party-budget dispatch',
+      formula:
+        "encounterPartyBudget('pf1e', partyLevels, difficulty) = pf1eEncounterXpBudget(partyLevels, difficulty)",
+      inputs: ['systemId', 'party levels', 'difficulty band'],
+      edgeCases: [
+        "systemId 'pf1e' resolves to the CRB awards table, never the 5e per-character sum",
+        'the drafter and the encounter-spec validator therefore read one identical budget',
+      ],
+      source: `${CRB}: Gamemastering — Designing Encounters`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/scene/encounterSpec.test.ts :: encounterPartyBudget dispatches to each system table',
+      note: 'Pins the ROUTING, not a second formula — the arithmetic belongs to pf1e.L10.encounter-xp-budget and is not re-counted here. Registered on its own because the `case \'pf1e\'` arm (src/scene/encounterDraft.ts:300-301) is the single point where a refactor could silently send PF1e to partyXpBudget, and its mutation anchor perturbs the arm itself rather than the formula.',
+    },
+    {
       id: 'pf1e.L3.cmb',
       layer: 'L3',
       quantity: 'Combat Maneuver Bonus (CMB)',

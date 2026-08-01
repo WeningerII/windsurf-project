@@ -304,6 +304,43 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'Math.min(Math.max(1, Math.floor(level)), PF1E_WEALTH_BY_LEVEL_GP.length) - 1',
     replace: 'Math.min(Math.max(1, Math.floor(level)), PF1E_WEALTH_BY_LEVEL_GP.length) - 2',
   },
+  // ── pf1e encounter economy (src/scene/encounterDraft.ts) ──
+  // Each anchor perturbs a DIFFERENT stage of the pipeline (APL -> target CR ->
+  // spend -> routing) so no single mutation could cover two of these rows.
+  //
+  // APL: the PF1e-only six-or-more +1. `apl += 1` is unique to
+  // pf1eEncounterXpBudget — dnd35eEncounterBudget has no party-size term at all.
+  // +2 flips the six-level-4-characters case from CR 5 (1,600) to CR 6 (2,400).
+  'pf1e.L10.average-party-level': {
+    file: 'src/scene/encounterDraft.ts',
+    find: 'if (partyLevels.length >= 6) apl += 1;',
+    replace: 'if (partyLevels.length >= 6) apl += 2;',
+  },
+  // Target CR: discriminating against the 3.5e sibling, which clamps to 20 and
+  // wraps in Math.max. Shifting the band up one CR makes the party-of-four easy
+  // case return the CR-4 award (1,200) where the test asserts the CR-3 award (800).
+  'pf1e.L10.encounter-xp-budget': {
+    file: 'src/scene/encounterDraft.ts',
+    find: 'Math.min(25, apl + offset)',
+    replace: 'Math.min(25, apl + offset + 1)',
+  },
+  // The fall-through spend branch: PF1e and 5e-2024 share this one return, so
+  // both ids carry the identical anchor (the gate dedups the find across them).
+  // +1 makes the 700-XP fixture cost 701 against the test's `toBe(700)`.
+  'pf1e.L10.encounter-spend': {
+    file: 'src/scene/encounterDraft.ts',
+    find: '  return monster.experiencePoints;',
+    replace: '  return monster.experiencePoints + 1;',
+  },
+  // Routing, not arithmetic: perturb the dispatch ARM so the number it returns
+  // stops equalling pf1eEncounterXpBudget(...), which is exactly what the
+  // dispatch assertion compares. A mutation inside the formula would move both
+  // sides of that equality and flip nothing.
+  'pf1e.L10.budget-dispatch': {
+    file: 'src/scene/encounterDraft.ts',
+    find: 'return pf1eEncounterXpBudget(partyLevels, difficulty);',
+    replace: 'return pf1eEncounterXpBudget(partyLevels, difficulty) + 1;',
+  },
   // CMB = BAB + Str (or Dex if Tiny-) + size mod; CMD = 10 + BAB + Str + Dex + size.
   'pf1e.L3.cmb': {
     file: 'src/systems/pf1e/engine.ts',
@@ -1047,6 +1084,91 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'return rank0Value * 2 ** rank;',
     replace: 'return rank0Value * 2 ** (rank + 1);',
   },
+  // ── mam3e L1: the foundation layer ──
+  // The raw ability check uses the ability RANK verbatim as the modifier, so +1
+  // flips the Strength-8 fixture's formula string from '1d20 + 8' to '1d20 + 9'.
+  'mam3e.L1.ability-check-modifier': {
+    file: 'src/systems/mam3e/engine.ts',
+    find: 'mod = data.abilities[checkId as keyof typeof data.abilities];',
+    replace: 'mod = data.abilities[checkId as keyof typeof data.abilities] + 1;',
+  },
+  // The purchased-rank floor. Dropping the floor below the fixture's −4 (rather
+  // than nudging it by one) lets the negative rank through unclamped, so both
+  // asserted values move: dodge.rank becomes −4 where 0 is asserted, and
+  // spent.defenses becomes −4 where 0 is asserted.
+  'mam3e.L1.purchased-rank-floor': {
+    file: 'src/systems/mam3e/engine.ts',
+    find: 'rank: Math.max(0, data.defenses[key].rank),',
+    replace: 'rank: Math.max(-9, data.defenses[key].rank),',
+  },
+  // Abilities are deliberately exempt from that floor. This row's claim is the
+  // ABSENCE of a clamp, so the mutation ADDS the clamp the engine deliberately
+  // omits — inserted right after the condition-track normalization, which always
+  // runs (a clamp appended inside the skills forEach would not fire on the
+  // fixture, which declares no skills). The fixture is Str −2, so the clamp
+  // flips BOTH of the linked test's assertions: system.abilities.str 0 vs −2 and
+  // spent.abilities 0 vs −4.
+  //
+  // Deliberately NOT anchored on the ability-cost accumulator (`let abilityCost
+  // = 0;` -> 1): that perturbs ability-cost ARITHMETIC, which is what
+  // mam3e.L9.cost-abilities already claims, so it would prove the test sensitive
+  // to the wrong proposition and leave the no-clamp rule unpinned.
+  'mam3e.L1.negative-ability-ranks': {
+    file: 'src/systems/mam3e/engine.ts',
+    find: '    data.conditionTrack = normalizeConditionTrack(data.conditionTrack);',
+    replace:
+      '    data.conditionTrack = normalizeConditionTrack(data.conditionTrack);\n    (Object.keys(data.abilities) as Array<keyof typeof data.abilities>).forEach((k) => { data.abilities[k] = Math.max(0, data.abilities[k]); });',
+  },
+  // The attack-bonus composition. The linked assertion is a PL8 cap violation
+  // (Fgt 10 + close-combat 7 + effect 5 = 22 > 16), so an off-by-one would not
+  // clear the cap; negating the skill term drops the total to 8 and the
+  // violation disappears entirely.
+  'mam3e.L1.attack-bonus': {
+    file: 'src/systems/mam3e/engine.ts',
+    find: "data.abilities.fgt + (data.skills['close-combat']?.rank ?? 0)",
+    replace: "data.abilities.fgt - (data.skills['close-combat']?.rank ?? 0)",
+  },
+  // ── mam3e L5: the effect economy (M&M has no Vancian slots) ──
+  // Activation spends exactly one unit of the named turn resource; 1 -> 2 flips
+  // the Flight fixture's asserted costs: [{ resource: 'free', amount: 1 }].
+  'mam3e.L8.effect-activation-cost': {
+    file: 'src/systems/mam3e/legalActions.ts',
+    find: "const FREE: LegalActionCost = { resource: 'free', amount: 1 };",
+    replace: "const FREE: LegalActionCost = { resource: 'free', amount: 2 };",
+  },
+  // A membership gate rather than arithmetic, so the perturbation is the literal
+  // itself (same reasoning as dnd35e.L10.budget-model-membership below).
+  // Re-pointing the exclusion at another VALID ActionType member keeps it
+  // type-valid while letting the always-on Immunity fixture into the action
+  // list, which is exactly what the linked test asserts must not happen.
+  'mam3e.L8.continuous-effect-no-activation': {
+    file: 'src/systems/mam3e/legalActions.ts',
+    find: "if (action === 'none') {",
+    replace: "if (action === 'free') {",
+  },
+  // The floor-of-1 on a per-rank effect: 1 -> 2 makes getPowerRank return 2 for
+  // the rank-0 fixture the test asserts is 1.
+  'mam3e.L9.effect-rank': {
+    file: 'src/systems/mam3e/powerMath.ts',
+    find: 'if (!Number.isFinite(rank) || (rank ?? 0) < 1) return 1;',
+    replace: 'if (!Number.isFinite(rank) || (rank ?? 0) < 1) return 2;',
+  },
+  // The flat-effect rank: 1 -> 2 breaks both assertions of the linked test —
+  // getPowerRank(perRank: false) returns 2, and the baseCost-3 flat power is
+  // charged 6 PP instead of 3.
+  'mam3e.L9.flat-effect-rank': {
+    file: 'src/systems/mam3e/powerMath.ts',
+    find: 'if (!power.perRank) return 1;',
+    replace: 'if (!power.perRank) return 2;',
+  },
+  // Modifier ranks: +1 applies every extra/flaw at rank 2 on a fixture that
+  // stores them all at rank 1, which drops cost/rank to 0 and takes the Blast
+  // from the asserted 5 PP to 4 PP (ceil(4 / 2) + 2 flat).
+  'mam3e.L9.modifier-applied-rank': {
+    file: 'src/systems/mam3e/powerMath.ts',
+    find: 'return normalizeRank(power.modifierRanks?.[modifierId]);',
+    replace: 'return normalizeRank(power.modifierRanks?.[modifierId]) + 1;',
+  },
   'daggerheart.L1.ancestry-adjustments': {
     file: 'src/rules/daggerheartDerived.ts',
     find: 'giant: { evasion: 0, hitPoints: 1, stress: 0 },',
@@ -1428,5 +1550,45 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     file: 'src/scene/encounterDraft.ts',
     find: '  return monster.experiencePoints;',
     replace: '  return monster.experiencePoints + 1;',
+  },
+
+  // D&D 3.5e Encounter-Level budgets. Each anchor perturbs a different stage of
+  // the pipeline (scale -> budget -> spend -> gate) so no one mutation could
+  // cover two rows.
+  //
+  // The odd-CR chain's first doubled rung: 140 must equal 2 * value(1) = 140.
+  // 140 -> 141 breaks the +2-doubling invariant at cr = 1 in the loop AND the
+  // explicit `value(3) === 2 * value(1)` spot-check on the next line.
+  'dnd35e.L10.creature-el-value': {
+    file: 'src/scene/encounterDraft.ts',
+    find: '\n  3: 140,\n',
+    replace: '\n  3: 141,\n',
+  },
+  // The target-EL calculation, discriminating: pf1eEncounterXpBudget's sibling
+  // line clamps to 25 and names targetCr, so this substring is 3.5e-only.
+  // Shifting the band up one EL makes the party-of-four low case return the
+  // EL-4 value (200) where the test asserts the EL-3 value (140).
+  'dnd35e.L10.encounter-budget': {
+    file: 'src/scene/encounterDraft.ts',
+    find: 'Math.min(20, Math.max(1, apl + offset))',
+    replace: 'Math.min(20, Math.max(1, apl + offset + 1))',
+  },
+  // The 3.5e branch of the shared spend dispatch. +1 makes the CR-3 fixture
+  // cost 141 against both of the test's assertions (=== dnd35eCreatureValue(3)
+  // and === 140).
+  'dnd35e.L10.encounter-spend': {
+    file: 'src/scene/encounterDraft.ts',
+    find: 'return dnd35eCreatureValue(monster.challengeRating);',
+    replace: 'return dnd35eCreatureValue(monster.challengeRating) + 1;',
+  },
+  // A membership gate, so the perturbation is the literal itself rather than
+  // arithmetic: misspelling the member id drops 3.5e out of
+  // ENCOUNTER_BUDGET_SYSTEMS, flipping supportsEncounterBudget('dnd-3.5e') from
+  // true to false. The leading newline pins the array element, not the
+  // `case 'dnd-3.5e':` or `systemId === 'dnd-3.5e'` occurrences below it.
+  'dnd35e.L10.budget-model-membership': {
+    file: 'src/scene/encounterDraft.ts',
+    find: "\n  'dnd-3.5e',\n",
+    replace: "\n  'dnd-3.5x',\n",
   },
 };

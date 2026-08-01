@@ -25,13 +25,16 @@ If `graphify` is not on PATH: `pip3 install --user graphifyy`, then use
 
 - `npm run dev` — Vite dev server; `npm run build` — typecheck + build
 - `npm test` — Vitest; `npm run test:e2e` — Playwright
-- `npm run verify` — the full CI gate, 22 steps (lint, typecheck incl. netlify,
-  format, coverage, keepalive-budget, validate, build, bundle-size, e2e,
-  repo-hygiene, generated-docs, doc-drift, dead-code, legal-notices,
-  compute-register, rules-provenance, srd-fidelity, mam-equipment,
-  secret-exposure). `package.json` is the authority — this list is a summary and
-  has drifted before. Run the individual `check:*` / `lint` / `typecheck:test`
-  scripts while iterating.
+- `npm run verify` — the full CI gate, 23 steps, in chain order: node:check,
+  ci-parity, lint, typecheck:test, typecheck:netlify, format:check,
+  repo-hygiene, legal-notices, secret-exposure, mam-equipment, validate,
+  generated-docs, doc-drift, rules-provenance, srd-fidelity,
+  provenance-over-inclusion, dead-code, coverage, keepalive-budget,
+  compute-register, build, bundle-size, e2e. `package.json` is the authority —
+  this list is a summary and has drifted before (an earlier revision named 19
+  items for a 22-step chain, silently omitting provenance-over-inclusion).
+  `check:ci-parity` now asserts the chain matches what CI actually runs. Run the
+  individual `check:*` / `lint` / `typecheck:test` scripts while iterating.
 - `npm run graph:update` — refresh the knowledge graph after code changes
   (AST-only, local, no API key)
 

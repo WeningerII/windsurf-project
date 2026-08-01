@@ -113,7 +113,7 @@ export const EquippedItemsSection: React.FC<Props> = ({ equipment, onUnequip, on
                         onClick={() => onToggleAttune(item.itemId, slot)}
                         className={`px-1 py-0.5 rounded transition-colors ${
                           item.attuned
-                            ? 'bg-amber-500/20 text-amber-700 font-medium'
+                            ? 'bg-amber-500/20 text-amber-800 dark:text-amber-400 font-medium'
                             : 'hover:bg-muted'
                         }`}
                         title={item.attuned ? 'Unattune' : 'Attune'}

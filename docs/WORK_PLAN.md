@@ -237,6 +237,24 @@ Nine were free: where the two 5e editions engine-wire the same shared helper, on
 
 Evidence and the adversarial method: `docs/GAPS.md` §24.
 
+#### Second tranche, 2026-07-31 — 247 → 264, and a shipped engine defect
+
+A follow-up lane filled the remaining owed cells for `mam3e`, `dnd-3.5e` and `pf1e`. Zero demotions.
+
+| system | was | now |
+| --- | --- | --- |
+| dnd-3.5e | 32/37 = 86.5% | **36/41 = 87.8%** |
+| pf1e | 33/33 = 100% | **37/37 = 100%** |
+| mam3e | 26/34 = 76.5% | **35/44 = 79.5%** |
+
+Both sides of each ratio move, which is the register working as intended — the denominator is the enumeration of what a layer SHOULD hold, so filling one adds proven and unproven rows alike. M&M gained 9 verified against 10 enumerated; the tenth is carried honestly as unproven.
+
+**Enumerating dnd-3.5e L10 found a live defect the draft entry had misfiled as intended behaviour.** `DND35E_EL_VALUE` keys CR 1/6 and 1/3 as exact fractions (`0.1666…`, `0.3333…`) while `src/data/dnd/3.5e/monsters/` encodes them as the rounded decimals `0.166` and `0.33`. The lookup missed every one and returned 0 — and cost 0 makes `validateEncounterSpec` reject the creature with `no-xp-cost`. Executed against the real catalog: **8 of 188 monsters had no encounter cost, and 7 of them were this bug** — Donkey, Lizard, Monkey, Raven, Dog, Giant Fire Beetle, Hawk simply could not be placed in a 3.5e encounter. After the fix, 1 of 188: Titan at CR 21, which is above the table and correctly excluded. The lookup now snaps a sub-1 CR within 0.005, far tighter than the 0.083 gap between the closest adjacent entries, so it can repair a rounding encoding but never reinterpret one CR as its neighbour.
+
+**This lane also broke the rule §3.1 had already established above, and it has been undone.** The paragraph at the top of this section states that `mam3e` L5 is absent *because M&M has no spellcasting economy*, "an honest structural absence, not a hole." The lane filed M&M's EFFECT economy under L5 anyway. Reclassified 2026-07-31: activation and upkeep are turn economy (**L8**), the rank helpers feed the power-point cost assembly (**L9**, beside `cost-abilities` and `power-cost`), and exactly one row stays at L5 — the `excluded` marker recording that the layer does not apply. **No published number moved**: mam3e is still 35/44 and the gate still 264, because the rows were always real work, only mis-filed. Per-layer: L5 5/6 → absent, L8 1/1 → 3/4, L9 12/12 → 15/15.
+
+**Root cause, unfixed and worth naming:** nine of the ten layers are named by FUNCTION; L5 alone is named after a MECHANIC ("spellcasting economy"). That is why it is the only layer a non-magic system cannot fill honestly, and it will bite again. Renaming it changes the meaning for all seven systems, so it is its own change.
+
 ### 3.2 L8 — damage types and resistance — **DONE 2026-07-29 — engine, scene path, and the combat join that made it reachable**
 
 **The join landed 2026-07-29 and it is what makes the rest of this item real.** The engine, the mitigation transform and the 395 shipped resistance declarations were all in place, and none of them could fire from actual combat: `monsterDamageEffects` encodes a damage type into an effect CHANNEL (`damage.fire`, `damage.slashing`, or bare `damage` when the source asserts none — it never invents one), `resolveAttack` summed every channel into a single scalar, and `attackToDamageIntent` emitted `{tokenId, amount}` with the type already gone. **A fire elemental took full fire damage on the grid.**
@@ -258,6 +276,18 @@ Pinned end to end by `src/__tests__/rules/sceneCombatBridge.test.ts`: a fire-res
 - 14 tests in `src/__tests__/rules/damageMitigation.test.ts`, including that healing is never mitigated under any branch (a fire-immune creature is not immune to being healed — the signed `amount` makes this the likeliest place for a sign bug).
 
 **Still open, and deliberately not claimed:** no UI surfaces the damage type — nothing in the app yet lets a user *say* "10 fire", so in practice mitigation only fires for callers that pass a type. The sheet/scene damage-entry affordance and the L8 compute-register rows are the remaining work. The engine and the scene path are done and gated; the input surface is not.
+
+#### The split rule landed 2026-07-31 — decision B1, and what it does NOT cover
+
+The remainder rule this section left open is implemented: **largest-remainder (Hamilton) distribution over channel proportions**, ties breaking toward the larger weight and then declaration order — a total order over the input array, never object iteration order, because this sits on the replay path. `src/rules/resolver/damageChannelSplit.ts`, with a manual/ad-hoc typed-damage path beside it. A flame tongue now mitigates per channel instead of going untyped.
+
+**Three defects the adversarial pass found in that work, fixed before it landed:**
+
+- `splitDamageAcrossChannels(5, [])` returned `[]` — sum 0 against a total of 5 — **silently destroying damage** while the docstring promised the parts always sum to the whole. The early return sat before the post-condition, so the self-check could not see it. It now throws. The test named *"no channels yields no parts"* was pinning the bug.
+- The single-channel bridge branch emitted `resolution.damageType` rather than the channel's own type. Those are set by different predicates and can disagree: `damage.fire +10` with `damage -3` resolves to 7 with one surviving channel (fire) but no `damageType`, so the event contradicted `resolution.damageChannels` and a fire-immune target took 7 instead of 0.
+- An unconditional integer assertion turned a previously-tolerated fractional total into a throw; latent, since nothing emits a `multiply` on a damage target today.
+
+**SCOPE — the headline is single attacks only.** `attackToDamageIntent` is genuinely reachable (`rules/combat/sceneCombat.ts:369`, `tactical/tacticalExecutor.ts:267,299`). But `areaEffectToDamageIntent` and `multiTargetAttackToDamageIntent` have **no callers outside tests and the barrel export** — the shipped scene fireball path is `resolveSceneAreaEffect`, which builds its own untyped intent inline at `src/rules/combat/sceneCombat.ts:503`. **A fireball on a fire elemental still does not mitigate.** The bridges are built and tested; wiring them is the follow-up, and it touches files that lane did not own.
 
 ---
 
@@ -395,6 +425,26 @@ The `test.fixme` on the dialog/wizard scan is gone and the test runs. Its note s
 
 **The transferable point:** the quarantine was correctly placed at the test level rather than by allowlisting `color-contrast` — but it still hid a live AA failure on the surface where every character in this app is created, for all seven systems, for as long as it stood. A skipped test is a gate that cannot fail.
 
+#### The 2026-07-28 fix BROKE dark mode, and shipped that way until 2026-07-31
+
+The sentence above — *"Dark mode was already compliant (`amber-400` at 11.98:1) so only the light value moved, across the 13 call sites that shared the colour"* — is true only of the sites that carry a `dark:` override. **Nine of the thirteen do not.** On those, `amber-600` → `amber-700` fixed light and broke dark, because amber-700 is the darker colour:
+
+| on the dark background `#020817` | ratio |
+| --- | ---: |
+| `amber-600` `#d97706` — before | 6.28:1 ✅ |
+| `amber-700` `#b45309` — after | **3.98:1 ❌** |
+| `amber-400` `#fbbf24` — the convention | 11.98:1 ✅ |
+
+Widening the audit past amber found far worse, none of it caused by that commit: `CurrencyEditor` platinum at **1.23:1**, `supportBadges` slate at 1.79:1, and the dark `--destructive` token at **2.00:1** — a third of AA, across 56 files that use `text-destructive`. That token's light counterpart had been AA-tuned; the dark one never was. 24 sites fixed across 16 files.
+
+**`--destructive` required flipping the PAIR, with a deliberate visible consequence.** No single value serves both roles in dark: clearing 4.5:1 on the background needs relative luminance ≥ 0.196, and carrying a near-white label needs ≤ 0.176. Solid destructive buttons and badges in dark mode are now light red with a dark label instead of dark red with white. Two call sites render solid.
+
+**`e2e/a11y.spec.ts` now scans in both themes — 16 axe scans, up from 8** — seeding the real `rpg-theme` key so the app resolves the theme through its own shipped code, and asserting `html.dark` before scanning so a "dark" test cannot silently run light.
+
+**That gate is narrower than it sounds, and the number is measured.** Its first revert control — dropping the `supportBadges` dark override, 1.79:1 — was **not caught**: 8 passed, exit 0, because that badge renders on none of the scanned surfaces. Only reverting `--destructive` and the wizard warning made it fire. Instrumenting all eight surfaces: **of ~17 files the fix touched, the dark gate reaches four.** The practical rule is that it defends shared design TOKENS well and component-local colour classes barely at all. Closing that properly means either scanning surfaces that render those components, or a static contrast lint over Tailwind classes lacking a `dark:` variant.
+
+**Three times now, a "checked and fine" claim in this file has been wrong because the check was too narrow** — §6.6's presence-not-shape probe, this section's light-only contrast check, and the gate-reach assumption above. Each time the code was fine by the measure applied and broken by the measure that mattered.
+
 ### 6.5 Toolchain modernization — **READY**
 
 Risk-ordered, verified against `package.json`: React 18.2→19, Tailwind 3.3→4, Vite 7.3→8, `lucide-react` 0.294→1.17, `@types/node` 20→22, and runtime-pin reconciliation (`.nvmrc` pins 20.19.0 while `engines` already admits 22 and 24).
@@ -455,7 +505,11 @@ A defect *class*, not a defect. Two instances have now shipped and been fixed on
 
 **One live defect found, one layer above the formatters.** `castingTime`, `cost` and `weight` were already handled. But `SpellBrowserSpell` declared `level: number` and `school: string` **required**, and M&M has neither — so the row caption rendered its prefix followed by two blanks (`"Rank  "`), and the Level and School filters offered a dropdown whose only entry was an empty option. The interface comment even asserted "rank rides `level`, power type rides `school`" — that describes an intended mapping the loader never populated. Both fields are now optional, absent values are dropped from the filter vocabularies, each filter hides itself when its vocabulary is empty, and the caption is built from the parts that exist.
 
-**`formatRange` and `formatDuration` were checked and are fine** — the probe found `range` and `duration` present on every row of every system, and both functions `switch` on `.type` and fall through to `'Unknown'`, so an unfamiliar shape degrades rather than throws.
+~~**`formatRange` and `formatDuration` were checked and are fine**~~ — **WRONG, corrected 2026-07-31, and the way it was wrong is the lesson.** The 2026-07-28 probe asked *is the field PRESENT*, and it is: every M&M row carries a `range` and a `duration`. But it carries them as **bare strings** (`'close'`, `'sustained'`), while both functions `switch` on `.type`. So every M&M row fell through to the literal `'Unknown'` — and the sentence above names that exact outcome and calls it acceptable degradation.
+
+It was not degradation, it was the whole catalog rendering `Unknown`. Measured after the fix, against the real loader: `Ranged` 15, `Close` 10, `Perception` 5, `Sustained` 37, `Instant` 16, `Permanent` 8.
+
+**The measurement error is the reusable finding.** Presence and SHAPE are different questions, and this defect class is entirely about shape. A probe that counts absent fields cannot see a field that is present in the wrong form — which is also why `sharedFormatterShapes.test.ts` stayed green: it asserts no formatter throws or leaks `undefined`, and `'Unknown'` is a well-formed string. The replacement suite (`src/__tests__/utils/formattersPerSystem.test.ts`, 56 tests) asserts that a row which HAS a field must not render an absence marker, which is the assertion that catches this.
 
 **The gate the plan asked for now exists:** `src/__tests__/dock/sharedFormatterShapes.test.ts` runs every formatter over every row of all seven shipped catalogs (15 tests), failing if one throws or leaks `undefined`/`null`/`NaN` into a caption. Proven able to fail: deleting the `formatCastingTime` guard reproduces `TypeError: Cannot read properties of undefined (reading 'amount')` against the mam3e catalog — the original crash — and turns the suite red.
 
@@ -495,6 +549,20 @@ halves were validated locally before landing: with the flag the assertion passes
 project always runs, so that test does execute — a legitimate per-project skip, not a
 vacuous gate. Phase 6's flag (`VITE_SCENE_CANVAS_ENABLED`) still has no job, but that
 is not the same defect: its spec was never written, so nothing is claiming to gate it.
+
+### 6.10 `check:ci-parity` — the gate the five-job split needs first — **DONE 2026-07-31**
+
+Decision B2 said the five-job CI split (~2m30s–3m30s) should not land before a parity gate, because splitting `verify` across jobs creates a silent failure mode: a step added to `package.json` never runs in CI and nothing notices. **That is this repo's documented failure mode** — §6.8's Phase-4 acceptance sat in the tree reporting green while proving nothing, because no workflow set its flag.
+
+`scripts/check-ci-parity.mjs` compares the **multiset** of `npm run` steps across every CI job against the verify chain, expanding any job that invokes an aggregate script transitively. A multiset rather than a set, so a step running twice in CI is drift too; and `ORDERING_CONSTRAINTS` additionally pins the two order dependencies a multiset cannot see (`check:keepalive-budget` consumes a vitest artifact, `check:bundle-size` reads `dist/`).
+
+**Honest scope: today it finds nothing, by construction.** `ci.yml`'s `verify` job delegates wholesale with `run: npm run verify`, so every chain step runs in CI and step-level drift is structurally zero. The gate is **prospective** — it earns its place the moment the job split lands, which is exactly why it lands first.
+
+Legitimate divergences are declared in `DECLARED_CI_ONLY_COMMANDS` with a reason, consumed at most once, and reported when stale — an exemption matching nothing is a lie about what CI does. The scene-drag build is pinned on `VITE_SCENE_DRAG_ENABLED` via `envContains`, so if that flag ever disappears the exemption stops matching and the gate fires. **Verified against a control:** removing the env block exits 1 and names both the duplicate build and the stale exemption; restoring exits 0.
+
+Two pre-existing gaps are now recorded in exemption reasons rather than lost: `verify` builds with `BASE_PATH` unset, so the artifact that ships to GitHub Pages is never size-checked; and the Playwright browser SET is pinned in `ci.yml` and nowhere in `package.json`.
+
+**Unblocks:** the five-job split (B2), which is now safe to do.
 
 ### 6.9 Technical-debt sweep — **DONE 2026-07-28**
 
@@ -593,7 +661,9 @@ Small, real, and each found while checking something else.
 - **`strikingRune` comment was stale** — **FIXED.** `src/types/core/character.ts` claimed no engine consumed it; `src/rules/combatants/characterCombatant.ts` does, gated on the system profile's `supportsStrikingRunes`. The comment now names the consumer and the gate.
 - ~~**The graphify index is stale.**~~ — **DONE 2026-07-28.** All three named symbols resolve again after `graphify update`: `ShellContext` (`src/contexts/shell-context.ts:165`), `SurfaceStage` (`src/components/SurfaceStage.tsx:53`), `SceneCanvas` (`src/components/SceneCanvas.tsx:56`). Graph now at 5,938 nodes / 17,180 edges.
 
-  **The recurrence is the real item, and it is not fixed.** Nothing runs `graph:update`; it is not in `npm run verify` and no workflow calls it, so the index goes stale again on the next merge and the next agent silently falls back to file reads — a slow failure with no signal, which is why this bullet had to be written by hand in the first place. Deliberately not added to `verify`: the graph artifacts are committed, so a gate would either fail every PR that touches `src/` or quietly rewrite tracked files mid-chain. A staleness *check* (compare the graph's recorded input hashes against the tree, warn rather than fail) is the shape that would work. Left open rather than half-built.
+  ~~**The recurrence is the real item, and it is not fixed.**~~ **BUILT 2026-07-31**, in exactly the shape this bullet specified: `scripts/check-graph-staleness.mjs` (`npm run check:graph-staleness`) compares the committed index against the tree and **always exits 0**. Warn-only for the reason recorded here — the artifacts are committed, so a hard gate would either fail every `src/` PR or rewrite tracked files mid-chain. Deliberately outside the `verify` chain so it does not add noise to every run.
+
+  **It does not trust the graph's own build stamp, and that matters.** `graphify update` rebuilds incrementally and does NOT restamp `built_at_commit` — measured 2026-07-30, when the graph was rebuilt and committed that day and the field still read a commit from two days earlier. Trusting it would make the check warn permanently even immediately after a refresh, which is precisely the cry-wolf outcome warn-only exists to avoid. It instead takes the later of that stamp and the last commit to touch `graphify-out/graph.json`, which is a sound lower bound on freshness and stays clone-stable (git does not preserve mtimes, so an mtime comparison would read "always stale" after any fresh checkout).
 - **`src/systems/pf2e/derivedMath.ts` had no non-test importer** while its PF1e twin was live. **Done:** the death-track helpers are declared in `PF2E_DERIVED_QUANTITIES` (dying-on-knockout, recovery DC, wounded-track) so the engine computes them into `system.derived` and the sheet surfaces the first two while on the death track; `pf2eAttackModifier` now backs the sheet's spell-attack readout and the hero-point constants back the header pip track and the long-rest handler. All substitutions are value-identical — no computed output moved. **Still test-only, for structural reasons recorded on their compute-register rows:** `pf2eDyingAfterRecovery` / `pf2eIsDead` (transitions and a predicate, not standing numeric scalars), `pf2eShieldBlockDamage` (needs a shield Hardness the equipment model does not carry), and `pf2eCreatureXP` / `pf2eEncounterBudget` (party-scoped GM math owned by `src/scene/`, which the lint-enforced layer boundary forbids from value-importing `src/systems/**`).
 
 ---

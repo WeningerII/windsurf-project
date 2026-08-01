@@ -13,8 +13,8 @@ interface OraclePanelProps {
 
 const ANSWER_BADGE: Record<SceneOracleAnswer, string> = {
   'exceptional-yes': 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-semibold',
-  yes: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
-  no: 'bg-amber-500/15 text-amber-700 dark:text-amber-400',
+  yes: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400',
+  no: 'bg-amber-500/15 text-amber-800 dark:text-amber-400',
   'exceptional-no': 'bg-destructive/15 text-destructive font-semibold',
 };
 

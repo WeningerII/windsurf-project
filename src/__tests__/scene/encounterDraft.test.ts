@@ -169,6 +169,28 @@ describe('D&D 3.5e Encounter-Level budgets (derived EL-value scale)', () => {
     expect(dnd35eCreatureValue(20)).toBe(2 * dnd35eCreatureValue(18)); // 51200 === 2*25600
   });
 
+  it('values the fractional CRs the monster catalog actually encodes, not just the exact fractions', () => {
+    // REGRESSION. DND35E_EL_VALUE keys CR 1/6 and 1/3 as exact fractions
+    // (0.16666666666666666, 0.3333333333333333), but src/data/dnd/3.5e/monsters/
+    // encodes them as the rounded decimals 0.166 and 0.33. The exact-key lookup
+    // missed every one, returned 0, and cost 0 makes the validator reject the
+    // creature with no-xp-cost — so Donkey, Lizard, Monkey, Raven (CR 1/6) and
+    // Dog, Giant Fire Beetle, Hawk (CR 1/3) could not be placed in a 3.5e
+    // encounter at all.
+    expect(dnd35eCreatureValue(0.166)).toBe(dnd35eCreatureValue(1 / 6));
+    expect(dnd35eCreatureValue(0.33)).toBe(dnd35eCreatureValue(1 / 3));
+    expect(dnd35eCreatureValue(0.166)).toBe(20);
+    expect(dnd35eCreatureValue(0.33)).toBe(35);
+
+    // Snapping repairs a rounding encoding and nothing more: it must never
+    // reinterpret a CR as its neighbour, and must not resurrect a CR that is
+    // genuinely out of band.
+    expect(dnd35eCreatureValue(0.2)).toBe(0);
+    expect(dnd35eCreatureValue(0.4)).toBe(0);
+    expect(dnd35eCreatureValue(21)).toBe(0); // Titan — above the table, correctly excluded
+    expect(dnd35eCreatureValue(0)).toBe(0);
+  });
+
   it('two CR-X monsters cost the same as one EL-(X+2) budget', () => {
     // Standard encounter at EL 5 for an APL-5 party = value(5). Two CR-3
     // monsters (2 * value(3)) compose to that same EL 5 value.

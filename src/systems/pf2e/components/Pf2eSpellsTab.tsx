@@ -264,7 +264,7 @@ export const Pf2eSpellsTab = (({
                 {focusSpellEntries.map((spell) => (
                   <span
                     key={spell.id}
-                    className={`inline-flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-xs text-amber-700 ${
+                    className={`inline-flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-xs text-amber-700 dark:text-amber-400 ${
                       spell.unresolved ? 'border-dashed' : ''
                     }`}
                     title={

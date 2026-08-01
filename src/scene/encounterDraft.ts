@@ -223,12 +223,43 @@ const DND35E_EL_VALUE: Record<number, number> = {
 };
 
 /**
+ * The fractional CRs, keyed by the ROUNDED decimal the monster catalog actually
+ * encodes. `DND35E_EL_VALUE` writes CR 1/6 and 1/3 as exact fractions
+ * (0.16666666666666666, 0.3333333333333333) but `src/data/dnd/3.5e/monsters/`
+ * stores them as `0.166` and `0.33`, so an exact-key lookup MISSED every one of
+ * them and returned 0 — and cost 0 means the validator rejects the creature with
+ * `no-xp-cost`. Seven shipped monsters (Donkey, Lizard, Monkey, Raven at CR 1/6;
+ * Dog, Giant Fire Beetle, Hawk at CR 1/3) could not be placed in a 3.5e
+ * encounter at all.
+ *
+ * Snapping is deliberately confined to the fractional band and to a tolerance
+ * far tighter than the gap between adjacent entries (the closest pair, 1/6 and
+ * 0.25, are 0.083 apart), so it can only ever repair a rounding encoding — it
+ * can never silently reinterpret one CR as its neighbour.
+ */
+const DND35E_FRACTIONAL_CRS = [0.125, 1 / 6, 0.25, 1 / 3, 0.5] as const;
+const CR_ROUNDING_TOLERANCE = 0.005;
+
+/**
  * One 3.5e creature's encounter value: its EL-value from the derived CR scale.
  * A CR outside the modeled range has no value (cost 0 → excluded from a draft
  * and flagged no-xp-cost by the validator), mirroring the PF tables' bounds.
+ * That exclusion is intended for genuinely out-of-band CRs — Titan at CR 21 sits
+ * above the table — but NOT for a fractional CR the catalog merely rounds, which
+ * is why the lookup snaps before giving up.
  */
 export function dnd35eCreatureValue(challengeRating: number): number {
-  return DND35E_EL_VALUE[challengeRating] ?? 0;
+  const exact = DND35E_EL_VALUE[challengeRating];
+  if (exact !== undefined) return exact;
+
+  if (challengeRating < 1) {
+    const snapped = DND35E_FRACTIONAL_CRS.find(
+      (cr) => Math.abs(cr - challengeRating) <= CR_ROUNDING_TOLERANCE
+    );
+    if (snapped !== undefined) return DND35E_EL_VALUE[snapped] ?? 0;
+  }
+
+  return 0;
 }
 
 /**

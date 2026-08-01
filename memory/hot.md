@@ -4,57 +4,79 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-29. `main` at `e9437f8` — **PRs #112 and #113 both
-merged**. Nothing unmerged; `claude/master-plan-unfinished-s1lsya` was reset onto
-the new main.
+**Last updated:** 2026-07-31. Branch `claude/master-plan-unfinished-s1lsya`
+pushed through the homebrew deletion + **six parallel lanes**. `npm run verify`
+is 21/22 — only step 22 (e2e) fails, on the container's Playwright revision
+mismatch; run via the bridge it is 45 passed / 2 skipped, exit 0. Unit tests
+3138 → **3261**. Compute register 247 → **264**, no demotions.
 
-## What landed (#112, #113)
+## The six lanes (2026-07-31)
 
-- **The Phase-4 drag acceptance had never executed.** `e2e/scene-drag.spec.ts`
-  skips on `VITE_SCENE_DRAG_ENABLED` and no workflow set it, so it reported green
-  while proving nothing. Its first run failed on a shipped defect: `Dock` keyed
-  `activeSystemId` off the open *sheet*, so dragging a monster into a scene of a
-  different system silently placed nothing. New `scene-drag` CI job builds
-  flag-on and **asserts from the JSON report that nothing was skipped** — verified
-  passing on #112 in 1m13s, parallel to Verify, off the critical path.
-- **`CLAUDE.md` is now inside the doc-drift gate** (it was outside
-  `ROOT_DOC_FILES` entirely and had drifted). Its numbers are gated — change the
-  code and let the gate tell you; do not hand-edit them.
-- **`ledger_ref_rule`** — plan prose citing a `done` ledger item now fails CI.
-- **L8 typed damage (§3.2)** — see below.
+| commit | lane |
+|---|---|
+| `6d4ebdb` | `check:ci-parity` + warn-only `check:graph-staleness` |
+| `d282086` | shared formatters — per-system fallbacks (§6.6) |
+| `3159e35` | register layers (§3.1) **+ a 3.5e encounter engine fix** |
+| `4948e04` | multi-channel damage split (§3.2 / B1) |
+| `5b3ed83` | dark-mode contrast regression + dark a11y scan |
+
+**Real defects the lanes found, beyond their briefs:**
+- **7 low-CR 3.5e monsters could not be placed in an encounter at all.**
+  `DND35E_EL_VALUE` keys CR 1/6 and 1/3 as exact fractions; the catalog encodes
+  `0.166`/`0.33`. Lookup missed → cost 0 → validator rejected them. Fixed by
+  snapping sub-1 CRs within 0.005 (adjacent entries are 0.083 apart). Titan
+  (CR 21) is still 0 and correctly so.
+- **The whole M&M catalog rendered `Unknown`** for range/duration — those
+  formatters switch on an object discriminant and M&M ships bare strings.
+- **Dark `--destructive` was 2.00:1** (a third of AA) across 56 files, plus
+  `CurrencyEditor` PP at **1.23:1**. The dark pair now flips; DELIBERATE visible
+  consequence: solid destructive buttons in dark are light-red with a dark label.
 
 ## Facts established (do not re-derive)
 
-- **`knip.jsonc`'s `.claude/` ignore does NOT prevent the worktree OOM.** Measured
-  with the entry present: 41 worktrees → `FATAL ERROR: Reached heap limit`;
-  worktrees removed → exit 0 in 7.8s. **The remedy is `git worktree remove`**,
-  which does not delete branches (113 before, 113 after).
+- **`splitDamageAcrossChannels` post-condition:** an empty channel list with a
+  non-zero total now THROWS. It used to return `[]` (destroying damage) because
+  the early return preceded the post-condition. The test named "no channels
+  yields no parts" was pinning the bug.
+- **Typed damage is wired for SINGLE ATTACKS ONLY.** `attackToDamageIntent` has
+  3 real callers; `areaEffectToDamageIntent` and `multiTargetAttackToDamageIntent`
+  have ZERO outside tests/barrel. A fireball on a fire elemental still does not
+  mitigate — `resolveSceneAreaEffect` builds an untyped intent inline at
+  `src/rules/combat/sceneCombat.ts:503`.
+- **The dark a11y gate reaches only 4 of ~17 touched files.** Proven by control:
+  reverting the `supportBadges` dark override (1.79:1) was NOT caught, because
+  the badge renders on no scanned surface. The gate defends shared design TOKENS
+  well and component-local colour classes barely at all.
+- **`graphify update` does NOT restamp `built_at_commit`.** `check:graph-staleness`
+  therefore prefers the last commit touching `graphify-out/graph.json`.
+- **CI's `verify` job delegates wholesale** (`run: npm run verify`), so
+  step-level drift is structurally zero TODAY. `check:ci-parity` is prospective —
+  it earns its place the moment the five-job split lands.
 - **Monster resistance data ships and was read by nothing.**
-  `damageResistances`/`damageImmunities`/`damageVulnerabilities` are populated
-  **395 times** in `src/data/`; before §3.2 the only references outside data and
-  tests were their own declarations.
+  `damageResistances`/`Immunities`/`Vulnerabilities` are populated **394** times
+  in `src/data/`.
 - **§3.2 design constraints, both load-bearing:** mitigation resolves when the
   event is BUILT (beside RNG), never in the fold, so RFC 006 byte-identical
-  replay holds and untyped historical events are unaffected; and damage profiles
-  are SNAPSHOTTED onto tokens, never looked up, so replay does not depend on the
-  SRD data as it exists at replay time.
-- **`ChoiceStepView` could hang a choice step on its skeleton forever** — effect
-  guarded on a null document but keyed only on `[step]`. Fixed with a BOOLEAN
-  `hasDocument` dep (depending on `document` would reload the list on every
-  selection). I misdiagnosed this twice as slowness/double-mount; an
-  already-resolved promise cannot take 10s, so the load had never started.
+  replay holds; and damage profiles are SNAPSHOTTED onto tokens, never looked up.
 - **`@ai-sdk/anthropic` vanishes from `node_modules` after a container recycle.**
-  Run `npm ci`; the lockfile is fine.
+  Run `npm ci`; the lockfile is fine. Symptom is `typecheck:netlify` TS2307.
 - **Harness landmine:** a backgrounded `cmd > log; echo "EXIT=$?"` reports the
-  *echo's* exit code. Write the exit to its own file.
+  *echo's* exit code — AND the task-completion notification reports the wrapper,
+  not the command. It claimed "exit code 0" for runs that exited 2, 1 and 134.
+  **Always write the exit to its own file and read that.**
 
-## Next up
+## Next up — queued, all unblocked
 
-§3.2's **input surface is still open** — no UI lets a user say "10 fire", so
-mitigation only fires for callers passing a type; the L8 compute-register rows
-are also unwritten. Other READY lanes: §3.1 register layers, §6.5 toolchain
-(React 18→19, Tailwind 3→4, Vite 7→8), §2.5 `p1.monster-denominator-fix` (moves
-published numbers), the five-job CI split (needs `check:ci-parity` first).
+- **Q2** scene-canvas e2e spec + CI job (§6.2/B6) — mirror the `scene-drag`
+  pattern that caught a real defect.
+- **Q3** five-job CI split — `check:ci-parity` has landed, so this is now safe.
+- **Q4** the L8 compute-register rows the damage lane owes.
+- **Q5** `normalizeLegacyEquipment` launders 8 non-coin 3.5e prices into a false
+  `0 gp`; unfixable in the formatter (indistinguishable from a free pf2e item).
+- **Q7** wire the area path to typed damage (see Facts above).
+- **Q8** widen the dark a11y coverage, or add a static contrast lint.
+- **§6.5** toolchain (React 18→19, Tailwind 3→4, Vite 7→8) — gated on the bundle
+  budgets, which is an owner call.
 
 ## Awaiting the owner — decisions, not work
 
@@ -69,6 +91,18 @@ published numbers), the five-job CI split (needs `check:ci-parity` first).
    unblocked connection. The blocker is the proxy, not licensing. Option (b),
    authoring them as labelled original content, is foreclosed.
 5. Ratification of the four kept sheet wrappers (WORK_PLAN §4.3).
+6. **The M&M L5 reinterpretation.** `docs/compute-register/types.ts` defines L5
+   as "spellcasting economy"; M&M has none, so the register lane sited the EFFECT
+   economy there. Defensible and documented, but it moves the published
+   completeness number — a scope decision, not a verification result. The
+   provenance allowlist records those citations as chapter-section; it does NOT
+   ratify the layer choice.
+7. **The dark `--destructive` flip has shipped** and is worth an eyes-on: solid
+   destructive buttons/badges in dark are now light-red with a dark label. The
+   old value was 2.00:1 (a third of AA) across 56 files, so the change is
+   necessary; only the look is a preference.
+8. **`wip/lane-snapshot`** is a stale recovery ref on the remote. Safe to delete
+   now that everything real is on the branch, but remote deletion needs consent.
 
 ## The homebrew deletion (2026-07-30)
 
@@ -91,6 +125,23 @@ policy channel that admitted them:
   entirely — all 11 were self-authored and the Hero SRD prints no device row.
 - Record: `GAPS` §17.3.
 
+## Reclassified 2026-07-31 — M&M L5
+
+The register lane filed M&M's effect economy under L5 "spellcasting economy".
+`WORK_PLAN` §3.1 had ALREADY recorded that mam3e L5 is legitimately absent. Undone:
+activation/upkeep → **L8** (turn economy), rank helpers → **L9** (cost assembly,
+beside `cost-abilities`), and ONE `excluded` row stays at L5 as the not-applicable
+marker. **No number moved** — still 35/44, gate still 264. Root cause: nine layers
+are named by FUNCTION, L5 alone by a MECHANIC.
+
+## Container rolled back TWICE this session
+
+Both times: local HEAD reverted to the 2026-07-28 snapshot, task list reset, 42
+agent worktrees restored (knip OOMs at ~42 → `git worktree remove`, branches
+survive: 184 before/after). **Both times everything was intact on origin** because
+it had been pushed immediately. Recovery is `git fetch` + `git merge --ff-only`.
+Symptom to watch for: a commit SHA you just made reporting `bad revision`.
+
 Read `docs/WORK_PLAN.md` first — it is the forward queue. `MASTER_PLAN` holds
 decisions; `GAPS` §20–§23 holds this week's evidence.
 
@@ -103,12 +154,25 @@ decisions; `GAPS` §20–§23 holds this week's evidence.
   counterparts (25%). Verify every figure locally (GAPS §18.7).
 - **Container recycles mid-session** kill background work and wipe the scratchpad.
   Commit and push per slice.
-- **Playwright:** `/opt/pw-browsers` has rev **1194**, the toolchain wants **1208**,
-  and there is no Firefox at all — so `npm run verify` always dies at step 22
-  locally and **firefox e2e cannot be run in this container**. Build a bridge dir
-  in the scratchpad symlinking 1208 → 1194, point `PLAYWRIGHT_BROWSERS_PATH` at
-  it, and run `--project=chromium` (41 passed / 2 skipped is the clean baseline).
-  Rebuild `dist` first — preview serves `dist`. NEVER `playwright install`.
+- **Playwright bridge — the plain directory symlink NO LONGER WORKS.** `/opt/pw-browsers`
+  has rev **1194**, the toolchain wants **1208**, and there is no Firefox, so
+  `npm run verify` always dies at step 22 locally and firefox e2e cannot run here.
+  The inner layouts differ between revisions, so symlinking `chromium-1208 ->
+  chromium-1194` fails with `browserType.launch: Executable doesn't exist`. Exact
+  working recipe (BR = a scratchpad dir):
+    chromium-1208/chrome-linux64                  -> chromium-1194/chrome-linux
+    chromium_headless_shell-1208/chrome-headless-shell-linux64/   REAL dir, per-file
+      symlinks into chromium_headless_shell-1194/chrome-linux, PLUS
+      chrome-headless-shell -> that dir's `headless_shell` (the binary is RENAMED
+      between revisions, and the parent dir name is chrome-headless-shell-linux64,
+      not chrome-linux64).
+    ffmpeg-1011 -> ffmpeg-1011
+  Then `PLAYWRIGHT_BROWSERS_PATH=$BR npx playwright test --project=chromium`.
+  **45 passed / 2 skipped is the clean baseline** (41 + 4 dark-theme a11y tests).
+  Rebuild `dist` first — preview serves `dist`. NEVER run `playwright install`.
+  **The scratchpad is wiped by a container rollback, so the bridge must be rebuilt
+  after one.** A 45-failed run where every error is `browserType.launch` in ~3ms
+  is the bridge missing, not the code.
 - **compute-register --mutate REFUSES a dirty tree.** Commit first, then mutate.
 - **doc-drift pins verbatim phrases** — preserve exact strings when editing paired
   docs. Quoting a stale path inside backticks trips `path_ref_rule`; describe it

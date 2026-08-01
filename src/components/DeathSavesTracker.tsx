@@ -66,7 +66,7 @@ export const DeathSavesTracker: React.FC<Props> = ({ currentHP, deathSaves, onCh
           <div className="flex flex-wrap items-center gap-2 pt-1">
             <button
               type="button"
-              className="px-2.5 py-1 rounded border text-xs hover:border-emerald-600 hover:text-emerald-600 disabled:opacity-50"
+              className="px-2.5 py-1 rounded border text-xs hover:border-emerald-600 hover:text-emerald-700 dark:hover:text-emerald-400 disabled:opacity-50"
               onClick={() => setTrack({ ...safeTrack, successes: safeTrack.successes + 1 })}
               disabled={!isDown}
               title="Mark death save success"
@@ -75,7 +75,7 @@ export const DeathSavesTracker: React.FC<Props> = ({ currentHP, deathSaves, onCh
             </button>
             <button
               type="button"
-              className="px-2.5 py-1 rounded border text-xs hover:border-rose-600 hover:text-rose-600 disabled:opacity-50"
+              className="px-2.5 py-1 rounded border text-xs hover:border-rose-600 hover:text-rose-600 dark:hover:text-rose-400 disabled:opacity-50"
               onClick={() => setTrack({ ...safeTrack, failures: safeTrack.failures + 1 })}
               disabled={!isDown}
               title="Mark death save failure"

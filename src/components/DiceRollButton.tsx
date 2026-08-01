@@ -74,7 +74,7 @@ export const DiceRollButton: React.FC<DiceRollButtonProps> = ({
       {error && !result && (
         <div
           role="alert"
-          className="absolute left-full ml-2 z-50 px-3 py-1.5 rounded-lg shadow-lg border text-sm whitespace-nowrap animate-in fade-in-0 slide-in-from-left-2 bg-red-500/10 border-red-500/30 text-red-600"
+          className="absolute left-full ml-2 z-50 px-3 py-1.5 rounded-lg shadow-lg border text-sm whitespace-nowrap animate-in fade-in-0 slide-in-from-left-2 bg-red-500/10 border-red-500/30 text-red-700 dark:text-red-400"
         >
           {error}
         </div>
@@ -83,9 +83,9 @@ export const DiceRollButton: React.FC<DiceRollButtonProps> = ({
         <div
           className={`absolute left-full ml-2 z-50 px-3 py-1.5 rounded-lg shadow-lg border text-sm whitespace-nowrap animate-in fade-in-0 slide-in-from-left-2 ${
             result.isCritical
-              ? 'bg-green-500/10 border-green-500/30 text-green-600'
+              ? 'bg-green-500/10 border-green-500/30 text-green-700 dark:text-green-400'
               : result.isFumble
-                ? 'bg-red-500/10 border-red-500/30 text-red-600'
+                ? 'bg-red-500/10 border-red-500/30 text-red-700 dark:text-red-400'
                 : 'bg-card border-border'
           }`}
         >
@@ -93,12 +93,14 @@ export const DiceRollButton: React.FC<DiceRollButtonProps> = ({
             <span className="font-bold tabular-nums">{result.total}</span>
             <span className="text-muted-foreground ml-1.5 text-xs">({result.formula})</span>
             {result.isCritical && (
-              <span className="ml-1 text-green-600 font-bold">
+              <span className="ml-1 text-green-700 dark:text-green-400 font-bold">
                 {result.outcomeLabel ?? 'NAT 20!'}
               </span>
             )}
             {result.isFumble && (
-              <span className="ml-1 text-red-600 font-bold">{result.outcomeLabel ?? 'NAT 1!'}</span>
+              <span className="ml-1 text-red-700 dark:text-red-400 font-bold">
+                {result.outcomeLabel ?? 'NAT 1!'}
+              </span>
             )}
           </div>
           {result.flavor && (

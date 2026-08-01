@@ -8,6 +8,9 @@ import type { SystemComputeRegister } from './types';
 
 const HH = "M&M 3e Hero's Handbook (DHH OGC)";
 const T = 'src/__tests__/mam3eEngineMath.test.ts';
+const E = 'src/__tests__/engines/mam3e-engine.test.ts';
+const LA = 'src/__tests__/mam3eLegalActions.test.ts';
+const CREATOR = 'src/__tests__/systems/mam3e/useMam3eCreatorDraft.test.ts';
 
 export const mam3eComputeRegister: SystemComputeRegister = {
   systemId: 'mam3e',
@@ -412,6 +415,215 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       source: 'M&M 3e Hero\'s Handbook (DHH OGC): Ranks and Measures — Measurements Table (relating mass, distance, speed and time)',
       status: 'missing',
       note: 'Confirmed by the SRD\'s own statement of the rule: \'To determine the distance a hero covers in a given amount of time, add the rank of the time to the rank of the hero\'s speed, with normal human ground speed being rank 0.\' Implementing this row would also surface the rounding divergence noted on mam3e.L6.move-action-distance, since the existing L10 pure-2^rank model cannot reproduce the printed distance column.',
+    },
+
+    // ── L1: the foundation layer. M&M has no score→modifier table, so the
+    // foundation is (a) the rank-is-the-modifier rule, (b) the asymmetric sign
+    // policy on ranks, and (c) the ability+combat-skill attack bonus the PL caps
+    // read. The ability COST rule (2 PP/rank) is registered at L9, not here.
+    {
+      id: 'mam3e.L1.ability-check-modifier',
+      layer: 'L1',
+      quantity: 'Ability check modifier (the rank IS the modifier)',
+      formula:
+        'check total = d20 + ability rank — M&M 3e has NO score→modifier derivation step (no ability score, no floor((score − 10) / 2))',
+      inputs: ['ability rank'],
+      edgeCases: [
+        'Strength 8 → "1d20 + 8" (a 5e-shaped floor((8 − 10) / 2) derivation would give −1)',
+        'the rank is read per-ability from the checkId, never from a shared table',
+        'the rolled total stays within [1 + rank, 20 + rank]',
+      ],
+      stacking:
+        'Nothing is layered onto a raw ability check: the ability rank is the whole modifier. Skill checks add the purchased skill rank on top (mam3e.L4.skill-total) and defense checks read the defense total instead (mam3e.L2.defense-totals).',
+      source: `${HH}: Abilities (an ability rank is its own modifier)`,
+      status: 'verified',
+      testRef: `${E} :: rolls an ability check`,
+      note: 'The sibling assertion "rolls an ability check for a different ability" (Agility 4 → "1d20 + 4") is what proves the value is read per-ability rather than from a fixed table; it is a separate it(), so it is named here rather than in testRef. This is the M&M divergence that is easiest to get wrong by analogy — contrast dnd5e2014.L1.ability-mod, which DOES derive from a score.',
+    },
+    {
+      id: 'mam3e.L1.purchased-rank-floor',
+      layer: 'L1',
+      quantity: 'Purchased defense / skill rank floor',
+      formula:
+        'defense rank = max(0, entered rank); skill rank = max(0, entered rank) — applied in prepareData BEFORE any total or cost is computed',
+      inputs: ['entered defense ranks', 'entered skill ranks'],
+      edgeCases: [
+        'dodge rank −4 → 0, and the Dodge total falls back to Agility alone',
+        'skill rank −8 → 0, so the skill cost is 0 rather than ceil(−8 / 2) = −4',
+        'the clamp precedes the cost pass, so no spend category can be charged a negative cost (a PP refund)',
+      ],
+      stacking:
+        'The floor applies to the PURCHASED rank only. The ability contribution to the same total is added afterwards and is deliberately not floored (mam3e.L1.negative-ability-ranks), so a defense total may still be negative on a below-average hero.',
+      source: `${HH}: Defenses; Skills (defense and skill ranks are bought with power points)`,
+      status: 'verified',
+      testRef: `${E} :: clamps negative purchased defense and skill ranks to 0 (no PP refunds)`,
+      note: 'The concrete failure mode this pins is a point refund: an unclamped −8 skill rank would hand the build 4 PP back. Engine rationale at src/systems/mam3e/engine.ts:114-125.',
+    },
+    {
+      id: 'mam3e.L1.negative-ability-ranks',
+      layer: 'L1',
+      quantity: 'Negative ability ranks (below-average traits)',
+      formula:
+        'ability ranks are NOT floored: a rank below 0 survives prepareData unchanged and is charged at the normal 2 PP per rank, so spent.abilities may be negative',
+      inputs: ['ability ranks'],
+      edgeCases: [
+        'Strength −2 survives prepareData as −2 (never clamped to 0)',
+        'Strength −2 → spent.abilities = −4, i.e. the build gets 4 PP back',
+        'the same document’s purchased defense/skill ranks ARE floored — the asymmetry is the rule, not an oversight',
+      ],
+      stacking:
+        'A negative ability rank propagates into everything built on it: defense totals (mam3e.L2.defense-totals), skill totals (mam3e.L4.skill-total) and attack bonuses (mam3e.L1.attack-bonus) all fall with it.',
+      source: `${HH}: Abilities (ranks below 0 are legal and refund points)`,
+      status: 'verified',
+      testRef: `${CREATOR} :: handles negative ability ranks (below-average traits refund points)`,
+      note: 'The linked test runs through the real Mam3eEngine.prepareData (src/systems/mam3e/creator/useMam3eCreatorDraft.ts:186), not a parallel creator calculator, so it pins engine behaviour. Rationale is stated in the engine at src/systems/mam3e/engine.ts:114-116.',
+    },
+    {
+      id: 'mam3e.L1.attack-bonus',
+      layer: 'L1',
+      quantity: 'Attack bonus (governing ability + combat-skill rank)',
+      formula:
+        'close attack bonus = Fighting + close-combat rank; ranged attack bonus = Dexterity + ranged-combat rank; a combat skill absent from the sheet contributes 0',
+      inputs: [
+        'Fighting (close) or Dexterity (ranged) rank',
+        'close-combat / ranged-combat skill rank',
+      ],
+      edgeCases: [
+        'Fgt 10 + close-combat 7 with a rank-5 close effect trips the PL8 cap (22 > 16) — the skill term is load-bearing, since dropping it leaves 15 ≤ 16 and no violation at all',
+        'no close-combat skill on the sheet → the term is 0, not undefined or NaN',
+      ],
+      stacking:
+        'PARTIAL by design (engine.ts:201-208): Close Attack / Ranged Attack advantage ranks and the Accurate / Inaccurate power modifiers are NOT folded in, so a clean plViolations list means "no violation detected", never "this build is legal".',
+      source: `${HH}: Skills — Close Combat, Ranged Combat; Power Level — Attack/Effect`,
+      status: 'verified',
+      testRef: `${E} :: flags close attack/effect PL cap violations`,
+      note: 'This is the bonus the composed caps read; the caps themselves are mam3e.L9.pl-cap-close-attack / -ranged-attack. The ranged twin (engine.ts:249) is the same shipped formula and its ability term is pinned by "Ranged attack bonus + effect rank over 2×PL is flagged" (Dex 10 + no skill + rank 12 = 22), but NO test yet pins the ranged SKILL term with a non-zero ranged-combat rank.',
+    },
+
+    // ── L5: M&M has no Vancian slot economy, so this layer is the effect
+    // economy proper — what an effect costs to ACTIVATE (turn resources) and the
+    // RANK unit every effect quantity is denominated in. The final cost assembly
+    // stays at L9 and the rank→DC conversions stay at L3; those rows read the
+    // rank registered here rather than re-deriving it.
+    {
+      id: 'mam3e.L8.effect-activation-cost',
+      layer: 'L8',
+      quantity: "Activation cost of a powered effect (M&M's turn economy)",
+      formula:
+        "the effect's action type maps to the turn resource it spends: standard → 1 standard, move → 1 move, free → 1 free, reaction → 1 reaction",
+      inputs: [
+        "the power's own action type",
+        "the catalog effect's canonical action type, when the document power is sparse",
+      ],
+      edgeCases: [
+        'a free-action power (Flight) costs exactly one free action',
+        'a standard-action attack power (Damage) costs exactly one standard action',
+        'a homebrew power absent from the catalog is costed from its own action field',
+        "the resource vocabulary is standard/move/free/reaction — the d20 'action' and 'bonus' resources never appear",
+      ],
+      stacking:
+        'A turn provides one standard + one move + as many free actions as reasonable, plus reactions. Activation never spends two resource types at once, and it is the ONLY cost: using the same effect again next round costs the same action and decrements no pool.',
+      source: `${HH}: Action & Adventure — Action Types`,
+      status: 'verified',
+      testRef: `${LA} :: marks a non-attack power as a GM-adjudicated manual boundary, costed by its action type`,
+      note: "One arm of the mapping is shipped but NOT test-pinned: the 'reaction' branch of costForAction (src/systems/mam3e/legalActions.ts:59-60) and the REACTION cost constant it returns have no coverage anywhere — no fixture power declares action 'reaction', and the vocabulary assertion in \"spends M&M's own standard/move/free economy\" checks standard/move/free only. So the reaction clause of the formula, and the 'reaction' term of the vocabulary edge case, rest on reading the switch rather than on a test; the other three arms are pinned (free by this row's testRef, standard and move by the sibling attack/homebrew assertions in the same file). Adding a reaction-action fixture is the next edge case to close.",
+    },
+    {
+      id: 'mam3e.L8.continuous-effect-no-activation',
+      layer: 'L8',
+      quantity: 'Activation cost of a continuous / permanent effect (none)',
+      formula:
+        "action type 'none' → nothing is spent, and the effect is not an activatable action at all: it is excluded from the legal-action list rather than listed at zero cost",
+      inputs: ["the power's action type", 'catalog fallback action type'],
+      edgeCases: [
+        "an always-on Immunity (action 'none', duration permanent) never appears in the action list",
+        'a fresh sheet with no powers still offers exactly the four universal basic actions',
+        "excluding at enumeration time rather than costing 0 is what stops 'no action required' being read as 'a free action'",
+      ],
+      stacking:
+        'Continuous and Permanent effects carry no per-round upkeep either — unlike Sustained duration (mam3e.L8.sustained-effect-upkeep), nothing at all is spent to keep them running.',
+      source: `${HH}: Powers — Duration (Continuous, Permanent); Action & Adventure — Action Types`,
+      status: 'verified',
+      testRef: `${LA} :: excludes continuous/permanent powers (action 'none') as passive, not actions`,
+    },
+    {
+      id: 'mam3e.L9.effect-rank',
+      layer: 'L9',
+      quantity: "Effective rank of a per-rank effect (M&M's unit of effect magnitude)",
+      formula:
+        'effective rank = floor(stored rank), floored at 1 — a per-rank effect never resolves below rank 1',
+      inputs: ['power.rank', 'power.perRank'],
+      edgeCases: ['a per-rank effect stored at rank 0 resolves to effective rank 1, never 0'],
+      stacking:
+        'This rank is the unit every other effect-economy quantity is denominated in: resistance DCs read it (mam3e.L3.damage-resistance-dc, mam3e.L3.affliction-dc), cost multiplies it (mam3e.L9.power-cost), the PL caps compare it (mam3e.L9.pl-cap-close-attack / -ranged-attack / -perception) and Protection adds it to Toughness (mam3e.L2.toughness-power-bonus). Registered once here; those rows must not re-derive it.',
+      source: `${HH}: Powers — Effect Ranks`,
+      status: 'verified',
+      testRef: `${T} :: rank floors at 1 for per-rank powers`,
+      note: 'Two further branches of normalizeRank (src/systems/mam3e/powerMath.ts:5-8) ship but are NOT yet test-pinned: a fractional rank truncates (2.7 → 2) and a missing/NaN rank falls to 1. Those are the next edge cases to add; this row claims only the rank-0 floor its test actually exercises. Note the rank→measurement conversion is already registered at mam3e.L10.measurements-track and is deliberately not duplicated here.',
+    },
+    {
+      id: 'mam3e.L9.flat-effect-rank',
+      layer: 'L9',
+      quantity: 'Effective rank of a flat (non-per-rank) effect',
+      formula: 'perRank = false → effective rank 1, whatever rank is stored on the power',
+      inputs: ['power.perRank', 'power.rank', 'power.baseCost'],
+      edgeCases: [
+        'a flat effect stored at rank 5 resolves to effective rank 1 — the stored rank is ignored, not multiplied',
+        'a flat effect with baseCost 3 costs 3 PP, i.e. it is charged exactly once',
+      ],
+      stacking:
+        'Flat effects are M&M’s fixed-cost, non-scaling case: no per-rank arithmetic applies to them anywhere in the economy, so a stored rank on such a power is inert data.',
+      source: `${HH}: Powers — Power Cost (flat versus per-rank effects)`,
+      status: 'verified',
+      testRef: `${T} :: non-per-rank power is charged at rank 1`,
+    },
+    {
+      id: 'mam3e.L9.modifier-applied-rank',
+      layer: 'L9',
+      quantity: 'Applied rank of an extra / flaw on an effect',
+      formula:
+        'modifier rank = floor(power.modifierRanks[id]) floored at 1; costPerRank += modifier.costPerRank × modifier rank, and flatCost += modifier.flatCost × modifier rank',
+      inputs: ['power.modifierRanks', 'modifier catalog entry (costPerRank, flatCost)'],
+      edgeCases: [
+        'Blast rank 4 (base 2) with Accurate 1 + Subtle 1 (flat) and Limited 1 + Activation 1 → (2 − 1) × 4 + (1 + 1 − 1) = 5 PP',
+        'a modifier with no entry in modifierRanks still applies at rank 1',
+        'per-rank and flat modifier costs scale by the SAME applied rank',
+      ],
+      stacking:
+        'Per-rank modifier costs accumulate into one costPerRank before the rank multiply; flat modifier costs accumulate separately and are added afterwards. mam3e.L9.power-cost owns that final assembly (including the minimum-cost ladder) and names modifierRanks only as an input — this row is what pins the normalization behind it.',
+      source: `${HH}: Powers — Modifiers (ranked extras and flaws)`,
+      status: 'verified',
+      testRef: `${E} :: calculates power costs using rank plus extras/flaws modifiers`,
+      note: 'A related shipped behaviour is deliberately NOT claimed here: calculatePowerPointCost silently skips a modifier id absent from MAM3E_MODIFIER_BY_ID (powerMath.ts:81-82), so an unresolvable id contributes 0 to both accumulators with no diagnostic on the cost path. The contribution ledger does surface it as a manual boundary ("Unknown power modifier ignored", pinned by src/__tests__/mam3eContributionLedger.test.ts:106), but the silent cost path itself is an L9 concern and belongs with mam3e.L9.power-cost.',
+    },
+    {
+      id: 'mam3e.L8.sustained-effect-upkeep',
+      layer: 'L8',
+      quantity: 'Per-round upkeep of a Sustained-duration effect',
+      formula:
+        'a Sustained effect costs 1 free action per round to maintain; skipping the upkeep ends the effect',
+      inputs: ['power.duration', 'rounds elapsed since activation'],
+      edgeCases: [
+        'a Sustained effect maintained across rounds costs one free action EACH round, on top of the activation cost paid once',
+        'Continuous / Permanent duration → no upkeep at all (mam3e.L8.continuous-effect-no-activation)',
+        'Instant duration → nothing to maintain',
+      ],
+      stacking:
+        'Upkeep is per effect, not per character: two Sustained effects cost two free actions a round, which is why the free-action budget ("as many as reasonable") is the real constraint rather than a counted pool.',
+      source: `${HH}: Powers — Duration (Sustained)`,
+      status: 'missing',
+      note: "The legal-actions seam costs ACTIVATION only: costForAction (src/systems/mam3e/legalActions.ts:52-67) reads a power's action type and never its duration, so a Sustained effect's per-round free action is invisible to the scene runtime and nothing lapses when it is not paid. Deliberately scoped to Sustained: src/types/mam/powers.ts:82 documents Concentration duration as a free action per round, which I could NOT confirm against open content in this pass (the Hero's Handbook Concentration entry is widely read as a standard action each round). That discrepancy needs a human check against the Hero's Handbook before any Concentration row is written — it is a candidate data defect in the type docblock, not a register row.",
+    },
+    {
+      id: 'mam3e.L5.no-per-use-resource-economy',
+      layer: 'L5',
+      quantity: 'Per-day / per-use slot economy — NOT a quantity in M&M 3e',
+      formula: 'n/a — no slot, spell-point or uses-per-day pool exists to compute',
+      inputs: [],
+      edgeCases: ['a hero uses any effect they own, every round, with no pool to decrement'],
+      source: `${HH}: Powers — Duration (effects are instant/concentration/sustained/continuous/permanent; none are expendable uses)`,
+      status: 'excluded',
+      note: "NOT A RULE IN THIS SYSTEM. M&M 3e is not Vancian: an effect is bought once with power points at build time (mam3e.L9.power-cost) and is thereafter usable at will, so there is no per-day or per-encounter pool for L5 to compute. The layer's economy in M&M is per-ACTIVATION (mam3e.L8.effect-activation-cost) and per-RANK (mam3e.L9.effect-rank) instead. Recorded explicitly, following the precedent at docs/compute-register/dnd5e-2024.ts:226-234, so the cell reads as ruled-out rather than silently blank. One genuine M&M activation-exclusivity mechanic is out of scope for a different reason: Alternate Effects in an array (only one may be active at a time) are not modelled anywhere in the engine or data model, so there is no shipped computation to register.",
     },
   ],
 };
