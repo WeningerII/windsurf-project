@@ -154,12 +154,25 @@ decisions; `GAPS` §20–§23 holds this week's evidence.
   counterparts (25%). Verify every figure locally (GAPS §18.7).
 - **Container recycles mid-session** kill background work and wipe the scratchpad.
   Commit and push per slice.
-- **Playwright:** `/opt/pw-browsers` has rev **1194**, the toolchain wants **1208**,
-  and there is no Firefox at all — so `npm run verify` always dies at step 22
-  locally and **firefox e2e cannot be run in this container**. Build a bridge dir
-  in the scratchpad symlinking 1208 → 1194, point `PLAYWRIGHT_BROWSERS_PATH` at
-  it, and run `--project=chromium` (41 passed / 2 skipped is the clean baseline).
-  Rebuild `dist` first — preview serves `dist`. NEVER `playwright install`.
+- **Playwright bridge — the plain directory symlink NO LONGER WORKS.** `/opt/pw-browsers`
+  has rev **1194**, the toolchain wants **1208**, and there is no Firefox, so
+  `npm run verify` always dies at step 22 locally and firefox e2e cannot run here.
+  The inner layouts differ between revisions, so symlinking `chromium-1208 ->
+  chromium-1194` fails with `browserType.launch: Executable doesn't exist`. Exact
+  working recipe (BR = a scratchpad dir):
+    chromium-1208/chrome-linux64                  -> chromium-1194/chrome-linux
+    chromium_headless_shell-1208/chrome-headless-shell-linux64/   REAL dir, per-file
+      symlinks into chromium_headless_shell-1194/chrome-linux, PLUS
+      chrome-headless-shell -> that dir's `headless_shell` (the binary is RENAMED
+      between revisions, and the parent dir name is chrome-headless-shell-linux64,
+      not chrome-linux64).
+    ffmpeg-1011 -> ffmpeg-1011
+  Then `PLAYWRIGHT_BROWSERS_PATH=$BR npx playwright test --project=chromium`.
+  **45 passed / 2 skipped is the clean baseline** (41 + 4 dark-theme a11y tests).
+  Rebuild `dist` first — preview serves `dist`. NEVER run `playwright install`.
+  **The scratchpad is wiped by a container rollback, so the bridge must be rebuilt
+  after one.** A 45-failed run where every error is `browserType.launch` in ~3ms
+  is the bridge missing, not the code.
 - **compute-register --mutate REFUSES a dirty tree.** Commit first, then mutate.
 - **doc-drift pins verbatim phrases** — preserve exact strings when editing paired
   docs. Quoting a stale path inside backticks trips `path_ref_rule`; describe it
