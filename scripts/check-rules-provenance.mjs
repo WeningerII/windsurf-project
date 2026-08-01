@@ -213,7 +213,7 @@ const ALLOWLIST = [
       '"Powers — Power Cost" is the Power Cost SECTION of the Hero\'s Handbook Powers chapter, not a power effect named "Power Cost"; the shipped mam3e power corpus (loadSpellsForSystem) is a list of power EFFECTS, so the name cannot resolve. The citation is sound; the parser cannot distinguish a chapter section from an entry without a denominator of section titles.',
   },
 
-  // The mam3e L5 rows added 2026-07-31 are all the SAME SHAPE as
+  // The six mam3e rows below are all the SAME SHAPE as
   // register:mam3e.L9.power-cost above: each cites a section of the Hero's
   // Handbook Powers chapter (Duration, Effect Ranks, Power Cost, Modifiers),
   // and the shipped mam3e corpus is a list of power EFFECTS, so a section title
@@ -221,14 +221,26 @@ const ALLOWLIST = [
   // so each remains a reviewable claim — a wildcard here would let a genuinely
   // fabricated citation in under cover of the real ones.
   //
-  // NOTE, separately: whether these rows belong in L5 at all is an open question.
-  // docs/compute-register/types.ts defines L5 as "spellcasting economy" and M&M
-  // has no spellcasting, so siting the EFFECT economy there is a reinterpretation
-  // that moves the published completeness number. That is a scope decision, and
-  // it is not settled by this allowlist — this only records that the citations
-  // name real chapter sections.
+  // These landed briefly as `mam3e.L5.*` and were RECLASSIFIED 2026-07-31.
+  // types.ts defines L5 as "spellcasting economy"; M&M has no spellcasting, so
+  // filing its effect economy there made one shared row mean a different thing
+  // for one system — which destroys the cross-system comparison the ten-layer
+  // grid exists for. The rows were three different things under one label:
+  // activation and upkeep are turn economy (L8 active-play state), and the rank
+  // helpers feed the power-point cost assembly (L9 build-legality & budgets,
+  // beside cost-abilities and power-cost). Reclassifying moved no number —
+  // mam3e stayed 35 verified — because the rows were always real work, only
+  // mis-filed.
+  //
+  // ONE row correctly remains at L5: `no-per-use-resource-economy`, status
+  // `excluded`. That is the honest "this system has no such thing" marker, and
+  // `isInScope` drops it from both sides of the ratio.
+  //
+  // Root cause worth naming: nine of the ten layers are named by FUNCTION;
+  // L5 alone is named after a MECHANIC. That is why it is the only one a
+  // non-magic system cannot fill honestly.
   {
-    id: 'register:mam3e.L5.continuous-effect-no-activation',
+    id: 'register:mam3e.L8.continuous-effect-no-activation',
     assertion: 'B/named-entry',
     citation:
       "M&M 3e Hero's Handbook (DHH OGC): Powers — Duration (Continuous, Permanent); Action & Adventure — Action Types",
@@ -238,7 +250,7 @@ const ALLOWLIST = [
       '"Powers — Duration" is the Duration SECTION of the Powers chapter; Continuous and Permanent are duration VALUES within it, not power effects. Cannot resolve against a corpus of effect names.',
   },
   {
-    id: 'register:mam3e.L5.effect-rank',
+    id: 'register:mam3e.L9.effect-rank',
     assertion: 'B/named-entry',
     citation: "M&M 3e Hero's Handbook (DHH OGC): Powers — Effect Ranks",
     verdict: 'chapter-section',
@@ -247,7 +259,7 @@ const ALLOWLIST = [
       '"Effect Ranks" is a section of the Powers chapter describing how rank scales an effect, not an effect named "Effect Ranks".',
   },
   {
-    id: 'register:mam3e.L5.flat-effect-rank',
+    id: 'register:mam3e.L9.flat-effect-rank',
     assertion: 'B/named-entry',
     citation: "M&M 3e Hero's Handbook (DHH OGC): Powers — Power Cost (flat versus per-rank effects)",
     verdict: 'chapter-section',
@@ -256,7 +268,7 @@ const ALLOWLIST = [
       'Same Power Cost section as register:mam3e.L9.power-cost, narrowed to the flat-versus-per-rank distinction. A section, not an effect.',
   },
   {
-    id: 'register:mam3e.L5.modifier-applied-rank',
+    id: 'register:mam3e.L9.modifier-applied-rank',
     assertion: 'B/named-entry',
     citation: "M&M 3e Hero's Handbook (DHH OGC): Powers — Modifiers (ranked extras and flaws)",
     verdict: 'chapter-section',
@@ -265,7 +277,7 @@ const ALLOWLIST = [
       '"Modifiers" is the extras-and-flaws SECTION of the Powers chapter. Individual modifiers ship in the modifier corpus, not the power-effect corpus this assertion resolves against.',
   },
   {
-    id: 'register:mam3e.L5.sustained-effect-upkeep',
+    id: 'register:mam3e.L8.sustained-effect-upkeep',
     assertion: 'B/named-entry',
     citation: "M&M 3e Hero's Handbook (DHH OGC): Powers — Duration (Sustained)",
     verdict: 'chapter-section',

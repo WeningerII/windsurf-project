@@ -1131,7 +1131,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // ── mam3e L5: the effect economy (M&M has no Vancian slots) ──
   // Activation spends exactly one unit of the named turn resource; 1 -> 2 flips
   // the Flight fixture's asserted costs: [{ resource: 'free', amount: 1 }].
-  'mam3e.L5.effect-activation-cost': {
+  'mam3e.L8.effect-activation-cost': {
     file: 'src/systems/mam3e/legalActions.ts',
     find: "const FREE: LegalActionCost = { resource: 'free', amount: 1 };",
     replace: "const FREE: LegalActionCost = { resource: 'free', amount: 2 };",
@@ -1141,14 +1141,14 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // Re-pointing the exclusion at another VALID ActionType member keeps it
   // type-valid while letting the always-on Immunity fixture into the action
   // list, which is exactly what the linked test asserts must not happen.
-  'mam3e.L5.continuous-effect-no-activation': {
+  'mam3e.L8.continuous-effect-no-activation': {
     file: 'src/systems/mam3e/legalActions.ts',
     find: "if (action === 'none') {",
     replace: "if (action === 'free') {",
   },
   // The floor-of-1 on a per-rank effect: 1 -> 2 makes getPowerRank return 2 for
   // the rank-0 fixture the test asserts is 1.
-  'mam3e.L5.effect-rank': {
+  'mam3e.L9.effect-rank': {
     file: 'src/systems/mam3e/powerMath.ts',
     find: 'if (!Number.isFinite(rank) || (rank ?? 0) < 1) return 1;',
     replace: 'if (!Number.isFinite(rank) || (rank ?? 0) < 1) return 2;',
@@ -1156,7 +1156,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // The flat-effect rank: 1 -> 2 breaks both assertions of the linked test —
   // getPowerRank(perRank: false) returns 2, and the baseCost-3 flat power is
   // charged 6 PP instead of 3.
-  'mam3e.L5.flat-effect-rank': {
+  'mam3e.L9.flat-effect-rank': {
     file: 'src/systems/mam3e/powerMath.ts',
     find: 'if (!power.perRank) return 1;',
     replace: 'if (!power.perRank) return 2;',
@@ -1164,7 +1164,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // Modifier ranks: +1 applies every extra/flaw at rank 2 on a fixture that
   // stores them all at rank 1, which drops cost/rank to 0 and takes the Blast
   // from the asserted 5 PP to 4 PP (ceil(4 / 2) + 2 flat).
-  'mam3e.L5.modifier-applied-rank': {
+  'mam3e.L9.modifier-applied-rank': {
     file: 'src/systems/mam3e/powerMath.ts',
     find: 'return normalizeRank(power.modifierRanks?.[modifierId]);',
     replace: 'return normalizeRank(power.modifierRanks?.[modifierId]) + 1;',

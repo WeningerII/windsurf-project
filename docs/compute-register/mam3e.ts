@@ -506,8 +506,8 @@ export const mam3eComputeRegister: SystemComputeRegister = {
     // stays at L9 and the rank→DC conversions stay at L3; those rows read the
     // rank registered here rather than re-deriving it.
     {
-      id: 'mam3e.L5.effect-activation-cost',
-      layer: 'L5',
+      id: 'mam3e.L8.effect-activation-cost',
+      layer: 'L8',
       quantity: "Activation cost of a powered effect (M&M's turn economy)",
       formula:
         "the effect's action type maps to the turn resource it spends: standard → 1 standard, move → 1 move, free → 1 free, reaction → 1 reaction",
@@ -529,8 +529,8 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       note: "One arm of the mapping is shipped but NOT test-pinned: the 'reaction' branch of costForAction (src/systems/mam3e/legalActions.ts:59-60) and the REACTION cost constant it returns have no coverage anywhere — no fixture power declares action 'reaction', and the vocabulary assertion in \"spends M&M's own standard/move/free economy\" checks standard/move/free only. So the reaction clause of the formula, and the 'reaction' term of the vocabulary edge case, rest on reading the switch rather than on a test; the other three arms are pinned (free by this row's testRef, standard and move by the sibling attack/homebrew assertions in the same file). Adding a reaction-action fixture is the next edge case to close.",
     },
     {
-      id: 'mam3e.L5.continuous-effect-no-activation',
-      layer: 'L5',
+      id: 'mam3e.L8.continuous-effect-no-activation',
+      layer: 'L8',
       quantity: 'Activation cost of a continuous / permanent effect (none)',
       formula:
         "action type 'none' → nothing is spent, and the effect is not an activatable action at all: it is excluded from the legal-action list rather than listed at zero cost",
@@ -541,14 +541,14 @@ export const mam3eComputeRegister: SystemComputeRegister = {
         "excluding at enumeration time rather than costing 0 is what stops 'no action required' being read as 'a free action'",
       ],
       stacking:
-        'Continuous and Permanent effects carry no per-round upkeep either — unlike Sustained duration (mam3e.L5.sustained-effect-upkeep), nothing at all is spent to keep them running.',
+        'Continuous and Permanent effects carry no per-round upkeep either — unlike Sustained duration (mam3e.L8.sustained-effect-upkeep), nothing at all is spent to keep them running.',
       source: `${HH}: Powers — Duration (Continuous, Permanent); Action & Adventure — Action Types`,
       status: 'verified',
       testRef: `${LA} :: excludes continuous/permanent powers (action 'none') as passive, not actions`,
     },
     {
-      id: 'mam3e.L5.effect-rank',
-      layer: 'L5',
+      id: 'mam3e.L9.effect-rank',
+      layer: 'L9',
       quantity: "Effective rank of a per-rank effect (M&M's unit of effect magnitude)",
       formula:
         'effective rank = floor(stored rank), floored at 1 — a per-rank effect never resolves below rank 1',
@@ -562,8 +562,8 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       note: 'Two further branches of normalizeRank (src/systems/mam3e/powerMath.ts:5-8) ship but are NOT yet test-pinned: a fractional rank truncates (2.7 → 2) and a missing/NaN rank falls to 1. Those are the next edge cases to add; this row claims only the rank-0 floor its test actually exercises. Note the rank→measurement conversion is already registered at mam3e.L10.measurements-track and is deliberately not duplicated here.',
     },
     {
-      id: 'mam3e.L5.flat-effect-rank',
-      layer: 'L5',
+      id: 'mam3e.L9.flat-effect-rank',
+      layer: 'L9',
       quantity: 'Effective rank of a flat (non-per-rank) effect',
       formula: 'perRank = false → effective rank 1, whatever rank is stored on the power',
       inputs: ['power.perRank', 'power.rank', 'power.baseCost'],
@@ -578,8 +578,8 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       testRef: `${T} :: non-per-rank power is charged at rank 1`,
     },
     {
-      id: 'mam3e.L5.modifier-applied-rank',
-      layer: 'L5',
+      id: 'mam3e.L9.modifier-applied-rank',
+      layer: 'L9',
       quantity: 'Applied rank of an extra / flaw on an effect',
       formula:
         'modifier rank = floor(power.modifierRanks[id]) floored at 1; costPerRank += modifier.costPerRank × modifier rank, and flatCost += modifier.flatCost × modifier rank',
@@ -597,15 +597,15 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       note: 'A related shipped behaviour is deliberately NOT claimed here: calculatePowerPointCost silently skips a modifier id absent from MAM3E_MODIFIER_BY_ID (powerMath.ts:81-82), so an unresolvable id contributes 0 to both accumulators with no diagnostic on the cost path. The contribution ledger does surface it as a manual boundary ("Unknown power modifier ignored", pinned by src/__tests__/mam3eContributionLedger.test.ts:106), but the silent cost path itself is an L9 concern and belongs with mam3e.L9.power-cost.',
     },
     {
-      id: 'mam3e.L5.sustained-effect-upkeep',
-      layer: 'L5',
+      id: 'mam3e.L8.sustained-effect-upkeep',
+      layer: 'L8',
       quantity: 'Per-round upkeep of a Sustained-duration effect',
       formula:
         'a Sustained effect costs 1 free action per round to maintain; skipping the upkeep ends the effect',
       inputs: ['power.duration', 'rounds elapsed since activation'],
       edgeCases: [
         'a Sustained effect maintained across rounds costs one free action EACH round, on top of the activation cost paid once',
-        'Continuous / Permanent duration → no upkeep at all (mam3e.L5.continuous-effect-no-activation)',
+        'Continuous / Permanent duration → no upkeep at all (mam3e.L8.continuous-effect-no-activation)',
         'Instant duration → nothing to maintain',
       ],
       stacking:
@@ -623,7 +623,7 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       edgeCases: ['a hero uses any effect they own, every round, with no pool to decrement'],
       source: `${HH}: Powers — Duration (effects are instant/concentration/sustained/continuous/permanent; none are expendable uses)`,
       status: 'excluded',
-      note: "NOT A RULE IN THIS SYSTEM. M&M 3e is not Vancian: an effect is bought once with power points at build time (mam3e.L9.power-cost) and is thereafter usable at will, so there is no per-day or per-encounter pool for L5 to compute. The layer's economy in M&M is per-ACTIVATION (mam3e.L5.effect-activation-cost) and per-RANK (mam3e.L5.effect-rank) instead. Recorded explicitly, following the precedent at docs/compute-register/dnd5e-2024.ts:226-234, so the cell reads as ruled-out rather than silently blank. One genuine M&M activation-exclusivity mechanic is out of scope for a different reason: Alternate Effects in an array (only one may be active at a time) are not modelled anywhere in the engine or data model, so there is no shipped computation to register.",
+      note: "NOT A RULE IN THIS SYSTEM. M&M 3e is not Vancian: an effect is bought once with power points at build time (mam3e.L9.power-cost) and is thereafter usable at will, so there is no per-day or per-encounter pool for L5 to compute. The layer's economy in M&M is per-ACTIVATION (mam3e.L8.effect-activation-cost) and per-RANK (mam3e.L9.effect-rank) instead. Recorded explicitly, following the precedent at docs/compute-register/dnd5e-2024.ts:226-234, so the cell reads as ruled-out rather than silently blank. One genuine M&M activation-exclusivity mechanic is out of scope for a different reason: Alternate Effects in an array (only one may be active at a time) are not modelled anywhere in the engine or data model, so there is no shipped computation to register.",
     },
   ],
 };

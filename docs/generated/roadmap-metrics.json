@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-31T05:40:35.414Z",
+  "generatedAt": "2026-08-01T19:03:43.412Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -583,20 +583,16 @@
           "inScope": 1
         },
         "L8": {
-          "verified": 1,
-          "inScope": 1
+          "verified": 3,
+          "inScope": 4
         },
         "L9": {
-          "verified": 12,
-          "inScope": 12
+          "verified": 15,
+          "inScope": 15
         },
         "L6": {
           "verified": 0,
           "inScope": 8
-        },
-        "L5": {
-          "verified": 5,
-          "inScope": 6
         }
       }
     },
