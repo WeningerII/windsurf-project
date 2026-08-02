@@ -528,6 +528,75 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'const total = cl.level;',
     replace: 'const total = cl.level + 1;',
   },
+  // ── the multi-channel damage helpers (WORK_PLAN §3.2, GAPS §27) ──
+  // All six live in shared resolver modules that both 5e editions engine-wire,
+  // so ONE perturbation per formula flips the linked test for each edition —
+  // the same shape as passive-perception and known-spell-limit above.
+  'dnd5e2014.L8.damage-mitigation-branch': {
+    file: 'src/rules/resolver/damageMitigation.ts',
+    find: "if (resistant && vulnerable) return 'none';",
+    replace: "if (resistant && vulnerable) return 'resistant';",
+  },
+  'dnd5e2024.L8.damage-mitigation-branch': {
+    file: 'src/rules/resolver/damageMitigation.ts',
+    find: "if (resistant && vulnerable) return 'none';",
+    replace: "if (resistant && vulnerable) return 'resistant';",
+  },
+  'dnd5e2014.L8.damage-mitigation-amount': {
+    file: 'src/rules/resolver/damageMitigation.ts',
+    find: 'return Math.floor(amount / 2);',
+    replace: 'return Math.floor(amount / 3);',
+  },
+  'dnd5e2024.L8.damage-mitigation-amount': {
+    file: 'src/rules/resolver/damageMitigation.ts',
+    find: 'return Math.floor(amount / 2);',
+    replace: 'return Math.floor(amount / 3);',
+  },
+  'dnd5e2014.L8.damage-channels': {
+    file: 'src/rules/resolver/damageChannelSplit.ts',
+    find: 'const amounts = weights.map((weight) => Math.floor((magnitude * weight) / weightSum));',
+    replace:
+      'const amounts = weights.map((weight) => Math.floor((magnitude * weight) / weightSum) + 1);',
+  },
+  'dnd5e2024.L8.damage-channels': {
+    file: 'src/rules/resolver/damageChannelSplit.ts',
+    find: 'const amounts = weights.map((weight) => Math.floor((magnitude * weight) / weightSum));',
+    replace:
+      'const amounts = weights.map((weight) => Math.floor((magnitude * weight) / weightSum) + 1);',
+  },
+  'dnd5e2014.L8.damage-channel-split': {
+    file: 'src/rules/resolver/damageChannelSplit.ts',
+    find: 'const leftover = magnitude - assigned;',
+    replace: 'const leftover = magnitude - assigned - 1;',
+  },
+  'dnd5e2024.L8.damage-channel-split': {
+    file: 'src/rules/resolver/damageChannelSplit.ts',
+    find: 'const leftover = magnitude - assigned;',
+    replace: 'const leftover = magnitude - assigned - 1;',
+  },
+  // The tie-break key itself: flipping weight-desc to weight-asc changes WHICH
+  // channel absorbs the remainder without changing the total, so only a test
+  // that pins the per-channel split can see it.
+  'dnd5e2014.L8.damage-channel-split-tiebreak': {
+    file: 'src/rules/resolver/damageChannelSplit.ts',
+    find: 'if (weights[a] !== weights[b]) return weights[b] - weights[a];',
+    replace: 'if (weights[a] !== weights[b]) return weights[a] - weights[b];',
+  },
+  'dnd5e2024.L8.damage-channel-split-tiebreak': {
+    file: 'src/rules/resolver/damageChannelSplit.ts',
+    find: 'if (weights[a] !== weights[b]) return weights[b] - weights[a];',
+    replace: 'if (weights[a] !== weights[b]) return weights[a] - weights[b];',
+  },
+  'dnd5e2014.L8.multi-channel-mitigation': {
+    file: 'src/rules/resolver/damageMitigation.ts',
+    find: 'return amount * 2;',
+    replace: 'return amount * 3;',
+  },
+  'dnd5e2024.L8.multi-channel-mitigation': {
+    file: 'src/rules/resolver/damageMitigation.ts',
+    find: 'return amount * 2;',
+    replace: 'return amount * 3;',
+  },
   'dnd5e2014.L8.exhaustion-max-hp': {
     file: 'src/systems/dnd5e/engine.ts',
     find: 'Math.floor(maxHP / 2)',
