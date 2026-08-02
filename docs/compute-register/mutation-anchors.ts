@@ -552,17 +552,20 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'return Math.floor(amount / 2);',
     replace: 'return Math.floor(amount / 3);',
   },
+  // `damage-channels` is `collectDamageChannels`, NOT the split arithmetic — the
+  // first anchor written here perturbed `splitDamageAcrossChannels` and the gate
+  // correctly demoted the row for it, because no assertion matching
+  // "collectDamageChannels" could see that change. The weight this pushes is
+  // what its test reads.
   'dnd5e2014.L8.damage-channels': {
     file: 'src/rules/resolver/damageChannelSplit.ts',
-    find: 'const amounts = weights.map((weight) => Math.floor((magnitude * weight) / weightSum));',
-    replace:
-      'const amounts = weights.map((weight) => Math.floor((magnitude * weight) / weightSum) + 1);',
+    find: 'channels.push({ type, weight: resolved.total });',
+    replace: 'channels.push({ type, weight: resolved.total + 1 });',
   },
   'dnd5e2024.L8.damage-channels': {
     file: 'src/rules/resolver/damageChannelSplit.ts',
-    find: 'const amounts = weights.map((weight) => Math.floor((magnitude * weight) / weightSum));',
-    replace:
-      'const amounts = weights.map((weight) => Math.floor((magnitude * weight) / weightSum) + 1);',
+    find: 'channels.push({ type, weight: resolved.total });',
+    replace: 'channels.push({ type, weight: resolved.total + 1 });',
   },
   'dnd5e2014.L8.damage-channel-split': {
     file: 'src/rules/resolver/damageChannelSplit.ts',
