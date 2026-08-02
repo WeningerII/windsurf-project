@@ -13,7 +13,9 @@ import {
   type EncounterDraftCandidate,
   type EncounterDraftPayload,
   type AnalyzeMapPayload,
+  type DmTurnIntentPayload,
   type IdentifyCreaturePayload,
+  type NarrationCritiquePayload,
   type IllustrateScenePayload,
   type SceneNarrationPayload,
 } from './contracts';
@@ -33,6 +35,8 @@ export const AI_PROMPT_VERSIONS = {
   'illustrate-scene': 'illustrate-scene.v1',
   'character-draft': 'character-draft.v1',
   'analyze-map': 'analyze-map.v1',
+  'narration-critique': 'narration-critique.v1',
+  'dm-turn-intent': 'dm-turn-intent.v1',
 } as const satisfies Record<AiTask, string>;
 
 /** The template version for a task (total over the allowlist by construction). */
@@ -64,6 +68,10 @@ export function buildPromptForTask(task: AiTask, payload: unknown): string {
       return buildCharacterDraftPrompt(payload as CharacterDraftPayload);
     case 'analyze-map':
       return buildAnalyzeMapPrompt(payload as AnalyzeMapPayload);
+    case 'narration-critique':
+      return buildNarrationCritiquePrompt(payload as NarrationCritiquePayload);
+    case 'dm-turn-intent':
+      return buildDmTurnIntentPrompt(payload as DmTurnIntentPayload);
     default:
       throw new Error(`No prompt builder for task '${task}'.`);
   }
@@ -164,6 +172,32 @@ export function buildSceneNarrationPrompt(payload: SceneNarrationPayload): strin
   ].join('\n');
 }
 
+/**
+ * The ADVISORY second pass. Two things this template deliberately does NOT ask
+ * for: a score, and a verdict. Scores over prose are invented precision, and the
+ * verdict belongs to `checkNarrationAgainstFacts`. It asks only for spans plus a
+ * reason, because a span is the one part of a model critique the flow can check
+ * — a quote that is not verbatim in the narration is discarded there.
+ */
+export function buildNarrationCritiquePrompt(payload: NarrationCritiquePayload): string {
+  return [
+    `You are reviewing a session recap that was written from a fixed set of facts.`,
+    `Find statements in the recap that the facts do not support: people, creatures,`,
+    `places, events, outcomes or numbers that are asserted but not stated in the facts.`,
+    ``,
+    `For each one, quote the offending span EXACTLY as it appears in the recap and say`,
+    `in one line what the facts do not support. Quote nothing you did not copy from the`,
+    `recap verbatim. Report no findings if every statement is supported. Do not comment`,
+    `on style, tone or pacing, and do not rewrite the recap.`,
+    ``,
+    `Facts:`,
+    payload.facts,
+    ``,
+    `Recap:`,
+    payload.narrative,
+  ].join('\n');
+}
+
 export function buildAnalyzeMapPrompt(payload: AnalyzeMapPayload): string {
   const { widthPx, heightPx } = payload.imageSize;
   const hint = payload.hint ? `\n\nHint from the user: ${payload.hint}` : '';
@@ -189,5 +223,63 @@ export function buildAnalyzeMapPrompt(payload: AnalyzeMapPayload): string {
     ``,
     `Report only regions you can actually see. Fewer, accurate boxes are better than`,
     `speculative ones, and a box you are unsure of is worse than a box you omit.${hint}`,
+  ].join('\n');
+}
+
+/**
+ * The AI-DM turn prompt (RFC 007). Two properties are structural rather than
+ * stylistic:
+ *
+ * 1. **It is written once, for every system.** The only system-specific thing it
+ *    ever says is `payload.systemId` and whatever the caller put in the
+ *    fold-derived facts and option labels. There is no rules vocabulary here, so
+ *    a Daggerheart turn and a Pathfinder turn use the identical template.
+ * 2. **It offers ids, not verbs.** The model is asked for `optionId`s from the
+ *    supplied list; it is never told the names of scene intents, and an id it
+ *    invents is rejected by `src/ai/dmTurn.ts` before any intent is built.
+ */
+export function buildDmTurnIntentPrompt(payload: DmTurnIntentPayload): string {
+  const roster = payload.tokens.length
+    ? payload.tokens
+        .map(
+          (token) =>
+            `- ${token.name} (${token.allegiance}) at (${token.position.x}, ${token.position.y})`
+        )
+        .join('\n')
+    : '- (no other tokens on the map)';
+  const options = payload.options
+    .map((option) => {
+      const reach =
+        option.verb === 'move' && option.maxDistance !== undefined
+          ? ` [needs a destination within ${option.maxDistance} squares]`
+          : '';
+      return `- ${option.id}: ${option.label}${reach}`;
+    })
+    .join('\n');
+  const repair =
+    payload.repairIssues && payload.repairIssues.length > 0
+      ? `\n\nYour previous attempt was rejected for these reasons:\n${payload.repairIssues
+          .map((issue) => `- ${issue}`)
+          .join('\n')}\nReturn corrected proposals that resolve them.`
+      : '';
+
+  return [
+    `You are running one creature's turn in a ${payload.systemId} tabletop scene, in round ${payload.round}.`,
+    ``,
+    `Acting now: ${payload.actor.name} (${payload.actor.allegiance}) at (${payload.actor.position.x}, ${payload.actor.position.y}).`,
+    ``,
+    `Others on the map:`,
+    roster,
+    ``,
+    `What has happened so far:`,
+    payload.facts,
+    ``,
+    `Choose what this creature does, using only these option ids:`,
+    options,
+    ``,
+    `Return proposals, each naming one optionId from the list above and, for a move,`,
+    `a destination as integer grid coordinates. Do not invent option ids, do not name`,
+    `actions that are not listed, and do not state damage, rolls or outcomes — the game`,
+    `resolves those. Propose the fewest actions that make the turn sensible.${repair}`,
   ].join('\n');
 }

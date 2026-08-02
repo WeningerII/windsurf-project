@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-02T00:55:28.435Z",
+  "generatedAt": "2026-08-02T16:10:34.709Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -281,7 +281,7 @@
   },
   "contentCoverage": {
     "source": "docs/generated/srd-coverage.md",
-    "measuredAt": "2026-07-28T00:04:51.558Z",
+    "measuredAt": "2026-08-02T15:21:58.050Z",
     "bySystem": [
       {
         "systemId": "dnd-5e-2014",
@@ -305,10 +305,10 @@
         "systemId": "dnd-3.5e",
         "systemLabel": "D&D 3.5e",
         "categories": 4,
-        "covered": 880,
-        "srdTotal": 948,
-        "percent": 92.8,
-        "shortfallCategories": 2
+        "covered": 918,
+        "srdTotal": 1073,
+        "percent": 85.6,
+        "shortfallCategories": 1
       },
       {
         "systemId": "pf1e",
@@ -323,7 +323,7 @@
         "systemId": "pf2e",
         "systemLabel": "Pathfinder 2e",
         "categories": 7,
-        "covered": 1109,
+        "covered": 1111,
         "srdTotal": 2284,
         "percent": 48.6,
         "shortfallCategories": 3

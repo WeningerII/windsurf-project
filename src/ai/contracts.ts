@@ -21,6 +21,8 @@ export const AI_GATEWAY_TASKS = [
   'illustrate-scene',
   'character-draft',
   'analyze-map',
+  'narration-critique',
+  'dm-turn-intent',
 ] as const;
 export type AiTask = (typeof AI_GATEWAY_TASKS)[number];
 
@@ -55,6 +57,8 @@ export const AI_TASK_CLASS: Record<AiTask, AiTaskClass> = {
   'illustrate-scene': 'image',
   'character-draft': 'text',
   'analyze-map': 'vision',
+  'narration-critique': 'text',
+  'dm-turn-intent': 'text',
 };
 
 /**
@@ -73,6 +77,14 @@ export const AI_TASK_UNIT_COST: Record<AiTask, number> = {
   // Vision, like identify-creature — but over a whole battle map rather than a
   // single creature, so the image is larger and the output structured.
   'analyze-map': 2,
+  // A second text pass over one already-generated narration. Same class and
+  // cost as the narration it reviews, so opting into the ADVISORY model review
+  // doubles a session's narration spend rather than hiding a cost.
+  'narration-critique': 1,
+  // One text call per AI-DM actor turn (RFC 007). Deliberately the same weight
+  // as any other text task: the AI-DM's cost control is the per-invocation
+  // proposal cap in `DmPolicy`, not a discounted unit price.
+  'dm-turn-intent': 1,
 };
 
 /**
@@ -265,6 +277,10 @@ function parseTaskPayload(task: AiTask, payload: unknown): AiParse<unknown> {
       return parseCharacterDraftPayload(payload);
     case 'analyze-map':
       return parseAnalyzeMapPayload(payload);
+    case 'narration-critique':
+      return parseNarrationCritiquePayload(payload);
+    case 'dm-turn-intent':
+      return parseDmTurnIntentPayload(payload);
     default:
       return { ok: false, message: `No validator for task '${task}'.` };
   }
@@ -316,6 +332,10 @@ export function parseTaskData(task: AiTask, raw: unknown): AiParse<unknown> {
       return parseCharacterDraftData(raw);
     case 'analyze-map':
       return parseAnalyzeMapData(raw);
+    case 'narration-critique':
+      return parseNarrationCritiqueData(raw);
+    case 'dm-turn-intent':
+      return parseDmTurnIntentData(raw);
     default:
       return { ok: false, message: `No output validator for task '${task}'.` };
   }
@@ -542,6 +562,79 @@ function parseSceneNarrationData(raw: unknown): AiParse<SceneNarrationData> {
     return { ok: false, message: 'Narration output needs a non-empty narrative string.' };
   }
   return { ok: true, value: { narrative: raw.narrative } };
+}
+
+// --- Task: narration-critique ----------------------------------------------
+
+/**
+ * Upper bound on concerns one critique may carry. A narration is one or two
+ * paragraphs; a dozen flagged spans is already more than a GM will read, and
+ * the cap keeps one runaway response from producing a list the caller must walk
+ * unboundedly.
+ */
+export const MAX_NARRATION_CRITIQUE_FINDINGS = 12;
+
+export interface NarrationCritiquePayload {
+  /** The generated narration under review. */
+  narrative: string;
+  /** The deterministic recap it was supposed to restate, and nothing else. */
+  facts: string;
+}
+
+/**
+ * One model-raised concern. `quote` is REQUIRED and is the reason this task can
+ * exist at all: the flow checks that the span appears verbatim in the narration
+ * and discards any finding that does not, so the second model pass cannot
+ * invent the evidence for its own objection. Every surviving finding is still
+ * ADVISORY — `src/ai/narrationCritic.ts` owns the verdict.
+ */
+export interface NarrationCritiqueFinding {
+  /** A verbatim span of the narration this concern is about. */
+  quote: string;
+  /** What the model thinks the facts do not support about it. */
+  concern: string;
+}
+
+export interface NarrationCritiqueData {
+  findings: NarrationCritiqueFinding[];
+}
+
+export type NarrationCritiqueRequest = AiRequest<'narration-critique', NarrationCritiquePayload>;
+
+function parseNarrationCritiquePayload(raw: unknown): AiParse<NarrationCritiquePayload> {
+  if (!isRecord(raw))
+    return { ok: false, message: 'Narration-critique payload must be an object.' };
+  if (typeof raw.narrative !== 'string' || !raw.narrative.trim()) {
+    return { ok: false, message: 'Narration-critique payload needs a non-empty narrative.' };
+  }
+  if (typeof raw.facts !== 'string' || !raw.facts.trim()) {
+    return { ok: false, message: 'Narration-critique payload needs non-empty facts.' };
+  }
+  return { ok: true, value: { narrative: raw.narrative, facts: raw.facts } };
+}
+
+function parseNarrationCritiqueData(raw: unknown): AiParse<NarrationCritiqueData> {
+  if (!isRecord(raw)) return { ok: false, message: 'Output must be an object.' };
+  if (!Array.isArray(raw.findings)) {
+    return { ok: false, message: 'Narration-critique output needs a findings array.' };
+  }
+  if (raw.findings.length > MAX_NARRATION_CRITIQUE_FINDINGS) {
+    return { ok: false, message: 'Narration-critique output raises too many findings.' };
+  }
+  const findings: NarrationCritiqueFinding[] = [];
+  for (const finding of raw.findings) {
+    if (
+      !isRecord(finding) ||
+      typeof finding.quote !== 'string' ||
+      !finding.quote.trim() ||
+      typeof finding.concern !== 'string' ||
+      !finding.concern.trim()
+    ) {
+      return { ok: false, message: 'Each finding needs a non-empty quote and concern.' };
+    }
+    findings.push({ quote: finding.quote, concern: finding.concern });
+  }
+  return { ok: true, value: { findings } };
 }
 
 // --- Shared: image input (multimodal tasks) --------------------------------
@@ -798,6 +891,298 @@ function parseAnalyzeMapData(raw: unknown): AiParse<AnalyzeMapData> {
       registration: { offsetX, offsetY, cellSizePx },
       boxes,
       ...(typeof raw.reason === 'string' && raw.reason ? { reason: raw.reason } : {}),
+    },
+  };
+}
+
+// --- Task: dm-turn-intent (RFC 007 AI-DM runtime) ---------------------------
+
+/**
+ * The CLOSED verb vocabulary an AI-DM turn proposal may draw on. It exists so
+ * the model can never name a `SceneActionIntent` type: it picks an OPTION id
+ * from a pool the caller built, and `src/ai/dmTurn.ts` maps that option's verb
+ * to the one intent shape it is allowed to become. Adding a verb here is a
+ * deliberate widening of what the AI-DM may ask for, and requires a new mapping
+ * case plus the deterministic gate that bounds it.
+ *
+ * Every verb below reaches the event log through `resolveSceneAction`, and none
+ * of them carries model-computed arithmetic:
+ *   - `move`  — reposition the acting token. The model chooses a destination
+ *               cell; the option carries the caller's Chebyshev reach, and the
+ *               scene runtime still owns bounds and footprint overlap.
+ *   - `check` — roll the check the OPTION describes. Label, modifier and DC come
+ *               from the option (system-derived), never from the response, and
+ *               the d20 is rolled inside `resolveSceneAction` from the event id.
+ *   - `hold`  — do nothing and pass the turn.
+ */
+export const DM_TURN_VERBS = ['move', 'check', 'hold'] as const;
+export type DmTurnVerb = (typeof DM_TURN_VERBS)[number];
+
+export function isDmTurnVerb(value: unknown): value is DmTurnVerb {
+  return typeof value === 'string' && (DM_TURN_VERBS as readonly string[]).includes(value);
+}
+
+/**
+ * Upper bound on the options one turn may offer and the proposals one response
+ * may carry. A single actor's turn has a handful of choices, not hundreds; the
+ * caps keep a malformed request or response from producing a list the validator
+ * must walk unboundedly. The per-invocation autonomy cap is separate and lives
+ * in `DmPolicy.maxProposalsPerTurn`.
+ */
+export const MAX_DM_TURN_OPTIONS = 32;
+export const MAX_DM_TURN_PROPOSALS = 8;
+
+/**
+ * A token's combat side, inlined rather than imported from
+ * `src/types/core/scene.ts` so this module stays dependency-free for the server
+ * gateway. Structurally identical to `SceneAllegiance`; the flow narrows the
+ * real type onto it.
+ */
+export type DmTurnAllegiance = 'party' | 'hostile' | 'neutral';
+
+/** A token as the model sees it: identity, side and where it stands. */
+export interface DmTurnTokenRef {
+  id: string;
+  name: string;
+  allegiance: DmTurnAllegiance;
+  position: { x: number; y: number };
+}
+
+/**
+ * The deterministic parameters of a `check` option. These ride the REQUEST, not
+ * the response: the system engine (or the caller) decides what a check is worth,
+ * and the model only decides whether to take it.
+ */
+export interface DmTurnCheckParams {
+  label: string;
+  modifier: number;
+  dc?: number;
+}
+
+/** One action the model is permitted to choose this turn, by id. */
+export interface DmTurnActionOption {
+  /** Stable id the model echoes back. Never parsed for meaning. */
+  id: string;
+  verb: DmTurnVerb;
+  /** Human-readable description for the prompt. */
+  label: string;
+  /** `move` only: furthest Chebyshev distance this option may travel (>= 1). */
+  maxDistance?: number;
+  /** `check` only: the roll this option performs. */
+  check?: DmTurnCheckParams;
+}
+
+export interface DmTurnIntentPayload {
+  systemId: string;
+  /** The deterministic scene recap — the only situational facts on offer. */
+  facts: string;
+  /** Current round number, for pacing context. */
+  round: number;
+  /** The token whose turn it is. Its id is stamped onto every built intent. */
+  actor: DmTurnTokenRef;
+  /** Every other token on the grid, fold-derived. May be empty. */
+  tokens: DmTurnTokenRef[];
+  /** The ONLY actions the model may choose from. */
+  options: DmTurnActionOption[];
+  /** Structured validation issues from a prior attempt, for a bounded repair. */
+  repairIssues?: string[];
+}
+
+/**
+ * One proposed action. Deliberately NARROWER than `SceneActionIntent`: there is
+ * no intent type, no token id, no modifier and no damage figure here, because
+ * none of those is the model's to choose. It picks an option and, for a `move`,
+ * a destination cell — everything else is stamped from the option and the
+ * folded scene.
+ */
+export interface DmTurnProposal {
+  optionId: string;
+  /** `move` options only: the destination cell in grid coordinates. */
+  destination?: { x: number; y: number };
+  /** One-line justification, optional, presentation-only. */
+  reason?: string;
+}
+
+export interface DmTurnIntentData {
+  proposals: DmTurnProposal[];
+  /** One-line account of the actor's plan, optional, presentation-only. */
+  rationale?: string;
+}
+
+export type DmTurnIntentRequest = AiRequest<'dm-turn-intent', DmTurnIntentPayload>;
+
+function parseDmTurnTokenRef(raw: unknown, label: string): AiParse<DmTurnTokenRef> {
+  if (!isRecord(raw)) return { ok: false, message: `The ${label} must be an object.` };
+  if (typeof raw.id !== 'string' || !raw.id) {
+    return { ok: false, message: `The ${label} needs a non-empty id.` };
+  }
+  if (typeof raw.name !== 'string' || !raw.name) {
+    return { ok: false, message: `The ${label} needs a non-empty name.` };
+  }
+  if (raw.allegiance !== 'party' && raw.allegiance !== 'hostile' && raw.allegiance !== 'neutral') {
+    return { ok: false, message: `The ${label} needs a recognized allegiance.` };
+  }
+  if (!isRecord(raw.position) || !isFiniteNum(raw.position.x) || !isFiniteNum(raw.position.y)) {
+    return { ok: false, message: `The ${label} needs a finite x/y position.` };
+  }
+  return {
+    ok: true,
+    value: {
+      id: raw.id,
+      name: raw.name,
+      allegiance: raw.allegiance,
+      position: { x: raw.position.x, y: raw.position.y },
+    },
+  };
+}
+
+/**
+ * Per-verb option validation. The required extras are checked HERE so a
+ * malformed pool is rejected at the gateway boundary rather than surfacing as a
+ * dropped proposal later — an option the flow could never map is a request bug,
+ * not a model failure.
+ */
+function parseDmTurnActionOption(raw: unknown): AiParse<DmTurnActionOption> {
+  if (!isRecord(raw)) return { ok: false, message: 'Each dm-turn option must be an object.' };
+  if (typeof raw.id !== 'string' || !raw.id) {
+    return { ok: false, message: 'Each dm-turn option needs a non-empty id.' };
+  }
+  if (!isDmTurnVerb(raw.verb)) {
+    return { ok: false, message: `'${String(raw.verb)}' is not a recognized AI-DM verb.` };
+  }
+  if (typeof raw.label !== 'string' || !raw.label) {
+    return { ok: false, message: 'Each dm-turn option needs a non-empty label.' };
+  }
+  if (raw.verb === 'move') {
+    if (!isPositiveInt(raw.maxDistance)) {
+      return { ok: false, message: "A 'move' option needs a positive integer maxDistance." };
+    }
+    return {
+      ok: true,
+      value: { id: raw.id, verb: 'move', label: raw.label, maxDistance: raw.maxDistance },
+    };
+  }
+  if (raw.verb === 'check') {
+    if (!isRecord(raw.check)) {
+      return { ok: false, message: "A 'check' option needs check parameters." };
+    }
+    const { label, modifier, dc } = raw.check;
+    if (typeof label !== 'string' || !label.trim()) {
+      return { ok: false, message: "A 'check' option needs a non-empty check label." };
+    }
+    if (!isFiniteNum(modifier)) {
+      return { ok: false, message: "A 'check' option needs a finite modifier." };
+    }
+    if (dc !== undefined && !isFiniteNum(dc)) {
+      return { ok: false, message: "A 'check' option's dc must be finite when set." };
+    }
+    return {
+      ok: true,
+      value: {
+        id: raw.id,
+        verb: 'check',
+        label: raw.label,
+        check: { label, modifier, ...(dc !== undefined ? { dc } : {}) },
+      },
+    };
+  }
+  return { ok: true, value: { id: raw.id, verb: 'hold', label: raw.label } };
+}
+
+function parseDmTurnIntentPayload(raw: unknown): AiParse<DmTurnIntentPayload> {
+  if (!isRecord(raw)) return { ok: false, message: 'Dm-turn-intent payload must be an object.' };
+  if (typeof raw.systemId !== 'string' || !raw.systemId) {
+    return { ok: false, message: 'Dm-turn-intent payload needs a systemId.' };
+  }
+  if (typeof raw.facts !== 'string' || !raw.facts.trim()) {
+    return { ok: false, message: 'Dm-turn-intent payload needs non-empty facts.' };
+  }
+  if (!isPositiveInt(raw.round)) {
+    return { ok: false, message: 'Dm-turn-intent payload needs a positive integer round.' };
+  }
+  const actor = parseDmTurnTokenRef(raw.actor, 'dm-turn actor');
+  if (!actor.ok) return actor;
+  if (!Array.isArray(raw.tokens)) {
+    return { ok: false, message: 'Dm-turn-intent payload needs a tokens array.' };
+  }
+  const tokens: DmTurnTokenRef[] = [];
+  for (const token of raw.tokens) {
+    const parsed = parseDmTurnTokenRef(token, 'dm-turn token');
+    if (!parsed.ok) return parsed;
+    tokens.push(parsed.value);
+  }
+  if (!Array.isArray(raw.options) || raw.options.length === 0) {
+    return { ok: false, message: 'Dm-turn-intent payload needs a non-empty options list.' };
+  }
+  if (raw.options.length > MAX_DM_TURN_OPTIONS) {
+    return { ok: false, message: 'Dm-turn-intent payload offers too many options.' };
+  }
+  const options: DmTurnActionOption[] = [];
+  for (const option of raw.options) {
+    const parsed = parseDmTurnActionOption(option);
+    if (!parsed.ok) return parsed;
+    options.push(parsed.value);
+  }
+  return {
+    ok: true,
+    value: {
+      systemId: raw.systemId,
+      facts: raw.facts,
+      round: raw.round,
+      actor: actor.value,
+      tokens,
+      options,
+      ...(Array.isArray(raw.repairIssues)
+        ? { repairIssues: raw.repairIssues.filter((s): s is string => typeof s === 'string') }
+        : {}),
+    },
+  };
+}
+
+/**
+ * Envelope-only validation, exactly as `parseAnalyzeMapData` is. Whether an
+ * `optionId` exists, whether a destination is in reach, and whether the
+ * resulting intent is legal are all decided downstream (`src/ai/dmTurn.ts` and
+ * `resolveSceneAction`); re-deciding any of it here would create a second,
+ * quieter opinion about legality.
+ */
+function parseDmTurnIntentData(raw: unknown): AiParse<DmTurnIntentData> {
+  if (!isRecord(raw)) return { ok: false, message: 'Output must be an object.' };
+  if (!Array.isArray(raw.proposals)) {
+    return { ok: false, message: 'Dm-turn-intent output needs a proposals array.' };
+  }
+  if (raw.proposals.length > MAX_DM_TURN_PROPOSALS) {
+    return { ok: false, message: 'Dm-turn-intent output proposes too many actions.' };
+  }
+  const proposals: DmTurnProposal[] = [];
+  for (const proposal of raw.proposals) {
+    if (!isRecord(proposal) || typeof proposal.optionId !== 'string' || !proposal.optionId) {
+      return { ok: false, message: 'Each proposal needs a non-empty optionId.' };
+    }
+    let destination: { x: number; y: number } | undefined;
+    if (proposal.destination !== undefined) {
+      if (
+        !isRecord(proposal.destination) ||
+        !isFiniteNum(proposal.destination.x) ||
+        !isFiniteNum(proposal.destination.y)
+      ) {
+        return { ok: false, message: 'A proposal destination needs finite x and y.' };
+      }
+      destination = { x: proposal.destination.x, y: proposal.destination.y };
+    }
+    proposals.push({
+      optionId: proposal.optionId,
+      ...(destination ? { destination } : {}),
+      ...(typeof proposal.reason === 'string' && proposal.reason
+        ? { reason: proposal.reason }
+        : {}),
+    });
+  }
+  return {
+    ok: true,
+    value: {
+      proposals,
+      ...(typeof raw.rationale === 'string' && raw.rationale ? { rationale: raw.rationale } : {}),
     },
   };
 }

@@ -8,9 +8,13 @@ import {
   type SystemLegalActionsProvider,
   type LegalActionsContext,
   type LegalActionList,
+  type SystemResourcePoolsProvider,
+  type ResourceIntentApplication,
 } from './types';
 import type { CharacterDocument } from '../types/core/document';
 import type { CreationPlan } from '../creation/types';
+import { resolveResourceIntent } from '../rules/resources/resolveResourceIntent';
+import type { ResourceIntent, ResourcePoolList } from '../rules/resources/types';
 
 /**
  * Central Registry for all Game Systems.
@@ -27,6 +31,11 @@ export class SystemRegistry {
   // provider chunk is imported at most once regardless of how often actions are
   // enumerated. Mirrors `validatorCache`.
   private legalActionsCache: Map<string, Promise<SystemLegalActionsProvider<SystemDataModel>>> =
+    new Map();
+
+  // Caches the promise from each system's lazy `loadResourcePools`. Mirrors
+  // `legalActionsCache`.
+  private resourcePoolsCache: Map<string, Promise<SystemResourcePoolsProvider<SystemDataModel>>> =
     new Map();
 
   // Caches the promise from each system's lazy `loadCreationPlan`, so a plan
@@ -261,6 +270,96 @@ export class SystemRegistry {
       this.creationPlanCache.set(
         systemId,
         pending as unknown as Promise<CreationPlan<SystemDataModel>>
+      );
+    }
+    return pending;
+  }
+
+  /**
+   * Enumerate the depletable resource pools of a document when its system
+   * exposes a provider (RFC-005 resource-pool seam).
+   *
+   * Additive and non-throwing by contract, exactly like {@link legalActions}:
+   * an unknown system, or a system without a provider, yields an empty list.
+   */
+  async resourcePools<T extends SystemDataModel = SystemDataModel>(
+    document: CharacterDocument<T>
+  ): Promise<ResourcePoolList> {
+    const systemDef = this.get<T>(document.systemId);
+
+    if (!systemDef) {
+      return { systemId: document.systemId, pools: [] };
+    }
+
+    const provider = await this.resolveResourcePools(systemDef);
+    if (!provider) {
+      return { systemId: systemDef.id, pools: [] };
+    }
+
+    return provider.resourcePools(document, { systemId: systemDef.id });
+  }
+
+  /**
+   * Route one proposed resource change through the full RFC-005 path: the
+   * system enumerates, the SHARED resolver decides, the system persists.
+   *
+   * This is the single code path RFC 005's future-work item asked for — a UI
+   * stepper and an AI-DM proposal emit the same {@link ResourceIntent} and get
+   * the same verdict, so neither can spend a slot the character does not have.
+   * A refused intent returns the caller's own document reference untouched.
+   */
+  async applyResourceIntent<T extends SystemDataModel = SystemDataModel>(
+    document: CharacterDocument<T>,
+    intent: ResourceIntent
+  ): Promise<ResourceIntentApplication<T>> {
+    const list = await this.resourcePools(document);
+    const outcome = resolveResourceIntent(list, intent);
+    if (!outcome.ok) {
+      return { outcome, document };
+    }
+
+    const systemDef = this.get<T>(document.systemId);
+    const provider = systemDef ? await this.resolveResourcePools(systemDef) : undefined;
+    // Unreachable while a pool was enumerated at all — the list came from this
+    // same provider — but a provider that mints an id it cannot write back is a
+    // defect that must surface as a refusal, never as a success that wrote
+    // nothing.
+    const next = provider?.applyResourcePool(document, {
+      poolId: outcome.poolId,
+      pool: outcome.pool,
+    });
+    if (!next) {
+      return {
+        outcome: {
+          ok: false,
+          code: 'unknown-pool',
+          reason: `${list.systemId} cannot persist resource pool '${outcome.poolId}'`,
+        },
+        document,
+      };
+    }
+
+    return { outcome, document: next };
+  }
+
+  /**
+   * Resolve a definition's lazy `loadResourcePools` provider, caching the
+   * resolved instance so the chunk is fetched at most once per system.
+   */
+  private async resolveResourcePools<T extends SystemDataModel>(
+    systemDef: SystemDefinition<T>
+  ): Promise<SystemResourcePoolsProvider<T> | undefined> {
+    if (!systemDef.loadResourcePools) {
+      return undefined;
+    }
+    let pending = this.resourcePoolsCache.get(systemDef.id) as
+      | Promise<SystemResourcePoolsProvider<T>>
+      | undefined;
+    if (!pending) {
+      pending = systemDef.loadResourcePools();
+      this.resourcePoolsCache.set(
+        systemDef.id,
+        pending as Promise<SystemResourcePoolsProvider<SystemDataModel>>
       );
     }
     return pending;

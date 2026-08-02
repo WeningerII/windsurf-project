@@ -60,6 +60,12 @@ export const Dnd35eSystemDef: SystemDefinition<Dnd35eDataModel> = {
     import('../d20-legacy/legalActions').then((m) =>
       m.createD20LegacyLegalActions<Dnd35eDataModel>('dnd-3.5e')
     ),
+  // Shared with PF1e: both editions store Vancian slots in the same
+  // `spellsPerDay` shape (see d20-legacy/d20LegacyResourcePools).
+  loadResourcePools: () =>
+    import('../d20-legacy/d20LegacyResourcePools').then((m) =>
+      m.createD20LegacyResourcePools<Dnd35eDataModel>()
+    ),
   loadCreationPlan: () => import('./creationPlan').then((m) => m.createDnd35eCreationPlan()),
   SheetComponent: makeD20LegacySheet<Dnd35eDataModel>(),
 };

@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
-import { appendSceneEvent, createSceneDocument } from '../../scene/runtime';
+import { appendSceneEvent, createSceneDocument, resolveSceneAction } from '../../scene/runtime';
 import { resolveSceneAttack } from '../../rules';
 import { SceneManager } from '../../components/SceneManager';
 import { registerAllSystems } from '../../systems';
@@ -170,10 +170,13 @@ function SceneHarness({
   campaigns = [],
   onSelectSceneSpy,
   onAppendSceneEventSpy,
+  onLogToCampaign,
 }: {
   initialScenes?: SceneDocument[];
   documents?: CharacterDocument<SystemDataModel>[];
   campaigns?: Campaign[];
+  /** Present only when a test needs the campaign-linked Session Recap panel. */
+  onLogToCampaign?: (campaignId: string, title: string, body: string) => void;
   /** Observes every shell-seam selection request (build-specs task 12). */
   onSelectSceneSpy?: (id: string | null) => void;
   /** Observes every appended scene event (e.g. the authored marker.added). */
@@ -206,6 +209,7 @@ function SceneHarness({
         campaigns={campaigns}
         selectedSceneId={selectedSceneId}
         onSelectScene={handleSelectScene}
+        {...(onLogToCampaign ? { onLogToCampaign } : {})}
         onAppendSceneEvent={(sceneId: string, event: SceneEvent) => {
           onAppendSceneEventSpy?.(sceneId, event);
           setScenes((current) =>
@@ -850,5 +854,236 @@ describe('SceneManager — Phase-4 scene-drag flag mutual exclusion', () => {
       ([, event]) => (event as SceneEvent).type === 'token.added'
     );
     expect(placed).toBeDefined();
+  });
+});
+
+/**
+ * WORK_PLAN §5.1 — the AI-DM and narration-critique flows had no UI entry
+ * point at all. These drive them the way the encounter-draft suite above does:
+ * real components, real gateway client, only `fetch` stubbed, so what is
+ * asserted is that a person clicking in this surface reaches the flow.
+ */
+describe('SceneManager — AI-DM turn (RFC 007)', () => {
+  function sceneWithToken(campaignId?: string): SceneDocument {
+    const base = makeScene(
+      campaignId
+        ? {
+            ...createSceneDocument({
+              id: 'scene-1',
+              name: 'Training Room',
+              systemId: 'dnd-5e-2024',
+              grid: { width: 4, height: 4 },
+              campaignId,
+              now,
+            }),
+          }
+        : {}
+    );
+    const placed = resolveSceneAction(
+      base,
+      {
+        type: 'place-token',
+        token: { id: 't1', name: 'Grish', kind: 'monster', position: { x: 0, y: 0 }, size: 1 },
+      },
+      { eventId: 'seed-token', createdAt: now }
+    );
+    const withToken = appendSceneEvent(base, placed.event!);
+    if (!campaignId) return withToken;
+    // The recap must be non-empty for the narration affordance to be live.
+    const rolled = resolveSceneAction(
+      withToken,
+      {
+        type: 'roll-check',
+        actorId: 'gm',
+        actorTokenId: 't1',
+        label: 'Perception',
+        modifier: 3,
+        dc: 15,
+      },
+      { eventId: 'seed-check', createdAt: now }
+    );
+    return appendSceneEvent(withToken, rolled.event!);
+  }
+
+  it('default-OFF: the AI-DM affordance does not exist', async () => {
+    const user = userEvent.setup();
+    render(<SceneHarness initialScenes={[sceneWithToken()]} />);
+    await user.click(screen.getByRole('button', { name: /Token Grish/i }));
+    expect(screen.queryByRole('button', { name: /Propose turn/i })).not.toBeInTheDocument();
+  });
+
+  it('proposes a turn through the gateway and applies it only when the GM accepts', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    const fetchSpy = vi.fn(async () => ({
+      json: async () => ({
+        ok: true,
+        task: 'dm-turn-intent',
+        data: {
+          proposals: [{ optionId: 'move', destination: { x: 2, y: 2 }, reason: 'Flank.' }],
+          rationale: 'Grish circles for a better angle.',
+        },
+        usage: { source: 'fixture' },
+      }),
+    }));
+    vi.stubGlobal('fetch', fetchSpy as unknown as typeof fetch);
+
+    const user = userEvent.setup();
+    const onAppendSceneEventSpy = vi.fn();
+    render(
+      <SceneHarness
+        initialScenes={[sceneWithToken()]}
+        onAppendSceneEventSpy={onAppendSceneEventSpy}
+      />
+    );
+
+    // Selecting the token is what puts a creature "up" for the AI-DM.
+    await user.click(screen.getByRole('button', { name: /Token Grish/i }));
+    await user.click(screen.getByRole('button', { name: /Propose turn/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/Move to \(2, 2\)/)).toBeInTheDocument();
+    });
+    expect(fetchSpy).toHaveBeenCalledWith(
+      '/.netlify/functions/ai-gateway',
+      expect.objectContaining({ method: 'POST' })
+    );
+    // The proposal is on screen and the log is untouched.
+    expect(
+      onAppendSceneEventSpy.mock.calls.some(
+        ([, event]) => (event as SceneEvent).type === 'token.moved'
+      )
+    ).toBe(false);
+
+    await user.click(screen.getByRole('button', { name: /Apply turn/i }));
+
+    const moved = onAppendSceneEventSpy.mock.calls.find(
+      ([, event]) => (event as SceneEvent).type === 'token.moved'
+    );
+    expect(moved).toBeDefined();
+  });
+
+  it('shows the fact-check beside the narration draft and never blocks the log', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        json: async () => ({
+          ok: true,
+          task: 'scene-narration',
+          // Asserts a defeat the scene does not record → the deterministic
+          // critic refutes it, with no second model call involved.
+          data: { narrative: 'Grish slumps and dies as the torchlight gutters.' },
+          usage: { source: 'fixture' },
+        }),
+      })) as unknown as typeof fetch
+    );
+
+    const user = userEvent.setup();
+    const campaign = makeCampaign({ id: 'campaign-1' });
+    const scene = sceneWithToken(campaign.id);
+    render(
+      <SceneHarness initialScenes={[scene]} campaigns={[campaign]} onLogToCampaign={vi.fn()} />
+    );
+
+    await user.click(screen.getByRole('button', { name: /Narrate with AI/i }));
+    await screen.findByRole('textbox', { name: /AI narration draft/i });
+
+    await user.click(screen.getByRole('button', { name: /Fact-check/i }));
+
+    expect(await screen.findByText(/Contradicts the facts/i)).toBeInTheDocument();
+    expect(screen.getByText(/the scene records no such defeat/i)).toBeInTheDocument();
+    // Advisory, not a gate: the GM can still log the prose.
+    expect(screen.getByRole('button', { name: /Log to Night Watch/i })).toBeEnabled();
+  });
+
+  /** A scene whose recap records Grish down, so a narration saying so is TRUE. */
+  function sceneWithDefeatedToken(campaignId: string): SceneDocument {
+    const base = makeScene({
+      ...createSceneDocument({
+        id: 'scene-1',
+        name: 'Training Room',
+        systemId: 'dnd-5e-2024',
+        grid: { width: 4, height: 4 },
+        campaignId,
+        now,
+      }),
+    });
+    const placed = resolveSceneAction(
+      base,
+      {
+        type: 'place-token',
+        token: {
+          id: 't1',
+          name: 'Grish',
+          kind: 'monster',
+          position: { x: 0, y: 0 },
+          size: 1,
+          hp: { current: 6, max: 6 },
+        },
+      },
+      { eventId: 'seed-token', createdAt: now }
+    );
+    const withToken = appendSceneEvent(base, placed.event!);
+    const felled = resolveSceneAction(
+      withToken,
+      { type: 'apply-damage', actorId: 'gm', damages: [{ tokenId: 't1', amount: 6 }] },
+      { eventId: 'seed-damage', createdAt: now }
+    );
+    return appendSceneEvent(withToken, felled.event!);
+  }
+
+  /**
+   * REGRESSION: the fact set the critic judges against is the one the NARRATOR
+   * was handed, not a re-reading of a scene that has since moved on.
+   *
+   * The recap is a live view of the folded scene. Clearing a downed creature off
+   * the map — ordinary table behaviour, and the one thing a GM does right before
+   * writing up the fight — drops it from the recap AND from `facts.names`. A
+   * critic rebuilt at Fact-check time then sees a narration naming a creature
+   * "the facts do not mention" and returns `refuted`: a contradiction produced
+   * entirely by its own staleness, shown to the GM in destructive red against
+   * prose that was accurate when it was written.
+   */
+  it('REGRESSION: fact-checks prose against the facts it was narrated FROM, not a scene that moved on', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        json: async () => ({
+          ok: true,
+          task: 'scene-narration',
+          // True of the scene at the moment it is generated: Grish is at 0 hp,
+          // and the recap handed to the narrator says "defeated Grish".
+          data: { narrative: 'The torch gutters as Grish falls to the flagstones.' },
+          usage: { source: 'fixture' },
+        }),
+      })) as unknown as typeof fetch
+    );
+
+    const user = userEvent.setup();
+    const campaign = makeCampaign({ id: 'campaign-1' });
+    render(
+      <SceneHarness
+        initialScenes={[sceneWithDefeatedToken(campaign.id)]}
+        campaigns={[campaign]}
+        onLogToCampaign={vi.fn()}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: /Narrate with AI/i }));
+    await screen.findByRole('textbox', { name: /AI narration draft/i });
+
+    // Play continues: the corpse comes off the map. The prose is untouched.
+    await user.click(screen.getByRole('button', { name: /Token Grish/i }));
+    await user.click(screen.getByRole('button', { name: /Remove token/i }));
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /Token Grish/i })).not.toBeInTheDocument();
+    });
+
+    await user.click(screen.getByRole('button', { name: /Fact-check/i }));
+
+    expect(await screen.findByText(/Supported by the facts/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Contradicts the facts/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/which the facts do not mention/i)).not.toBeInTheDocument();
   });
 });

@@ -53,6 +53,12 @@ export const Pf1eSystemDef: SystemDefinition<Pf1eDataModel> = {
     import('../d20-legacy/legalActions').then((m) =>
       m.createD20LegacyLegalActions<Pf1eDataModel>('pf1e')
     ),
+  // Shared with 3.5e: both editions store Vancian slots in the same
+  // `spellsPerDay` shape (see d20-legacy/d20LegacyResourcePools).
+  loadResourcePools: () =>
+    import('../d20-legacy/d20LegacyResourcePools').then((m) =>
+      m.createD20LegacyResourcePools<Pf1eDataModel>()
+    ),
   loadCreationPlan: () => import('./creationPlan').then((m) => m.createPf1eCreationPlan()),
   SheetComponent: makeD20LegacySheet<Pf1eDataModel>(),
 };

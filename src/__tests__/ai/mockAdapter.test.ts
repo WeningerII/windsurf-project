@@ -25,6 +25,41 @@ describe('createMockAdapter', () => {
     expect(parseTaskData('scene-narration', out).ok).toBe(true);
   });
 
+  it('produces narration-critique output that passes parseTaskData', async () => {
+    const narrative = 'The ogre fell. The party moved on.';
+    const out = await adapter.generate('narration-critique', {
+      narrative,
+      facts: 'Combat: defeated the ogre.',
+    });
+    expect(parseTaskData('narration-critique', out).ok).toBe(true);
+    // The quote must be verbatim in the narration, or the flow discards it.
+    const quote = (out as { findings: Array<{ quote: string }> }).findings[0].quote;
+    expect(narrative).toContain(quote);
+  });
+
+  it('produces dm-turn-intent output that passes parseTaskData and stays in the pool', async () => {
+    const options = [
+      { id: 'move', verb: 'move', label: 'Move up to 3 squares', maxDistance: 3 },
+      { id: 'hold', verb: 'hold', label: 'Do nothing and end the turn' },
+    ];
+    const out = (await adapter.generate('dm-turn-intent', {
+      systemId: 'daggerheart',
+      facts: 'Combat: reached round 2.',
+      round: 2,
+      actor: { id: 'goblin', name: 'Goblin', allegiance: 'hostile', position: { x: 5, y: 5 } },
+      tokens: [],
+      options,
+    })) as { proposals: Array<{ optionId: string; destination?: { x: number; y: number } }> };
+
+    expect(parseTaskData('dm-turn-intent', out).ok).toBe(true);
+    // The mock must choose from the OFFERED pool, like the encounter mock does:
+    // a mock that reliably fails its own gate teaches nothing about the wiring.
+    expect(options.map((option) => option.id)).toContain(out.proposals[0]!.optionId);
+    // A move needs a destination one step from the actor, so the reach gate in
+    // `dmProposalToIntent` passes and the SCENE decides the rest.
+    expect(out.proposals[0]!.destination).toEqual({ x: 4, y: 5 });
+  });
+
   it('produces identify-creature output that passes parseTaskData', async () => {
     const out = await adapter.generate('identify-creature', {
       candidates: [{ id: 'owlbear', name: 'Owlbear' }],

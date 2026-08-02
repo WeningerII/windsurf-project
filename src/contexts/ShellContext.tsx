@@ -1,5 +1,7 @@
-import { useCallback, useMemo, useReducer, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react';
 import {
+  decodeShellNav,
+  encodeShellNav,
   INITIAL_NAV_STATE,
   ShellContext,
   shellReducer,
@@ -10,10 +12,27 @@ import {
   type Surface,
 } from './shell-context';
 
+/** Coalesce rapid nav changes into one history write. */
+const HASH_WRITE_DEBOUNCE_MS = 150;
+
 interface ShellProviderProps {
   children: ReactNode;
   /** Test seam: start the shell somewhere other than Library/Characters. */
   initialState?: ShellNavState;
+  /**
+   * Opt OUT of reading and writing `location.hash` (Phase 7 tasks 1-2).
+   *
+   * Defaults to ON. Tests that assert a specific `initialState` pass `false`,
+   * because seeding from the hash would otherwise let one test's URL leak into
+   * the next — jsdom shares a `location` across a file.
+   */
+  syncHash?: boolean;
+}
+
+/** Seed from the hash when enabled, else honour the explicit initial state. */
+function resolveInitialState(initialState: ShellNavState, syncHash: boolean): ShellNavState {
+  if (!syncHash || typeof window === 'undefined') return initialState;
+  return decodeShellNav(window.location.hash);
 }
 
 /**
@@ -23,8 +42,43 @@ interface ShellProviderProps {
  * state that Phase 1 kept inside `useAppNav`, and memoizes the named action
  * creators so consumers' effect dependencies stay referentially stable.
  */
-export function ShellProvider({ children, initialState = INITIAL_NAV_STATE }: ShellProviderProps) {
-  const [nav, dispatch] = useReducer(shellReducer, initialState);
+export function ShellProvider({
+  children,
+  initialState = INITIAL_NAV_STATE,
+  syncHash = true,
+}: ShellProviderProps) {
+  const [nav, dispatch] = useReducer(shellReducer, resolveInitialState(initialState, syncHash));
+  const hashWriteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Mirror nav state into the URL hash, debounced.
+  //
+  // `replaceState`, NOT `pushState`: the Phase-1 "deferred router / no
+  // deep-linking" decision means a surface switch must not grow the history
+  // stack, or Back becomes a per-tab-click undo the shell does not model.
+  //
+  // Writing only on CHANGE (and only when the encoding actually differs) keeps
+  // a re-render from touching history at all.
+  useEffect(() => {
+    if (!syncHash || typeof window === 'undefined') return;
+
+    const next = encodeShellNav(nav);
+    const current = window.location.hash;
+    if (next === current || (next === '' && current === '')) return;
+
+    if (hashWriteTimer.current !== null) clearTimeout(hashWriteTimer.current);
+    hashWriteTimer.current = setTimeout(() => {
+      hashWriteTimer.current = null;
+      const url = `${window.location.pathname}${window.location.search}${next}`;
+      window.history.replaceState(window.history.state, '', url);
+    }, HASH_WRITE_DEBOUNCE_MS);
+
+    return () => {
+      if (hashWriteTimer.current !== null) {
+        clearTimeout(hashWriteTimer.current);
+        hashWriteTimer.current = null;
+      }
+    };
+  }, [nav, syncHash]);
 
   const openSheet = useCallback((docId: string) => dispatch({ type: 'openSheet', docId }), []);
   const closeSheet = useCallback(() => dispatch({ type: 'closeSheet' }), []);

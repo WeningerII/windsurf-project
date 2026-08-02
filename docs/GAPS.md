@@ -126,12 +126,12 @@ rollup.
   wrong-edition provenance defect that re-transcription fixed). PF1e Greater
   Teleport and 3.5e Greater Shadow Evocation were encoded earlier.
 - The genuine residual is now the 3.5e monster missing list, itemized in
-  `srd-coverage.md`. The container-like rows the first collapse pass missed
-  ("Chromatic Dragons", "Celestial Creature", then Ooze/Planetouched/Snake/
-  Sprite/Swarm and the stat-block-less Half-Celestial/Half-Fiend templates)
-  are now dropped; the confirmed individuals **Lich, Ghost, Salamander,
-  Hydra** remain counted as genuine misses, as do Vampire/Skeleton/Zombie/
-  Half-Dragon/Fungus/Horse (their sections do carry a stat block).
+  `srd-coverage.md`. **It is 155, not the 30 recorded here before 2026-08-02**:
+  the parse fix below raised the denominator 207 → 332, and the product ships
+  none of the 125 stat blocks that were added. The confirmed individuals
+  **Lich, Ghost, Salamander, Hydra** remain counted as genuine misses, as do
+  Vampire/Skeleton/Zombie/Half-Dragon/Fungus/Horse (their sections do carry a
+  stat block).
 - **Monster denominator shape-mismatch [CLOSED 2026-07-25]:**
   the 3.5e and PF1e monster denominators previously counted taxonomic CONTAINER
   entries — the SRD 3.5 category headers (Angel/Dragon/Elemental/…) and the PF1e
@@ -148,6 +148,27 @@ rollup.
   Half-Fiend as template headers carrying no stat table at all). Live
   percentages are in `docs/generated/srd-coverage.md` — do not restate them
   here.
+- **Monster denominator DEPTH defect [CLOSED 2026-08-02]:** the 2026-07-25
+  closure above was incomplete, and its own alibi text hid the hole. The parse
+  collected `## ` headings ONLY, so every member of the SRD's 26 taxonomic
+  groups — which have no `## ` heading at all — was absent from the
+  denominator: no demon, devil, angel, archon, dinosaur, dire animal,
+  elemental, genie, giant, golem, hag, inevitable, lycanthrope, mephit, naga,
+  nightshade, ooze, planetouched, sphinx, sprite, swarm or snake, and none of
+  the ten true dragons. Dropping the containers therefore removed the parents
+  of members that were never counted, and 85.5% was measuring a denominator
+  with them taken out. `Formian` was additionally wrong on the hand-maintained
+  container list — it owns its own combined 5-caste table — so the formians
+  left the denominator entirely. `parseSrd35eMonsterHeadings` now reads BOTH
+  depths and the container set is DERIVED (a `## ` with no stat table is a
+  container iff a `### ` child was counted under it), which is what makes the
+  hand-list drift unrepeatable. The age/size fold claimed above never matched
+  anything and is deleted — dragon ages and elemental sizes are table ROWS.
+  Denominator 207 → 332. This survived behind PASSING tests whose fixtures
+  described flat `## Astral Deva` / `## Young Black Dragon` headings the SRD
+  has never had; the fixture is now verbatim upstream text
+  (`src/__tests__/scripts/fixtures/srd35-monsters-excerpt.md`) and the pinned
+  `scripts/data/srd-overinclusion-manifest.json` is asserted against directly.
 - **M&M equipment coverage target [CLOSED — see §17]:** the `mam3e`/`equipment`
   `CoverageTarget` (frnprt EQUIPMENT vs the loader) was wired and run on
   2026-07-21, and the shortfall it exposed was then remediated by the Hero SRD
@@ -2977,18 +2998,38 @@ Not a section — a reading aid, kept last so it stays out of the numbering. It 
 re-derived each time this file is audited, and it says what the numbered sections
 above already say.
 
-1. **§15(b) and §15(c) — content integrity.** Hand-written 5e-2024 monsters and
-   backgrounds carrying content the source they cite does not contain.
-   §15(c) is a licensing exposure of the same class as §11's OC-1, and neither
-   the name-based reverse diff nor the scalar fidelity gate can see it. Largest
-   single body of genuine work in the repo.
-2. **§11 OC-1 — the owner decision.** Cheap to make, and it is blocking a
-   self-expiring quarantine that otherwise sits indefinitely.
-3. **§2 — compute.** Expand the registers toward the full L1–L10 set, and give
-   the build-legality layer a user-facing surface.
-4. **§19 — M&M adversaries.** The only system with no creature catalog, and the
-   one thing keeping the 7×N parity matrix from closing honestly. The source
-   exists and is open; the obstacle is that this sandbox cannot reach it.
+**Re-derived 2026-08-02.** Three of the four entries that stood here are closed;
+what replaced them is smaller and differently shaped.
+
+1. **§11 OC-1 — the owner decision, and now the ONLY open licensing item.**
+   Great Weapon Master and Sharpshooter cite SRD 5.1, which opens exactly one
+   feat (Grappler). The feat *entries* are gone with the rest of the deleted
+   content, but the **rider mechanics** still ship in
+   `src/rules/conditions/dnd5eRiders.ts`. That is outside `src/data/`, so
+   `check:provenance-over-inclusion` — which reports `licensing-class total:
+   none` — structurally cannot see it; `check:rules-provenance` is the gate that
+   holds it.
+2. **§2 — compute.** The registers now carry 276 verified entries across
+   L1–L10, Tier A **and** Tier B. What remains is the other half of this entry,
+   untouched: **the build-legality layer still has no user-facing surface.**
+   `makeMeAGameFlow` is the only non-test caller of
+   `systemRegistry.validateDocument`, so nothing a user can click invokes build
+   legality (`WORK_PLAN` §5.1).
+3. **Prose fidelity, unaudited in all seven systems.** Every fidelity finding so
+   far is scalar. §27.2 is the reason this is now the largest body of unknown:
+   the 5e-2024 backgrounds proved a legitimate NAME can carry the wrong
+   edition's text invisibly, and field-level comparison covers 5e monsters and
+   backgrounds and nothing else.
+
+~~1. §15(b) and §15(c) — content integrity.~~ **CLOSED 2026-08-02** (§27.2). The
+2024 monsters were reconciled 2026-07-28 and the four backgrounds re-encoded from
+the real SRD 5.2 source. Closed by hand, not by a gate — see item 3.
+
+~~4. §19 — M&M adversaries.~~ **CLOSED 2026-08-01** as a recorded source
+limitation (§19.5). Not "the sandbox cannot reach it": the data WAS found, and
+refused, because the only reachable copy is an unlicensed scrape with named
+Product Identity interleaved. The 7×N matrix closes at 6 of 7 with that reason
+attached (`WORK_PLAN` §4.1).
 
 **Corrected 2026-07-28.** Item 3 used to read *"§6 — execute the Denominator-A
 demotion"*. It was executed on 2026-07-27 and merged in `62ac50a`; PF2e content%

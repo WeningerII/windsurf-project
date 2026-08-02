@@ -80,6 +80,10 @@ export const Dnd5eSystemDef: SystemDefinition<Dnd5eDataModel> = {
     import('./shared/legalActions').then((m) =>
       m.createDnd5eLegalActions<Dnd5eDataModel>('dnd-5e-2014')
     ),
+  // Shared with the 2024 edition for the same reason: the editions differ in
+  // rest rules, not in which counters exist, and this seam enumerates counters.
+  loadResourcePools: () =>
+    import('./shared/dnd5eResourcePools').then((m) => m.createDnd5eResourcePools<Dnd5eDataModel>()),
   // Guided-creation plan for the system-agnostic wizard shell. Shared factory
   // with the 2024 edition; code-split out of the eager bootstrap chunk.
   loadCreationPlan: () =>

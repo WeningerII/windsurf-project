@@ -1,0 +1,1612 @@
+{
+  "ledgers": {
+    "dnd-5e-2014/cleric-armor-shield-magic-items": [
+      {
+        "id": "dnd-5e-2014:defense:armorclass:leather-armor:equipped-armor-base-ac:11",
+        "systemId": "dnd-5e-2014",
+        "target": "armorClass",
+        "source": {
+          "kind": "item",
+          "label": "leather-armor",
+          "id": "leather-armor",
+          "path": "system.equipment"
+        },
+        "label": "Equipped armor base AC",
+        "operation": "set",
+        "value": 11,
+        "category": "defense",
+        "details": {
+          "armorType": "light"
+        }
+      },
+      {
+        "id": "dnd-5e-2014:defense:armorclass:dexterity-modifier:dexterity-ac-contribution:2",
+        "systemId": "dnd-5e-2014",
+        "target": "armorClass",
+        "source": {
+          "kind": "system",
+          "label": "Dexterity modifier",
+          "id": "dexterity-modifier"
+        },
+        "label": "Dexterity AC contribution",
+        "operation": "add",
+        "value": 2,
+        "category": "defense",
+        "details": {
+          "dexterityScore": 14,
+          "rawDexterityModifier": 2,
+          "armorType": "light"
+        }
+      },
+      {
+        "id": "dnd-5e-2014:defense:armorclass:shield:shield-ac-bonus:2",
+        "systemId": "dnd-5e-2014",
+        "target": "armorClass",
+        "source": {
+          "kind": "item",
+          "label": "shield",
+          "id": "shield",
+          "path": "system.equipment"
+        },
+        "label": "Shield AC bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "defense"
+      },
+      {
+        "id": "dnd-5e-2014:ac:ring-of-protection:ac:1",
+        "systemId": "dnd-5e-2014",
+        "target": "armorClass",
+        "source": {
+          "kind": "item",
+          "label": "ring-of-protection",
+          "id": "ring-of-protection"
+        },
+        "label": "ring-of-protection AC bonus",
+        "operation": "add",
+        "value": 1,
+        "category": "defense"
+      },
+      {
+        "id": "dnd-5e-2014:attack:longsword-plus-1:atk:1",
+        "systemId": "dnd-5e-2014",
+        "target": "attack",
+        "source": {
+          "kind": "item",
+          "label": "+1 Longsword",
+          "id": "longsword-plus-1"
+        },
+        "label": "+1 Longsword attack bonus",
+        "operation": "add",
+        "value": 1,
+        "category": "other"
+      },
+      {
+        "id": "dnd-5e-2014:damage.slashing:longsword-plus-1:dmg:1",
+        "systemId": "dnd-5e-2014",
+        "target": "damage.slashing",
+        "source": {
+          "kind": "item",
+          "label": "+1 Longsword",
+          "id": "longsword-plus-1"
+        },
+        "label": "+1 Longsword damage bonus",
+        "operation": "add",
+        "value": 1,
+        "category": "other"
+      },
+      {
+        "id": "dnd-5e-2014:proficiency:proficiencies.armor:class-template-proficiencies:class-armor-proficiencies:light-medium",
+        "systemId": "dnd-5e-2014",
+        "target": "proficiencies.armor",
+        "source": {
+          "kind": "class",
+          "label": "Class template proficiencies",
+          "path": "system.templateState.classDerivedProficiencies.armor"
+        },
+        "label": "Class armor proficiencies",
+        "operation": "add",
+        "value": ["light", "medium"],
+        "category": "proficiency"
+      },
+      {
+        "id": "dnd-5e-2014:proficiency:proficiencies.weapons:class-template-proficiencies:class-weapon-proficiencies:simple",
+        "systemId": "dnd-5e-2014",
+        "target": "proficiencies.weapons",
+        "source": {
+          "kind": "class",
+          "label": "Class template proficiencies",
+          "path": "system.templateState.classDerivedProficiencies.weapons"
+        },
+        "label": "Class weapon proficiencies",
+        "operation": "add",
+        "value": ["simple"],
+        "category": "proficiency"
+      },
+      {
+        "id": "dnd-5e-2014:proficiency:proficiencies.savingthrows:class-template-proficiencies:class-saving-throw-proficiencies:wis-cha",
+        "systemId": "dnd-5e-2014",
+        "target": "proficiencies.savingThrows",
+        "source": {
+          "kind": "class",
+          "label": "Class template proficiencies",
+          "path": "system.templateState.classDerivedProficiencies.savingThrows"
+        },
+        "label": "Class saving throw proficiencies",
+        "operation": "add",
+        "value": ["wis", "cha"],
+        "category": "proficiency"
+      },
+      {
+        "id": "dnd-5e-2014:proficiency:proficiencies.tools:background-template-proficiencies:background-tool-proficiencies:herbalism-kit",
+        "systemId": "dnd-5e-2014",
+        "target": "proficiencies.tools",
+        "source": {
+          "kind": "background",
+          "label": "Background template proficiencies",
+          "path": "system.templateState.backgroundDerived.tools"
+        },
+        "label": "Background tool proficiencies",
+        "operation": "add",
+        "value": ["herbalism-kit"],
+        "category": "proficiency"
+      },
+      {
+        "id": "dnd-5e-2014:proficiency:proficiencies.languages:background-template-proficiencies:background-language-proficiencies:celestial",
+        "systemId": "dnd-5e-2014",
+        "target": "proficiencies.languages",
+        "source": {
+          "kind": "background",
+          "label": "Background template proficiencies",
+          "path": "system.templateState.backgroundDerived.languages"
+        },
+        "label": "Background language proficiencies",
+        "operation": "add",
+        "value": ["celestial"],
+        "category": "proficiency"
+      },
+      {
+        "id": "dnd-5e-2014:ability:baseattributes.wis:feat-automation:feat-ability-score-automation:1",
+        "systemId": "dnd-5e-2014",
+        "target": "baseAttributes.wis",
+        "source": {
+          "kind": "feat",
+          "label": "Feat automation",
+          "path": "system.templateState.featDerivedAutomation.abilityScores.wis"
+        },
+        "label": "Feat ability score automation",
+        "operation": "add",
+        "value": 1,
+        "category": "ability"
+      },
+      {
+        "id": "dnd-5e-2014:proficiency:proficiencies.armor:feat-automation:feat-armor-proficiencies:heavy",
+        "systemId": "dnd-5e-2014",
+        "target": "proficiencies.armor",
+        "source": {
+          "kind": "feat",
+          "label": "Feat automation",
+          "path": "system.templateState.featDerivedAutomation.armor"
+        },
+        "label": "Feat armor proficiencies",
+        "operation": "add",
+        "value": ["heavy"],
+        "category": "proficiency"
+      },
+      {
+        "id": "dnd-5e-2014:spell:spellcasting.alwayspreparedspellids:life-domain-spells:always-prepared-spell-grant:bless",
+        "systemId": "dnd-5e-2014",
+        "target": "spellcasting.alwaysPreparedSpellIds",
+        "source": {
+          "kind": "class",
+          "label": "Life Domain Spells",
+          "id": "Life Domain Spells"
+        },
+        "label": "Always-prepared spell grant",
+        "operation": "add",
+        "value": "bless",
+        "category": "spell",
+        "details": {
+          "spellId": "bless",
+          "minLevel": 1,
+          "countsAgainstPreparedLimit": false
+        }
+      },
+      {
+        "id": "dnd-5e-2014:spell:spellcasting.alwayspreparedspellids:life-domain-spells:always-prepared-spell-grant:cure-wounds",
+        "systemId": "dnd-5e-2014",
+        "target": "spellcasting.alwaysPreparedSpellIds",
+        "source": {
+          "kind": "class",
+          "label": "Life Domain Spells",
+          "id": "Life Domain Spells"
+        },
+        "label": "Always-prepared spell grant",
+        "operation": "add",
+        "value": "cure-wounds",
+        "category": "spell",
+        "details": {
+          "spellId": "cure-wounds",
+          "minLevel": 1,
+          "countsAgainstPreparedLimit": false
+        }
+      },
+      {
+        "id": "dnd-5e-2014:spell:spellcasting.alwayspreparedspellids:life-domain-spells:always-prepared-spell-grant:lesser-restoration",
+        "systemId": "dnd-5e-2014",
+        "target": "spellcasting.alwaysPreparedSpellIds",
+        "source": {
+          "kind": "class",
+          "label": "Life Domain Spells",
+          "id": "Life Domain Spells"
+        },
+        "label": "Always-prepared spell grant",
+        "operation": "add",
+        "value": "lesser-restoration",
+        "category": "spell",
+        "details": {
+          "spellId": "lesser-restoration",
+          "minLevel": 3,
+          "countsAgainstPreparedLimit": false
+        }
+      },
+      {
+        "id": "dnd-5e-2014:spell:spellcasting.alwayspreparedspellids:life-domain-spells:always-prepared-spell-grant:spiritual-weapon",
+        "systemId": "dnd-5e-2014",
+        "target": "spellcasting.alwaysPreparedSpellIds",
+        "source": {
+          "kind": "class",
+          "label": "Life Domain Spells",
+          "id": "Life Domain Spells"
+        },
+        "label": "Always-prepared spell grant",
+        "operation": "add",
+        "value": "spiritual-weapon",
+        "category": "spell",
+        "details": {
+          "spellId": "spiritual-weapon",
+          "minLevel": 3,
+          "countsAgainstPreparedLimit": false
+        }
+      },
+      {
+        "id": "dnd-5e-2014:spell:spellcasting.classes.cleric.spellsavedc:spell-save-dc-base:spell-save-dc-base:8",
+        "systemId": "dnd-5e-2014",
+        "target": "spellcasting.classes.cleric.spellSaveDc",
+        "source": {
+          "kind": "system",
+          "label": "Spell save DC base",
+          "id": "spell-save-dc-base",
+          "path": "system.spellcasting.classes"
+        },
+        "label": "Spell save DC base",
+        "operation": "set",
+        "value": 8,
+        "category": "spell",
+        "details": {
+          "classId": "cleric",
+          "ability": "wis",
+          "abilityScore": 16,
+          "proficiencyBonus": 2,
+          "spellcastingAbilityModifier": 3,
+          "spellSaveDc": 13,
+          "spellAttackBonus": 5
+        }
+      },
+      {
+        "id": "dnd-5e-2014:spell:spellcasting.classes.cleric.spellsavedc:cleric:spell-save-dc-proficiency-bonus:2",
+        "systemId": "dnd-5e-2014",
+        "target": "spellcasting.classes.cleric.spellSaveDc",
+        "source": {
+          "kind": "class",
+          "label": "cleric",
+          "id": "cleric",
+          "path": "system.spellcasting.classes"
+        },
+        "label": "Spell save DC proficiency bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "spell",
+        "details": {
+          "classId": "cleric",
+          "ability": "wis",
+          "abilityScore": 16,
+          "proficiencyBonus": 2,
+          "spellcastingAbilityModifier": 3,
+          "spellSaveDc": 13,
+          "spellAttackBonus": 5
+        }
+      },
+      {
+        "id": "dnd-5e-2014:spell:spellcasting.classes.cleric.spellsavedc:wis-modifier:spell-save-dc-ability-modifier:3",
+        "systemId": "dnd-5e-2014",
+        "target": "spellcasting.classes.cleric.spellSaveDc",
+        "source": {
+          "kind": "system",
+          "label": "wis modifier",
+          "id": "wis-modifier",
+          "path": "system.spellcasting.classes"
+        },
+        "label": "Spell save DC ability modifier",
+        "operation": "add",
+        "value": 3,
+        "category": "spell",
+        "details": {
+          "classId": "cleric",
+          "ability": "wis",
+          "abilityScore": 16,
+          "proficiencyBonus": 2,
+          "spellcastingAbilityModifier": 3,
+          "spellSaveDc": 13,
+          "spellAttackBonus": 5
+        }
+      },
+      {
+        "id": "dnd-5e-2014:spell:spellcasting.classes.cleric.spellattackbonus:cleric:spell-attack-proficiency-bonus:2",
+        "systemId": "dnd-5e-2014",
+        "target": "spellcasting.classes.cleric.spellAttackBonus",
+        "source": {
+          "kind": "class",
+          "label": "cleric",
+          "id": "cleric",
+          "path": "system.spellcasting.classes"
+        },
+        "label": "Spell attack proficiency bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "spell",
+        "details": {
+          "classId": "cleric",
+          "ability": "wis",
+          "abilityScore": 16,
+          "proficiencyBonus": 2,
+          "spellcastingAbilityModifier": 3,
+          "spellSaveDc": 13,
+          "spellAttackBonus": 5
+        }
+      },
+      {
+        "id": "dnd-5e-2014:spell:spellcasting.classes.cleric.spellattackbonus:wis-modifier:spell-attack-ability-modifier:3",
+        "systemId": "dnd-5e-2014",
+        "target": "spellcasting.classes.cleric.spellAttackBonus",
+        "source": {
+          "kind": "system",
+          "label": "wis modifier",
+          "id": "wis-modifier",
+          "path": "system.spellcasting.classes"
+        },
+        "label": "Spell attack ability modifier",
+        "operation": "add",
+        "value": 3,
+        "category": "spell",
+        "details": {
+          "classId": "cleric",
+          "ability": "wis",
+          "abilityScore": 16,
+          "proficiencyBonus": 2,
+          "spellcastingAbilityModifier": 3,
+          "spellSaveDc": 13,
+          "spellAttackBonus": 5
+        }
+      }
+    ],
+    "dnd-5e-2024/cleric-armor-shield-magic-items": [
+      {
+        "id": "dnd-5e-2024:defense:armorclass:leather-armor:equipped-armor-base-ac:11",
+        "systemId": "dnd-5e-2024",
+        "target": "armorClass",
+        "source": {
+          "kind": "item",
+          "label": "leather-armor",
+          "id": "leather-armor",
+          "path": "system.equipment"
+        },
+        "label": "Equipped armor base AC",
+        "operation": "set",
+        "value": 11,
+        "category": "defense",
+        "details": {
+          "armorType": "light"
+        }
+      },
+      {
+        "id": "dnd-5e-2024:defense:armorclass:dexterity-modifier:dexterity-ac-contribution:2",
+        "systemId": "dnd-5e-2024",
+        "target": "armorClass",
+        "source": {
+          "kind": "system",
+          "label": "Dexterity modifier",
+          "id": "dexterity-modifier"
+        },
+        "label": "Dexterity AC contribution",
+        "operation": "add",
+        "value": 2,
+        "category": "defense",
+        "details": {
+          "dexterityScore": 14,
+          "rawDexterityModifier": 2,
+          "armorType": "light"
+        }
+      },
+      {
+        "id": "dnd-5e-2024:defense:armorclass:shield:shield-ac-bonus:2",
+        "systemId": "dnd-5e-2024",
+        "target": "armorClass",
+        "source": {
+          "kind": "item",
+          "label": "shield",
+          "id": "shield",
+          "path": "system.equipment"
+        },
+        "label": "Shield AC bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "defense"
+      },
+      {
+        "id": "dnd-5e-2024:ac:ring-of-protection:ac:1",
+        "systemId": "dnd-5e-2024",
+        "target": "armorClass",
+        "source": {
+          "kind": "item",
+          "label": "ring-of-protection",
+          "id": "ring-of-protection"
+        },
+        "label": "ring-of-protection AC bonus",
+        "operation": "add",
+        "value": 1,
+        "category": "defense"
+      },
+      {
+        "id": "dnd-5e-2024:attack:longsword-plus-1:atk:1",
+        "systemId": "dnd-5e-2024",
+        "target": "attack",
+        "source": {
+          "kind": "item",
+          "label": "+1 Longsword",
+          "id": "longsword-plus-1"
+        },
+        "label": "+1 Longsword attack bonus",
+        "operation": "add",
+        "value": 1,
+        "category": "other"
+      },
+      {
+        "id": "dnd-5e-2024:damage.slashing:longsword-plus-1:dmg:1",
+        "systemId": "dnd-5e-2024",
+        "target": "damage.slashing",
+        "source": {
+          "kind": "item",
+          "label": "+1 Longsword",
+          "id": "longsword-plus-1"
+        },
+        "label": "+1 Longsword damage bonus",
+        "operation": "add",
+        "value": 1,
+        "category": "other"
+      },
+      {
+        "id": "dnd-5e-2024:proficiency:proficiencies.armor:class-template-proficiencies:class-armor-proficiencies:light-medium",
+        "systemId": "dnd-5e-2024",
+        "target": "proficiencies.armor",
+        "source": {
+          "kind": "class",
+          "label": "Class template proficiencies",
+          "path": "system.templateState.classDerivedProficiencies.armor"
+        },
+        "label": "Class armor proficiencies",
+        "operation": "add",
+        "value": ["light", "medium"],
+        "category": "proficiency"
+      },
+      {
+        "id": "dnd-5e-2024:proficiency:proficiencies.weapons:class-template-proficiencies:class-weapon-proficiencies:simple",
+        "systemId": "dnd-5e-2024",
+        "target": "proficiencies.weapons",
+        "source": {
+          "kind": "class",
+          "label": "Class template proficiencies",
+          "path": "system.templateState.classDerivedProficiencies.weapons"
+        },
+        "label": "Class weapon proficiencies",
+        "operation": "add",
+        "value": ["simple"],
+        "category": "proficiency"
+      },
+      {
+        "id": "dnd-5e-2024:proficiency:proficiencies.savingthrows:class-template-proficiencies:class-saving-throw-proficiencies:wis-cha",
+        "systemId": "dnd-5e-2024",
+        "target": "proficiencies.savingThrows",
+        "source": {
+          "kind": "class",
+          "label": "Class template proficiencies",
+          "path": "system.templateState.classDerivedProficiencies.savingThrows"
+        },
+        "label": "Class saving throw proficiencies",
+        "operation": "add",
+        "value": ["wis", "cha"],
+        "category": "proficiency"
+      },
+      {
+        "id": "dnd-5e-2024:proficiency:proficiencies.tools:background-template-proficiencies:background-tool-proficiencies:herbalism-kit",
+        "systemId": "dnd-5e-2024",
+        "target": "proficiencies.tools",
+        "source": {
+          "kind": "background",
+          "label": "Background template proficiencies",
+          "path": "system.templateState.backgroundDerived.tools"
+        },
+        "label": "Background tool proficiencies",
+        "operation": "add",
+        "value": ["herbalism-kit"],
+        "category": "proficiency"
+      },
+      {
+        "id": "dnd-5e-2024:proficiency:proficiencies.languages:background-template-proficiencies:background-language-proficiencies:celestial",
+        "systemId": "dnd-5e-2024",
+        "target": "proficiencies.languages",
+        "source": {
+          "kind": "background",
+          "label": "Background template proficiencies",
+          "path": "system.templateState.backgroundDerived.languages"
+        },
+        "label": "Background language proficiencies",
+        "operation": "add",
+        "value": ["celestial"],
+        "category": "proficiency"
+      },
+      {
+        "id": "dnd-5e-2024:ability:baseattributes.wis:feat-automation:feat-ability-score-automation:1",
+        "systemId": "dnd-5e-2024",
+        "target": "baseAttributes.wis",
+        "source": {
+          "kind": "feat",
+          "label": "Feat automation",
+          "path": "system.templateState.featDerivedAutomation.abilityScores.wis"
+        },
+        "label": "Feat ability score automation",
+        "operation": "add",
+        "value": 1,
+        "category": "ability"
+      },
+      {
+        "id": "dnd-5e-2024:proficiency:proficiencies.armor:feat-automation:feat-armor-proficiencies:heavy",
+        "systemId": "dnd-5e-2024",
+        "target": "proficiencies.armor",
+        "source": {
+          "kind": "feat",
+          "label": "Feat automation",
+          "path": "system.templateState.featDerivedAutomation.armor"
+        },
+        "label": "Feat armor proficiencies",
+        "operation": "add",
+        "value": ["heavy"],
+        "category": "proficiency"
+      },
+      {
+        "id": "dnd-5e-2024:spell:spellcasting.alwayspreparedspellids:life-domain-spells:always-prepared-spell-grant:bless",
+        "systemId": "dnd-5e-2024",
+        "target": "spellcasting.alwaysPreparedSpellIds",
+        "source": {
+          "kind": "class",
+          "label": "Life Domain Spells",
+          "id": "Life Domain Spells"
+        },
+        "label": "Always-prepared spell grant",
+        "operation": "add",
+        "value": "bless",
+        "category": "spell",
+        "details": {
+          "spellId": "bless",
+          "minLevel": 3,
+          "countsAgainstPreparedLimit": false
+        }
+      },
+      {
+        "id": "dnd-5e-2024:spell:spellcasting.alwayspreparedspellids:life-domain-spells:always-prepared-spell-grant:cure-wounds",
+        "systemId": "dnd-5e-2024",
+        "target": "spellcasting.alwaysPreparedSpellIds",
+        "source": {
+          "kind": "class",
+          "label": "Life Domain Spells",
+          "id": "Life Domain Spells"
+        },
+        "label": "Always-prepared spell grant",
+        "operation": "add",
+        "value": "cure-wounds",
+        "category": "spell",
+        "details": {
+          "spellId": "cure-wounds",
+          "minLevel": 3,
+          "countsAgainstPreparedLimit": false
+        }
+      },
+      {
+        "id": "dnd-5e-2024:spell:spellcasting.classes.cleric.spellsavedc:spell-save-dc-base:spell-save-dc-base:8",
+        "systemId": "dnd-5e-2024",
+        "target": "spellcasting.classes.cleric.spellSaveDc",
+        "source": {
+          "kind": "system",
+          "label": "Spell save DC base",
+          "id": "spell-save-dc-base",
+          "path": "system.spellcasting.classes"
+        },
+        "label": "Spell save DC base",
+        "operation": "set",
+        "value": 8,
+        "category": "spell",
+        "details": {
+          "classId": "cleric",
+          "ability": "wis",
+          "abilityScore": 16,
+          "proficiencyBonus": 2,
+          "spellcastingAbilityModifier": 3,
+          "spellSaveDc": 13,
+          "spellAttackBonus": 5
+        }
+      },
+      {
+        "id": "dnd-5e-2024:spell:spellcasting.classes.cleric.spellsavedc:cleric:spell-save-dc-proficiency-bonus:2",
+        "systemId": "dnd-5e-2024",
+        "target": "spellcasting.classes.cleric.spellSaveDc",
+        "source": {
+          "kind": "class",
+          "label": "cleric",
+          "id": "cleric",
+          "path": "system.spellcasting.classes"
+        },
+        "label": "Spell save DC proficiency bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "spell",
+        "details": {
+          "classId": "cleric",
+          "ability": "wis",
+          "abilityScore": 16,
+          "proficiencyBonus": 2,
+          "spellcastingAbilityModifier": 3,
+          "spellSaveDc": 13,
+          "spellAttackBonus": 5
+        }
+      },
+      {
+        "id": "dnd-5e-2024:spell:spellcasting.classes.cleric.spellsavedc:wis-modifier:spell-save-dc-ability-modifier:3",
+        "systemId": "dnd-5e-2024",
+        "target": "spellcasting.classes.cleric.spellSaveDc",
+        "source": {
+          "kind": "system",
+          "label": "wis modifier",
+          "id": "wis-modifier",
+          "path": "system.spellcasting.classes"
+        },
+        "label": "Spell save DC ability modifier",
+        "operation": "add",
+        "value": 3,
+        "category": "spell",
+        "details": {
+          "classId": "cleric",
+          "ability": "wis",
+          "abilityScore": 16,
+          "proficiencyBonus": 2,
+          "spellcastingAbilityModifier": 3,
+          "spellSaveDc": 13,
+          "spellAttackBonus": 5
+        }
+      },
+      {
+        "id": "dnd-5e-2024:spell:spellcasting.classes.cleric.spellattackbonus:cleric:spell-attack-proficiency-bonus:2",
+        "systemId": "dnd-5e-2024",
+        "target": "spellcasting.classes.cleric.spellAttackBonus",
+        "source": {
+          "kind": "class",
+          "label": "cleric",
+          "id": "cleric",
+          "path": "system.spellcasting.classes"
+        },
+        "label": "Spell attack proficiency bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "spell",
+        "details": {
+          "classId": "cleric",
+          "ability": "wis",
+          "abilityScore": 16,
+          "proficiencyBonus": 2,
+          "spellcastingAbilityModifier": 3,
+          "spellSaveDc": 13,
+          "spellAttackBonus": 5
+        }
+      },
+      {
+        "id": "dnd-5e-2024:spell:spellcasting.classes.cleric.spellattackbonus:wis-modifier:spell-attack-ability-modifier:3",
+        "systemId": "dnd-5e-2024",
+        "target": "spellcasting.classes.cleric.spellAttackBonus",
+        "source": {
+          "kind": "system",
+          "label": "wis modifier",
+          "id": "wis-modifier",
+          "path": "system.spellcasting.classes"
+        },
+        "label": "Spell attack ability modifier",
+        "operation": "add",
+        "value": 3,
+        "category": "spell",
+        "details": {
+          "classId": "cleric",
+          "ability": "wis",
+          "abilityScore": 16,
+          "proficiencyBonus": 2,
+          "spellcastingAbilityModifier": 3,
+          "spellSaveDc": 13,
+          "spellAttackBonus": 5
+        }
+      }
+    ],
+    "dnd-3.5e/fighter-wizard-saves-synergy-typed-ac": [
+      {
+        "id": "dnd-3.5e:other:baseattackbonus:fighter:base-attack-bonus-full-progression-:5",
+        "systemId": "dnd-3.5e",
+        "target": "baseAttackBonus",
+        "source": {
+          "kind": "class",
+          "label": "fighter",
+          "id": "fighter",
+          "path": "system.classLevels.0"
+        },
+        "label": "Base attack bonus (full progression)",
+        "operation": "add",
+        "value": 5,
+        "category": "other",
+        "details": {
+          "classLevel": 5,
+          "progression": "full"
+        }
+      },
+      {
+        "id": "dnd-3.5e:other:baseattackbonus:wizard:base-attack-bonus-half-progression-:2",
+        "systemId": "dnd-3.5e",
+        "target": "baseAttackBonus",
+        "source": {
+          "kind": "class",
+          "label": "wizard",
+          "id": "wizard",
+          "path": "system.classLevels.1"
+        },
+        "label": "Base attack bonus (half progression)",
+        "operation": "add",
+        "value": 2,
+        "category": "other",
+        "details": {
+          "classLevel": 4,
+          "progression": "half"
+        }
+      },
+      {
+        "id": "dnd-3.5e:defense:saves.fortitude:fighter:fortitude-base-save-good-:4",
+        "systemId": "dnd-3.5e",
+        "target": "saves.fortitude",
+        "source": {
+          "kind": "class",
+          "label": "fighter",
+          "id": "fighter",
+          "path": "system.classLevels.0"
+        },
+        "label": "Fortitude base save (good)",
+        "operation": "add",
+        "value": 4,
+        "category": "defense",
+        "details": {
+          "classLevel": 5,
+          "quality": "good"
+        }
+      },
+      {
+        "id": "dnd-3.5e:defense:saves.fortitude:wizard:fortitude-base-save-poor-:1",
+        "systemId": "dnd-3.5e",
+        "target": "saves.fortitude",
+        "source": {
+          "kind": "class",
+          "label": "wizard",
+          "id": "wizard",
+          "path": "system.classLevels.1"
+        },
+        "label": "Fortitude base save (poor)",
+        "operation": "add",
+        "value": 1,
+        "category": "defense",
+        "details": {
+          "classLevel": 4,
+          "quality": "poor"
+        }
+      },
+      {
+        "id": "dnd-3.5e:defense:saves.fortitude:con-modifier:fortitude-ability-modifier:2",
+        "systemId": "dnd-3.5e",
+        "target": "saves.fortitude",
+        "source": {
+          "kind": "system",
+          "label": "CON modifier",
+          "id": "con-modifier",
+          "path": "system.baseAttributes.con"
+        },
+        "label": "Fortitude ability modifier",
+        "operation": "add",
+        "value": 2,
+        "category": "defense",
+        "details": {
+          "abilityScore": 14,
+          "ability": "con"
+        }
+      },
+      {
+        "id": "dnd-3.5e:defense:saves.fortitude:miscellaneous-save-modifier:fortitude-miscellaneous-modifier:1",
+        "systemId": "dnd-3.5e",
+        "target": "saves.fortitude",
+        "source": {
+          "kind": "system",
+          "label": "Miscellaneous save modifier",
+          "id": "fortitude-misc",
+          "path": "system.saves.fortitude.misc"
+        },
+        "label": "Fortitude miscellaneous modifier",
+        "operation": "add",
+        "value": 1,
+        "category": "defense"
+      },
+      {
+        "id": "dnd-3.5e:defense:saves.reflex:fighter:reflex-base-save-poor-:1",
+        "systemId": "dnd-3.5e",
+        "target": "saves.reflex",
+        "source": {
+          "kind": "class",
+          "label": "fighter",
+          "id": "fighter",
+          "path": "system.classLevels.0"
+        },
+        "label": "Reflex base save (poor)",
+        "operation": "add",
+        "value": 1,
+        "category": "defense",
+        "details": {
+          "classLevel": 5,
+          "quality": "poor"
+        }
+      },
+      {
+        "id": "dnd-3.5e:defense:saves.reflex:wizard:reflex-base-save-poor-:1",
+        "systemId": "dnd-3.5e",
+        "target": "saves.reflex",
+        "source": {
+          "kind": "class",
+          "label": "wizard",
+          "id": "wizard",
+          "path": "system.classLevels.1"
+        },
+        "label": "Reflex base save (poor)",
+        "operation": "add",
+        "value": 1,
+        "category": "defense",
+        "details": {
+          "classLevel": 4,
+          "quality": "poor"
+        }
+      },
+      {
+        "id": "dnd-3.5e:defense:saves.reflex:dex-modifier:reflex-ability-modifier:1",
+        "systemId": "dnd-3.5e",
+        "target": "saves.reflex",
+        "source": {
+          "kind": "system",
+          "label": "DEX modifier",
+          "id": "dex-modifier",
+          "path": "system.baseAttributes.dex"
+        },
+        "label": "Reflex ability modifier",
+        "operation": "add",
+        "value": 1,
+        "category": "defense",
+        "details": {
+          "abilityScore": 12,
+          "ability": "dex"
+        }
+      },
+      {
+        "id": "dnd-3.5e:defense:saves.will:fighter:will-base-save-poor-:1",
+        "systemId": "dnd-3.5e",
+        "target": "saves.will",
+        "source": {
+          "kind": "class",
+          "label": "fighter",
+          "id": "fighter",
+          "path": "system.classLevels.0"
+        },
+        "label": "Will base save (poor)",
+        "operation": "add",
+        "value": 1,
+        "category": "defense",
+        "details": {
+          "classLevel": 5,
+          "quality": "poor"
+        }
+      },
+      {
+        "id": "dnd-3.5e:defense:saves.will:wizard:will-base-save-good-:4",
+        "systemId": "dnd-3.5e",
+        "target": "saves.will",
+        "source": {
+          "kind": "class",
+          "label": "wizard",
+          "id": "wizard",
+          "path": "system.classLevels.1"
+        },
+        "label": "Will base save (good)",
+        "operation": "add",
+        "value": 4,
+        "category": "defense",
+        "details": {
+          "classLevel": 4,
+          "quality": "good"
+        }
+      },
+      {
+        "id": "dnd-3.5e:ac:chain-shirt-plus-1:ac:1",
+        "systemId": "dnd-3.5e",
+        "target": "ac",
+        "source": {
+          "kind": "item",
+          "label": "chain-shirt-plus-1",
+          "id": "chain-shirt-plus-1"
+        },
+        "label": "chain-shirt-plus-1 AC bonus",
+        "operation": "add",
+        "value": 1,
+        "category": "defense"
+      },
+      {
+        "id": "dnd-3.5e:ac:dusty-rose-ioun-stone:ac:1",
+        "systemId": "dnd-3.5e",
+        "target": "ac",
+        "source": {
+          "kind": "item",
+          "label": "dusty-rose-ioun-stone",
+          "id": "dusty-rose-ioun-stone"
+        },
+        "label": "dusty-rose-ioun-stone AC bonus",
+        "operation": "add",
+        "value": 1,
+        "category": "defense"
+      },
+      {
+        "id": "dnd-3.5e:other:skills.balance:tumble-5-ranks-:skill-synergy-bonus:2",
+        "systemId": "dnd-3.5e",
+        "target": "skills.balance",
+        "source": {
+          "kind": "system",
+          "label": "tumble (5+ ranks)",
+          "id": "skill-synergy:tumble",
+          "path": "system.skillRanks.tumble"
+        },
+        "label": "Skill synergy bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "other",
+        "details": {
+          "sourceSkill": "tumble",
+          "sourceRanks": 5,
+          "targetSkill": "balance"
+        }
+      },
+      {
+        "id": "dnd-3.5e:other:skills.jump:tumble-5-ranks-:skill-synergy-bonus:2",
+        "systemId": "dnd-3.5e",
+        "target": "skills.jump",
+        "source": {
+          "kind": "system",
+          "label": "tumble (5+ ranks)",
+          "id": "skill-synergy:tumble",
+          "path": "system.skillRanks.tumble"
+        },
+        "label": "Skill synergy bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "other",
+        "details": {
+          "sourceSkill": "tumble",
+          "sourceRanks": 5,
+          "targetSkill": "jump"
+        }
+      },
+      {
+        "id": "dnd-3.5e:other:skills.tumble:jump-5-ranks-:skill-synergy-bonus:2",
+        "systemId": "dnd-3.5e",
+        "target": "skills.tumble",
+        "source": {
+          "kind": "system",
+          "label": "jump (5+ ranks)",
+          "id": "skill-synergy:jump",
+          "path": "system.skillRanks.jump"
+        },
+        "label": "Skill synergy bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "other",
+        "details": {
+          "sourceSkill": "jump",
+          "sourceRanks": 5,
+          "targetSkill": "tumble"
+        }
+      },
+      {
+        "id": "dnd-3.5e:other:skills.diplomacy:bluff-5-ranks-:skill-synergy-bonus:2",
+        "systemId": "dnd-3.5e",
+        "target": "skills.diplomacy",
+        "source": {
+          "kind": "system",
+          "label": "bluff (5+ ranks)",
+          "id": "skill-synergy:bluff",
+          "path": "system.skillRanks.bluff"
+        },
+        "label": "Skill synergy bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "other",
+        "details": {
+          "sourceSkill": "bluff",
+          "sourceRanks": 8,
+          "targetSkill": "diplomacy"
+        }
+      },
+      {
+        "id": "dnd-3.5e:other:skills.intimidate:bluff-5-ranks-:skill-synergy-bonus:2",
+        "systemId": "dnd-3.5e",
+        "target": "skills.intimidate",
+        "source": {
+          "kind": "system",
+          "label": "bluff (5+ ranks)",
+          "id": "skill-synergy:bluff",
+          "path": "system.skillRanks.bluff"
+        },
+        "label": "Skill synergy bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "other",
+        "details": {
+          "sourceSkill": "bluff",
+          "sourceRanks": 8,
+          "targetSkill": "intimidate"
+        }
+      },
+      {
+        "id": "dnd-3.5e:other:skills.sleight-of-hand:bluff-5-ranks-:skill-synergy-bonus:2",
+        "systemId": "dnd-3.5e",
+        "target": "skills.sleight-of-hand",
+        "source": {
+          "kind": "system",
+          "label": "bluff (5+ ranks)",
+          "id": "skill-synergy:bluff",
+          "path": "system.skillRanks.bluff"
+        },
+        "label": "Skill synergy bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "other",
+        "details": {
+          "sourceSkill": "bluff",
+          "sourceRanks": 8,
+          "targetSkill": "sleight-of-hand"
+        }
+      }
+    ],
+    "pf1e/cleric-bab-saves-natural-armor": [
+      {
+        "id": "pf1e:other:baseattackbonus:cleric:base-attack-bonus-three-quarter-progression-:4",
+        "systemId": "pf1e",
+        "target": "baseAttackBonus",
+        "source": {
+          "kind": "class",
+          "label": "cleric",
+          "id": "cleric",
+          "path": "system.classLevels.0"
+        },
+        "label": "Base attack bonus (three-quarter progression)",
+        "operation": "add",
+        "value": 4,
+        "category": "other",
+        "details": {
+          "classLevel": 6,
+          "progression": "three-quarter"
+        }
+      },
+      {
+        "id": "pf1e:defense:saves.fortitude:cleric:fortitude-base-save-good-:5",
+        "systemId": "pf1e",
+        "target": "saves.fortitude",
+        "source": {
+          "kind": "class",
+          "label": "cleric",
+          "id": "cleric",
+          "path": "system.classLevels.0"
+        },
+        "label": "Fortitude base save (good)",
+        "operation": "add",
+        "value": 5,
+        "category": "defense",
+        "details": {
+          "classLevel": 6,
+          "quality": "good"
+        }
+      },
+      {
+        "id": "pf1e:defense:saves.fortitude:con-modifier:fortitude-ability-modifier:2",
+        "systemId": "pf1e",
+        "target": "saves.fortitude",
+        "source": {
+          "kind": "system",
+          "label": "CON modifier",
+          "id": "con-modifier",
+          "path": "system.baseAttributes.con"
+        },
+        "label": "Fortitude ability modifier",
+        "operation": "add",
+        "value": 2,
+        "category": "defense",
+        "details": {
+          "abilityScore": 14,
+          "ability": "con"
+        }
+      },
+      {
+        "id": "pf1e:defense:saves.reflex:cleric:reflex-base-save-poor-:2",
+        "systemId": "pf1e",
+        "target": "saves.reflex",
+        "source": {
+          "kind": "class",
+          "label": "cleric",
+          "id": "cleric",
+          "path": "system.classLevels.0"
+        },
+        "label": "Reflex base save (poor)",
+        "operation": "add",
+        "value": 2,
+        "category": "defense",
+        "details": {
+          "classLevel": 6,
+          "quality": "poor"
+        }
+      },
+      {
+        "id": "pf1e:defense:saves.reflex:dex-modifier:reflex-ability-modifier:1",
+        "systemId": "pf1e",
+        "target": "saves.reflex",
+        "source": {
+          "kind": "system",
+          "label": "DEX modifier",
+          "id": "dex-modifier",
+          "path": "system.baseAttributes.dex"
+        },
+        "label": "Reflex ability modifier",
+        "operation": "add",
+        "value": 1,
+        "category": "defense",
+        "details": {
+          "abilityScore": 12,
+          "ability": "dex"
+        }
+      },
+      {
+        "id": "pf1e:defense:saves.will:cleric:will-base-save-good-:5",
+        "systemId": "pf1e",
+        "target": "saves.will",
+        "source": {
+          "kind": "class",
+          "label": "cleric",
+          "id": "cleric",
+          "path": "system.classLevels.0"
+        },
+        "label": "Will base save (good)",
+        "operation": "add",
+        "value": 5,
+        "category": "defense",
+        "details": {
+          "classLevel": 6,
+          "quality": "good"
+        }
+      },
+      {
+        "id": "pf1e:ac:breastplate-plus-2:ac:2",
+        "systemId": "pf1e",
+        "target": "ac",
+        "source": {
+          "kind": "item",
+          "label": "breastplate-plus-2",
+          "id": "breastplate-plus-2"
+        },
+        "label": "breastplate-plus-2 AC bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "defense"
+      }
+    ],
+    "pf2e/item-ac-plus-status-conditions": [
+      {
+        "id": "pf2e:ac:bracers-of-armor:ac:1",
+        "systemId": "pf2e",
+        "target": "ac",
+        "source": {
+          "kind": "item",
+          "label": "bracers-of-armor",
+          "id": "bracers-of-armor"
+        },
+        "label": "bracers-of-armor AC bonus",
+        "operation": "add",
+        "value": 1,
+        "category": "defense"
+      },
+      {
+        "id": "pf2e:condition:frightened:check:2",
+        "systemId": "pf2e",
+        "target": "check",
+        "source": {
+          "kind": "condition",
+          "label": "frightened",
+          "id": "frightened"
+        },
+        "label": "frightened 2: -2 status penalty",
+        "operation": "subtract",
+        "value": 2,
+        "category": "other"
+      },
+      {
+        "id": "pf2e:condition:sickened:check:1",
+        "systemId": "pf2e",
+        "target": "check",
+        "source": {
+          "kind": "condition",
+          "label": "sickened",
+          "id": "sickened"
+        },
+        "label": "sickened 1: -1 status penalty",
+        "operation": "subtract",
+        "value": 1,
+        "category": "other"
+      },
+      {
+        "id": "pf2e:condition:clumsy:check.dex:1",
+        "systemId": "pf2e",
+        "target": "check.dex",
+        "source": {
+          "kind": "condition",
+          "label": "clumsy",
+          "id": "clumsy"
+        },
+        "label": "clumsy 1: -1 status penalty",
+        "operation": "subtract",
+        "value": 1,
+        "category": "other"
+      }
+    ],
+    "mam3e/power-cost-extras-flaws-and-unknown-modifier": [
+      {
+        "id": "mam3e:powers.0.costperrank:damage:base-cost-per-rank:1",
+        "systemId": "mam3e",
+        "target": "powers.0.costPerRank",
+        "source": {
+          "kind": "power",
+          "label": "Damage",
+          "id": "damage",
+          "path": "system.powers.0"
+        },
+        "label": "Base cost per rank",
+        "operation": "add",
+        "value": 1,
+        "category": "cost",
+        "details": {
+          "rank": 5,
+          "perRank": true
+        }
+      },
+      {
+        "id": "mam3e:powers.0.costperrank:area:area-per-rank-cost:2",
+        "systemId": "mam3e",
+        "target": "powers.0.costPerRank",
+        "source": {
+          "kind": "power-modifier",
+          "label": "Area",
+          "id": "area",
+          "path": "system.powers.0"
+        },
+        "label": "Area per-rank cost",
+        "operation": "add",
+        "value": 2,
+        "category": "cost",
+        "details": {
+          "modifierRank": 2,
+          "costPerRank": 1,
+          "modifierType": "extra"
+        }
+      },
+      {
+        "id": "mam3e:powers.0.costperrank:limited:limited-per-rank-cost:-1",
+        "systemId": "mam3e",
+        "target": "powers.0.costPerRank",
+        "source": {
+          "kind": "power-modifier",
+          "label": "Limited",
+          "id": "limited",
+          "path": "system.powers.0"
+        },
+        "label": "Limited per-rank cost",
+        "operation": "add",
+        "value": -1,
+        "category": "cost",
+        "details": {
+          "modifierRank": 1,
+          "costPerRank": -1,
+          "modifierType": "flaw"
+        }
+      },
+      {
+        "id": "mam3e:powers.0.totalcost:damage:total-power-cost:10",
+        "systemId": "mam3e",
+        "target": "powers.0.totalCost",
+        "source": {
+          "kind": "power",
+          "label": "Damage",
+          "id": "damage",
+          "path": "system.powers.0"
+        },
+        "label": "Total power cost",
+        "operation": "set",
+        "value": 10,
+        "category": "cost",
+        "details": {
+          "rank": 5,
+          "costPerRank": 2,
+          "flatCost": 0
+        }
+      },
+      {
+        "id": "mam3e:powers.1.costperrank:protection:base-cost-per-rank:1",
+        "systemId": "mam3e",
+        "target": "powers.1.costPerRank",
+        "source": {
+          "kind": "power",
+          "label": "Protection",
+          "id": "protection",
+          "path": "system.powers.1"
+        },
+        "label": "Base cost per rank",
+        "operation": "add",
+        "value": 1,
+        "category": "cost",
+        "details": {
+          "rank": 4,
+          "perRank": true
+        }
+      },
+      {
+        "id": "mam3e:powers.1.totalcost:not-a-real-modifier-id:unknown-power-modifier-ignored:0",
+        "systemId": "mam3e",
+        "target": "powers.1.totalCost",
+        "source": {
+          "kind": "power-modifier",
+          "label": "not-a-real-modifier-id",
+          "id": "not-a-real-modifier-id",
+          "path": "system.powers.1"
+        },
+        "label": "Unknown power modifier ignored",
+        "operation": "add",
+        "value": 0,
+        "category": "cost",
+        "manualBoundary": {
+          "kind": "unsupported",
+          "note": "Modifier id is not present in the loader-backed M&M modifier catalog."
+        }
+      },
+      {
+        "id": "mam3e:powers.1.totalcost:protection:total-power-cost:4",
+        "systemId": "mam3e",
+        "target": "powers.1.totalCost",
+        "source": {
+          "kind": "power",
+          "label": "Protection",
+          "id": "protection",
+          "path": "system.powers.1"
+        },
+        "label": "Total power cost",
+        "operation": "set",
+        "value": 4,
+        "category": "cost",
+        "details": {
+          "rank": 4,
+          "costPerRank": 1,
+          "flatCost": 0
+        }
+      }
+    ],
+    "daggerheart/armored-loadout-cards-and-derived-passives": [
+      {
+        "id": "daggerheart:defense:evasion:daggerheart-armor-gambeson-armor-tier-1:passive-bonus:1",
+        "systemId": "daggerheart",
+        "target": "evasion",
+        "source": {
+          "kind": "item",
+          "label": "Gambeson Armor",
+          "id": "daggerheart-armor-gambeson-armor-tier-1",
+          "path": "system.armorId"
+        },
+        "label": "Passive bonus",
+        "operation": "add",
+        "value": 1,
+        "category": "defense",
+        "details": {
+          "multiplier": 1
+        }
+      },
+      {
+        "id": "daggerheart:defense:majorthreshold:blade-fortified-armor:passive-bonus:2",
+        "systemId": "daggerheart",
+        "target": "majorThreshold",
+        "source": {
+          "kind": "domain-card",
+          "label": "Fortified Armor",
+          "id": "blade-fortified-armor",
+          "path": "system.domainCards"
+        },
+        "label": "Passive bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "defense",
+        "manualBoundary": {
+          "kind": "partial",
+          "note": "Auto-applies +2 damage thresholds while armor is equipped."
+        },
+        "details": {
+          "multiplier": 1
+        }
+      },
+      {
+        "id": "daggerheart:defense:severethreshold:blade-fortified-armor:passive-bonus:2",
+        "systemId": "daggerheart",
+        "target": "severeThreshold",
+        "source": {
+          "kind": "domain-card",
+          "label": "Fortified Armor",
+          "id": "blade-fortified-armor",
+          "path": "system.domainCards"
+        },
+        "label": "Passive bonus",
+        "operation": "add",
+        "value": 2,
+        "category": "defense",
+        "manualBoundary": {
+          "kind": "partial",
+          "note": "Auto-applies +2 damage thresholds while armor is equipped."
+        },
+        "details": {
+          "multiplier": 1
+        }
+      },
+      {
+        "id": "daggerheart:defense:evasion:bone-i-see-it-coming:derived-evasion-passive-bonus:1",
+        "systemId": "daggerheart",
+        "target": "evasion",
+        "source": {
+          "kind": "domain-card",
+          "label": "I See It Coming",
+          "id": "bone-i-see-it-coming",
+          "path": "system.domainCards"
+        },
+        "label": "Derived Evasion passive bonus",
+        "operation": "add",
+        "value": 1,
+        "category": "defense",
+        "manualBoundary": {
+          "kind": "partial",
+          "note": "Auto-applies an Evasion bonus equal to half your current Agility."
+        },
+        "details": {
+          "derivedKind": "evasion-half-trait",
+          "trait": "agility"
+        }
+      },
+      {
+        "id": "daggerheart:defense:severethreshold:valor-rise-up:derived-severe-threshold-passive-bonus:3",
+        "systemId": "daggerheart",
+        "target": "severeThreshold",
+        "source": {
+          "kind": "domain-card",
+          "label": "Rise Up",
+          "id": "valor-rise-up",
+          "path": "system.domainCards"
+        },
+        "label": "Derived Severe threshold passive bonus",
+        "operation": "add",
+        "value": 3,
+        "category": "defense",
+        "manualBoundary": {
+          "kind": "partial",
+          "note": "Auto-applies a Severe threshold bonus equal to your current Proficiency. The stress-clearing rider remains manual."
+        },
+        "details": {
+          "derivedKind": "severe-threshold-proficiency"
+        }
+      }
+    ],
+    "daggerheart/unarmored-bare-bones-object-valued-override": [
+      {
+        "id": "daggerheart:defense:unarmoreddefense:valor-bare-bones:derived-unarmored-defense-passive-bonus:-object-object",
+        "systemId": "daggerheart",
+        "target": "unarmoredDefense",
+        "source": {
+          "kind": "domain-card",
+          "id": "valor-bare-bones",
+          "label": "Bare Bones",
+          "path": "system.domainCards"
+        },
+        "label": "Derived unarmored defense passive bonus",
+        "operation": "set",
+        "value": {
+          "armorScore": 4,
+          "majorThreshold": 13,
+          "severeThreshold": 31
+        },
+        "category": "defense",
+        "manualBoundary": {
+          "kind": "partial",
+          "note": "Auto-applies the unarmored Armor Score and threshold bases from Bare Bones while no armor is equipped."
+        },
+        "details": {
+          "derivedKind": "unarmored-defense-by-tier",
+          "trait": "strength"
+        }
+      },
+      {
+        "id": "daggerheart:defense:evasion:bone-i-see-it-coming:derived-evasion-passive-bonus:1",
+        "systemId": "daggerheart",
+        "target": "evasion",
+        "source": {
+          "kind": "domain-card",
+          "label": "I See It Coming",
+          "id": "bone-i-see-it-coming",
+          "path": "system.domainCards"
+        },
+        "label": "Derived Evasion passive bonus",
+        "operation": "add",
+        "value": 1,
+        "category": "defense",
+        "manualBoundary": {
+          "kind": "partial",
+          "note": "Auto-applies an Evasion bonus equal to half your current Agility."
+        },
+        "details": {
+          "derivedKind": "evasion-half-trait",
+          "trait": "agility"
+        }
+      }
+    ]
+  },
+  "resolvedTotals": {
+    "dnd-5e-2014/competing-same-discipline-ac-bonuses": {
+      "ac": 14
+    },
+    "dnd-5e-2024/competing-same-discipline-ac-bonuses": {
+      "ac": 14
+    },
+    "dnd-3.5e/competing-same-discipline-ac-bonuses": {
+      "ac": 13
+    },
+    "pf1e/competing-same-discipline-ac-bonuses": {
+      "ac": 13
+    },
+    "pf2e/competing-same-discipline-ac-bonuses": {
+      "ac": 13
+    },
+    "mam3e/competing-same-discipline-ac-bonuses": {
+      "ac": 14
+    },
+    "daggerheart/competing-same-discipline-ac-bonuses": {
+      "ac": 14
+    }
+  }
+}

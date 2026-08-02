@@ -325,7 +325,7 @@ PF2e read `Full` with zero entries while naming a manual focus-spell surface in 
 
 The label was not downgraded to `Partial`, and the reason matters: PF2e's remaining non-boundary debt is content fidelity, which four of seven systems share and which `docs/generated/srd-coverage.md` already measures. Singling PF2e out would have swapped one mislabel for another. Now gated by `src/__tests__/manualExclusionRegistry.test.ts`.
 
-### 4.3 Sheet eviction — ~~the dual-home is not transient~~ **EXECUTED; ratification of the four kept wrappers is an OPEN owner decision**
+### 4.3 Sheet eviction — ~~the dual-home is not transient~~ **FULLY EXECUTED 2026-08-02; all ten wrappers are gone**
 
 Six of the ten in-sheet browser wrappers are deleted and every affected tab grid is collapsed: `Dnd5eFeatBrowserTab`, `Pf2eFeatBrowserTab`, `Pf2eEquipmentBrowserTab`, `D20FeatBrowserTab`, `D20EquipmentBrowserTab`, `MamEquipmentBrowserTab`. Each re-hosted the same shared browser over the same loader the Dock already calls for that system, so the sheet copy was a true duplicate. The equipped-armour controls that shared the PF2e and d20-legacy equipment-browser tab moved onto Inventory instead of dying with it.
 
@@ -396,9 +396,9 @@ The gateway side is genuinely ready — `traceId` already exists on `AiGatewayLo
 
 This partially supersedes RFC 007, which specified the strategist plus a narration/adjudication loop. The RFC stays Accepted (it records a decision at a point in time); the phase table now wins. RFC 007's narration half is unaffected.
 
-### 5.4 Phase 13 — narration critic · 5.5 Phase 10 — the vision adapter
+### 5.4 Phase 13 — narration critic · ~~5.5 Phase 10 — the vision adapter~~ **5.5 BUILT 2026-08-02**
 
-The critic is unbuilt. For Phase 10, the *deterministic geometry validator* already ships (`src/scene/gridGeometryProposal.ts`) with **no consumer** — what is missing is the vision adapter that would feed it.
+The critic is unbuilt. **Phase 10 is done** (§0.6): `analyze-map` is a vision task on the RFC 002 gateway and `src/ai/analyzeMapFlow.ts` runs `validateGridGeometryProposal` before the MapPanel affordance may offer anything as applicable, so `gridGeometryProposal.ts` has a consumer for the first time since it landed. The prerequisite this section named — reading the image's `naturalWidth`/`naturalHeight`, which `MapPanel` never learned — is closed by measuring the decoded asset in `SceneManager`. Original framing follows.
 
 The shelf branch's version of that adapter is **not** salvageable: it targets a superseded validator and instructs the model to return cell-coordinate boxes, the opposite of the shipped pixel-rect + deterministic-snap design. Rebuild against `GridGeometryProposal` instead — a known 6-site checklist. One thing *is* worth taking: the branch reads the image's `naturalWidth`/`naturalHeight`, which main's `MapPanel` never learns, and the shipped validator requires `image: { widthPx, heightPx }`. That read is a hard prerequisite.
 
@@ -438,11 +438,11 @@ Per-system engines now load through the registry's `loadEngine`/`peekEngine`/`pr
 ### 6.2 UI shell Phases 6 and 7 — **partly BLOCKED**
 
 - **Phase 6** is ~1 of 5 slices. Open: decompose `SceneManager` (~1,220 LOC) into a thin scene surface; the right-rail summon tray; the pan/zoom viewport and its gate; the distance ruler and deletion of the `PlacementMode` machine.
-- **Phase 7** is 1 of 5 deliverables. Open: hash-sync restore-on-reload, the chrome-dominance gate (**blocked on Phase 6's right-rail tray**, not merely undone), the seam catalogue, and owner usability sign-off.
+- **Phase 7** is 4 of 5 deliverables as of 2026-08-02. ~~hash-sync restore-on-reload~~ **DONE** (tasks 1-3); ~~the seam catalogue~~ **DONE** with the constraint-set-of-record (`docs/design/ui-shell-constraint-set.md`, tasks 8-10, its figures gated by `count_rule` rather than retyped). The **interaction-latency gate is SUPERSEDED, not open** — the budgets work proved a wall-clock gate cannot be sound here (the instrument measures dwell time, the spread is ~3.9x on identical work, and the repo's one existing wall-clock budget measured 14.99 ms alone and 73.41 ms under load in the same commit); `check:keepalive-budget` is the deterministic replacement and already ships. Still open: the **chrome-dominance gate** (**blocked on Phase 6's right-rail tray**, not merely undone) and **owner usability sign-off**.
 
 **Two constraints nobody had written down until now:** the two flag-gated phases are *mutually exclusive in practice* — enabling the Phase-6 canvas flag disables Phase-4 drag (`sceneDragEnabled && !sceneCanvasEnabled`), so they cannot both be on to preview the destination. And the canvas render drops the map-image layer the DOM grid carries, which is a second reason its flag stays off.
 
-**Asymmetry in how the two flags are gated, as of 2026-07-28:** Phase 4's flag-on acceptance now runs in CI (§6.8) even though the flag still defaults OFF. Phase 6's does not, and the reason is different — its spec was never written, so there is no gate to run rather than a gate that skips.
+~~**Asymmetry in how the two flags are gated, as of 2026-07-28:**~~ **CLOSED 2026-08-02 — the asymmetry is gone.** Phase 4's flag-on acceptance runs in CI (§6.8) and Phase 6's now does too: `e2e/scene-canvas.spec.ts` plus a `Scene canvas (flag-on e2e)` job that asserts from Playwright's JSON report that the tests did not SKIP. It earned its place immediately — its first real run caught the spec pinning `DEFAULT_GRID` (24x18) while `SceneCreateForm` prefills 12x10. Original: Phase 6's spec was never written, so there was no gate to run rather than a gate that skips.
 
 ### 6.3 `p5.infra-gaps` residuals — ~~READY~~ **NOT WORK — mislabelled**
 

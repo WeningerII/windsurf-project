@@ -163,3 +163,148 @@ export interface ShellContextValue {
  * silently inert no-op shell.
  */
 export const ShellContext = createContext<ShellContextValue | null>(null);
+
+// --- Hash sync (Phase 7, build-spec tasks 1-3) --------------------------------
+
+/**
+ * The shell's nav state as a URL hash, and back.
+ *
+ * DESIGN, and the parts that are deliberate:
+ *
+ * - **`replaceState`, never `pushState`.** The Phase-1 decision was "deferred
+ *   router / no deep-linking", and honouring it means a surface switch must not
+ *   grow the history stack — otherwise Back becomes a per-tab-click undo that
+ *   nothing else in the shell models.
+ * - **Decoding is TOTAL and lossy-tolerant.** A hash is user-editable and
+ *   survives across deploys, so every field is validated against the live union
+ *   and anything unrecognised falls back to the Phase-1 default rather than
+ *   throwing. A shell that white-screens on a stale bookmark is worse than one
+ *   that lands on Characters.
+ * - **Ids are NOT validated here.** `decodeShellNav` cannot know which
+ *   documents or scenes exist; that is the caller's job (see
+ *   `sanitizeRestoredNav`), which keeps this pair pure and unit-testable.
+ */
+const HASH_KEYS = {
+  surface: 's',
+  librarySegment: 'l',
+  sheetDocId: 'd',
+  sceneId: 'c',
+  overlay: 'o',
+} as const;
+
+const SURFACES: readonly Surface[] = ['library', 'sheet', 'scene'];
+const OVERLAYS: readonly Exclude<Overlay, null>[] = ['legal'];
+
+function isSurface(value: string): value is Surface {
+  return (SURFACES as readonly string[]).includes(value);
+}
+
+function isLibrarySegment(value: string): value is LibrarySegment {
+  return (LIBRARY_SEGMENTS as readonly string[]).includes(value);
+}
+
+function isOverlay(value: string): value is Exclude<Overlay, null> {
+  return (OVERLAYS as readonly string[]).includes(value);
+}
+
+/** Serialize nav state to a `#`-prefixed hash. Default state yields `''`. */
+export function encodeShellNav(state: ShellNavState): string {
+  const parts: string[] = [];
+  if (state.surface !== INITIAL_NAV_STATE.surface) {
+    parts.push(`${HASH_KEYS.surface}=${state.surface}`);
+  }
+  if (state.librarySegment !== INITIAL_NAV_STATE.librarySegment) {
+    parts.push(`${HASH_KEYS.librarySegment}=${state.librarySegment}`);
+  }
+  if (state.sheetDocId) {
+    parts.push(`${HASH_KEYS.sheetDocId}=${encodeURIComponent(state.sheetDocId)}`);
+  }
+  if (state.sceneId) {
+    parts.push(`${HASH_KEYS.sceneId}=${encodeURIComponent(state.sceneId)}`);
+  }
+  if (state.overlay) {
+    parts.push(`${HASH_KEYS.overlay}=${state.overlay}`);
+  }
+  // Empty rather than a bare '#': the default shell should leave the URL clean,
+  // so a first visit and a return-to-default look identical in the address bar.
+  return parts.length === 0 ? '' : `#${parts.join('&')}`;
+}
+
+/**
+ * Parse a hash into nav state, falling back field-by-field to the Phase-1
+ * default. Total: any malformed input yields a usable state.
+ */
+export function decodeShellNav(hash: string): ShellNavState {
+  const state: ShellNavState = { ...INITIAL_NAV_STATE };
+  const body = hash.startsWith('#') ? hash.slice(1) : hash;
+  if (!body) return state;
+
+  for (const pair of body.split('&')) {
+    const separator = pair.indexOf('=');
+    if (separator <= 0) continue;
+    const key = pair.slice(0, separator);
+    const raw = pair.slice(separator + 1);
+    let value: string;
+    try {
+      value = decodeURIComponent(raw);
+    } catch {
+      // A malformed percent-escape is not worth losing the whole hash over.
+      continue;
+    }
+
+    switch (key) {
+      case HASH_KEYS.surface:
+        if (isSurface(value)) state.surface = value;
+        break;
+      case HASH_KEYS.librarySegment:
+        if (isLibrarySegment(value)) state.librarySegment = value;
+        break;
+      case HASH_KEYS.sheetDocId:
+        if (value) state.sheetDocId = value;
+        break;
+      case HASH_KEYS.sceneId:
+        if (value) state.sceneId = value;
+        break;
+      case HASH_KEYS.overlay:
+        if (isOverlay(value)) state.overlay = value;
+        break;
+      default:
+        // Unknown key: ignore rather than reject. A hash written by a newer
+        // build must not strand an older one on a blank screen.
+        break;
+    }
+  }
+
+  return state;
+}
+
+/**
+ * Drop restored ids that no longer resolve (build-spec task 3).
+ *
+ * A reload can never strand or crash on a deleted document: an unresolvable
+ * `sheetDocId` lands on the Library exactly as `closeSheet` does, rather than
+ * rendering a sheet surface with nothing to render. An unresolvable `sceneId`
+ * is cleared and left for `SceneManager`'s existing `scenes[0]?.id ?? null`
+ * auto-reset — deliberately NOT resolved here, so there is one owner of that
+ * fallback rather than two that can disagree.
+ */
+export function sanitizeRestoredNav(
+  state: ShellNavState,
+  known: { documentIds: readonly string[]; sceneIds: readonly string[] }
+): ShellNavState {
+  const next = { ...state };
+
+  if (next.sheetDocId && !known.documentIds.includes(next.sheetDocId)) {
+    next.sheetDocId = null;
+    if (next.surface === 'sheet') {
+      next.surface = 'library';
+      next.librarySegment = 'characters';
+    }
+  }
+
+  if (next.sceneId && !known.sceneIds.includes(next.sceneId)) {
+    next.sceneId = null;
+  }
+
+  return next;
+}

@@ -176,6 +176,23 @@ function buildDocDriftTruth(rootDir: string): DocDriftTruth {
     // drifted before; gating the count means adding or removing a gate cannot
     // leave the summary silently wrong.
     verifyGateCount: packageJson.scripts.verify.split('&&').length,
+    // All four below are READ, never restated. The constraint-set-of-record
+    // (docs/design/ui-shell-constraint-set.md) states them inline for readers,
+    // and these fields are what stop that doc becoming the drift it documents —
+    // which is not hypothetical: the build spec's own "corrected" count for
+    // RUNTIME_COPY_RULES was itself stale by the time the doc was written.
+    runtimeCopyRuleCount: RUNTIME_COPY_RULES.length,
+    hostSizeBudgetLoc: readNumericConst(
+      rootDir,
+      'src/__tests__/hostSizeBudget.test.ts',
+      'HOST_BUDGET_LOC'
+    ),
+    hostSizeBudgetFileCount: readArrayLength(
+      rootDir,
+      'src/__tests__/hostSizeBudget.test.ts',
+      'HOSTS'
+    ),
+    coverageThresholds: readCoverageThresholds(rootDir),
     nvmVersion,
     nodeVersionFileVersion,
     pinnedNodeVersion: nvmVersion,
@@ -919,4 +936,53 @@ export function getExpectedSupportMatrixRows(): string[] {
     (definition) =>
       `| ${definition.label} | ${capitalizeSupportLevel(definition.supportLevel ?? 'full')} |`
   );
+}
+
+/**
+ * Read a `const NAME = <number>;` out of a source file.
+ *
+ * Deliberately a source read rather than an import: `hostSizeBudget.test.ts` is
+ * a test file, and importing it here would execute its `describe`/`it` calls
+ * inside the doc-drift gate.
+ */
+function readNumericConst(rootDir: string, relPath: string, name: string): number {
+  const source = readFileSync(path.join(rootDir, relPath), 'utf8');
+  const match = source.match(new RegExp(`const\\s+${name}\\s*=\\s*(\\d+)`));
+  if (!match) {
+    throw new Error(`doc-drift truth: could not read ${name} from ${relPath}`);
+  }
+  return Number(match[1]);
+}
+
+/** Count the entries of a `const NAME = [ ... ];` string array in a source file. */
+function readArrayLength(rootDir: string, relPath: string, name: string): number {
+  const source = readFileSync(path.join(rootDir, relPath), 'utf8');
+  const match = source.match(new RegExp(`const\\s+${name}\\s*=\\s*\\[([\\s\\S]*?)\\]`));
+  if (!match) {
+    throw new Error(`doc-drift truth: could not read ${name} from ${relPath}`);
+  }
+  return (match[1].match(/'/g)?.length ?? 0) / 2;
+}
+
+/** vitest coverage thresholds, read from the config rather than restated. */
+function readCoverageThresholds(rootDir: string): {
+  lines: number;
+  functions: number;
+  branches: number;
+  statements: number;
+} {
+  const source = readFileSync(path.join(rootDir, 'vitest.config.ts'), 'utf8');
+  const read = (key: string): number => {
+    const match = source.match(new RegExp(`${key}:\\s*(\\d+)`));
+    if (!match) {
+      throw new Error(`doc-drift truth: could not read coverage threshold '${key}'`);
+    }
+    return Number(match[1]);
+  };
+  return {
+    lines: read('lines'),
+    functions: read('functions'),
+    branches: read('branches'),
+    statements: read('statements'),
+  };
 }
