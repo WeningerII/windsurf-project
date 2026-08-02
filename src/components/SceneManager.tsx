@@ -3,6 +3,8 @@ import { Download, MousePointer2, Trash2 } from 'lucide-react';
 import { useSceneEncounter } from './scene/useSceneEncounter';
 import { supportsEncounterBudget } from '../scene/encounterDraft';
 import { narrateSceneWithAi } from '../ai/sceneNarrationFlow';
+import { critiqueNarrationWithAi } from '../ai/narrationCritiqueFlow';
+import { narrationFactsFromScene, type NarrationFacts } from '../ai/narrationFacts';
 import { illustrateSceneWithAi } from '../ai/illustrateSceneFlow';
 import { isAiEnabled } from '../ai/gatewayClient';
 import { foldSceneEvents } from '../scene/runtime';
@@ -43,11 +45,13 @@ import { OraclePanel } from './scene/OraclePanel';
 import { ReactionPanel } from './scene/ReactionPanel';
 import { DicePanel } from './scene/DicePanel';
 import { RecapPanel } from './scene/RecapPanel';
+import { DmTurnPanel } from './scene/DmTurnPanel';
 import { IllustrationPanel } from './scene/IllustrationPanel';
 import { useDaggerheartSceneCatalog } from './scene/useDaggerheartSceneCatalog';
 import { useSceneActions } from './scene/useSceneActions';
 import { useSceneCombat } from './scene/useSceneCombat';
 import { useSceneInitiative } from './scene/useSceneInitiative';
+import { useSceneDmTurn } from './scene/useSceneDmTurn';
 import { useSceneMap } from './scene/useSceneMap';
 import { useSceneMarkers } from './scene/useSceneMarkers';
 import { useSceneTokens } from './scene/useSceneTokens';
@@ -328,6 +332,24 @@ export function SceneManager({
     onAppendSceneEvent,
     onIssues: setActionIssues,
   });
+
+  const { dmTurnActor, handleRunDmTurn, handleApplyDmTurn } = useSceneDmTurn({
+    selectedScene,
+    state,
+    selectedTokenId,
+    onAppendSceneEvent,
+  });
+
+  // The facts the narration on screen was actually generated FROM, pinned at
+  // narrate time. The recap is a live view of the folded scene, so it moves with
+  // play: heal a downed creature, or take its token off the map, and both the
+  // recap text and the structured `defeated`/`names` change under a draft that
+  // is already written. Rebuilding the fact set when the GM presses Fact-check
+  // would then judge round-3 prose against round-7 facts and REFUTE a narration
+  // that was true when the narrator wrote it — the critic reporting a
+  // contradiction that only its own staleness created. A ref, not state: it is
+  // read inside the critique callback and must never trigger a render.
+  const narratedFacts = useRef<NarrationFacts | null>(null);
 
   // Deselect a token that no longer exists (kept separate from the initiative
   // sync so selection changes cannot disturb the edit buffer).
@@ -729,6 +751,16 @@ export function SceneManager({
 
               <DicePanel seed={state.seed} systemId={sceneSystemId} />
 
+              {/* RFC 007's AI-DM, as a PROPOSAL the GM reads. The flow resolves
+                its intents against a working copy and returns the events; only
+                the Apply click here appends them. Hidden when AI is off, and
+                absent until a token is actually up. */}
+              <DmTurnPanel
+                actor={dmTurnActor}
+                onRunTurn={aiEnabled && dmTurnActor ? handleRunDmTurn : undefined}
+                onApply={handleApplyDmTurn}
+              />
+
               {/* Image-output surface: a creative aid, not scene state. */}
               {aiEnabled && (
                 <IllustrationPanel illustrate={(params) => illustrateSceneWithAi(params)} />
@@ -741,7 +773,36 @@ export function SceneManager({
                   onLog={(title, body) => onLogToCampaign(linkedCampaign.id, title, body)}
                   // The model restyles the deterministic recap into prose the
                   // GM edits before logging; hidden entirely when AI is off.
-                  narrate={aiEnabled ? (params) => narrateSceneWithAi(params) : undefined}
+                  // `params.facts` is the exact recap string being sent, so this
+                  // is the one moment the narrator's ground truth is knowable —
+                  // pin the structured half of it to the same instant.
+                  narrate={
+                    aiEnabled
+                      ? (params) => {
+                          narratedFacts.current = narrationFactsFromScene(state, {
+                            text: params.facts,
+                          });
+                          return narrateSceneWithAi(params);
+                        }
+                      : undefined
+                  }
+                  // Phase 13's fact-check over that prose. The fact set is built
+                  // HERE — the panel never sees it — and it is the set the
+                  // narration was GIVEN, not a fresh reading of a scene that has
+                  // since moved on. Judging a draft against later facts would
+                  // manufacture contradictions rather than find them.
+                  critique={
+                    aiEnabled
+                      ? (params) =>
+                          critiqueNarrationWithAi(
+                            {
+                              narrative: params.narrative,
+                              facts: narratedFacts.current ?? narrationFactsFromScene(state),
+                            },
+                            { includeModelReview: params.includeModelReview }
+                          )
+                      : undefined
+                  }
                 />
               )}
             </div>

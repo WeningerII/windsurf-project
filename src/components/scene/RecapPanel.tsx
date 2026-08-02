@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react';
-import { BookMarked, Check, Sparkles } from 'lucide-react';
+import { BookMarked, Check, ScanSearch, Sparkles } from 'lucide-react';
 import type { SceneState } from '../../types/core/scene';
 import { EMPTY_SCENE_RECAP, summarizeSceneForLog } from '../../scene/sceneRecap';
 import type { NarrateSceneResult } from '../../ai/sceneNarrationFlow';
+import type { CritiqueNarrationResult } from '../../ai/narrationCritiqueFlow';
+import type { NarrationCritiqueVerdict } from '../../ai/narrationCritic';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 
@@ -16,7 +18,33 @@ interface RecapPanelProps {
    * the affordance entirely — the panel is the factual-only experience when off.
    */
   narrate?: (params: { facts: string; tone: string }) => Promise<NarrateSceneResult>;
+  /**
+   * Review the prose draft against the scene's facts (Phase 13). Injected as a
+   * closure that already holds the fact set, so this panel needs no knowledge
+   * of it and testing it needs no gateway — the same seam `onAnalyzeGrid` uses
+   * in `MapPanel`. Omit to hide the affordance.
+   *
+   * `includeModelReview` is the caller's opt-in SECOND pass; the deterministic
+   * critic runs either way and owns the verdict.
+   */
+  critique?: (params: {
+    narrative: string;
+    includeModelReview: boolean;
+  }) => Promise<CritiqueNarrationResult>;
 }
+
+/** Presentation for the three deterministic verdicts. */
+const VERDICT_LABEL: Record<NarrationCritiqueVerdict, string> = {
+  supported: 'Supported by the facts',
+  'needs-review': 'Needs review',
+  refuted: 'Contradicts the facts',
+};
+
+const VERDICT_CLASS: Record<NarrationCritiqueVerdict, string> = {
+  supported: 'text-emerald-600 dark:text-emerald-400',
+  'needs-review': 'text-amber-600 dark:text-amber-400',
+  refuted: 'text-destructive',
+};
 
 /** Tone presets offered for AI narration (free of provider specifics). */
 const NARRATION_TONES = ['cinematic', 'gritty', 'lighthearted', 'classic'] as const;
@@ -28,8 +56,15 @@ const NARRATION_TONES = ['cinematic', 'gritty', 'lighthearted', 'classic'] as co
  * hidden behavior. When AI is enabled, the GM can optionally restyle that recap
  * into prose (grounded ONLY in those facts), edit it, and log the prose instead;
  * the model proposes, the GM decides, and nothing is logged automatically.
+ *
+ * Phase 13 adds the fact-check beside that draft. It is a REVIEW, never a gate:
+ * the deterministic critic owns the verdict, the optional model pass can only
+ * add advisory notes, and neither can edit the prose or stop it being logged —
+ * a critic that could condemn a narration on its own say-so would have moved
+ * RFC 002's problem rather than solved it. The verdict is shown only while the
+ * textarea still holds the exact text that was reviewed.
  */
-export function RecapPanel({ state, campaignName, onLog, narrate }: RecapPanelProps) {
+export function RecapPanel({ state, campaignName, onLog, narrate, critique }: RecapPanelProps) {
   const recap = useMemo(() => summarizeSceneForLog(state), [state]);
   const hasFacts = recap !== EMPTY_SCENE_RECAP;
 
@@ -39,6 +74,16 @@ export function RecapPanel({ state, campaignName, onLog, narrate }: RecapPanelPr
   const [narrative, setNarrative] = useState<string | null>(null);
   const [narrating, setNarrating] = useState(false);
   const [narrationError, setNarrationError] = useState<string | null>(null);
+
+  // Fact-check state. `critiquedText` is the EXACT prose the review judged, kept
+  // for the same reason `loggedText` is kept below: the GM edits the draft in
+  // place, and a verdict left on screen after an edit would be a claim about
+  // text that is no longer there. Same-string comparison, not a dirty flag, so
+  // editing back to the reviewed wording restores the verdict truthfully.
+  const [critiquedText, setCritiquedText] = useState<string | null>(null);
+  const [critiqueResult, setCritiqueResult] = useState<CritiqueNarrationResult | null>(null);
+  const [critiquing, setCritiquing] = useState(false);
+  const [includeModelReview, setIncludeModelReview] = useState(false);
 
   // Log the prose draft when present, else the factual recap.
   const textToLog = narrative ?? recap;
@@ -68,6 +113,27 @@ export function RecapPanel({ state, campaignName, onLog, narrate }: RecapPanelPr
       setNarrating(false);
     }
   };
+
+  const handleCritique = async () => {
+    if (!critique || narrative === null || critiquing) return;
+    setCritiquing(true);
+    // Drop the previous verdict before the new one lands: a review in flight
+    // must not leave the old verdict standing beside edited prose.
+    setCritiqueResult(null);
+    setCritiquedText(null);
+    try {
+      const reviewed = narrative;
+      const result = await critique({ narrative: reviewed, includeModelReview });
+      setCritiqueResult(result);
+      setCritiquedText(reviewed);
+    } finally {
+      setCritiquing(false);
+    }
+  };
+
+  // Only render a verdict that describes the prose currently in the textarea.
+  const currentCritique =
+    critiquedText !== null && critiquedText === narrative ? critiqueResult : null;
 
   return (
     <div className="rounded-lg border bg-card p-3">
@@ -142,6 +208,79 @@ export function RecapPanel({ state, campaignName, onLog, narrate }: RecapPanelPr
                   Discard
                 </Button>
               </div>
+
+              {critique && (
+                <div className="space-y-1.5 rounded border border-dashed p-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <label className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                      <input
+                        type="checkbox"
+                        checked={includeModelReview}
+                        onChange={(event) => setIncludeModelReview(event.target.checked)}
+                        disabled={critiquing}
+                      />
+                      Also ask the model for advisory notes
+                    </label>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleCritique}
+                      disabled={critiquing}
+                      title="Check this prose against the facts above"
+                    >
+                      <ScanSearch className="mr-1.5 h-4 w-4" />
+                      {critiquing ? 'Checking…' : 'Fact-check'}
+                    </Button>
+                  </div>
+
+                  {currentCritique &&
+                    (currentCritique.ok ? (
+                      <div className="space-y-1" role="status">
+                        <p
+                          className={`text-xs font-semibold ${VERDICT_CLASS[currentCritique.critique.verdict]}`}
+                        >
+                          {VERDICT_LABEL[currentCritique.critique.verdict]}
+                        </p>
+                        {currentCritique.critique.issues.length > 0 ? (
+                          <ul className="space-y-0.5 text-[11px] text-muted-foreground">
+                            {currentCritique.critique.issues.map((issue, index) => (
+                              <li key={`${issue.code}:${index}`}>
+                                {issue.deterministic ? '' : 'Model note: '}
+                                {issue.message}
+                                {issue.quote ? ` — “${issue.quote}”` : ''}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-[11px] text-muted-foreground">
+                            Nothing in this prose contradicts or outruns the recap.
+                          </p>
+                        )}
+                        {currentCritique.modelReview.status === 'failed' && (
+                          <p className="text-[11px] text-muted-foreground">
+                            The optional model review did not run (
+                            {currentCritique.modelReview.error}
+                            ). The verdict above is the deterministic one and stands.
+                          </p>
+                        )}
+                        {currentCritique.modelReview.discarded > 0 && (
+                          <p className="text-[11px] text-muted-foreground">
+                            {currentCritique.modelReview.discarded} model note(s) were discarded for
+                            not quoting this prose verbatim.
+                          </p>
+                        )}
+                        <p className="text-[11px] text-muted-foreground">
+                          Advisory only — this never edits or blocks your prose. Fix it yourself,
+                          then log it.
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-destructive" role="status">
+                        {currentCritique.error}
+                      </p>
+                    ))}
+                </div>
+              )}
             </>
           )}
 
