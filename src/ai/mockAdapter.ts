@@ -81,6 +81,18 @@ export function createMockAdapter(): AiProviderAdapter {
           return Promise.resolve({
             narrative: `A deterministic mock retelling of ${factsOf(payload)}.`,
           });
+        case 'narration-critique':
+          // Quotes the narration's opening span VERBATIM, so the wiring test
+          // exercises the flow's quote check on the passing side. A mock that
+          // quoted something absent would only ever prove the discard path.
+          return Promise.resolve({
+            findings: [
+              {
+                quote: openingSpanOf(payload),
+                concern: 'Deterministic mock concern.',
+              },
+            ],
+          });
         case 'identify-creature': {
           const monsterId = firstCandidateId(payload) ?? 'mock-monster';
           return Promise.resolve({
@@ -121,12 +133,46 @@ export function createMockAdapter(): AiProviderAdapter {
             rationale: 'Deterministic mock character draft.',
           });
         }
+        case 'dm-turn-intent': {
+          // Take the FIRST offered option, exactly as the encounter mock takes
+          // the first candidate: the point is to exercise the option-id gate
+          // with an id that is genuinely in the pool. A move gets a destination
+          // one cell from the actor, so the reach gate passes and the scene
+          // runtime — not this mock — decides whether the cell is legal.
+          const option = firstDmTurnOption(payload);
+          if (!option) return Promise.resolve({ proposals: [] });
+          const destination =
+            option.verb === 'move' ? oneCellFrom(dmTurnActorPosition(payload)) : undefined;
+          return Promise.resolve({
+            proposals: [
+              {
+                optionId: option.id,
+                ...(destination ? { destination } : {}),
+                reason: 'Deterministic mock turn proposal.',
+              },
+            ],
+            rationale: 'Deterministic mock AI-DM turn.',
+          });
+        }
         default:
           // Unknown task: throw like a real adapter would; the core normalizes it.
           return Promise.reject(new Error(`Mock adapter has no output for task '${task}'.`));
       }
     },
   };
+}
+
+/**
+ * The first sentence (or the whole of a short narration) from a
+ * narration-critique payload — a span guaranteed to be verbatim present.
+ */
+function openingSpanOf(payload: unknown): string {
+  const narrative =
+    payload && typeof payload === 'object' && 'narrative' in payload
+      ? (payload as { narrative?: unknown }).narrative
+      : undefined;
+  if (typeof narrative !== 'string' || !narrative.trim()) return 'the narration';
+  return narrative.match(/[^.!?]+[.!?]*/)?.[0].trim() || narrative.trim();
 }
 
 /** The client-measured image size on an analyze-map payload, with a safe default. */
@@ -138,4 +184,34 @@ function imageSizeOf(payload: unknown): { widthPx: number; heightPx: number } {
   const widthPx = typeof size?.widthPx === 'number' ? size.widthPx : 1000;
   const heightPx = typeof size?.heightPx === 'number' ? size.heightPx : 1000;
   return { widthPx, heightPx };
+}
+
+/** The first offered dm-turn option, if the payload carries a non-empty pool. */
+function firstDmTurnOption(payload: unknown): { id: string; verb: string } | undefined {
+  if (payload && typeof payload === 'object' && 'options' in payload) {
+    const options = (payload as { options?: unknown }).options;
+    if (Array.isArray(options) && options.length > 0) {
+      const first = options[0] as { id?: unknown; verb?: unknown };
+      if (first && typeof first.id === 'string' && typeof first.verb === 'string') {
+        return { id: first.id, verb: first.verb };
+      }
+    }
+  }
+  return undefined;
+}
+
+/** The acting token's cell on a dm-turn payload, with a safe origin default. */
+function dmTurnActorPosition(payload: unknown): { x: number; y: number } {
+  const actor =
+    payload && typeof payload === 'object'
+      ? (payload as { actor?: { position?: { x?: unknown; y?: unknown } } }).actor
+      : undefined;
+  const x = typeof actor?.position?.x === 'number' ? actor.position.x : 0;
+  const y = typeof actor?.position?.y === 'number' ? actor.position.y : 0;
+  return { x, y };
+}
+
+/** One cell away, staying at non-negative coordinates on any sane grid. */
+function oneCellFrom(position: { x: number; y: number }): { x: number; y: number } {
+  return { x: position.x > 0 ? position.x - 1 : position.x + 1, y: position.y };
 }

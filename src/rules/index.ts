@@ -58,6 +58,20 @@ export {
 export type { AreaShape } from './resolver/areaTargeting';
 export { cellInArea, gridDistance, tokensInArea } from './resolver/areaTargeting';
 
+export type {
+  ResourceIntent,
+  ResourceIntentAccepted,
+  ResourceIntentOutcome,
+  ResourceIntentRejected,
+  ResourcePoolChange,
+  ResourcePoolDescriptor,
+  ResourcePoolList,
+  ResourcePoolsContext,
+  ResourceRejectionCode,
+  ResourceVerb,
+} from './resources/types';
+export { resolveResourceIntent } from './resources/resolveResourceIntent';
+
 export {
   areaEffectToDamageIntent,
   attackToDamageIntent,

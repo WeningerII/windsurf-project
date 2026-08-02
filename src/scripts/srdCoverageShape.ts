@@ -5,9 +5,11 @@
  * `main()` / fetches. `srd-coverage.ts` fetches the raw independent SRD lists;
  * these helpers reshape both sides so that:
  *
- *   1. the monster denominators count INDIVIDUAL stat blocks, not the taxonomic
- *      CONTAINER headings/records that merely nest separately-named members
- *      (3.5e SRD category headers; PF1e bestiary dragon/elemental parents), and
+ *   1. the monster denominators count INDIVIDUAL stat blocks — every heading
+ *      that owns a stat table, at whatever markdown depth it sits — and not the
+ *      taxonomic CONTAINER headings/records that merely nest separately-named
+ *      members (3.5e SRD group headers; PF1e bestiary dragon/elemental
+ *      parents), and
  *   2. confirmed naming-CONVENTION variants ("Greater Invisibility" vs
  *      "Invisibility, Greater") match across the SRD and loader sides instead of
  *      being double-counted as a "missing" entry and an over-inclusion suspect.
@@ -144,79 +146,110 @@ export function pf1eContainerRecords(names: string[], minChildren = 2): string[]
   return names.filter((name) => !kept.has(name));
 }
 
-// --- D&D 3.5e monster heading collapse --------------------------------------
+// --- D&D 3.5e monster chapter parse + heading collapse ----------------------
 
 /**
- * SRD 3.5 monster GROUP headers — taxonomic containers that nest several
- * separately-named member stat blocks (Angel → Astral Deva / Planetar / Solar;
- * Elemental → Air/Earth/Fire/Water; Genie → Djinni / Efreeti / Janni). Each
- * member is counted on its own entry, so the bare group header is NOT an
- * individual stat block and inflates the denominator.
+ * One heading from the olimot SRD 3.5 monster chapters, carrying the single
+ * fact the denominator turns on: whether the heading's OWN body prints a stat
+ * table.
  *
- * The membership test is STRUCTURAL and verified against the upstream chapters:
- * a heading belongs here only when its `## ` section is PROSE ONLY (no stat
- * table of its own) and every stat block sits under a separately-named `### `
- * child — the Angel → Astral Deva/Planetar/Solar shape.
- *
- * Confirmed INDIVIDUALS are deliberately EXCLUDED — Salamander, Hydra, Lich and
- * Ghost are single stat blocks (with, at most, their own inline variants), so
- * they remain genuine misses while unencoded rather than being hidden. Headings
- * whose `## ` section OWNS a combined multi-column table are likewise excluded
- * even when it covers several named creatures (Fungus → Shrieker/Violet Fungus,
- * Arrowhawk → juvenile/adult/elder), because the table is one stat block.
+ * The chapters are THREE levels deep and the level does NOT predict what a
+ * heading is. A `## ` may be an individual creature (`## Aboleth`), a combined
+ * multi-column stat block (`## Salamander`, `## Formian`), a prose taxonomic
+ * container whose members are `### ` children (`## Angel`, `## Demon`), or
+ * chapter prose that is not a creature at all (`## Reading the Entries`). A
+ * `### ` may be an individual stat block (`### Balor`, `### Djinni`,
+ * `### Air Elemental`, `### Black Dragon`) or ordinary prose (`### Combat`,
+ * `### Greater Barghest`). Only the presence of a stat table separates them.
  */
-export const SRD_35E_MONSTER_CATEGORY_HEADINGS: readonly string[] = [
-  'Angel',
-  'Archon',
-  'Chromatic Dragons',
-  'Demon',
-  'Devil',
-  'Dinosaur',
-  'Dire Animal',
-  'Dragon',
-  'Dragon, True',
-  'True Dragon',
-  'Elemental',
-  'Formian',
-  'Genie',
-  'Giant',
-  'Golem',
-  'Hag',
-  'Inevitable',
-  'Lycanthrope',
-  'Mephit',
-  'Metallic Dragons',
-  'Naga',
-  'Nightshade',
-  'Ooze',
-  'Planetouched',
-  'Slaad',
-  'Snake',
-  'Sphinx',
-  'Sprite',
-  'Swarm',
-];
+export interface Srd35eMonsterHeading {
+  /** Markdown depth. Only 2 and 3 are collected; no `#### ` owns a stat table. */
+  level: 2 | 3;
+  /** Heading text, verbatim. */
+  name: string;
+  /** Enclosing `## ` heading for a `### `; `null` for a `## ` itself. */
+  parent: string | null;
+  /**
+   * The heading's OWN body — everything up to the next heading of ANY depth —
+   * contains a stat table. Deliberately NOT the whole subtree: a prose container
+   * must not inherit its children's stat blocks.
+   */
+  hasStatBlock: boolean;
+}
 
 /**
- * NON-stat-block `## ` headings the olimot SRD 3.5 monster chapters carry that
- * are NOT creatures at all: prose sub-sections of the chapter intro ("Reading
- * the Entries", "Combat") and TEMPLATE headers whose example is applied to an
- * existing base creature rather than shipped as its own enumerable monster
- * ("Celestial Creature", "Fiendish Creature", "Half-Celestial", "Half-Fiend").
- * Dropping them keeps the denominator to individual monster stat blocks. Kept
- * distinct from the taxonomic CONTAINER list above because they nest nothing —
- * they are just non-monster headings — but both are removed by
- * `collapse35eMonsterHeadings`.
+ * The stat-block discriminator: a stat-table CELL whose entire content is the
+ * Hit Dice label.
  *
- * The template entries here are the ones whose upstream section contains NO
- * stat table at all (no `Hit Dice:` row anywhere under the heading), verified
- * against the chapters. "Half-Dragon" is deliberately ABSENT: its section does
- * print a sample stat block, so it stays a countable individual and a genuine
- * miss.
+ * Every olimot stat block is an HTML table whose first data row labels Hit Dice;
+ * nothing else in the chapters produces that cell. Three details are
+ * load-bearing and each was verified against the upstream chapters:
+ *
+ *   - `<t[hd]>` rather than `<th>`: `### Kolyarut` and `### Lemure` are real
+ *     stat blocks whose label cells are `<td>`, not `<th>`. A `<th>`-only test
+ *     silently drops both.
+ *   - `Hit Dice (hp)` as well as `Hit Dice:`: the ten true dragons
+ *     (`### Black Dragon` … `### Silver Dragon`) print a by-age table whose
+ *     column header is `Hit Dice (hp)`. A `Hit Dice:`-only test finds no dragon
+ *     in the entire SRD.
+ *   - the surrounding cell tags: the bare string "Hit Dice" appears in ordinary
+ *     prose ("A barghest that reaches 9 Hit Dice through feeding…", the
+ *     "Racial Hit Dice" paragraph in every "X as Characters" section), so a
+ *     substring test counts ~25 prose sections as creatures.
+ */
+const SRD_35E_STAT_TABLE_CELL = /<t[hd]>\s*Hit Dice(?::|\s*\(hp\))\s*<\/t[hd]>/i;
+
+/**
+ * Parse one olimot SRD 3.5 monster chapter into its `## ` / `### ` headings.
+ * Pure: takes the chapter text, does no I/O. Call once per chapter and
+ * concatenate — `parent` is only meaningful within a chapter.
+ */
+export function parseSrd35eMonsterHeadings(markdown: string): Srd35eMonsterHeading[] {
+  const lines = markdown.split('\n');
+  const headings: Array<{ level: number; name: string; line: number }> = [];
+  lines.forEach((line, index) => {
+    const match = line.match(/^(#{1,6}) (.+)$/);
+    if (match) headings.push({ level: match[1].length, name: match[2].trim(), line: index });
+  });
+
+  const out: Srd35eMonsterHeading[] = [];
+  let parent: string | null = null;
+  headings.forEach((heading, index) => {
+    if (heading.level === 2) parent = heading.name;
+    if (heading.level !== 2 && heading.level !== 3) return;
+    // Own body only: up to the NEXT heading of any depth.
+    const end = index + 1 < headings.length ? headings[index + 1].line : lines.length;
+    const body = lines.slice(heading.line + 1, end).join('\n');
+    out.push({
+      level: heading.level,
+      name: heading.name,
+      parent: heading.level === 2 ? null : parent,
+      hasStatBlock: SRD_35E_STAT_TABLE_CELL.test(body),
+    });
+  });
+  return out;
+}
+
+/**
+ * NON-stat-block `## ` headings the chapters carry that are NOT creatures:
+ * chapter/section prose ("Reading the Entries", "Combat", "Dragon, True" — the
+ * true-dragon chapter preamble covering age categories, overland movement and
+ * dragonhide) and TEMPLATE headers applied to an existing base creature rather
+ * than shipped as their own monster ("Celestial Creature", "Fiendish Creature",
+ * "Half-Celestial", "Half-Fiend").
+ *
+ * This list is EXPLICIT and deliberately narrow. It could be derived — these
+ * are exactly the `## ` headings with neither a stat table nor a counted
+ * `### ` child — but that derivation would also swallow "Ghost", "Lich",
+ * "Vampire" and "Half-Dragon", four template sections the repo has already
+ * ruled are countable individuals and therefore genuine misses. Dropping them
+ * would improve the published percentage by hiding four real gaps, so they stay
+ * off this list and stay counted.
  */
 export const SRD_35E_MONSTER_NONBLOCK_HEADINGS: readonly string[] = [
   'Reading the Entries',
   'Combat',
+  'Dragon, True',
   'Celestial Creature',
   'Fiendish Creature',
   'Half-Celestial',
@@ -224,73 +257,109 @@ export const SRD_35E_MONSTER_NONBLOCK_HEADINGS: readonly string[] = [
 ];
 
 /**
- * Dragon AGE and elemental/creature SIZE descriptors the SRD prefixes onto a
- * base creature ("Adult Black Dragon", "Large Air Elemental"). Folding them to
- * the archetype makes the denominator count one stat block per creature rather
- * than one per age/size row. Ordered longest-first so multi-word variants match
- * before their sub-words ("Young Adult" before "Young"/"Adult"). These are the
- * ONLY tokens folded, so genus/species commas ("Bear, Black") and descriptors
- * outside this set ("Dire Bear") are left intact.
+ * The ONLY `### ` sections that print a stat table without being a creature.
+ * Each is excluded BY NAME under its parent, with the reason it is not a
+ * creature — there are exactly three in the whole corpus, and a structural rule
+ * that caught them would also catch real monsters.
+ *
+ * Every other stat-table `### ` is a creature and is counted.
  */
-const SRD_35E_VARIANT_WORDS = [
-  'great wyrm',
-  'young adult',
-  'mature adult',
-  'very young',
-  'very old',
-  'wyrmling',
-  'juvenile',
-  'greater',
-  'ancient',
-  'medium',
-  'young',
-  'adult',
-  'small',
-  'large',
-  'elder',
-  'wyrm',
-  'huge',
-  'old',
-].sort((a, b) => b.length - a.length);
-
-/** Strip a single recognized leading/trailing age/size variant word, if present. */
-function foldMonsterVariant(name: string): string {
-  const n = name.trim();
-  for (const w of SRD_35E_VARIANT_WORDS) {
-    const esc = w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const lead = new RegExp(`^${esc}[\\s,]+(.+)$`, 'i');
-    const mLead = n.match(lead);
-    if (mLead) return mLead[1].trim();
-    const trail = new RegExp(`^(.+?)[\\s,]+${esc}$`, 'i');
-    const mTrail = n.match(trail);
-    if (mTrail) return mTrail[1].trim();
-  }
-  return n;
-}
+export const SRD_35E_NON_CREATURE_STAT_SECTIONS: ReadonlyArray<{
+  parent: string;
+  name: string;
+  reason: string;
+}> = [
+  {
+    parent: 'Skeleton',
+    name: 'Creating a Skeleton',
+    // The section is the skeleton TEMPLATE's worked example: one nine-column
+    // table of sample skeletons made from other monsters (Human Warrior, Wolf,
+    // Owlbear, Troll, Chimera, Ettin, Advanced Megaraptor, Cloud Giant, Young
+    // Adult Red Dragon Skeleton). None is an SRD monster in its own right; the
+    // countable entry is the parent `## Skeleton`, which keeps its place in the
+    // denominator because this is its only stat-table child.
+    reason: 'template worked example — sample skeletons built from other monsters',
+  },
+  {
+    parent: 'Zombie',
+    name: 'Creating a Zombie',
+    // Same shape as Creating a Skeleton: the zombie template's eight-column
+    // sample table (Kobold, Human Commoner, Troglodyte, Bugbear, Ogre, Minotaur,
+    // Wyvern, Gray Render Zombie). `## Zombie` stays the countable entry.
+    reason: 'template worked example — sample zombies built from other monsters',
+  },
+  {
+    parent: 'Horse',
+    name: 'Combat',
+    // "Combat" is the chapter's prose sub-heading, used ~200 times across the
+    // corpus; under `## Horse` alone it happens to also carry the horse stat
+    // tables. The creature name is the parent `## Horse`, so counting the child
+    // would put the literal string "Combat" in the denominator. Excluded by
+    // PARENT + name, so the ~200 other prose `### Combat` sections are untouched
+    // and `## Horse` — left with no counted child — stays counted itself.
+    reason: 'prose sub-heading that happens to hold the horse stat tables',
+  },
+];
 
 /**
- * Reshape the raw `## ` monster headings from the olimot SRD 3.5 chapters into
- * an individual-stat-block list: drop the taxonomic category CONTAINER headers
- * (`SRD_35E_MONSTER_CATEGORY_HEADINGS`) and the non-creature prose/template
- * headings (`SRD_35E_MONSTER_NONBLOCK_HEADINGS`), then fold age/size variant
- * rows to their archetype (first occurrence wins; later variants of the same
- * archetype are de-duplicated). Order is preserved. Genuine standalone monsters
- * and genuine misses (Salamander, Hydra, …) pass through unchanged.
+ * Reshape the parsed monster-chapter headings into an individual-stat-block
+ * list.
+ *
+ * The rule is structural, in this order:
+ *
+ *   1. A `### ` is counted iff it owns a stat table and is not one of the three
+ *      `SRD_35E_NON_CREATURE_STAT_SECTIONS`.
+ *   2. A `## ` that owns a stat table is counted (this includes the combined
+ *      multi-column blocks — Salamander, Hydra, Formian, Fungus, Arrowhawk,
+ *      Animated Object — which are ONE stat block covering several named
+ *      variants).
+ *   3. A `## ` that owns no stat table is a CONTAINER, and dropped, iff at
+ *      least one `### ` child was counted at step 1. Its members carry the
+ *      count. Because step 1 runs first, `## Skeleton`, `## Zombie` and
+ *      `## Horse` — whose only stat-table children are excluded — are left with
+ *      no counted child and stay counted themselves.
+ *   4. Everything else with no stat table is counted unless it is on
+ *      `SRD_35E_MONSTER_NONBLOCK_HEADINGS`, which preserves Ghost / Lich /
+ *      Vampire / Half-Dragon as genuine misses.
+ *
+ * Deriving the container set at step 3 replaces the hand-maintained category
+ * list this function used to carry. That list had drifted from the source in
+ * both directions: three of its entries ('Dragon', 'True Dragon', 'Slaad')
+ * matched no heading in the chapters at all — "Slaad" does not occur anywhere —
+ * and 'Formian' was wrong, dropping a `## ` that owns its own combined
+ * Worker/Warrior/Taskmaster/Myrmarch/Queen table and whose `### ` children own
+ * none, so the formians left the denominator entirely.
+ *
+ * Order is preserved and names are de-duplicated by `norm`.
  */
-export function collapse35eMonsterHeadings(headings: string[]): string[] {
-  const categorySet = new Set(
-    [...SRD_35E_MONSTER_CATEGORY_HEADINGS, ...SRD_35E_MONSTER_NONBLOCK_HEADINGS].map(norm)
+export function collapse35eMonsterHeadings(headings: Srd35eMonsterHeading[]): string[] {
+  const excluded = new Set(
+    SRD_35E_NON_CREATURE_STAT_SECTIONS.map((s) => `${norm(s.parent)}|${norm(s.name)}`)
   );
-  const seenArchetype = new Set<string>();
+  const nonBlock = new Set(SRD_35E_MONSTER_NONBLOCK_HEADINGS.map(norm));
+
+  const isCountedChild = (h: Srd35eMonsterHeading): boolean =>
+    h.level === 3 &&
+    h.hasStatBlock &&
+    !excluded.has(`${norm(h.parent ?? '')}|${norm(h.name)}`) &&
+    !nonBlock.has(norm(h.name));
+
+  const containers = new Set(headings.filter(isCountedChild).map((h) => norm(h.parent ?? '')));
+
+  const seen = new Set<string>();
   const kept: string[] = [];
   for (const heading of headings) {
-    const name = heading.trim();
-    if (!name || categorySet.has(norm(name))) continue;
-    const archetype = foldMonsterVariant(name);
-    const key = norm(archetype);
-    if (!key || seenArchetype.has(key)) continue;
-    seenArchetype.add(key);
-    kept.push(archetype);
+    const name = heading.name.trim();
+    if (!name) continue;
+    const counted =
+      heading.level === 3
+        ? isCountedChild(heading)
+        : !nonBlock.has(norm(name)) && (heading.hasStatBlock || !containers.has(norm(name)));
+    if (!counted) continue;
+    const key = norm(name);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    kept.push(name);
   }
   return kept;
 }

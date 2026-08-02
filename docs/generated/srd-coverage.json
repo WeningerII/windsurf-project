@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T00:04:51.558Z",
+  "generatedAt": "2026-08-02T15:21:58.050Z",
   "note": "Independent SRD reverse diff (Denominator A). Written by `npm run srd:coverage` (networked) alongside srd-coverage.md; read offline by generate-roadmap-metrics.ts. Not hand-editable.",
   "rows": [
     {
@@ -83,8 +83,8 @@
       "srdTotal": 598,
       "pct": 100,
       "missingCount": 0,
-      "loaderCount": 653,
-      "overInclusionCount": 46
+      "loaderCount": 643,
+      "overInclusionCount": 36
     },
     {
       "systemId": "dnd-5e-2024",
@@ -155,8 +155,8 @@
       "srdTotal": 330,
       "pct": 100,
       "missingCount": 0,
-      "loaderCount": 340,
-      "overInclusionCount": 10
+      "loaderCount": 330,
+      "overInclusionCount": 0
     },
     {
       "systemId": "dnd-5e-2024",
@@ -167,8 +167,8 @@
       "srdTotal": 443,
       "pct": 100,
       "missingCount": 0,
-      "loaderCount": 501,
-      "overInclusionCount": 44
+      "loaderCount": 488,
+      "overInclusionCount": 31
     },
     {
       "systemId": "pf2e",
@@ -179,8 +179,8 @@
       "srdTotal": 537,
       "pct": 100,
       "missingCount": 0,
-      "loaderCount": 551,
-      "overInclusionCount": 14
+      "loaderCount": 543,
+      "overInclusionCount": 6
     },
     {
       "systemId": "pf1e",
@@ -215,8 +215,8 @@
       "srdTotal": 243,
       "pct": 100,
       "missingCount": 0,
-      "loaderCount": 616,
-      "overInclusionCount": 372
+      "loaderCount": 612,
+      "overInclusionCount": 368
     },
     {
       "systemId": "pf1e",
@@ -227,8 +227,8 @@
       "srdTotal": 347,
       "pct": 100,
       "missingCount": 0,
-      "loaderCount": 616,
-      "overInclusionCount": 269
+      "loaderCount": 612,
+      "overInclusionCount": 265
     },
     {
       "systemId": "pf2e",
@@ -295,12 +295,12 @@
       "systemLabel": "Pathfinder 2e",
       "category": "equipment",
       "srdSource": "Core Rulebook (Pf2eToolsOrg/Pf2eTools items-crb.json)",
-      "covered": 32,
+      "covered": 34,
       "srdTotal": 467,
-      "pct": 6.9,
-      "missingCount": 435,
-      "loaderCount": 188,
-      "overInclusionCount": 156
+      "pct": 7.3,
+      "missingCount": 433,
+      "loaderCount": 148,
+      "overInclusionCount": 114
     },
     {
       "systemId": "dnd-3.5e",
@@ -311,8 +311,8 @@
       "srdTotal": 605,
       "pct": 100,
       "missingCount": 0,
-      "loaderCount": 610,
-      "overInclusionCount": 5
+      "loaderCount": 607,
+      "overInclusionCount": 2
     },
     {
       "systemId": "dnd-3.5e",
@@ -320,9 +320,9 @@
       "category": "monsters",
       "srdSource": "SRD 3.5 (olimot/srd-v3.5-md monster chapters)",
       "covered": 177,
-      "srdTotal": 207,
-      "pct": 85.5,
-      "missingCount": 30,
+      "srdTotal": 332,
+      "pct": 53.3,
+      "missingCount": 155,
       "loaderCount": 188,
       "overInclusionCount": 11
     },
@@ -343,11 +343,11 @@
       "systemLabel": "D&D 3.5e",
       "category": "feats",
       "srdSource": "SRD 3.5 (olimot/srd-v3.5-md feats chapter)",
-      "covered": 72,
+      "covered": 110,
       "srdTotal": 110,
-      "pct": 65.5,
-      "missingCount": 38,
-      "loaderCount": 80,
+      "pct": 100,
+      "missingCount": 0,
+      "loaderCount": 118,
       "overInclusionCount": 0
     },
     {
@@ -383,8 +383,8 @@
       "srdTotal": 113,
       "pct": 100,
       "missingCount": 0,
-      "loaderCount": 192,
-      "overInclusionCount": 79
+      "loaderCount": 113,
+      "overInclusionCount": 0
     },
     {
       "systemId": "mam3e",

@@ -54,8 +54,10 @@ import {
   srdNormVariants,
   overInclusionSuspects,
   collapse35eMonsterHeadings,
+  parseSrd35eMonsterHeadings,
   collapsePf1eContainerRecords,
 } from './srdCoverageShape';
+import type { Srd35eMonsterHeading } from './srdCoverageShape';
 
 const RAW5E = 'https://raw.githubusercontent.com/5e-bits/5e-database/main/src';
 
@@ -644,17 +646,19 @@ const SRD35_MONSTER_FILES = [
   'monsters-vermin.md',
 ];
 async function fetchSrd35MonsterNames(): Promise<string[]> {
-  const headings: string[] = [];
+  // The chapters are three levels deep and a stat block can sit at `## ` OR at
+  // `### `. Collecting `## ` alone — which this function used to do — DEFLATES
+  // the denominator by every member of the SRD's 26 taxonomic groups: there is
+  // no `## Balor`, no `## Djinni`, no `## Air Elemental`, no `## Black Dragon`.
+  // Parse both depths and let the presence of a stat table decide; see
+  // src/scripts/srdCoverageShape.ts.
+  const headings: Srd35eMonsterHeading[] = [];
   for (const file of SRD35_MONSTER_FILES) {
     const text = await fetchText(
       `https://raw.githubusercontent.com/olimot/srd-v3.5-md/main/monsters/${file}`
     );
-    for (const match of text.matchAll(/^## (.+)$/gm)) headings.push(match[1].trim());
+    headings.push(...parseSrd35eMonsterHeadings(text));
   }
-  // Reshape to individual stat blocks: drop the SRD's taxonomic category
-  // headers (Angel/Dragon/Elemental/…) that merely nest separately-named
-  // members, and fold age/size variant rows to their archetype. See
-  // src/scripts/srdCoverageShape.ts.
   return collapse35eMonsterHeadings(headings);
 }
 TARGETS.push({
@@ -1015,7 +1019,7 @@ async function main(): Promise<void> {
   }
   lines.push('## Pending (independent source not yet wired or not cleanly scopable)');
   lines.push(
-    '- **D&D 3.5e** spells, monsters, classes, and feats are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator counts INDIVIDUAL stat blocks: `collapse35eMonsterHeadings` (`src/scripts/srdCoverageShape.ts`) drops the SRD\'s taxonomic category headers (e.g. "Angel", "Dragon", "Chromatic Dragons", "Dinosaur") that merely nest separately-named members, drops non-creature prose/template headings ("Reading the Entries", "Combat", "Celestial Creature", "Fiendish Creature"), and folds age/size variant rows to their archetype. **3.5e equipment is closed-by-no-source**: the olimot `equipment.md` tables interleave services/lodging/food/mounts/transport outside the loader\'s weapons/armor/shields/gear scope, so a scrape would poison the denominator (D35E packs remain rejected for psionics/epic). See `docs/srd-sources.md`.'
+    '- **D&D 3.5e** spells, monsters, classes, and feats are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator counts INDIVIDUAL stat blocks, at whatever markdown depth they sit: `parseSrd35eMonsterHeadings` + `collapse35eMonsterHeadings` (`src/scripts/srdCoverageShape.ts`) read both `## ` and `### ` headings and count every one whose OWN body prints a stat table (a `<th>`/`<td>` cell that is exactly `Hit Dice:` or the dragons\' by-age `Hit Dice (hp)`). A `## ` with no stat table of its own is dropped as a taxonomic container only when a `### ` child was counted under it ("Angel" → Astral Deva/Planetar/Solar; "Chromatic Dragons" → Black/Blue/Green/Red/White Dragon), non-creature prose/template headings are dropped ("Reading the Entries", "Combat", "Dragon, True", "Celestial Creature", "Fiendish Creature", "Half-Celestial", "Half-Fiend"), and exactly three stat-table `### ` sections that are not creatures are excluded by name ("Creating a Skeleton", "Creating a Zombie", and Horse\'s "Combat"). **This denominator moved from 207 to 332 on 2026-08-02**: the previous parse collected `## ` headings only, so all 124 members of the SRD\'s taxonomic groups — every demon, devil, angel, archon, dinosaur, dire animal, elemental, genie, giant, golem, hag, inevitable, lycanthrope, mephit, naga, nightshade, ooze, planetouched, sphinx, sprite, swarm and snake, and all ten true dragons — were absent from it, along with "Formian", whose combined caste table was dropped by a hand-maintained container list. The published percentage fell accordingly; the product ships none of those stat blocks, and the earlier figure measured a denominator that had removed them. **3.5e equipment is closed-by-no-source**: the olimot `equipment.md` tables interleave services/lodging/food/mounts/transport outside the loader\'s weapons/armor/shields/gear scope, so a scrape would poison the denominator (D35E packs remain rejected for psionics/epic). See `docs/srd-sources.md`.'
   );
   lines.push(
     '- **Remaining categories** — PF2e classes/ancestries/backgrounds/feats/equipment are wired above (Core Rulebook scope; **archetypes closed-by-no-source** — an APG-era system with no CRB entries). **PF1e classes/feats are closed-by-no-source** (no runtime-enumerable Core source; PSRD-Data needs an encoder-produced pinned manifest). Daggerheart classes/ancestries/communities/weapons/armor/adversaries are wired and measured above (adversaries against the pinned `scripts/data/daggerheart-adversary-manifest.json` roster). M&M skills and equipment are wired and measured above; **M&M conditions is an absent gap marker** (no conditions catalog ships — see the Absent section).'

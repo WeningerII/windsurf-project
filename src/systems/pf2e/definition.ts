@@ -42,6 +42,7 @@ export const Pf2eSystemDef: SystemDefinition<Pf2eDataModel> = {
   loadEngine: () => import('./engine').then((m) => new m.Pf2eEngine()),
   loadValidator: () => import('./validation').then((m) => m.createPf2eValidator()),
   loadLegalActions: () => import('./legalActions').then((m) => m.createPf2eLegalActions()),
+  loadResourcePools: () => import('./pf2eResourcePools').then((m) => m.createPf2eResourcePools()),
   loadCreationPlan: () => import('./creationPlan').then((m) => m.createPf2eCreationPlan()),
   SheetComponent: lazyWithPreload(() =>
     import('./sheet').then((m) => ({ default: m.Pf2eCharacterSheet }))

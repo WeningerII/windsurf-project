@@ -78,6 +78,15 @@ const ENCOUNTER_PAYLOAD = {
   candidates: [{ id: 'pf2e-goblin-warrior', name: 'Goblin Warrior', challengeRating: 1 }],
 };
 
+const DM_TURN_PAYLOAD = {
+  systemId: 'pf2e',
+  facts: 'Combat: reached round 2.',
+  round: 2,
+  actor: { id: 'goblin', name: 'Goblin', allegiance: 'hostile', position: { x: 5, y: 5 } },
+  tokens: [{ id: 'hero', name: 'Hero', allegiance: 'party', position: { x: 1, y: 1 } }],
+  options: [{ id: 'move', verb: 'move' as const, label: 'Move up to 3 squares', maxDistance: 3 }],
+};
+
 describe('shared AI-SDK adapter — structured text tasks', () => {
   it('sends the shared loader-derived prompt and returns the model object', async () => {
     const { model, seen } = recordingModel({
@@ -147,6 +156,29 @@ describe('shared AI-SDK adapter — structured text tasks', () => {
     const kinds = (parts as Array<{ type: string }>).map((part) => part.type);
     expect(kinds).toContain('text');
     expect(kinds).toContain('file'); // the SDK normalizes an image part to a file part
+  });
+
+  it('constrains a dm-turn-intent response to option ids and destinations only', async () => {
+    const { model, seen } = recordingModel({
+      proposals: [{ optionId: 'move', destination: { x: 6, y: 6 } }],
+      rationale: 'Close the distance.',
+    });
+    const adapter = createAiSdkAdapter({
+      id: 'test-provider',
+      model: 'test-text-model',
+      languageModel: () => model,
+    });
+
+    const output = await adapter.generate('dm-turn-intent', DM_TURN_PAYLOAD);
+
+    expect(output).toEqual({
+      proposals: [{ optionId: 'move', destination: { x: 6, y: 6 } }],
+      rationale: 'Close the distance.',
+    });
+    // The option pool reached the model; no scene intent vocabulary did.
+    const text = promptText(seen[0]!);
+    expect(text).toContain('- move: Move up to 3 squares');
+    expect(text).not.toContain('move-token');
   });
 
   it('throws for a task with no provider schema, letting the core normalize it', async () => {

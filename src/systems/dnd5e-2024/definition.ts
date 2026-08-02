@@ -79,6 +79,11 @@ export const Dnd5e2024SystemDef: SystemDefinition<Dnd5e2024DataModel> = {
     import('../dnd5e/shared/legalActions').then((m) =>
       m.createDnd5eLegalActions<Dnd5e2024DataModel>('dnd-5e-2024')
     ),
+  // Shared 5e resource-pool enumeration (see dnd5e/shared/dnd5eResourcePools).
+  loadResourcePools: () =>
+    import('../dnd5e/shared/dnd5eResourcePools').then((m) =>
+      m.createDnd5eResourcePools<Dnd5e2024DataModel>()
+    ),
   // Shared 5e guided-creation plan, stamped with the 2024 systemId.
   loadCreationPlan: () =>
     import('../dnd5e/shared/creationPlan').then((m) =>

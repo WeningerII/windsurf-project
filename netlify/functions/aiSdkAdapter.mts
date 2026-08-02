@@ -47,6 +47,12 @@ const TASK_SCHEMAS: Partial<Record<AiTask, z.ZodTypeAny>> = {
     confidence: z.number(),
     reason: z.string().optional(),
   }),
+  // Advisory critique. No score and no verdict field on purpose: the verdict is
+  // `checkNarrationAgainstFacts`'s (src/ai/narrationCritic.ts), and a model
+  // field named `verdict` here would invite a caller to read it as one.
+  'narration-critique': z.object({
+    findings: z.array(z.object({ quote: z.string(), concern: z.string() })),
+  }),
   'character-draft': z.object({
     name: z.string().min(1),
     classId: z.string().optional(),
@@ -80,6 +86,22 @@ const TASK_SCHEMAS: Partial<Record<AiTask, z.ZodTypeAny>> = {
       })
     ),
     reason: z.string().optional(),
+  }),
+  // Shape only, and deliberately no `optionId` enum: the legal ids are the ones
+  // the CALLER put in this request's option pool, and pinning them here would
+  // move the membership decision off `src/ai/dmTurn.ts`, which is where the
+  // proposal is mapped to a `SceneActionIntent` and where an invented id must be
+  // caught. There is no intent type, token id or modifier in this schema for the
+  // same reason — none of those is the model's to choose.
+  'dm-turn-intent': z.object({
+    proposals: z.array(
+      z.object({
+        optionId: z.string(),
+        destination: z.object({ x: z.number(), y: z.number() }).optional(),
+        reason: z.string().optional(),
+      })
+    ),
+    rationale: z.string().optional(),
   }),
 };
 

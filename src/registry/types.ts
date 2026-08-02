@@ -3,6 +3,24 @@ export type { SystemDataModel };
 import React from 'react';
 import type { Attribute, Skill } from '../types/game-systems';
 import type { CreationPlan } from '../creation/types';
+import type {
+  ResourceIntentOutcome,
+  ResourcePoolChange,
+  ResourcePoolList,
+  ResourcePoolsContext,
+} from '../rules/resources/types';
+
+// Re-exported so a system's provider imports its whole contract from the
+// registry, exactly as the legal-actions providers do.
+export type {
+  ResourceIntent,
+  ResourceIntentOutcome,
+  ResourcePoolChange,
+  ResourcePoolDescriptor,
+  ResourcePoolList,
+  ResourcePoolsContext,
+  ResourceVerb,
+} from '../rules/resources/types';
 
 type SheetProps<T extends SystemDataModel> = {
   document: CharacterDocument<T>;
@@ -220,6 +238,53 @@ export interface SystemLegalActionsProvider<T extends SystemDataModel> {
 }
 
 /**
+ * Resource-pool seam (RFC 005 substrate).
+ *
+ * The stateful twin of the legal-actions seam above. A provider does exactly
+ * two things, and neither is arithmetic:
+ *
+ * 1. `resourcePools` — project the system's own data model onto the canonical
+ *    `{ max, spent }` pools of `src/utils/resourcePool.ts`, so a caller can ask
+ *    "what does this character have to spend" without knowing the model.
+ * 2. `applyResourcePool` — write a pool the shared resolver already computed
+ *    back into that model. The system knows WHERE the id lives; the resolver
+ *    decided WHAT the value is. Splitting it that way is what keeps a spend
+ *    clamped identically in all seven systems.
+ *
+ * Deliberately does NOT privilege a rest model: some systems refill on a rest,
+ * PF2e Refocus recovers exactly one focus point, and Daggerheart's downtime is
+ * player-chosen moves. Enumeration plus a validated verb serves all three; a
+ * cross-system rest engine would serve none of them honestly.
+ */
+export interface SystemResourcePoolsProvider<T extends SystemDataModel> {
+  resourcePools(
+    document: CharacterDocument<T>,
+    context: ResourcePoolsContext
+  ): ResourcePoolList | Promise<ResourcePoolList>;
+
+  /**
+   * Persist a resolved pool. Returns `undefined` when the provider does not own
+   * `change.poolId` — the registry turns that into an `unknown-pool` rejection
+   * rather than reporting a success that wrote nothing.
+   */
+  applyResourcePool(
+    document: CharacterDocument<T>,
+    change: ResourcePoolChange
+  ): CharacterDocument<T> | undefined;
+}
+
+/**
+ * The result of routing one {@link ResourceIntent} through a system.
+ *
+ * `document` is the SAME reference the caller passed in whenever `outcome.ok`
+ * is false, so a refusal is observably a no-op rather than a silent re-write.
+ */
+export interface ResourceIntentApplication<T extends SystemDataModel> {
+  outcome: ResourceIntentOutcome;
+  document: CharacterDocument<T>;
+}
+
+/**
  * A complete definition of a Game System module.
  */
 export interface SystemDefinition<T extends SystemDataModel> {
@@ -277,6 +342,12 @@ export interface SystemDefinition<T extends SystemDataModel> {
   // eager bootstrap chunk. Systems without one enumerate no actions (an empty
   // list, never an error), so their behavior is unchanged.
   loadLegalActions?: () => Promise<SystemLegalActionsProvider<T>>;
+
+  // Lazy resource-pool provider (RFC-005 substrate for the UI stepper and the
+  // AI-DM action path). Same lazy+cached pattern as `loadLegalActions`. Systems
+  // without one enumerate no pools (an empty list, never an error), so their
+  // behavior is unchanged.
+  loadResourcePools?: () => Promise<SystemResourcePoolsProvider<T>>;
 
   // The Main Character Sheet Component
   SheetComponent: SystemSheetComponent<T>;

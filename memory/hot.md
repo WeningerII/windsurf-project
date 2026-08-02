@@ -56,6 +56,22 @@ seven systems. Do not read the close as the class being solved.
 - **`git add -A <path> <missing-path>` aborts the WHOLE add** — a commit went in
   with a message describing docs it did not contain.
 
+## Concurrent lanes: what it actually costs (2026-08-02)
+
+Running 4-6 lanes at once is fast and it is NOT free. Both of these happened:
+
+- **A lane silently reverted another lane's file to HEAD mid-session.**
+  `src/__tests__/ai/prompts.test.ts` lost BOTH lanes' fingerprint pins. It was
+  caught only because `Record<AiTask, unknown>` totality typing made the loss a
+  type error. A file two lanes both touch WILL be clobbered; brief lanes onto
+  disjoint files or expect this.
+- **`git add -A` after a parallel run sweeps agent scratch dirs into the repo**
+  (`.lanecheck/`), and squashing several lanes into one commit makes
+  `git status` look clean for the wrong reason.
+
+Mitigation that worked: declare each lane's files in its brief, give every lane
+an adversarial checker, and stage EXPLICIT paths at integration.
+
 ## Landmines
 
 - **Never delete or relabel shipped content on your own** —

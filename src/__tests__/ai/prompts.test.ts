@@ -4,6 +4,7 @@ import {
   buildEncounterDraftPrompt,
   buildIdentifyCreaturePrompt,
   buildIllustrateScenePrompt,
+  buildNarrationCritiquePrompt,
   buildPromptForTask,
   buildSceneNarrationPrompt,
   promptVersionForTask,
@@ -94,7 +95,37 @@ describe('buildIllustrateScenePrompt', () => {
   });
 });
 
+describe('buildNarrationCritiquePrompt', () => {
+  it('carries both the facts and the recap, and demands verbatim quotes', () => {
+    const prompt = buildNarrationCritiquePrompt({
+      narrative: 'The ogre fell to Tam.',
+      facts: 'Combat: reached round 2; defeated Ogre.',
+    });
+    expect(prompt).toContain('Combat: reached round 2; defeated Ogre.');
+    expect(prompt).toContain('The ogre fell to Tam.');
+    expect(prompt).toMatch(/EXACTLY as it appears/);
+  });
+
+  it('asks for no score and no verdict, and forbids style commentary', () => {
+    // The verdict belongs to checkNarrationAgainstFacts; a template that invited
+    // one would make the model's opinion look like a gate.
+    const prompt = buildNarrationCritiquePrompt({ narrative: 'A recap.', facts: 'Some facts.' });
+    expect(prompt).not.toMatch(/\bscore\b/i);
+    expect(prompt).not.toMatch(/\bverdict\b/i);
+    expect(prompt).toMatch(/not comment[\s\S]*style, tone or pacing/);
+  });
+});
+
 describe('buildPromptForTask', () => {
+  it('dispatches narration-critique', () => {
+    expect(
+      buildPromptForTask('narration-critique', {
+        narrative: 'The ogre fell.',
+        facts: 'Combat: defeated Ogre.',
+      })
+    ).toContain('Combat: defeated Ogre.');
+  });
+
   it('dispatches encounter-draft', () => {
     expect(buildPromptForTask('encounter-draft', payload)).toContain('combat encounter');
   });
@@ -185,6 +216,28 @@ const CANONICAL_PAYLOADS: Record<AiTask, unknown> = {
     imageSize: { widthPx: 1200, heightPx: 800 },
     hint: 'canonical hint',
   },
+  'narration-critique': {
+    narrative: 'Canonical narration sentence one. Canonical narration sentence two.',
+    facts: 'Canonical fact one. Canonical fact two.',
+  },
+  'dm-turn-intent': {
+    systemId: 'canonical-system',
+    facts: 'Canonical fact one. Canonical fact two.',
+    round: 2,
+    actor: { id: 'alpha', name: 'Alpha', allegiance: 'hostile', position: { x: 3, y: 4 } },
+    tokens: [{ id: 'beta', name: 'Beta', allegiance: 'party', position: { x: 6, y: 4 } }],
+    options: [
+      { id: 'move', verb: 'move', label: 'Move up to 3 squares', maxDistance: 3 },
+      {
+        id: 'check-0',
+        verb: 'check',
+        label: 'Attempt Canonical Check (DC 12)',
+        check: { label: 'Canonical Check', modifier: 2, dc: 12 },
+      },
+      { id: 'hold', verb: 'hold', label: 'Do nothing and end the turn' },
+    ],
+    repairIssues: ['canonical prior issue'],
+  },
 };
 
 /**
@@ -201,6 +254,8 @@ const TEMPLATE_FINGERPRINTS: Record<string, string> = {
   'illustrate-scene.v1': 'd34f4528',
   'character-draft.v1': 'b0e684da',
   'analyze-map.v1': '0a9ae63b',
+  'narration-critique.v1': '29ffc089',
+  'dm-turn-intent.v1': '1cbde607',
 };
 
 describe('template fingerprints (change a template => bump its version)', () => {

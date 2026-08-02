@@ -392,6 +392,10 @@ describe('Capability scenarios', () => {
         image: { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
       },
       'illustrate-scene': { prompt: 'a torchlit crypt' },
+      'narration-critique': {
+        narrative: 'The crypt fell silent.',
+        facts: 'Combat: defeated the ogre.',
+      },
       'character-draft': {
         systemId: 'dnd-5e-2024',
         prompt: 'a brave knight',
@@ -407,16 +411,30 @@ describe('Capability scenarios', () => {
         image: { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
         imageSize: { widthPx: 1000, heightPx: 800 },
       },
+      'dm-turn-intent': {
+        systemId: 'dnd-5e-2024',
+        facts: 'Combat: reached round 2.',
+        round: 2,
+        actor: { id: 'goblin', name: 'Goblin', allegiance: 'hostile', position: { x: 5, y: 5 } },
+        tokens: [{ id: 'hero', name: 'Hero', allegiance: 'party', position: { x: 1, y: 1 } }],
+        options: [{ id: 'move', verb: 'move', label: 'Move up to 3 squares', maxDistance: 3 }],
+      },
     };
     const fixtures: Record<AiTask, unknown> = {
       'encounter-draft': { selections: [{ monsterId: 'goblin', count: 2 }] },
       'scene-narration': { narrative: 'The crypt fell silent.' },
       'identify-creature': { monsterId: 'goblin', confidence: 0.8 },
       'illustrate-scene': { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
+      'narration-critique': {
+        findings: [{ quote: 'The crypt fell silent.', concern: 'No ogre is named.' }],
+      },
       'character-draft': { name: 'Sir Reginald', classId: 'fighter' },
       'analyze-map': {
         registration: { offsetX: 0, offsetY: 0, cellSizePx: 50 },
         boxes: [{ kind: 'spawn', rect: { x: 0, y: 0, width: 100, height: 100 } }],
+      },
+      'dm-turn-intent': {
+        proposals: [{ optionId: 'move', destination: { x: 6, y: 6 } }],
       },
     };
 

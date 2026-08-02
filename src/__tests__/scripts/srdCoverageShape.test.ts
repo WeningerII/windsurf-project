@@ -18,7 +18,8 @@ import {
   collapsePf1eContainerRecords,
   pf1eContainerRecords,
   collapse35eMonsterHeadings,
-  SRD_35E_MONSTER_CATEGORY_HEADINGS,
+  parseSrd35eMonsterHeadings,
+  SRD_35E_NON_CREATURE_STAT_SECTIONS,
   SRD_35E_MONSTER_NONBLOCK_HEADINGS,
 } from '../../scripts/srdCoverageShape';
 
@@ -110,202 +111,252 @@ describe('collapsePf1eContainerRecords (PF1e bestiary container collapse)', () =
   });
 });
 
-describe('collapse35eMonsterHeadings (3.5e SRD monster denominator shape)', () => {
-  const headings = [
-    'Aboleth',
-    'Angel', // category container
-    'Astral Deva', // member — individual
-    'Planetar',
-    'Solar',
-    'Genie', // category container
-    'Djinni',
-    'Efreeti',
-    'Elemental', // category container
-    'Small Air Elemental', // size variants → fold to "Air Elemental"
-    'Large Air Elemental',
-    'Huge Air Elemental',
-    'Dragon', // category container
-    'Young Black Dragon', // age variants → fold to "Black Dragon"
-    'Adult Black Dragon',
-    'Ancient Black Dragon',
-    'Young Adult Red Dragon', // multi-word age → "Red Dragon"
-    'Giant', // category container
-    'Golem', // category container
-    'Bear, Black', // genus,species — NOT a variant, must survive intact
-    'Dire Bear', // "Dire" not a variant word — survives
-    'Salamander', // genuine miss individual
-    'Hydra',
-    'Lich',
-    'Ghost',
-  ];
+/**
+ * The 3.5e monster fixtures below are DERIVED FROM THE REAL DOCUMENT, not
+ * imagined. `fixtures/srd35-monsters-excerpt.md` holds verbatim lines from the
+ * olimot chapters covering every shape the corpus actually has.
+ *
+ * The fixtures these replaced listed `Astral Deva`, `Planetar`, `Solar`,
+ * `Djinni`, `Efreeti`, `Young Black Dragon`, `Deinonychus` and `Gold Dragon` as
+ * flat sibling `## ` headings. The SRD has never had a single one of those
+ * headings — every one of them is a `### ` child (or, for the dragon age rows, a
+ * table row and not a heading at all). Those tests passed against a document
+ * that does not exist, which is exactly why they never noticed that the parse
+ * was collecting `## ` only and so counted no demon, devil, angel, elemental,
+ * genie, giant, golem, mephit, naga, ooze, sphinx, sprite, swarm or dragon.
+ */
+const excerpt = readFileSync(
+  path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'fixtures/srd35-monsters-excerpt.md'),
+  'utf8'
+);
 
-  const result = collapse35eMonsterHeadings(headings);
+describe('parseSrd35eMonsterHeadings (real chapter shape)', () => {
+  const parsed = parseSrd35eMonsterHeadings(excerpt);
+  const byName = new Map(parsed.map((h) => [h.name, h]));
 
-  it('drops every taxonomic category container header', () => {
-    for (const category of ['Angel', 'Genie', 'Elemental', 'Dragon', 'Giant', 'Golem']) {
-      expect(result).not.toContain(category);
+  it('collects BOTH depths — the SRD puts real stat blocks at ## and at ###', () => {
+    expect(parsed.filter((h) => h.level === 2).length).toBeGreaterThan(0);
+    expect(parsed.filter((h) => h.level === 3).length).toBeGreaterThan(0);
+    expect(byName.get('Angel, Astral Deva')?.level).toBe(3);
+    expect(byName.get('Angel, Astral Deva')?.parent).toBe('Angel');
+    expect(byName.get('Black Dragon')?.parent).toBe('Chromatic Dragons');
+  });
+
+  it('marks the ### stat blocks the old ##-only parse could not see', () => {
+    for (const name of ['Angel, Astral Deva', 'Angel, Planetar', 'Kolyarut', 'Marut']) {
+      expect(byName.get(name)?.hasStatBlock).toBe(true);
     }
   });
 
-  it('keeps separately-named category members as individuals', () => {
-    expect(result).toEqual(
-      expect.arrayContaining(['Astral Deva', 'Planetar', 'Solar', 'Djinni', 'Efreeti'])
-    );
+  it('accepts <td> label cells — Kolyarut and Lemure are real blocks with <td>, not <th>', () => {
+    expect(excerpt).toMatch(/<td>Hit Dice:<\/td>/);
+    expect(byName.get('Kolyarut')?.hasStatBlock).toBe(true);
+    expect(byName.get('Marut')?.hasStatBlock).toBe(true);
   });
 
-  it('folds age variants to one archetype per creature', () => {
-    expect(result).toContain('Black Dragon');
-    expect(result.filter((n) => n === 'Black Dragon')).toHaveLength(1);
-    expect(result).not.toContain('Young Black Dragon');
-    expect(result).not.toContain('Adult Black Dragon');
-    expect(result).toContain('Red Dragon');
+  it("accepts the dragons' by-age table header — the only Hit Dice cell any dragon has", () => {
+    expect(excerpt).toMatch(/<th>Hit Dice \(hp\)<\/th>/);
+    expect(byName.get('Black Dragon')?.hasStatBlock).toBe(true);
   });
 
-  it('folds elemental size variants to one archetype', () => {
-    expect(result.filter((n) => n === 'Air Elemental')).toHaveLength(1);
-    expect(result).not.toContain('Large Air Elemental');
+  it('does NOT treat the words "Hit Dice" in prose as a stat block', () => {
+    // "A barghest that reaches 9 Hit Dice through feeding becomes a greater
+    // barghest" — verbatim prose under a heading that owns no table.
+    expect(byName.get('Greater Barghest')?.hasStatBlock).toBe(false);
+    expect(byName.get('Creating a Ghost')?.hasStatBlock).toBe(false);
   });
 
-  it('never folds a genus/species comma or a non-variant descriptor', () => {
-    expect(result).toContain('Bear, Black');
-    expect(result).toContain('Dire Bear');
+  it('gives a prose container no stat block of its own, even though its children have one', () => {
+    for (const container of [
+      'Angel',
+      'Chromatic Dragons',
+      'Inevitable',
+      'Skeleton',
+      'Zombie',
+      'Horse',
+    ]) {
+      expect(byName.get(container)?.hasStatBlock).toBe(false);
+    }
   });
 
-  it('preserves confirmed genuine misses as individual stat blocks', () => {
-    expect(result).toEqual(expect.arrayContaining(['Salamander', 'Hydra', 'Lich', 'Ghost']));
-  });
-
-  it('never lists a genuine individual (Salamander/Hydra) as a category container', () => {
-    const cats = SRD_35E_MONSTER_CATEGORY_HEADINGS.map(norm);
-    for (const individual of ['Salamander', 'Hydra', 'Lich', 'Ghost']) {
-      expect(cats).not.toContain(norm(individual));
+  it('gives all THREE non-creature sections the stat table they really own', () => {
+    // Load-bearing, and the reason this fixture was rebuilt: the exclusion in
+    // SRD_35E_NON_CREATURE_STAT_SECTIONS only has anything to do iff these
+    // sections DO print a stat table. If a fixture gives them none, the
+    // exclusion never fires and the constant is tested vacuously.
+    for (const { parent, name } of SRD_35E_NON_CREATURE_STAT_SECTIONS) {
+      const heading = parsed.find((h) => h.name === name && h.parent === parent);
+      expect(heading, `${parent} :: ${name} missing from the fixture`).toBeDefined();
+      expect(heading?.hasStatBlock, `${parent} :: ${name} must own a stat table`).toBe(true);
     }
   });
 });
 
-describe('collapse35eMonsterHeadings (extended non-block + sub-group headings)', () => {
-  // The sub-group dragon containers, the animal/dinosaur containers, the two
-  // template headers, and the two prose sub-section headers — each interleaved
-  // with a genuine individual member that MUST survive.
-  const headings = [
-    'Reading the Entries', // chapter intro prose — not a creature
-    'Combat', // chapter intro prose — not a creature
-    'Chromatic Dragons', // sub-group container
-    'Black Dragon', // member individual (folded from age rows elsewhere)
-    'Metallic Dragons', // sub-group container
-    'Gold Dragon', // member individual
-    'Celestial Creature', // template header — not an enumerable base monster
-    'Fiendish Creature', // template header
-    'Dire Animal', // group container
-    'Dire Bear', // individual — "Dire" is not a variant word, survives
-    'Dinosaur', // group container
-    'Deinonychus', // member individual
-    'Aboleth', // plain individual
-  ];
+describe('collapse35eMonsterHeadings (3.5e SRD monster denominator shape)', () => {
+  const result = collapse35eMonsterHeadings(parseSrd35eMonsterHeadings(excerpt));
 
-  const result = collapse35eMonsterHeadings(headings);
+  it('counts the ### members of every taxonomic group', () => {
+    expect(result).toEqual(
+      expect.arrayContaining(['Angel, Astral Deva', 'Angel, Planetar', 'Kolyarut', 'Marut'])
+    );
+  });
 
-  it('drops the extended sub-group / template / prose headings', () => {
-    for (const dropped of [
-      'Reading the Entries',
-      'Combat',
-      'Chromatic Dragons',
-      'Metallic Dragons',
-      'Celestial Creature',
-      'Fiendish Creature',
-      'Dire Animal',
-      'Dinosaur',
-    ]) {
+  it('counts the dragons, which have no ## heading anywhere in the SRD', () => {
+    expect(result).toContain('Black Dragon');
+  });
+
+  it('drops a prose ## container once a ### child was counted under it', () => {
+    for (const container of ['Angel', 'Chromatic Dragons', 'Inevitable']) {
+      expect(result).not.toContain(container);
+    }
+  });
+
+  it('keeps a ## that owns a COMBINED multi-column table as one stat block', () => {
+    // One table, several named variants — Salamander/Hydra/Fungus/Arrowhawk/
+    // Animated Object, and Formian, whose five castes share the `##` table while
+    // its `###` caste sections own none. Formian was on the old hand-maintained
+    // container list, so it left the denominator entirely.
+    expect(result).toContain('Formian');
+    expect(result).toContain('Salamander');
+    expect(result).toContain('Aboleth');
+    expect(result).toContain('Barghest');
+  });
+
+  it('counts a prose ### exactly zero times', () => {
+    expect(result).not.toContain('Combat');
+    expect(result).not.toContain('Greater Barghest');
+    expect(result).not.toContain('Creating a Ghost');
+  });
+
+  it('excludes the three stat-table ### sections that are not creatures', () => {
+    for (const { name } of SRD_35E_NON_CREATURE_STAT_SECTIONS) {
+      expect(result).not.toContain(name);
+    }
+    expect(SRD_35E_NON_CREATURE_STAT_SECTIONS.map((s) => `${s.parent}/${s.name}`)).toEqual([
+      'Skeleton/Creating a Skeleton',
+      'Zombie/Creating a Zombie',
+      'Horse/Combat',
+    ]);
+    // Every one of them names its reason — the exclusion is an argument, not a
+    // list, and this is the defect's alibi comment being made falsifiable.
+    for (const s of SRD_35E_NON_CREATURE_STAT_SECTIONS) {
+      expect(s.reason.length).toBeGreaterThan(20);
+    }
+  });
+
+  it('keeps the PARENT of an excluded section, so the creature is not lost', () => {
+    // `## Horse`, `## Skeleton` and `## Zombie` own no table; their only
+    // stat-table child is excluded. This is the step-1-before-step-3 ordering:
+    // the child is removed BEFORE containers are derived, so the parent is left
+    // with no counted child and stays counted itself. Dropping them as
+    // containers would delete three real creatures from the denominator.
+    for (const { parent } of SRD_35E_NON_CREATURE_STAT_SECTIONS) {
+      expect(result, `${parent} must survive its excluded child`).toContain(parent);
+    }
+    expect(result).toEqual(expect.arrayContaining(['Horse', 'Skeleton', 'Zombie']));
+  });
+
+  it('drops the non-creature prose and template ## headings', () => {
+    for (const dropped of ['Dragon, True', 'Half-Celestial']) {
       expect(result).not.toContain(dropped);
     }
-  });
-
-  it('keeps the individual members and standalone monsters', () => {
-    expect(result).toEqual(
-      expect.arrayContaining(['Black Dragon', 'Gold Dragon', 'Dire Bear', 'Deinonychus', 'Aboleth'])
+    expect(SRD_35E_MONSTER_NONBLOCK_HEADINGS).toEqual(
+      expect.arrayContaining(['Reading the Entries', 'Combat', 'Dragon, True'])
     );
   });
 
-  it('exposes the non-block headings as a distinct list, disjoint from the containers', () => {
-    const containers = new Set(SRD_35E_MONSTER_CATEGORY_HEADINGS.map(norm));
-    for (const h of SRD_35E_MONSTER_NONBLOCK_HEADINGS) {
-      expect(containers.has(norm(h))).toBe(false);
+  it('still counts Ghost as a genuine miss rather than hiding it', () => {
+    // `## Ghost` has no stat table and no counted child, so a purely structural
+    // rule would drop it — along with Lich, Vampire and Half-Dragon. Four real
+    // gaps would vanish and the percentage would improve. They stay counted.
+    expect(result).toContain('Ghost');
+    for (const kept of ['Ghost', 'Lich', 'Vampire', 'Half-Dragon']) {
+      expect(SRD_35E_MONSTER_NONBLOCK_HEADINGS).not.toContain(kept);
     }
-    // Both new sub-group containers live on the taxonomic list, not the prose one.
-    expect(SRD_35E_MONSTER_CATEGORY_HEADINGS.map(norm)).toEqual(
-      expect.arrayContaining([norm('Chromatic Dragons'), norm('Metallic Dragons')])
-    );
+  });
+
+  it('has no age/size fold, because the SRD has no age/size HEADINGS', () => {
+    // The deleted `SRD_35E_VARIANT_WORDS`/`foldMonsterVariant` pair matched zero
+    // of the 239 `## ` headings AND zero of the 432 `### ` headings. The four
+    // headings it would have touched — "Greater Barghest", "Greater Stone
+    // Golem", "Elder Black Pudding", "Greater Shadow" — are prose sections that
+    // own no stat table, so folding them would have collided a non-entry onto a
+    // real one. Dragon ages and elemental sizes live in table ROWS.
+    expect(excerpt).not.toMatch(/^#{2,3} (Young|Adult|Ancient|Large|Huge) /m);
+    expect(result.filter((n) => n === 'Barghest')).toHaveLength(1);
   });
 });
 
-describe('collapse35eMonsterHeadings (residual container rows in the missing list)', () => {
-  // The rows that still leaked into the published 3.5e "missing" list even after
-  // the first collapse pass. Each was verified against the upstream olimot
-  // chapters: the `## ` section is PROSE ONLY and every stat block sits under a
-  // separately-named `### ` child (the ratified Angel → Astral Deva shape), or —
-  // for the two templates — the section carries no stat table at all.
-  const residualContainers = [
-    'Ooze', // → Black Pudding / Gelatinous Cube / Gray Ooze / Ochre Jelly
-    'Planetouched', // → Aasimar / Tiefling
-    'Snake', // → Constrictor Snake / Viper Snake
-    'Sprite', // → Grig / Nixie / Pixie
-    'Swarm', // → Bat / Centipede / Hellwasp / Locust / Rat / Spider Swarm
-  ];
-  const residualTemplates = [
-    'Half-Celestial', // template header, no stat table anywhere in the section
-    'Half-Fiend', // template header, no stat table anywhere in the section
-  ];
-  // Individuals that MUST survive — the whole point of the denominator work is
-  // that a real gap is never masked to improve a percentage.
-  const genuineMisses = [
-    'Lich',
-    'Ghost',
-    'Salamander',
-    'Hydra',
-    'Vampire',
-    'Skeleton',
-    'Zombie',
-    'Half-Dragon', // its section DOES print a sample stat block
-    'Fungus', // `## ` owns a combined Shrieker/Violet Fungus table
-    'Horse',
-    'Arrowhawk',
-    'Animated Object',
-  ];
+describe('the REAL pinned 3.5e monster denominator (networked artifact, not a fixture)', () => {
+  // The strongest guard available offline: `srd-overinclusion-manifest.json` is
+  // written by the NETWORKED `npm run srd:overinclusion:write` from exactly the
+  // sources srd-coverage.ts cites. A fixture can describe an imaginary document;
+  // this cannot. Every assertion here is a fact about the shipped denominator.
+  const manifestPath = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../../../scripts/data/srd-overinclusion-manifest.json'
+  );
+  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
+    denominators: Record<string, { names: string[] }>;
+  };
+  const names = manifest.denominators['dnd-3.5e/monsters'].names;
 
-  const result = collapse35eMonsterHeadings([
-    ...residualContainers,
-    ...residualTemplates,
-    ...genuineMisses,
-    'Gelatinous Cube', // a member individual, listed in its own right
-    'Pixie',
-  ]);
-
-  it('drops the residual taxonomic container rows', () => {
-    for (const dropped of residualContainers) expect(result).not.toContain(dropped);
+  it('contains the group members that the ##-only parse omitted entirely', () => {
+    expect(names).toEqual(
+      expect.arrayContaining([
+        'Balor', // Demon
+        'Pit Fiend', // Devil
+        'Djinni', // Genie
+        'Air Elemental', // Elemental
+        'Deinonychus', // Dinosaur
+        'Dire Bear', // Dire Animal
+        'Iron Golem', // Golem
+        'Pixie', // Sprite
+        'Formian', // combined-table ## wrongly dropped as a container
+      ])
+    );
   });
 
-  it('drops the two stat-block-less template headers', () => {
-    for (const dropped of residualTemplates) expect(result).not.toContain(dropped);
-  });
-
-  it('still counts every confirmed genuine individual as a real miss', () => {
-    expect(result).toEqual(expect.arrayContaining(genuineMisses));
-  });
-
-  it('keeps member individuals that are listed in their own right', () => {
-    expect(result).toEqual(expect.arrayContaining(['Gelatinous Cube', 'Pixie']));
-  });
-
-  it('classifies the residuals onto the correct list', () => {
-    const containers = SRD_35E_MONSTER_CATEGORY_HEADINGS.map(norm);
-    const nonBlocks = SRD_35E_MONSTER_NONBLOCK_HEADINGS.map(norm);
-    expect(containers).toEqual(expect.arrayContaining(residualContainers.map(norm)));
-    expect(nonBlocks).toEqual(expect.arrayContaining(residualTemplates.map(norm)));
-    // and the protected individuals appear on NEITHER drop list
-    for (const keep of genuineMisses) {
-      expect(containers).not.toContain(norm(keep));
-      expect(nonBlocks).not.toContain(norm(keep));
+  it('contains all ten true dragons', () => {
+    for (const dragon of [
+      'Black Dragon',
+      'Blue Dragon',
+      'Green Dragon',
+      'Red Dragon',
+      'White Dragon',
+      'Brass Dragon',
+      'Bronze Dragon',
+      'Copper Dragon',
+      'Gold Dragon',
+      'Silver Dragon',
+    ]) {
+      expect(names).toContain(dragon);
     }
+  });
+
+  it('contains no taxonomic container and none of the three non-creature sections', () => {
+    for (const container of [
+      'Angel',
+      'Demon',
+      'Devil',
+      'Genie',
+      'Elemental',
+      'Chromatic Dragons',
+      'Metallic Dragons',
+      'Swarm',
+      'Snake',
+    ]) {
+      expect(names).not.toContain(container);
+    }
+    for (const { name } of SRD_35E_NON_CREATURE_STAT_SECTIONS) expect(names).not.toContain(name);
+    for (const nonBlock of SRD_35E_MONSTER_NONBLOCK_HEADINGS) expect(names).not.toContain(nonBlock);
+  });
+
+  it('is the post-fix denominator, not the deflated one', () => {
+    // 207 was the `## `-only count. 332 = 208 stat-block `## ` headings + 124
+    // stat-block `### ` sections (117 `Hit Dice:` + 10 by-age dragons - 3
+    // non-creature exclusions).
+    expect(names.length).toBe(332);
   });
 });
 
