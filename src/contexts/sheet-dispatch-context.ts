@@ -143,16 +143,7 @@ export function useSheetDispatchRegister(
         unregister(docId);
       }
     };
-  }, [
-    register,
-    unregister,
-    docId,
-    addSpell,
-    addFeat,
-    addEquipment,
-    addAdvantage,
-    catalogFilter,
-  ]);
+  }, [register, unregister, docId, addSpell, addFeat, addEquipment, addAdvantage, catalogFilter]);
 }
 
 interface SheetDispatch {

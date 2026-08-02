@@ -98,7 +98,10 @@ export const AdvantageBrowser: React.FC<AdvantageBrowserProps> = ({
         {filtered.map((advantage) => {
           const alreadyAdded = characterAdvantageNames?.has(advantage.name) ?? false;
           return (
-            <div key={advantage.id} className="rounded border p-2 transition-colors hover:bg-muted/50">
+            <div
+              key={advantage.id}
+              className="rounded border p-2 transition-colors hover:bg-muted/50"
+            >
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">{advantage.name}</span>
                 <Badge variant="secondary" className="px-1.5 py-0 text-[10px] capitalize">

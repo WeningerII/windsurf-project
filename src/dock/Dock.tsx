@@ -464,8 +464,8 @@ function DockPanel({
           <TabsContent value="spell" className="space-y-4">
             {catalogFilter?.spell && (
               <p className="rounded-md border border-dashed px-2 py-1 text-xs text-muted-foreground">
-                Showing {catalogFilter.label} — {filteredSpells.length} of{' '}
-                {resources.spells.length} in the {systemLabel(selectedSystem)} catalog.
+                Showing {catalogFilter.label} — {filteredSpells.length} of {resources.spells.length}{' '}
+                in the {systemLabel(selectedSystem)} catalog.
               </p>
             )}
             {resources.loading ? (
@@ -543,9 +543,7 @@ function DockPanel({
               <Suspense fallback={BROWSER_FALLBACK}>
                 <AdvantageBrowser
                   advantages={resources.advantages}
-                  onSelectAdvantage={
-                    dispatch.canAddAdvantage ? dispatch.addAdvantage : undefined
-                  }
+                  onSelectAdvantage={dispatch.canAddAdvantage ? dispatch.addAdvantage : undefined}
                 />
               </Suspense>
             )}
