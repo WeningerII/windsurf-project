@@ -8,7 +8,8 @@
 `npm run verify` is **23 of 24** — the only failure is step 24 (e2e) demanding a
 **Firefox** binary this container does not have at all. Chromium e2e passes via
 the bridge: **45 passed / 6 skipped, exit 0**. Unit tests **3328**. Compute
-register **276**.
+register **276**, Tier A **and** Tier B — the 12 new damage rows carry real
+mutation anchors, 0 demotions.
 
 ## The release hold is FULLY LIFTED (2026-08-02, GAPS §27)
 
@@ -76,7 +77,17 @@ seven systems. Do not read the close as the class being solved.
       chrome-headless-shell -> that dir's `headless_shell` (renamed between revs)
   Rebuild `dist` first — preview serves `dist`. NEVER run `playwright install`.
   **There is no Firefox at all**, so that project cannot run here; CI covers it.
-- **compute-register --mutate REFUSES a dirty tree.** Commit first.
+- **compute-register --mutate REFUSES a dirty tree.** Commit first — writing the
+  anchors dirties the tree, so the order is always: commit anchors, then mutate.
+- **A Tier B anchor must perturb the formula the ROW NAMES.** An anchor aimed at
+  a neighbouring function proves nothing and the gate demotes the row for it
+  (`damage-channels` was aimed at `splitDamageAcrossChannels`; the row is
+  `collectDamageChannels`). No other step in the chain can see that mistake.
+- **Commit signing is configured but NON-FUNCTIONAL here.** `commit.gpgsign=true`
+  with `gpg.format=ssh` points at `/home/claude/.ssh/commit_signing_key.pub`,
+  a 0-byte file owned by `claude` while the session runs as `root`. Every commit
+  is unsigned; `--reset-author` does not fix it (the author email is already
+  correct). Needs a real key in the environment.
 - **doc-drift pins verbatim phrases** — preserve exact strings when editing
   paired docs. Quoting a stale path in backticks trips `path_ref_rule`.
 - **Merge policy:** merge-to-main, force-push, and remote branch deletion need
