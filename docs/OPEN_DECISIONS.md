@@ -90,7 +90,8 @@ No decision required. These are queued and unstarted.
 
 - **`p1.provenance-over-inclusion-audit`** — classification done, remedies are A1/A3.
 - **`p4.parity-matrix`** — the 7×N capability matrix; blocked on A1-class decisions, not on work.
-- **`p5.ai-provider-agnostic`**, **`p6.expansions`**, **`p7.release`** — ledger `pending`.
+- ~~**`p5.ai-provider-agnostic`**~~ — **DONE, and this line was the stale half.** Verified against code 2026-08-02: all three deliverables ship (env-selected provider via `AI_PROVIDER` in `providerRegistry.mts`, the documented `AiProviderAdapter` interface in `gatewayCore.ts`, and `mockAdapter.ts`), plus three real adapters rather than the one the scope asked for. Nothing was built to close this — it had been finished and never marked.
+- **`p6.expansions`**, **`p7.release`** — ledger `pending`; `p7`'s licensing hold is lifted (`WORK_PLAN` §8), so its remaining scope is engineering.
 - **`p2.rfc003-consolidation`** — in progress.
 - **Phase 6 remaining slices** — `SceneManager` decomposition (~1,220 LOC), right-rail summon tray, pan/zoom viewport, distance ruler, `PlacementMode` deletion.
 - **Phase 7 remaining** — hash-sync restore-on-reload, seam catalogue, chrome-dominance gate (genuinely blocked on Phase 6's tray).

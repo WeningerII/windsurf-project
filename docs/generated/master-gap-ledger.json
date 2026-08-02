@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-08-02T00:55:25.687Z",
+  "generatedAt": "2026-08-02T14:30:14.951Z",
   "summary": {
     "total": 23,
     "byStatus": {
-      "done": 14,
+      "done": 15,
       "in-progress": 4,
-      "pending": 5
+      "pending": 4
     },
     "byPhase": {
       "0": 6,
@@ -293,12 +293,12 @@
       "phase": 5,
       "track": "hardening",
       "title": "AI gateway provider-agnosticism (D-AI)",
-      "detail": "Refactor netlify/functions/ai-gateway.mts + adapters so the provider (currently geminiAdapter) is env-selected; document the adapter interface; add a mock adapter. AI surfaces stay default-off (VITE_AI_ENABLED).",
-      "status": "pending",
+      "detail": "DONE — verified against code 2026-08-02, and this entry was stale rather than the work being missing. All three deliverables ship: (1) the provider is ENV-SELECTED via netlify/functions/providerRegistry.mts, which resolves the adapter from AI_PROVIDER and preserves the previous default exactly (unset/blank -> gemini, DEFAULT_AI_PROVIDER); (2) the adapter interface is DOCUMENTED as AiProviderAdapter in src/ai/gatewayCore.ts, including the optional reportUsage third argument and the compatibility rule that adapters predating it keep working; (3) the MOCK adapter is src/ai/mockAdapter.ts, deterministic per task. Scope was exceeded rather than met: three real adapters exist (gemini, anthropic, and the shared aiSdkAdapter), and anthropicAdapter.mts states its own capability gap honestly — Anthropic has no image-generation endpoint, so illustrate-scene fails there with a normalized provider error instead of a faked image. AI surfaces remain default-off behind VITE_AI_ENABLED. Original scope: refactor ai-gateway.mts + adapters so the provider is env-selected; document the adapter interface; add a mock adapter.",
+      "status": "done",
       "tags": [
         "engineering"
       ],
-      "evidence": "netlify/functions/ai-gateway.mts; geminiAdapter.mts"
+      "evidence": "netlify/functions/providerRegistry.mts (AI_PROVIDER, DEFAULT_AI_PROVIDER); netlify/functions/{geminiAdapter,anthropicAdapter,aiSdkAdapter}.mts; src/ai/gatewayCore.ts (AiProviderAdapter); src/ai/mockAdapter.ts; netlify/functions/rateLimitStore.mts"
     },
     {
       "id": "p5.infra-gaps",
