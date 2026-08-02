@@ -5,6 +5,7 @@ import { useSceneEncounter } from './scene/useSceneEncounter';
 import { generateNpc } from '../scene/npcGenerator';
 import { supportsEncounterBudget } from '../scene/encounterDraft';
 import { narrateSceneWithAi } from '../ai/sceneNarrationFlow';
+import { analyzeMapWithAi } from '../ai/analyzeMapFlow';
 import { illustrateSceneWithAi } from '../ai/illustrateSceneFlow';
 import { isAiEnabled } from '../ai/gatewayClient';
 import {
@@ -59,6 +60,10 @@ import { isSceneDragEnabled } from './drag/sceneDragFlag';
 import { isSceneCanvasEnabled } from './scene/sceneCanvasFlag';
 import { EncounterPanel } from './scene/EncounterPanel';
 import { InitiativeTracker } from './scene/InitiativeTracker';
+import {
+  acceptGridGeometryProposal,
+  type GridGeometryProposal,
+} from '../scene/gridGeometryProposal';
 import { MapPanel } from './scene/MapPanel';
 import { MarkerPanel } from './scene/MarkerPanel';
 import { terrainEffectsForPreset, type MarkerEffectPreset } from './scene/markerEffects';
@@ -908,6 +913,87 @@ export function SceneManager({
     [selectedScene, onUpdateScene]
   );
 
+  // --- Phase 10 (RFC 006 x RFC 002): AI grid detection over the map image. ---
+  // The pixel dimensions the validator requires are MEASURED here from the
+  // decoded asset, never taken from the model — see analyzeMapFlow's header. A
+  // map whose image cannot be decoded yields no measurement, and the affordance
+  // is simply absent rather than sending a request that cannot be validated.
+  const [mapImageSize, setMapImageSize] = useState<{ widthPx: number; heightPx: number } | null>(
+    null
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!mapAsset) {
+      setMapImageSize(null);
+      return;
+    }
+    void measureImageSize(mapAsset.dataUrl).then((measured) => {
+      if (cancelled) return;
+      setMapImageSize(
+        measured && measured.width > 0 && measured.height > 0
+          ? { widthPx: measured.width, heightPx: measured.height }
+          : null
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [mapAsset]);
+
+  const handleAnalyzeGrid = useCallback(
+    (hint?: string) => {
+      // Guarded by the same condition that decides whether to pass this down.
+      const asset = mapAsset!;
+      const size = mapImageSize!;
+      return analyzeMapWithAi({
+        image: { dataUrl: asset.dataUrl, mediaType: asset.mime },
+        imageSize: size,
+        ...(hint ? { hint } : {}),
+      });
+    },
+    [mapAsset, mapImageSize]
+  );
+
+  /**
+   * Apply an ACCEPTED proposal. Everything applied here is an artifact the
+   * manual path already produces: the registration goes onto the map reference
+   * exactly as the three offset inputs write it, and the terrain/cover/hazard
+   * boxes become ordinary `add-marker` events through `applySceneIntents` — the
+   * same validate-then-append route every manual marker takes, so a rejected
+   * intent is surfaced rather than silently applied. Spawn zones are reported,
+   * not placed: they are an encounter-builder input, not scene state.
+   */
+  const handleApplyMapAnalysis = useCallback(
+    (proposal: GridGeometryProposal) => {
+      if (!selectedScene?.map) return;
+      const acceptance = acceptGridGeometryProposal(proposal, { markerIdFactory: generateUUID });
+      if (!acceptance.accepted || !acceptance.registration) {
+        setMapNotice('That grid proposal could not be applied.');
+        return;
+      }
+
+      const { offsetXPx, offsetYPx, cellSizePx } = acceptance.registration;
+      onUpdateScene({
+        ...selectedScene,
+        map: {
+          ...selectedScene.map,
+          gridRegistration: { offsetX: offsetXPx, offsetY: offsetYPx, cellSizePx },
+        },
+      });
+
+      if (acceptance.intents.length > 0) {
+        const { events, rejected } = applySceneIntents(selectedScene, acceptance.intents, {
+          eventIdFactory: generateUUID,
+        });
+        events.forEach((event) => onAppendSceneEvent(selectedScene.id, event));
+        setActionIssues(rejected);
+      }
+      setMapNotice(null);
+    },
+    [selectedScene, onUpdateScene, onAppendSceneEvent]
+  );
+
   const handleRemoveMap = useCallback(() => {
     if (!selectedScene?.map) return;
     // Drop only the reference; the content-addressed asset stays stored (other
@@ -1145,6 +1231,10 @@ export function SceneManager({
                 onChangeRegistration={handleChangeMapRegistration}
                 onRemoveMap={handleRemoveMap}
                 notice={mapNotice}
+                onAnalyzeGrid={
+                  aiEnabled && mapAsset && mapImageSize ? handleAnalyzeGrid : undefined
+                }
+                onApplyAnalysis={handleApplyMapAnalysis}
               />
 
               <MarkerPanel

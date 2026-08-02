@@ -12,6 +12,7 @@ import {
   type CharacterDraftPayload,
   type EncounterDraftCandidate,
   type EncounterDraftPayload,
+  type AnalyzeMapPayload,
   type IdentifyCreaturePayload,
   type IllustrateScenePayload,
   type SceneNarrationPayload,
@@ -31,6 +32,7 @@ export const AI_PROMPT_VERSIONS = {
   'identify-creature': 'identify-creature.v1',
   'illustrate-scene': 'illustrate-scene.v1',
   'character-draft': 'character-draft.v1',
+  'analyze-map': 'analyze-map.v1',
 } as const satisfies Record<AiTask, string>;
 
 /** The template version for a task (total over the allowlist by construction). */
@@ -60,6 +62,8 @@ export function buildPromptForTask(task: AiTask, payload: unknown): string {
       return buildIllustrateScenePrompt(payload as IllustrateScenePayload);
     case 'character-draft':
       return buildCharacterDraftPrompt(payload as CharacterDraftPayload);
+    case 'analyze-map':
+      return buildAnalyzeMapPrompt(payload as AnalyzeMapPayload);
     default:
       throw new Error(`No prompt builder for task '${task}'.`);
   }
@@ -157,5 +161,33 @@ export function buildSceneNarrationPrompt(payload: SceneNarrationPayload): strin
     ``,
     `Facts:`,
     payload.facts,
+  ].join('\n');
+}
+
+export function buildAnalyzeMapPrompt(payload: AnalyzeMapPayload): string {
+  const { widthPx, heightPx } = payload.imageSize;
+  const hint = payload.hint ? `\n\nHint from the user: ${payload.hint}` : '';
+  // Every coordinate is asked for in IMAGE PIXELS, the same space the shipped
+  // manual registration already uses, so an accepted proposal and a hand-dialed
+  // one are the same kind of value. The vocabularies below are the validator's
+  // (`src/scene/gridGeometryProposal.ts`); a proposal outside them is rejected
+  // there rather than being quietly coerced here.
+  return [
+    `Look at the attached top-down tabletop battle map, which is ${widthPx} by ${heightPx} pixels.`,
+    ``,
+    `First, locate the square grid. Report where cell (0,0)'s top-left corner sits, as`,
+    `offsetX/offsetY in image pixels, plus cellSizePx — the width of one cell in image pixels.`,
+    `Keep each offset within one cell (0 <= offset < cellSizePx). If the map has no drawn grid,`,
+    `infer a cell size from the scale of doors, tiles and furniture.`,
+    ``,
+    `Then list the notable regions as boxes, each an image-pixel rect {x, y, width, height}`,
+    `with a kind and an optional label:`,
+    `- "spawn"   — open areas where a group could start. No preset.`,
+    `- "terrain" — ground that changes movement. suggestedPreset: "difficult", "high-ground-1" or "none".`,
+    `- "cover"   — walls, pillars, crates. suggestedPreset REQUIRED: "cover-2" (half) or "cover-5" (three-quarters).`,
+    `- "hazard"  — pits, fire, spikes. No preset.`,
+    ``,
+    `Report only regions you can actually see. Fewer, accurate boxes are better than`,
+    `speculative ones, and a box you are unsure of is worse than a box you omit.${hint}`,
   ].join('\n');
 }

@@ -236,7 +236,9 @@ export function formatAreaOfEffect(
  * 207 entries are not a coin amount at all but a rate or a qualifier —
  * 'Varies' (barding), '3 cp/mile' (coach hire), '1 sp/day' (hireling). Those
  * are legitimate prices, not missing ones, so they print verbatim instead of
- * taking the em-dash.
+ * taking the em-dash. `normalizeLegacyEquipment` parks exactly those on
+ * `Item.costText`; callers pass `item.costText ?? item.cost` so the string
+ * wins over the placeholder zero `cost` has to carry alongside it.
  */
 export function formatItemCost(cost: unknown, fallback = '—'): string {
   if (typeof cost === 'number' && Number.isFinite(cost)) {

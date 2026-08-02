@@ -1493,12 +1493,14 @@ describe('System Sheets', () => {
   });
 
   // Phase-5 eviction: 3.5e/PF1e lost their in-sheet feat and equipment BROWSER
-  // tabs (both were browse-only duplicates of the Dock's). What survives in the
-  // sheet is the class-filtered spell browse-and-learn panel — the Dock's spell
-  // tab is unfiltered and cannot know the character's class list — and the
-  // equipped-armour controls, which moved onto Inventory.
+  // tabs (both were browse-only duplicates of the Dock's). WORK_PLAN §4.3 then
+  // took the spell browser too: the sheet PUBLISHES a catalog-filter predicate
+  // through useSheetDispatchRegister's third argument, and the Dock's spell tab
+  // applies it, so the Dock is no longer unfiltered. What survives in the sheet
+  // is the spell CATALOG (prepared-slot selectors resolve spell names out of it)
+  // and the equipped-armour controls, which moved onto Inventory.
   it(
-    'keeps the class-filtered spell panel, and hosts no feat or equipment browser tab',
+    'hosts no spell, feat, or equipment browser tab, but still loads the spell catalog',
     async () => {
       const user = userEvent.setup();
       const loadFeatsSpy = vi.spyOn(dataLoader, 'loadFeatsForSystem').mockResolvedValue([
@@ -1554,13 +1556,15 @@ describe('System Sheets', () => {
         { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
       );
       await user.click(spellsTab);
+      // The tab body renders, but hosts no spell BROWSER any more: no
+      // browse-and-learn control and no spell search box. Only the slot and
+      // spellbook surfaces that read out of the catalog are left.
       expect(
-        await screen.findByRole(
-          'button',
-          { name: 'Learn Magic Missile' },
-          { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
-        )
+        await screen.findByText('Spellbook', {}, { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS })
       ).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /^Learn / })).not.toBeInTheDocument();
+      expect(screen.queryByLabelText(/search spells/i)).not.toBeInTheDocument();
+      expect(screen.queryByPlaceholderText(/search spells/i)).not.toBeInTheDocument();
       await waitFor(
         () => {
           expect(loadSpellsSpy).toHaveBeenCalledTimes(1);
@@ -1639,7 +1643,12 @@ describe('System Sheets', () => {
         0: { total: 1, used: 0 },
         1: { total: 2, used: 0 },
       },
-      spellsKnown: [],
+      // The learn verb now arrives through the Dock's spell tab (WORK_PLAN
+      // §4.3), which applies the class filter this sheet publishes; it is
+      // covered by src/__tests__/dock/SheetDispatchParity.test.tsx. This test is
+      // about prepared slots, so the known spell is seeded here rather than
+      // routed through a browser the sheet no longer hosts.
+      spellsKnown: ['magic-missile'],
       preparedSpellsByLevel: {},
     }) as CharacterDocument<ReturnType<typeof createDefaultDnd35eData>>;
 
@@ -1677,15 +1686,12 @@ describe('System Sheets', () => {
       )
     ).toBeInTheDocument();
 
-    await user.click(await screen.findByRole('button', { name: 'Learn Magic Missile' }));
-    await waitFor(() => {
-      expect(onUpdate).toHaveBeenCalled();
-    });
-    applyLatestUpdate();
-
     expect(currentDoc.system.spellsKnown).toEqual(['magic-missile']);
 
-    await user.selectOptions(screen.getByLabelText('Prepared level 1 slot 1'), 'magic-missile');
+    await user.selectOptions(
+      await screen.findByLabelText('Prepared level 1 slot 1'),
+      'magic-missile'
+    );
     await waitFor(() => {
       expect(onUpdate).toHaveBeenCalled();
     });
@@ -1706,7 +1712,7 @@ describe('System Sheets', () => {
   });
 
   it(
-    'warms archetypes and the class-filtered spell panel, with no PF2e browser tabs left',
+    'warms archetypes and the spell catalog, with no PF2e browser tabs left',
     async () => {
       const user = userEvent.setup();
       const loadFeatsSpy = vi.spyOn(dataLoader, 'loadFeatsForSystem').mockResolvedValue([
@@ -1770,7 +1776,9 @@ describe('System Sheets', () => {
 
       // Phase-5 eviction: PF2e's feat and equipment BROWSER tabs are gone (both
       // were browse-only duplicates of the Dock's), so nothing in the sheet
-      // loads the feat catalog any more.
+      // loads the feat catalog any more. WORK_PLAN §4.3 then took the in-sheet
+      // spell browser too — the sheet publishes its tradition filter up through
+      // useSheetDispatchRegister and the Dock's spell tab applies it.
       expect(screen.queryByRole('tab', { name: /^browse$/i })).not.toBeInTheDocument();
       expect(screen.queryByRole('tab', { name: /^equipment$/i })).not.toBeInTheDocument();
       expect(loadFeatsSpy).not.toHaveBeenCalled();
@@ -1805,13 +1813,17 @@ describe('System Sheets', () => {
         { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
       );
       await user.click(spellsTab);
-      expect(
-        await screen.findByRole(
-          'button',
-          { name: 'Learn Magic Weapon' },
-          { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
-        )
-      ).toBeInTheDocument();
+      // The catalog is warmed, but the Spells tab hosts no spell BROWSER any
+      // more: no browse-and-learn control and no spell search box.
+      await waitFor(
+        () => {
+          expect(spellsTab).toHaveAttribute('aria-selected', 'true');
+        },
+        { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
+      );
+      expect(screen.queryByRole('button', { name: /^Learn / })).not.toBeInTheDocument();
+      expect(screen.queryByLabelText(/search spells/i)).not.toBeInTheDocument();
+      expect(screen.queryByPlaceholderText(/search spells/i)).not.toBeInTheDocument();
       await waitFor(
         () => {
           expect(loadSpellsSpy).toHaveBeenCalledTimes(1);
@@ -2306,7 +2318,12 @@ describe('System Sheets', () => {
         type: 'prepared',
         proficiency: { tier: 'trained', total: 3 },
         spellSlots: { 1: { max: 2, used: 0 } },
-        spellsKnown: [],
+        // The learn verb now arrives through the Dock's spell tab (WORK_PLAN
+        // §4.3), which applies the tradition filter this sheet publishes; it is
+        // covered by src/__tests__/dock/SheetDispatchParity.test.tsx. This test
+        // is about prepared-by-rank, so the known spell is seeded here rather
+        // than routed through a browser the sheet no longer hosts.
+        spellsKnown: ['burning-hands-pf2e'],
         preparedSpellsByRank: {},
         focusPoints: { current: 1, max: 1 },
       },
@@ -2330,15 +2347,12 @@ describe('System Sheets', () => {
       expect(dataLoader.loadSpellsForSystem).toHaveBeenCalledWith('pf2e');
     });
 
-    await user.click(screen.getByRole('button', { name: 'Learn Burning Hands' }));
-    await waitFor(() => {
-      expect(onUpdate).toHaveBeenCalled();
-    });
-    applyLatestUpdate();
-
     expect(currentDoc.system.spellcasting?.spellsKnown).toEqual(['burning-hands-pf2e']);
 
-    await user.selectOptions(screen.getByLabelText('Prepared rank 1 slot 1'), 'burning-hands-pf2e');
+    await user.selectOptions(
+      await screen.findByLabelText('Prepared rank 1 slot 1'),
+      'burning-hands-pf2e'
+    );
     await waitFor(() => {
       expect(onUpdate).toHaveBeenCalled();
     });
@@ -2597,38 +2611,35 @@ describe('System Sheets', () => {
       expect(loadComplicationsSpy).toHaveBeenCalledTimes(1);
     });
 
-    const powersDbTab = screen.getByRole('tab', { name: /powers db/i });
-    fireEvent.focus(powersDbTab);
-    fireEvent.pointerEnter(powersDbTab);
+    // WORK_PLAN §4.3 evicted both in-sheet catalog browsers: the Dock grew an
+    // Advantages tab (click-add, fed by this sheet's published `addAdvantage`)
+    // and a browse-only Modifiers tab, so the Powers DB and Advantages DB tabs
+    // are gone from the strip entirely.
+    expect(screen.queryByRole('tab', { name: /powers db/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('tab', { name: /advantages db/i })).not.toBeInTheDocument();
+
+    // The power BUILDER tab survives, and it is the only thing left that warms
+    // the modifier catalog. Nothing in the sheet loads the power or advantage
+    // catalogs any more — the Dock loads those.
+    const powersTab = screen.getByRole('tab', { name: /^powers$/i });
+    fireEvent.focus(powersTab);
+    fireEvent.pointerEnter(powersTab);
     await waitFor(() => {
-      expect(loadPowersSpy).toHaveBeenCalledWith('mam3e');
       expect(loadPowerModifiersSpy).toHaveBeenCalledWith('mam3e');
     });
-    await user.click(powersDbTab);
-    expect(await screen.findByRole('button', { name: 'Learn Flight' })).toBeInTheDocument();
-    expect(await screen.findByLabelText(/search modifiers/i)).toBeInTheDocument();
+    await user.click(powersTab);
     await waitFor(() => {
-      expect(loadPowersSpy).toHaveBeenCalledTimes(1);
       expect(loadPowerModifiersSpy).toHaveBeenCalledTimes(1);
     });
-
-    const advantagesTab = screen.getByRole('tab', { name: /advantages db/i });
-    fireEvent.focus(advantagesTab);
-    fireEvent.pointerEnter(advantagesTab);
-    await waitFor(() => {
-      expect(loadAdvantagesSpy).toHaveBeenCalledWith('mam3e');
-    });
-    await user.click(advantagesTab);
-    expect(await screen.findByText('Assessment')).toBeInTheDocument();
-    await waitFor(() => {
-      expect(loadAdvantagesSpy).toHaveBeenCalledTimes(1);
-    });
+    expect(loadPowersSpy).not.toHaveBeenCalled();
+    expect(loadAdvantagesSpy).not.toHaveBeenCalled();
 
     // Phase-5 eviction: M&M gear is reference-only (this sheet has no inventory
     // or equipped-item surface), so its browser tab was a pure duplicate of the
     // Dock's Equipment tab and is gone. The Powers DB and Advantages DB tabs
-    // above deliberately STAY — the Dock has no power-modifier catalog and
-    // loads no advantages for M&M, so those are capability, not duplication.
+    // are gone for the same reason as of WORK_PLAN §4.3 — the Dock now carries
+    // a Modifiers tab and an Advantages tab, so the sheet copies were
+    // duplication, and the Dock's own tests cover them.
     expect(screen.queryByRole('tab', { name: /^equipment$/i })).not.toBeInTheDocument();
     expect(loadEquipmentSpy).not.toHaveBeenCalled();
   });

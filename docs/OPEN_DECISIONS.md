@@ -53,6 +53,37 @@ defensible right answer, and the cost of being wrong is a revert, not a lawsuit.
 
 ---
 
+## A-DECIDED. Owner rulings, 2026-08-01 — recorded verbatim
+
+Four decisions taken. **On three of four the owner chose the more expensive
+option than the one recommended**, which is recorded here because the cheap
+option was argued for and rejected, not overlooked.
+
+| # | Decision | Ruling |
+| --- | --- | --- |
+| **A2/A3, §8** | The 68 `wrong-edition-attribution` records | **REPLACE with same-edition equivalents.** Not the recommended re-tag-and-drop. Every record gets a genuine entry transcribed from its own edition's open source, so the catalogs keep their rows AND every citation becomes true. — **EXECUTED 2026-08-01, with a documented limit.** 15 records had a genuine same-edition entry and were replaced with it; 13 turned out to duplicate an edition-correct row the catalog already shipped, so the equivalent was already present; **40 had no equivalent to transcribe** — PF2e has no Basket, Bell, Bucket, Ring Mail or Siangham under any name in any book, checked against two independent datasets — and were removed. The ruling's goal held: every surviving citation is true, and `check:provenance-over-inclusion` reports `licensing-class total: none`. What could not hold is "the catalogs keep their rows", for rows whose edition never had them. See `GAPS` §26. |
+| **A4, §4.3** | The four kept sheet wrappers | **FUND THE DOCK CAPABILITY WORK.** Not ratification. Build the Advantage tab, the Power-Modifier tab, and a sheet→Dock catalog-filter seam, then delete the four wrappers, restoring the single browse route Phase 5 intended. — **EXECUTED 2026-08-02.** All three built, all four wrappers deleted. The seam publishes a predicate rather than a descriptor, so no static import crosses the layer boundary. Two calls taken while building: no `addPowerModifier` channel (nothing would walk through it), and empty tabs hide rather than reading zero. See `WORK_PLAN` §4.3. |
+| **A5, §2.3** | M&M 3e adversaries | **OWNER FETCHES `d20herosrd.com` once**; the encoder then runs offline against a pinned copy, as `scripts/encode-mam-equipment.mjs` already does. Unblocks §4.1. |
+| **§0.6** | Phase 10 grid-geometry validator | **BUILD `analyze-map` + a MapPanel affordance (~1 day).** Not the recommended close-as-seam. — **BUILT 2026-08-02.** `gridGeometryProposal.ts` has a consumer for the first time since it landed. The affordance is a proposal review: Apply is offered only on an `accept` verdict, and the image dimensions the validator needs are measured client-side rather than taken from the model. Both properties have controls that were watched failing. See `WORK_PLAN` §0.6. |
+
+### Feasibility, measured rather than assumed (2026-08-01)
+
+The replacement ruling is the one that could have been undeliverable here, so
+reachability was tested before starting:
+
+| source | status |
+| --- | --- |
+| `raw.githubusercontent.com` (Pf2eTools, 5e-database, PSRD-Data) | **200 — reachable** |
+| `d20srd.org` | 000 — proxy-blocked |
+| `2e.aonprd.com` | 000 — proxy-blocked |
+| `d20herosrd.com` | 000 — proxy-blocked (this is why A5 needs the owner) |
+
+All three systems carrying wrong-edition records — pf2e (50), dnd-5e-2024 (14),
+pf1e (4) — have GitHub-mirrored open sources, so the work is executable in this
+environment. The blocked hosts affect only M&M adversaries.
+
+---
+
 ## C. Blocked on work, not on anyone
 
 No decision required. These are queued and unstarted.
@@ -67,12 +98,15 @@ No decision required. These are queued and unstarted.
 - **Prose fidelity is unaudited in all seven systems.** Every fidelity finding so far is scalar; descriptions, traits and actions are unchecked. Scoping it is itself a lane.
 - **Tier-B anchors** — *closed 2026-07-29*, 247/247 mutation-proven; **264/264 after the 2026-07-31 tranche**. Listed only because it appears as open in older prose.
 
-### Surfaced 2026-07-31 by the six-lane run — all work, no decisions
+### Surfaced 2026-07-31 by the six-lane run — **all executed 2026-08-02**
 
-- **Wire the area-effect path to typed damage.** `areaEffectToDamageIntent` and `multiTargetAttackToDamageIntent` have no callers outside tests and the barrel; the shipped fireball path builds an untyped intent inline at `src/rules/combat/sceneCombat.ts:503`. Until that is wired, **a fireball on a fire elemental does not mitigate.** `WORK_PLAN` §3.2.
-- **The dark a11y gate reaches 4 of ~17 touched files** — proven by a control that was NOT caught. Either scan surfaces that render the affected components, or add a static contrast lint over Tailwind classes lacking a `dark:` variant. `WORK_PLAN` §6.4.
-- **`normalizeLegacyEquipment` launders 8 non-coin 3.5e prices** (`'Varies'`, `'3 cp/mile'`) into a well-formed `0 gp`. Unfixable in the formatter — indistinguishable there from a legitimately free pf2e item. `src/utils/dataLoader.ts`.
-- **The L8 compute-register rows** the damage-split work now owes.
+The five work items below were dispatched as one parallel run and are done. Kept
+here with their original framing because each one's finding outlived the fix.
+
+- ~~**Wire the area-effect path to typed damage.**~~ **DONE.** `areaEffectToDamageIntent` and `multiTargetAttackToDamageIntent` have no callers outside tests and the barrel; the shipped fireball path builds an untyped intent inline at `src/rules/combat/sceneCombat.ts:503`. Until that is wired, **a fireball on a fire elemental does not mitigate.** `WORK_PLAN` §3.2.
+- ~~**The dark a11y gate reaches 4 of ~17 touched files**~~ **DONE** — closed by the second option, a static Tailwind contrast lint (`scripts/check-a11y-contrast.mjs`) that resolves class names against the shipped palette and the `:root`/`.dark` tokens, judges every text-colour string twice, and pins its pre-existing failures with their exact ratios. Two things had to be repaired after it landed, both the same shape as the defect it was built to catch. It was **unwired** — an npm script in neither `verify` nor `.github/workflows/ci.yml`, which is §6.4's own transferable point ("a skipped test is a gate that cannot fail") applied to its own remedy; it is now verify chain step 8 and the "Dark-mode contrast" step of the `static-analysis` job, held in sync by `check:ci-parity` at 24 steps. And it scanned only `src/components` + `src/dock`, **which is 12 of the ~17 files the fix touched** — 5 live under `src/systems/` (commit `5b3ed83`), as does `src/App.tsx`. Scope is now all of `src`: 1007 files, 756 colour class strings, 50 baselined pairs. Widening it immediately found a real one the two-tree scan could not see — `CurrencyEditor`'s own coin colours were AA-fixed in 2026-07-31 but Daggerheart supplies its own via `daggerheartSheetConstants.ts`, and those were still `text-yellow-200` at **1.16:1**, worse than the platinum 1.23:1 §6.4 named as its worst find. Fixed. Original: — proven by a control that was NOT caught. Either scan surfaces that render the affected components, or add a static contrast lint over Tailwind classes lacking a `dark:` variant. `WORK_PLAN` §6.4.
+- ~~**`normalizeLegacyEquipment` launders 8 non-coin 3.5e prices**~~ **DONE** — fixed at normalization time via a new `Item.costText`; `cost` stays non-nullable because every arithmetic consumer reads `cost.amount` unguarded. The population was exactly the 8 predicted. Original: (`'Varies'`, `'3 cp/mile'`) into a well-formed `0 gp`. Unfixable in the formatter — indistinguishable there from a legitimately free pf2e item. `src/utils/dataLoader.ts`.
+- ~~**The L8 compute-register rows** the damage-split work now owes.~~ **DONE, Tier A AND Tier B** — 12 rows (6 per 5e edition); the gate reports **276 verified entries, zero demotions, anti-bootstrap clean**. Tier B means a mutation anchor per row: a real source perturbation the linked test must fail against. The tie-break anchor is the one worth having — flipping the sort from weight-desc to weight-asc changes *which* channel absorbs the remainder without changing the total, so a test that only checks the sum survives it. It did not survive, so that test pins the rule rather than the total. One anchor was initially wrong and the gate caught it: `damage-channels` was aimed at `splitDamageAcrossChannels` when the row is `collectDamageChannels`, so no matching assertion could see the mutation. **That was a defect in the evidence, invisible to every other step in the chain** — which is exactly what this tier exists to find.
 - **Rename compute layer L5.** Nine of the ten layers are named by FUNCTION; L5 alone by a MECHANIC ("spellcasting economy"), which is why it is the only layer a non-magic system cannot fill honestly. M&M's rows were mis-filed there and reclassified to L8/L9 on 2026-07-31 with no number movement; renaming the layer would stop it recurring, but it changes the meaning for all seven systems.
 - **`wip/lane-snapshot`** — a superseded recovery branch on the remote. Verified to hold nothing unique. **This sandbox's git proxy refuses branch deletion** (`the remote end hung up unexpectedly`, both syntaxes) and no delete-branch tool is available, so it needs deleting from the GitHub UI.
 

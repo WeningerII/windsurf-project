@@ -266,41 +266,6 @@ export const explorerClothing: Armor = {
 };
 
 // Additional Medium Armor
-export const bandedMail: Armor = {
-  id: 'banded-mail',
-  name: 'Banded Mail',
-  system: 'pf2e',
-  type: 'armor',
-  armorType: 'medium',
-  rarity: 'common',
-  armorClass: 4,
-  dexBonusMax: 1,
-  stealthDisadvantage: true,
-  weight: 5,
-  cost: { amount: 10, currency: 'gp' },
-  description: 'Overlapping metal bands.',
-  source: 'SRD 3.5',
-  requiresAttunement: false,
-};
-
-// Additional Heavy Armor
-export const ringMail: Armor = {
-  id: 'ring-mail',
-  name: 'Ring Mail',
-  system: 'pf2e',
-  type: 'armor',
-  armorType: 'heavy',
-  rarity: 'common',
-  armorClass: 5,
-  dexBonusMax: 0,
-  stealthDisadvantage: true,
-  weight: 8,
-  cost: { amount: 10, currency: 'gp' },
-  description: 'Armor made of interlocking rings.',
-  source: 'SRD 5.1',
-  requiresAttunement: false,
-};
-
 export const armoredCoat: Armor = {
   id: 'armored-coat',
   name: 'Armored Coat',
@@ -328,9 +293,7 @@ export const pf2eArmor = {
   scaleMail,
   chainmail,
   breastplate,
-  bandedMail,
   armoredCoat,
-  ringMail,
   splintMail,
   halfPlate,
   fullPlate,

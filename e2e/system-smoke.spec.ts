@@ -158,10 +158,22 @@ for (const systemName of ['D&D 3.5e', 'Pathfinder 1e'] as const) {
     await expect(page.getByRole('tab', { name: /^Browse$/i })).toHaveCount(0);
     await expect(page.getByRole('tab', { name: /^Equipment$/i })).toHaveCount(0);
 
-    // The class-filtered spell browse-and-learn panel STAYS in the sheet — the
-    // Dock's spell tab is the whole system catalog and cannot filter by class.
+    // WORK_PLAN §4.3: the spell browser left the sheet too. The Dock's spell tab
+    // used to be the whole system catalog with no way to narrow it, which is why
+    // this panel was kept; the sheet now publishes its class filter UP through
+    // the catalog-filter seam and the Dock applies it, so there is one browse
+    // route again. The sheet's Spells tab keeps the slot/preparation controls.
     await clickTab(page, /^Spells$/i);
-    await expect(page.getByLabel('Search spells')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByLabel('Search spells')).toHaveCount(0);
+    await expect(page.getByRole('heading', { name: /Spell Slots/i })).toBeVisible({
+      timeout: 10000,
+    });
+
+    await openDockTab(page, /^Spells$/i);
+    await expect(page.getByPlaceholder('Search spells by name or description...')).toBeVisible({
+      timeout: 10000,
+    });
+    await closeDock(page);
 
     await openDockTab(page, /^Feats$/i);
     await expect(page.getByPlaceholder('Search feats by name or description...')).toBeVisible({
@@ -218,9 +230,17 @@ test('smokes Pathfinder 2e browsers', async ({ page }) => {
   await clickTab(page, /^Archetypes$/i);
   await expect(page.getByRole('heading', { name: /Available Archetypes/i })).toBeVisible();
 
-  // The tradition/class-filtered spell panel STAYS in the sheet.
+  // WORK_PLAN §4.3: the spell browser left the sheet for the Dock, which now
+  // applies the class filter this sheet publishes through the catalog-filter
+  // seam. Only the preparation controls stay here.
   await clickTab(page, /^Spells$/i);
-  await expect(page.getByLabel('Search spells')).toBeVisible();
+  await expect(page.getByLabel('Search spells')).toHaveCount(0);
+
+  await openDockTab(page, /^Spells$/i);
+  await expect(page.getByPlaceholder('Search spells by name or description...')).toBeVisible({
+    timeout: 10000,
+  });
+  await closeDock(page);
 
   // Equipped armour moved onto Inventory when its host tab was collapsed.
   await clickTab(page, /^Inventory$/i);
@@ -243,20 +263,25 @@ test('smokes Mutants & Masterminds 3e reference browsers', async ({ page }) => {
   await clickTab(page, /^Archetypes$/i);
   await expect(page.getByLabel('Search archetypes')).toBeVisible({ timeout: 10000 });
 
-  await clickTab(page, /^Powers DB$/i);
-  await expect(page.getByLabel('Search powers')).toBeVisible();
-  await expect(page.getByLabel('Search modifiers')).toBeVisible();
-
-  await clickTab(page, /^Advantages DB$/i);
-  await expect(page.getByRole('heading', { name: /SRD Advantages/i })).toBeVisible();
-
   await clickTab(page, /^Complications$/i);
   await expect(page.getByLabel('Search complications')).toBeVisible();
 
+  // WORK_PLAN §4.3: Powers DB and Advantages DB are gone from the sheet. They
+  // were the last two wrappers the Dock could not replace — its Feats tab is
+  // empty for M&M (`loadFeatsForSystem('mam3e')` returns []) and it had no
+  // power-modifier catalog at all — so the Dock grew both tabs instead, and
+  // they appear ONLY for a system whose catalogs are non-empty.
+  await expect(page.getByRole('tab', { name: /^Powers DB$/i })).toHaveCount(0);
+  await expect(page.getByRole('tab', { name: /^Advantages DB$/i })).toHaveCount(0);
+
+  await openDockTab(page, /^Advantages$/i);
+  await expect(page.getByLabel('Search advantages')).toBeVisible({ timeout: 10000 });
+  await openDockTab(page, /^Modifiers$/i);
+  await expect(page.getByLabel('Search modifiers')).toBeVisible();
+  await closeDock(page);
+
   // Phase 5: M&M gear is reference-only (this sheet has no inventory), so its
-  // browser tab was a pure duplicate of the Dock's and is gone. Powers DB and
-  // Advantages DB above deliberately STAY — the Dock has no power-modifier
-  // catalog and loads no advantages for M&M.
+  // browser tab was a pure duplicate of the Dock's and is gone.
   await expect(page.getByRole('tab', { name: /^Equipment$/i })).toHaveCount(0);
   await openDockTab(page, /^Equipment$/i);
   await expect(page.getByPlaceholder('Search equipment...')).toBeVisible({ timeout: 10000 });

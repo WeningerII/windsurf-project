@@ -91,6 +91,24 @@ export function createMockAdapter(): AiProviderAdapter {
         }
         case 'illustrate-scene':
           return Promise.resolve({ dataUrl: MOCK_PNG_DATA_URL, mediaType: 'image/png' });
+        case 'analyze-map': {
+          // Derived from the payload's measured image size so the mock proposal
+          // always lands INSIDE the image and passes the validator — a mock that
+          // reliably fails its own gate teaches nothing about the wiring.
+          const size = imageSizeOf(payload);
+          const cellSizePx = Math.max(8, Math.round(size.widthPx / 10));
+          return Promise.resolve({
+            registration: { offsetX: 0, offsetY: 0, cellSizePx },
+            boxes: [
+              {
+                kind: 'spawn',
+                rect: { x: 0, y: 0, width: cellSizePx * 2, height: cellSizePx * 2 },
+                label: 'Mock spawn',
+              },
+            ],
+            reason: 'Deterministic mock map analysis.',
+          });
+        }
         case 'character-draft': {
           const classId = firstPoolId(payload, 'classes');
           const ancestryId = firstPoolId(payload, 'ancestries');
@@ -109,4 +127,15 @@ export function createMockAdapter(): AiProviderAdapter {
       }
     },
   };
+}
+
+/** The client-measured image size on an analyze-map payload, with a safe default. */
+function imageSizeOf(payload: unknown): { widthPx: number; heightPx: number } {
+  const size =
+    payload && typeof payload === 'object'
+      ? (payload as { imageSize?: { widthPx?: unknown; heightPx?: unknown } }).imageSize
+      : undefined;
+  const widthPx = typeof size?.widthPx === 'number' ? size.widthPx : 1000;
+  const heightPx = typeof size?.heightPx === 'number' ? size.heightPx : 1000;
+  return { widthPx, heightPx };
 }

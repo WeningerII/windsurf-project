@@ -180,6 +180,11 @@ const CANONICAL_PAYLOADS: Record<AiTask, unknown> = {
     },
     repairIssues: ['canonical prior issue'],
   },
+  'analyze-map': {
+    image: { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
+    imageSize: { widthPx: 1200, heightPx: 800 },
+    hint: 'canonical hint',
+  },
 };
 
 /**
@@ -195,6 +200,7 @@ const TEMPLATE_FINGERPRINTS: Record<string, string> = {
   'identify-creature.v1': '07f756fe',
   'illustrate-scene.v1': 'd34f4528',
   'character-draft.v1': 'b0e684da',
+  'analyze-map.v1': '0a9ae63b',
 };
 
 describe('template fingerprints (change a template => bump its version)', () => {

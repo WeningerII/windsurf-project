@@ -55,10 +55,10 @@ silently dropped: the **62 remote branch deletions** (§0.2), the **orphaned
 feat-automation copy** (§4.3), and **ratification of the four kept sheet
 wrappers** (§4.3).
 
-### 0.1 ~~Open-content licensing: two populations shipping under source tags they do not have~~ — **M&M HALF DECIDED AND EXECUTED 2026-07-30; backgrounds still open**
+### 0.1 ~~Open-content licensing: two populations shipping under source tags they do not have~~ — **FULLY CLOSED 2026-08-02**
 
 - ~~**M&M 3e equipment.**~~ **DONE.** The finding was that 64 entries had no Hero SRD counterpart (of the original 79 suspects, 7 were duplicate rows of an SRD entry that also ships, 6 pre-built instances of a generic SRD row, 2 too ambiguous to call). They were honestly labelled `Original Content (not SRD)` and machine-separated, so nothing was *mislabelled*; what remained was trade dress — `Power Ring`, `Web Shooters`, `Mystic Amulet`, `Magic Wand`. **Owner decision: delete.** All 79 entries in that module are gone, and so are the other 27 that shipped through the same `originalContentSources` channel across the d20 catalogs — 106 in total, plus 2 more (`Cloak of the Archmagi`, `Pegasus Boots`) that were the same invented content still carrying a false `SRD 5.2` tag in the 2024 catalog. The channel itself is deleted, so self-authored content now fails the gate instead of being admitted. `genuine-non-open-content` in the over-inclusion ledger went **89 → 0**. See `GAPS` §17.3.
-- **5e-2024 backgrounds — STILL OPEN.** All four ship tagged `SRD 5.2` while carrying the *2014* model. SRD 5.1 contains exactly one background (Acolyte), so the Criminal / Sage / Soldier text is *Player's Handbook* content — not open. The name-based reverse diff cannot see this, because the names are legitimate SRD 5.2 names. This is the `wrong-edition-attribution` class (§2.1), not the deleted-homebrew class: the remedy is a re-tag that drops them, or replacement with genuine SRD 5.2 origins.
+- ~~**5e-2024 backgrounds — STILL OPEN.**~~ **CLOSED 2026-08-02 by re-encoding, not by re-tagging.** All four shipped tagged `SRD 5.2` while carrying the *2014* model — no ability scores, no origin feat. SRD 5.1 contains exactly one background (Acolyte), so the Criminal / Sage / Soldier text was *Player's Handbook* content, and the name-based reverse diff could not see it: the names are legitimate SRD 5.2 names, so it scored them 100% covered with zero over-inclusion. The remedy on offer was a re-tag that drops them; what landed instead is the real thing. All four are re-encoded from `5e-bits/5e-database`'s 2024 set — which was **already this category's wired denominator** in `src/scripts/srd-coverage.ts`, so the source needed no new trust — and now carry three ability scores, the Origin feat resolved against the shipped catalog, the skill/tool proficiencies and both lettered equipment packages. `feature`, `suggestedCharacteristics` and `description` became optional on the type, because SRD 5.2 genuinely has none of the three.
 
 **Unblocks:** the Phase-1 content close-out, and `p7.release` — neither should ship with an unresolved licensing question.
 
@@ -120,7 +120,18 @@ Two separate features, same shape: **the expensive half is built and the cheap h
 
 **`character-draft` — DONE 2026-07-27.** Reachable from the new-character dialog's "Draft with AI" mode, rendered only when `isAiEnabled()`, loaded by dynamic import so the AI-off eager chunk is unchanged. The draft applies through the system's *own* creation plan and is gated on its own `registry.validateDocument`, and the proposal is shown before anything is created — model proposes, validators decide. It also gave `makeMeAGameFlow` a shared seam instead of a second inline copy of that logic.
 
-**Phase 10 — still open, and this is the decision that remains.** Build the `analyze-map` task plus a MapPanel affordance (~1 day), or close Phase 10 formally and reclassify the validator as a permanent documented seam. **Do not delete the validator** — it is the careful half, and the retired shelf branch's version was strictly worse. One prerequisite for whoever builds it: `MapPanel` never learns the image's pixel dimensions, and the shipped validator requires `image: { widthPx, heightPx }`.
+**Phase 10 — DECIDED 2026-08-01: BUILD IT. BUILT 2026-08-02.** The owner chose the `analyze-map` task plus a MapPanel affordance over closing it as a documented seam.
+
+`analyze-map` is a vision task on the RFC 002 gateway, registered at every point the allowlist requires (task class, unit cost, payload/output parsers, prompt template with a pinned fingerprint, deterministic mock, AI-SDK schema). `src/ai/analyzeMapFlow.ts` runs `validateGridGeometryProposal` before the UI may show anything as applicable, and the MapPanel affordance is a **proposal review, not an action**: verdict, offsets, cell size, region count and every issue are shown, and Apply is offered only on an `accept`.
+
+Two things the model does not get to own, both regression-tested with a control run that was watched failing:
+
+- **The image's pixel dimensions are the client's.** They ride the payload so the model can reason in the right space, but the flow stamps the MEASURED values onto the proposal. A model that places a box at x=4000 *and* claims the image is 8000px wide still trips `box-out-of-image`.
+- **The envelope version is pinned in the flow**, so a model cannot opt into a schema version this build does not implement.
+
+The stated prerequisite is closed: `SceneManager` already had `measureImageSize` for the import path and now measures the decoded asset too. A map that cannot be decoded yields no measurement, which is also the panel's signal to hide the affordance rather than send a request that could not be validated. Original framing follows.
+
+**Phase 10 — was still open, and this was the decision that remained.** Build the `analyze-map` task plus a MapPanel affordance (~1 day), or close Phase 10 formally and reclassify the validator as a permanent documented seam. **Do not delete the validator** — it is the careful half, and the retired shelf branch's version was strictly worse. One prerequisite for whoever builds it: `MapPanel` never learns the image's pixel dimensions, and the shipped validator requires `image: { widthPx, heightPx }`.
 
 ---
 
@@ -148,9 +159,9 @@ The content denominator is mid-migration. Read §2.2 before starting anything el
 All 925 suspects are classified with evidence and held by a gate that is a proven ratchet (all five failure modes made to fire against a control run). What remains is **not** classification work:
 
 - ~~**31 records ship content with no open-content counterpart anywhere — the licensing-exposure number.**~~ **CLOSED 2026-07-30: the number is 0.** The class stood at 89 `genuine-non-open-content` records after the 2026-07-29 re-record. Every one of them was content this project wrote rather than transcribed, so the owner's answer was to delete it: 106 entries admitted through the `originalContentSources` channel, plus `Cloak of the Archmagi` and `Pegasus Boots` which were the same invented content still claiming `SRD 5.2`. The channel is gone too. The ledger now reports **`genuine-non-open-content` = 0** and the total falls 1034 → 925. See `GAPS` §17.3.
-- **Separately, 68 `wrong-edition-attribution` records carry a false citation over genuinely open content** (§18.5.3; was 78, then 73 after the allowlists were widened to admit the books by their true names, then 68 once the deleted homebrew stopped shadowing rows). No licence exposure — the content is OGL — but the product asserts a provenance it does not have.
+- ~~**Separately, 68 `wrong-edition-attribution` records carry a false citation over genuinely open content**~~ **CLOSED 2026-08-01: the number is 0.** (§18.5.3; was 78, then 73 after the allowlists were widened to admit the books by their true names, then 68 once the deleted homebrew stopped shadowing rows.) The owner ruled REPLACE rather than re-tag-and-drop, and executing that ruling showed its premise held for only a third of the population: **PF2e has no Basket, Bell, Bucket, Ring Mail or Siangham under any name in any book**, verified against two independent datasets. 15 rows were replaced with the real entry, 13 turned out to duplicate an edition-correct row the catalog already shipped, and 40 had nothing to replace them with and were removed. `check:provenance-over-inclusion` now reports `licensing-class total: none`. See `GAPS` §26.
 
-  **Correction, 2026-07-26: these are NOT a cheap re-tag.** Measured against the per-system allowlists in `src/utils/openContentPolicy.ts`, **75 of the 78 would be dropped from the product if re-tagged to their true source.** The reason is structural, not incidental: a wrong-edition record is by definition content from an edition the system's allowlist does not admit, so `filterOpenContentBySource` removes it the moment the tag becomes honest. `Cloak of Etherealness` ships in the 2024 catalog tagged `SRD 5.2`; its true source is SRD 5.1; the 2024 allowlist admits only 5.2 — so the honest tag deletes it. The sharpest case is PF2e equipment, where **47 of 188 rows** are PF1e/5e content tagged `Core Rulebook`.
+  **Correction, 2026-07-26 (superseded by the close above, kept because the reasoning is why REPLACE was the right ruling): these are NOT a cheap re-tag.** Measured against the per-system allowlists in `src/utils/openContentPolicy.ts`, **75 of the 78 would be dropped from the product if re-tagged to their true source.** The reason is structural, not incidental: a wrong-edition record is by definition content from an edition the system's allowlist does not admit, so `filterOpenContentBySource` removes it the moment the tag becomes honest. `Cloak of Etherealness` ships in the 2024 catalog tagged `SRD 5.2`; its true source is SRD 5.1; the 2024 allowlist admits only 5.2 — so the honest tag deletes it. The sharpest case is PF2e equipment, where **47 of 188 rows** are PF1e/5e content tagged `Core Rulebook`.
 
   So this is an owner decision of the same class as the 31, not cleanup. Options: re-tag honestly and lose ~75 entries · widen the allowlists to admit cross-edition open content (weakens what the policy claims) · leave as-is · replace with genuine same-edition equivalents (most work, best product). GAPS §18.5 warned about exactly this; an earlier revision of this file called it "mechanical, no risk" and was wrong.
 - **Nothing was deleted or relabelled, deliberately.** `filterOpenContentBySource` drops any entry whose source leaves the allowlist, so re-tagging silently removes shipped content from the product. That is the owner's call, not a cleanup.
@@ -169,7 +180,16 @@ The demotion was worth doing precisely because it *moved numbers downward*: **PF
 
 **Unblocked:** every content% number in the repo is now measured against something external to it.
 
-### 2.3 M&M 3e adversaries — **BLOCKED ON A DECISION, and the blocker is network access, not licensing** (corrected 2026-07-28)
+### 2.3 M&M 3e adversaries — **CLOSED 2026-08-01 as a recorded SOURCE LIMITATION: the data was found and refused on licensing grounds**
+
+**Option (d) — fetch `d20herosrd.com` from an unblocked connection — was attempted and is exhausted.** The owner could not locate NPC stat blocks on the site, and a systematic sweep of every GitHub-reachable source followed (`raw.githubusercontent.com` is this sandbox's only fetch route; `d20herosrd.com`, `d20pfsrd.com`, `aonprd.com`, `web.archive.org` and every proxy return 000).
+
+Result, with evidence in `GAPS` §19.5: **every** Foundry VTT M&M 3e system on GitHub ships **empty** compendium packs — four `system.json` files fetched, `"packs": []` or no packs field. The one repo holding real stat blocks is an unlicensed digitization of the entire Deluxe Hero's Handbook with no LICENSE, no OGL statement, and named Product Identity mixed in. **106 entries were deleted on 2026-07-30 for weaker cause than that**, so it is refused.
+
+**The gap's real shape, now established:** the stat blocks that exist are for the SAME 16 archetypes already shipped as build templates. The gap is *our archetypes have no scores, and the only reachable copy of those scores is a scrape* — and nothing reachable can even establish whether that chapter is OGC.
+
+Reopens immediately if someone pins a licensed copy; the archetypes are already wired and would need only their scores.
+
 
 `loadMonstersForSystem` returns `[]` for `mam3e`. 5 of 7 systems have loader-backed creature catalogs; M&M has none.
 
@@ -293,7 +313,7 @@ The remainder rule this section left open is implemented: **largest-remainder (H
 
 ## 4. Parity — the all-seven-equal spine
 
-### 4.1 `p4.parity-matrix` — close the 7×N matrix — **held on an owner decision, not on work**
+### 4.1 `p4.parity-matrix` — close the 7×N matrix — **UNBLOCKED 2026-08-01: close it at 6 of 7, by the §2.3 source limitation**
 
 Cannot be honestly closed while one system has no creature catalog. §2.3 (corrected 2026-07-28) establishes that the source **does** exist and is open — the obstacle is that CI cannot reach it, not that it is unavailable. So this is closable work, gated on the owner picking `GAPS.md` §19.4(d) (fetch once from an unblocked connection, pin, encode offline) or one of the fallbacks.
 
@@ -323,7 +343,20 @@ Six of the ten in-sheet browser wrappers are deleted and every affected tab grid
 
 **What the eviction left, one still open:**
 
-1. **DECIDE — the four kept wrappers need ratification.** The Phase-5 spec assumed the Dock covered every catalog and it does not (the three capability gaps above). Keeping the wrappers was the right call *given* that, but it was made by the lane, not by you, and it leaves the product with two browse routes indefinitely. Either ratify the split as the shipped design or fund the Dock capability work that would close it.
+1. ~~**DECIDE — the four kept wrappers need ratification.**~~ **DECIDED 2026-08-01: NOT ratified — build the Dock capability instead. EXECUTED 2026-08-02.** The owner declined to accept two browse routes as the shipped design.
+
+   What shipped: an **Advantages** tab (click-add) and a **Modifiers** tab; `PowerModifierBrowser` moved into the shared layer and `AdvantageBrowser` was extracted from the wrapper's markup with search added; and the **catalog-filter seam** — `SheetCatalogFilter` on `useSheetDispatchRegister`'s third argument. All four wrappers are deleted, with the M&M sheet's two catalog tabs.
+
+   The seam publishes a **predicate, not a descriptor**, and that is the load-bearing choice: a predicate is a runtime value the sheet hands over, so no static import crosses the layer boundary and the Dock never has to learn what a "tradition" or a "spell list" *is* in order to honour one. PF2e publishes its class filter, d20-legacy its spell-list filter, and the Dock shows a chip naming the narrowing.
+
+   Two decisions taken while building, both recorded because the cheap option was available:
+
+   - **There is no `addPowerModifier` channel.** It was built, then removed: no sheet in any system has a handler that adds a power modifier to a character, and the wrapper being replaced was browse-only for modifiers too. Declaring the channel anyway would put a door on the dispatch registry that nothing walks through — the same defect as a dead allowlist string (`GAPS` §26.4). The tab is `addVerb: false`.
+   - **A tab whose catalog is empty for the active system hides**, rather than reading zero. Advantages and Modifiers exist only for M&M; six systems should not grow two permanently-dead tabs so the seventh can have them. `src/dock/__tests__/Dock.test.tsx` asserts both directions — five tabs for 5e, seven for a system with those catalogs.
+
+   `SheetDispatchParity` earned its keep: it pins *a doc id is published iff some handler is*, and went red the moment M&M began publishing `addAdvantage`. Its matrix was extended, not loosened. Original framing follows.
+
+   Original: The Phase-5 spec assumed the Dock covered every catalog and it does not (the three capability gaps above). Keeping the wrappers was the right call *given* that, but it was made by the lane, not by you, and it leaves the product with two browse routes indefinitely. Either ratify the split as the shipped design or fund the Dock capability work that would close it.
 2. ~~**DECIDE — one string of user-facing copy is now orphaned.**~~ **RESOLVED 2026-07-28: deleted, not re-homed.** `DND5E_FEAT_COPY.browserSupport` is gone from `src/utils/documentationCopy.ts`.
 
    Re-homing it in the Dock's Feats tab was the obvious move and is wrong on inspection. That tab is shared-layer and browses **all seven** systems' feat catalogs, so a blanket caption about ability score increases and proficiencies — a 5e concept — would be false on the 3.5e, PF1e, PF2e and M&M catalogs shown by the same surface. And the information is already delivered better: the Dock stamps a per-feat **"Manual"** badge through `shouldShowDnd5eManualFeatBadge` (`src/dock/Dock.tsx`), marking the individual feats whose riders the engine cannot apply rather than asserting it across a whole catalog.
@@ -386,7 +419,9 @@ Accepted 2026-07-21, nothing landed. Verified: the RFC's proposed AI-DM module d
 **Two prerequisites are bugs, not features, and should land first and separately:**
 
 1. ~~**`saveScenes` has no `try/catch`**~~ — **DONE 2026-07-27.** Scenes now persist to IndexedDB with a localStorage snapshot kept only so the first paint has something to render (`src/hooks/useScenes.ts`, `src/utils/sceneStorage.ts`). Durability moves from the ~5 MB localStorage ceiling to the browser's storage quota, `saveScenes` resolves with which tiers are current instead of throwing inside a debounce timer with nobody to catch it, and a campaign too large for localStorage lives in IndexedDB alone — so the async second stage is not an optimization, it is the only path that returns the full collection. The live data-loss risk is closed; the sync question below is not.
-2. **Event order is not intrinsic to the data.** `sequence` is assigned as `scene.events.length + 1` — a local counter — and `foldSceneEvents` sorts on it alone. `Array#sort` is stable, so tied sequences resolve to *array insertion order*, a property of how the array was assembled rather than of the data. Two devices appending offline both mint `N+1`. RFC 006 guarantees byte-identical folds; under any merge that guarantee is currently unenforceable. The fix is a comparator — `sequence`, then `createdAt`, then `id` — and it must land alone, with a test proving existing single-device logs fold identically before and after.
+2. ~~**Event order is not intrinsic to the data.**~~ — **DONE (`b3ddee9`).** `compareSceneEvents` (`src/scene/runtime.ts:105`) is now a total order over event DATA — sequence, then `createdAt`, then a codepoint compare on `id` — so a tie no longer resolves to array insertion order, which was a property of the merge rather than of the log. Deliberately non-throwing, because the fold sorts BEFORE its per-event try/catch, so a corrupt persisted field must fall through rather than take down replay. The description below is kept as the statement of the defect it closed.
+
+   Original finding: `sequence` is assigned as `scene.events.length + 1` — a local counter — and `foldSceneEvents` sorts on it alone. `Array#sort` is stable, so tied sequences resolve to *array insertion order*, a property of how the array was assembled rather than of the data. Two devices appending offline both mint `N+1`. RFC 006 guarantees byte-identical folds; under any merge that guarantee is currently unenforceable. The fix is a comparator — `sequence`, then `createdAt`, then `id` — and it must land alone, with a test proving existing single-device logs fold identically before and after.
 
 Note the failure mode is *order ambiguity*, not re-rolling: every random value is resolved at authoring time and seeded from the event's own id, which is sound.
 
@@ -668,9 +703,15 @@ Small, real, and each found while checking something else.
 
 ---
 
-## 8. Release — `p7.release` — **held for the wrong-edition attribution pile**
+## 8. Release — `p7.release` — **the licensing hold is FULLY LIFTED (2026-08-02)**
 
-Release engineering and launch. Should not begin while an open-content licensing question is unresolved. The self-authored half is closed — that content is deleted and `genuine-non-open-content` is 0 — so what still holds release is the 68 `wrong-edition-attribution` records (§2.1) plus the four 5e-2024 backgrounds: real open content asserting a provenance it does not have.
+Release engineering and launch. Should not begin while an open-content licensing question is unresolved. Nothing is now unresolved:
+
+- The self-authored content was deleted — `genuine-non-open-content` = 0 (§17.3).
+- The 68 `wrong-edition-attribution` records were replaced or removed (`GAPS` §26). `check:provenance-over-inclusion` reports `licensing-class total: none`.
+- The four 5e-2024 backgrounds — the one finding a name diff structurally *cannot* reach (§18.5.4, §15(c)) — are re-encoded from the real SRD 5.2 source (§0.1).
+
+Worth keeping in view rather than declaring solved: the backgrounds were closed by hand, not by a gate. **A name diff still cannot see content divergence under a legitimate name**, so the same defect can recur in any category the field-level comparison of `GAPS` §15 does not cover — which today is 5e monsters and backgrounds and nothing else. Prose fidelity is unaudited in all seven systems.
 
 ---
 

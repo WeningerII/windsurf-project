@@ -11,8 +11,10 @@
  * claims to. This repo has already shipped that exact failure once: a Playwright
  * acceptance spec sat in the tree passing for weeks because no workflow ever set
  * the flag it needed, so it asserted nothing and said so in green. A five-job CI
- * split makes that hole structural rather than accidental — so this gate lands
- * BEFORE any split, not after.
+ * split makes that hole structural rather than accidental — so this gate landed
+ * BEFORE the split, not after. The split has since landed, and this gate is now
+ * the only thing standing between `verify` and a workflow that quietly runs 22
+ * of its 23 steps.
  *
  * WHAT IT ASSERTS: the MULTISET of `npm run` invocations across every job in
  * every workflow equals the multiset of steps in package.json's `verify` chain.
@@ -30,11 +32,19 @@
  * stayed identical. Those dependencies are asserted separately, from
  * ORDERING_CONSTRAINTS below.
  *
- * SELF-REFERENCE: this gate is itself a member of the chain it measures. That is
- * self-consistent and requires no special case — ci.yml's verify job runs
- * `npm run verify`, so adding `check:ci-parity` to the chain adds it to CI's
- * coverage in the same edit. The gate must NOT exempt itself; if a future job
- * split enumerates steps and drops this one, that has to fail like any other.
+ * SELF-REFERENCE: this gate is itself a member of the chain it measures, and
+ * since the split it is enumerated like any other step (ci.yml's `lint-types`
+ * job). That is self-consistent and requires no special case. The gate must NOT
+ * exempt itself: dropping any OTHER step from the jobs fails here exactly like
+ * dropping `lint` would.
+ *
+ * The one case it cannot catch is deleting its own step from `lint-types`, since
+ * a gate that no longer runs cannot report that it no longer runs — and a second
+ * job running it is no answer, that would be a duplicate in the very multiset it
+ * compares. Before the split this was covered by construction (a single
+ * `npm run verify` step). It is covered again from OUTSIDE: `command_rule` in
+ * src/utils/docDrift.ts asserts ci.yml still runs this gate, and doc-drift runs
+ * in a different job, so removing both steps takes two edits in two files.
  *
  * PLACEMENT: first gate after `node:check`. It is offline and sub-second (it
  * reads package.json and the workflow YAML, nothing else), so drift in the shape
@@ -72,16 +82,22 @@ const workflowDir = path.join(root, '.github', 'workflows');
  * var disappears the exemption stops matching and this gate fires.
  */
 const DECLARED_CI_ONLY_COMMANDS = [
+  // ── The five verify jobs ─────────────────────────────────────────────────
+  // One `npm ci` each, because the split gave the chain five runners instead of
+  // one. Enumerated per job rather than matched by pattern: a job that appears
+  // without an entry is a job nobody reviewed.
+  ...['lint-types', 'hygiene-docs', 'content-provenance', 'unit-tests', 'build-e2e'].map(
+    (job) => ({
+      workflow: 'ci.yml',
+      job,
+      command: 'npm ci',
+      reason:
+        'Dependency install. Environment setup, legitimately outside the chain — verify assumes an installed tree.',
+    })
+  ),
   {
     workflow: 'ci.yml',
-    job: 'verify',
-    command: 'npm ci',
-    reason:
-      'Dependency install. Environment setup, legitimately outside the chain — verify assumes an installed tree.',
-  },
-  {
-    workflow: 'ci.yml',
-    job: 'verify',
+    job: 'build-e2e',
     command: 'npx playwright install chromium firefox',
     reason:
       "Browser provisioning. verify's test:e2e runs scripts/check-playwright-browsers.mjs, which GUARDS that the browsers are present rather than installing them, so the browser SET is pinned here and nowhere in package.json. If playwright.config.ts gains a third project, this line must change and only a human will notice.",
@@ -98,7 +114,8 @@ const DECLARED_CI_ONLY_COMMANDS = [
     workflow: 'ci.yml',
     job: 'scene-drag',
     command: 'npm ci',
-    reason: 'Dependency install for the flag-on e2e job. Environment setup, same rationale as verify.',
+    reason:
+      'Dependency install for the flag-on e2e job. Environment setup, same rationale as the verify jobs.',
   },
   {
     workflow: 'ci.yml',
@@ -122,6 +139,42 @@ const DECLARED_CI_ONLY_COMMANDS = [
     reason:
       'The flag-on acceptance itself. Invoked directly rather than through npm run test:e2e because it needs the single spec, the chromium project, and the JSON reporter that the follow-up step parses to ASSERT nothing was skipped — the assertion that closes the reported-green-while-proving-nothing hole.',
   },
+
+  // ── The scene-canvas job ─────────────────────────────────────────────────
+  // The Phase-6 twin of the block above (decision B6). Same shape and the same
+  // argument: e2e/scene-canvas.spec.ts skips unless VITE_SCENE_CANVAS_ENABLED is
+  // set, so without this job it would be a keystone acceptance that cannot fail.
+  // Also deliberately outside the verify chain — the flag is a build input, and
+  // the canvas branch replaces the DOM grid every other e2e spec drives.
+  {
+    workflow: 'ci.yml',
+    job: 'scene-canvas',
+    command: 'npm ci',
+    reason: 'Dependency install for the flag-on e2e job. Environment setup, same rationale as the verify jobs.',
+  },
+  {
+    workflow: 'ci.yml',
+    job: 'scene-canvas',
+    command: 'npx playwright install chromium',
+    reason:
+      'chromium only, matching scene-drag: this job proves one flag-gated surface, not cross-browser parity.',
+  },
+  {
+    workflow: 'ci.yml',
+    job: 'scene-canvas',
+    command: 'npm run build',
+    envContains: { VITE_SCENE_CANVAS_ENABLED: 'true' },
+    reason:
+      "Deliberate SECOND build with the scene-canvas flag ON, not a duplicate of the chain's build step. Pinned on the env var so that if the flag disappears the exemption stops matching and this gate fires — Vite folds the flag at build time and tree-shakes the canvas away without it, so a flag-less build would run this acceptance against a bundle that does not contain the surface it tests.",
+  },
+  {
+    workflow: 'ci.yml',
+    job: 'scene-canvas',
+    command: 'npx playwright test e2e/scene-canvas.spec.ts --project=chromium --reporter=list,json',
+    reason:
+      'The flag-on acceptance itself. Invoked directly rather than through npm run test:e2e for the same three reasons as scene-drag: the single spec, the chromium project, and the JSON reporter the follow-up step parses to ASSERT nothing was skipped.',
+  },
+
   {
     workflow: 'pages.yml',
     job: 'build-and-deploy',
@@ -454,7 +507,16 @@ for (const file of workflowFiles) {
 
       const via = parsed.script === ROOT_SCRIPT ? ` (via \`npm run ${ROOT_SCRIPT}\`)` : '';
       for (const leaf of expand(command, new Set())) {
-        ciOccurrences.push({ command: leaf, where: `${jobKey}${via}` });
+        // `job` and `order` are provenance the ORDERING_CONSTRAINTS pass needs:
+        // `where` carries the `via` suffix and so cannot be compared for job
+        // identity, and artifact couplings are only preserved when producer and
+        // consumer sit in the SAME job, earlier step first.
+        ciOccurrences.push({
+          command: leaf,
+          where: `${jobKey}${via}`,
+          job: jobKey,
+          order: ciOccurrences.length,
+        });
       }
     }
   }
@@ -516,6 +578,28 @@ for (const constraint of ORDERING_CONSTRAINTS) {
     violations.push(
       `Verify chain order broken: \`${constraint.step}\` runs before \`${constraint.mustRunAfter}\`, but ${constraint.reason}`
     );
+  }
+
+  // CI side. Chain order binds `npm run verify` because the chain is sequential,
+  // but CI runs the chain as PARALLEL jobs, and two parallel jobs have no
+  // relative order at all. So a coupling is only preserved when both steps land
+  // in the same job with the producer first; split across jobs, the consumer
+  // reads a missing or stale artifact while this gate still reports full
+  // coverage — the multiset it compares is order-blind and job-blind.
+  const consumers = ciOccurrences.filter((entry) => entry.command === chainSteps[stepIndex]);
+  const producers = ciOccurrences.filter((entry) => entry.command === chainSteps[afterIndex]);
+
+  for (const consumer of consumers) {
+    const inSameJob = producers.filter((producer) => producer.job === consumer.job);
+    if (inSameJob.length === 0) {
+      violations.push(
+        `CI ordering broken: ${consumer.job} runs \`${constraint.step}\` but not \`${constraint.mustRunAfter}\`, and jobs run in parallel — ${constraint.reason} Move both into one job.`
+      );
+    } else if (!inSameJob.some((producer) => producer.order < consumer.order)) {
+      violations.push(
+        `CI ordering broken: ${consumer.job} runs \`${constraint.step}\` before \`${constraint.mustRunAfter}\`, but ${constraint.reason}`
+      );
+    }
   }
 }
 

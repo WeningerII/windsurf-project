@@ -323,6 +323,8 @@ async function loadDnd35eSpecies(): Promise<Species[]> {
  * so `item.cost.amount` rendered undefined at runtime despite green types).
  * System-specific extras (damage, properties, armorClass, …) are preserved
  * by spreading the raw entry first; only the canonical fields are coerced.
+ * A price that is not a coin amount at all survives on `costText` rather than
+ * being laundered into a well-formed `0 gp` — see the `cost` branch below.
  */
 function normalizeLegacyEquipment(rawItems: unknown[], fallbackType: Item['type']): Item[] {
   const CURRENCIES = new Set(['cp', 'sp', 'gp', 'pp']);
@@ -344,13 +346,21 @@ function normalizeLegacyEquipment(rawItems: unknown[], fallbackType: Item['type'
     })
     .map((raw) => {
       let cost: Item['cost'] = { amount: 0, currency: 'gp' };
+      // A price string that is NOT a coin amount ('Varies', '3 cp/mile') has no
+      // representation in `cost`, and the `{0, 'gp'}` seed below is a well-formed
+      // lie the formatter cannot tell apart from a legitimately free item. Keep
+      // the catalog's own words so the browser can print them instead.
+      let costText: string | undefined;
       if (typeof raw.cost === 'string') {
-        const match = raw.cost.trim().match(/^([\d,.]+)\s*(cp|sp|gp|pp)$/i);
+        const text = raw.cost.trim();
+        const match = text.match(/^([\d,.]+)\s*(cp|sp|gp|pp)$/i);
         if (match) {
           const amount = Number(match[1].replace(/,/g, ''));
           if (Number.isFinite(amount)) {
             cost = { amount, currency: match[2].toLowerCase() as Item['cost']['currency'] };
           }
+        } else if (text) {
+          costText = text;
         }
       } else if (
         raw.cost &&
@@ -367,6 +377,7 @@ function normalizeLegacyEquipment(rawItems: unknown[], fallbackType: Item['type'
         ...raw,
         type,
         cost,
+        ...(costText ? { costText } : {}),
         rarity: (raw.rarity as Item['rarity']) ?? 'common',
         weight: typeof raw.weight === 'number' && Number.isFinite(raw.weight) ? raw.weight : 0,
         description: typeof raw.description === 'string' ? raw.description : '',

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-01T19:03:43.412Z",
+  "generatedAt": "2026-08-02T00:55:28.435Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -28,8 +28,7 @@
         "Core Rulebook",
         "CRB",
         "Bestiary",
-        "Pathfinder 1e Advanced Player's Guide",
-        "SRD 3.5"
+        "Pathfinder 1e Advanced Player's Guide"
       ],
       "allowMissingSourceFor": []
     },
@@ -38,14 +37,9 @@
         "Core Rulebook",
         "CRB",
         "B1",
-        "Pathfinder 1e Core Rulebook",
-        "Pathfinder 1e Advanced Player's Guide",
-        "Pathfinder 1e Ultimate Combat",
-        "Pathfinder 1e Ultimate Equipment",
         "Pathfinder 2e Advanced Player's Guide",
-        "Secrets of Magic",
-        "SRD 3.5",
-        "SRD 5.1"
+        "Pathfinder 2e Treasure Vault",
+        "Secrets of Magic"
       ],
       "allowMissingSourceFor": []
     },
@@ -96,8 +90,8 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 337,
-      "equipment": 492,
+      "monsters": 330,
+      "equipment": 489,
       "feats": 19,
       "advantages": 0,
       "powerModifiers": 0
@@ -127,13 +121,13 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 332,
-      "equipment": 615,
+      "equipment": 613,
       "feats": 86,
       "advantages": 0,
       "powerModifiers": 0
     },
     "pf2e": {
-      "spells": 546,
+      "spells": 543,
       "classes": 12,
       "species": 6,
       "backgrounds": 16,
@@ -142,7 +136,7 @@
       "archetypes": 5,
       "complications": 0,
       "monsters": 413,
-      "equipment": 182,
+      "equipment": 148,
       "feats": 93,
       "advantages": 0,
       "powerModifiers": 0
@@ -203,8 +197,8 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 337,
-      "equipment": 492,
+      "monsters": 330,
+      "equipment": 489,
       "feats": 19,
       "advantages": 0,
       "powerModifiers": 0
@@ -234,13 +228,13 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 332,
-      "equipment": 615,
+      "equipment": 613,
       "feats": 86,
       "advantages": 0,
       "powerModifiers": 0
     },
     "pf2e": {
-      "spells": 546,
+      "spells": 543,
       "classes": 12,
       "species": 6,
       "backgrounds": 16,
@@ -249,7 +243,7 @@
       "archetypes": 5,
       "complications": 0,
       "monsters": 413,
-      "equipment": 182,
+      "equipment": 148,
       "feats": 93,
       "advantages": 0,
       "powerModifiers": 0
@@ -358,9 +352,9 @@
     {
       "systemId": "dnd-5e-2014",
       "systemLabel": "D&D 5e (2014)",
-      "verified": 48,
-      "inScope": 51,
-      "percent": 94.1,
+      "verified": 54,
+      "inScope": 57,
+      "percent": 94.7,
       "byLayer": {
         "L1": {
           "verified": 2,
@@ -391,8 +385,8 @@
           "inScope": 3
         },
         "L8": {
-          "verified": 8,
-          "inScope": 8
+          "verified": 14,
+          "inScope": 14
         },
         "L9": {
           "verified": 3,
@@ -407,9 +401,9 @@
     {
       "systemId": "dnd-5e-2024",
       "systemLabel": "D&D 5e (2024)",
-      "verified": 44,
-      "inScope": 50,
-      "percent": 88,
+      "verified": 50,
+      "inScope": 56,
+      "percent": 89.3,
       "byLayer": {
         "L1": {
           "verified": 2,
@@ -440,8 +434,8 @@
           "inScope": 3
         },
         "L8": {
-          "verified": 8,
-          "inScope": 8
+          "verified": 14,
+          "inScope": 14
         },
         "L9": {
           "verified": 3,
@@ -895,14 +889,13 @@
       "category": "monsters",
       "categoryLabel": "Monsters",
       "metrics": {
-        "rawCount": 337,
-        "uniqueCount": 337,
+        "rawCount": 330,
+        "uniqueCount": 330,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 330,
-          "SRD 5.1": 7
+          "SRD 5.2": 330
         }
       }
     },
@@ -912,14 +905,14 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 492,
-        "uniqueCount": 492,
+        "rawCount": 489,
+        "uniqueCount": 489,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 487,
-          "SRD 5.1": 5
+          "SRD 5.2": 485,
+          "SRD 5.1": 4
         }
       }
     },
@@ -1121,14 +1114,13 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 615,
-        "uniqueCount": 615,
+        "rawCount": 613,
+        "uniqueCount": 613,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Core Rulebook": 613,
-          "SRD 3.5": 2
+          "Core Rulebook": 613
         }
       }
     },
@@ -1154,16 +1146,15 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 546,
-        "uniqueCount": 546,
+        "rawCount": 543,
+        "uniqueCount": 543,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Core Rulebook": 543,
-          "Pathfinder 1e Advanced Player's Guide": 1,
+          "Core Rulebook": 541,
           "Secrets of Magic": 1,
-          "SRD 5.1": 1
+          "Pathfinder 2e Advanced Player's Guide": 1
         }
       }
     },
@@ -1253,20 +1244,15 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 182,
-        "uniqueCount": 182,
+        "rawCount": 148,
+        "uniqueCount": 148,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Core Rulebook": 137,
-          "Pathfinder 1e Core Rulebook": 15,
-          "SRD 5.1": 14,
-          "Pathfinder 1e Advanced Player's Guide": 6,
-          "SRD 3.5": 6,
-          "Pathfinder 1e Ultimate Combat": 2,
-          "Pathfinder 2e Advanced Player's Guide": 1,
-          "Pathfinder 1e Ultimate Equipment": 1
+          "Core Rulebook": 142,
+          "Pathfinder 2e Treasure Vault": 3,
+          "Pathfinder 2e Advanced Player's Guide": 3
         }
       }
     },

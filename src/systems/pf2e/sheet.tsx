@@ -70,10 +70,29 @@ export const Pf2eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
       }),
     [onAddItem]
   );
-  useSheetDispatchRegister(onUpdate ? document.id : null, {
-    addSpell: onUpdate && spellcasting ? addSpell : undefined,
-    addEquipment: onUpdate ? addEquipment : undefined,
-  });
+  // The class narrowing the deleted in-sheet Pf2eSpellBrowserPanel applied
+  // locally (WORK_PLAN §4.3). Published UP so the Dock's spell tab shows this
+  // character's class list rather than the whole PF2e catalog — the Dock cannot
+  // derive it, being shared-layer with no view of the open character.
+  const { classId } = controller.spellsTabProps;
+  const catalogFilter = React.useMemo(
+    () =>
+      classId
+        ? {
+            label: `${classId} spells`,
+            spell: (spell: Spell) => spell.classes.includes(classId),
+          }
+        : undefined,
+    [classId]
+  );
+  useSheetDispatchRegister(
+    onUpdate ? document.id : null,
+    {
+      addSpell: onUpdate && spellcasting ? addSpell : undefined,
+      addEquipment: onUpdate ? addEquipment : undefined,
+    },
+    catalogFilter
+  );
 
   const derivedCards = presentDerivedQuantities(
     PF2E_DERIVED_QUANTITIES,

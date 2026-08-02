@@ -14,7 +14,6 @@ import {
 } from '../../utils/dataLoader';
 import { MamArchetypesTab } from './components/MamArchetypesTab';
 import { MamComplicationsTab } from './components/MamComplicationsTab';
-import { MamPowerBrowserTab } from './components/MamPowerBrowserTab';
 import { MAM3E_EXTRA_MODIFIERS, MAM3E_FLAW_MODIFIERS } from './powerMath';
 
 interface UseMam3eSheetResourcesProps {
@@ -173,7 +172,6 @@ export function useMam3eSheetResources({ systemId }: UseMam3eSheetResourcesProps
   const warmPowerBrowser = useCallback(() => {
     void loadPowers();
     void loadPowerModifiers();
-    void MamPowerBrowserTab.preload();
   }, [loadPowerModifiers, loadPowers]);
 
   const warmAdvantages = useCallback(() => {

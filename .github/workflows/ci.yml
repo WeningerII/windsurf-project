@@ -17,24 +17,225 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+# ─────────────────────────────────────────────────────────────────────────────
+# THE VERIFY CHAIN IS SPLIT ACROSS FIVE PARALLEL JOBS (decision B2).
+#
+# `npm run verify` is a 23-step SEQUENCE that took the whole pipeline's critical
+# path even though most of its steps are independent. The five jobs below
+# enumerate those 23 steps, each exactly once, and run concurrently.
+#
+# THE THING THAT MAKES THIS SAFE: `npm run check:ci-parity` (itself step 2 of the
+# chain, run by `lint-types`) compares the MULTISET of npm-script invocations
+# across every job in every workflow against the chain in package.json. So a step
+# added to `verify` and forgotten here — the exact silent failure a job split
+# invites, and this repo's documented failure mode — is a red check, not a green
+# one that proves less than it claims. Anything a job runs that is NOT a chain
+# step must be declared in DECLARED_CI_ONLY_COMMANDS in scripts/check-ci-parity.mjs
+# with a written reason.
+#
+# HOW THE STEPS ARE GROUPED: by what they need, not by taste. Two chain steps
+# consume an artifact an earlier step emits, and those pairs cannot be separated:
+# `check:keepalive-budget` reads what the SurfaceStage vitest suite writes (so it
+# shares `unit-tests` with `test:coverage`), and `check:bundle-size` plus
+# `test:e2e` both read the `dist/` the build produces (so all three share
+# `build-e2e`). ORDERING_CONSTRAINTS in the parity script pins those two
+# dependencies against a reorder of the chain itself.
+#
+# The remaining eighteen are independent of each other and are grouped to keep
+# the four fast jobs off the critical path of the slow one: `build-e2e` is the
+# long pole and carries nothing else.
+#
+# EVERY JOB REPEATS checkout + setup-node + `npm ci`. Deliberately not factored
+# into a composite action: the parity gate reads .github/workflows/*.yml and
+# nothing else, so an `npm ci` hidden inside a composite action would be a
+# toolchain invocation this gate cannot see.
+# ─────────────────────────────────────────────────────────────────────────────
+
 jobs:
-  verify:
-    name: Verify
+  # Chain steps 1-6. The cheapest gates and the ones whose failures are most
+  # often the only failure, so they report first.
+  lint-types:
+    name: Lint and types
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
+      - name: Node version guard
+        run: npm run node:check
+
+      # Runs HERE rather than in a job of its own so that a workflow edit which
+      # drops a chain step fails in the first job to finish, not the last.
+      - name: CI/verify parity
+        run: npm run check:ci-parity
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck (tests and tool configs)
+        run: npm run typecheck:test
+
+      - name: Typecheck (netlify functions)
+        run: npm run typecheck:netlify
+
+      - name: Format check
+        run: npm run format:check
+
+  # Chain steps 7-9, 12-13 and 17 — the gates that read the repo tree and the
+  # docs rather than the product: hygiene, licensing, secrets, generated-doc and
+  # doc-drift parity, and knip's dead-code sweep.
+  hygiene-docs:
+    name: Hygiene and docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Repo hygiene
+        run: npm run check:repo-hygiene
+
+      - name: Dark-mode contrast
+        run: npm run check:a11y-contrast
+
+      - name: Legal notices
+        run: npm run check:legal-notices
+
+      - name: Secret exposure
+        run: npm run check:secret-exposure
+
+      - name: Generated docs
+        run: npm run check:generated-docs
+
+      - name: Doc drift
+        run: npm run check:doc-drift
+
+      - name: Dead code
+        run: npm run check:dead-code
+
+  # Chain steps 10-11 and 14-16 — the content gates: every claim this repo makes
+  # about what its SRD data is and where it came from.
+  content-provenance:
+    name: Content and provenance
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: M&M equipment provenance
+        run: npm run check:mam-equipment
+
+      - name: Validate classes
+        run: npm run validate
+
+      - name: Rules provenance
+        run: npm run check:rules-provenance
+
+      - name: SRD fidelity
+        run: npm run check:srd-fidelity
+
+      - name: Provenance over-inclusion
+        run: npm run check:provenance-over-inclusion
+
+  # Chain steps 18-20. `check:keepalive-budget` MUST stay in this job: it
+  # re-asserts the artifact `SurfaceStageKeepaliveBudget.test.tsx` emits during
+  # the test run, and it fails on a missing artifact by design — split across
+  # jobs it would fail every run. `check:compute-register` also drives vitest,
+  # so it belongs beside the suite that has already warmed the same files.
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit tests with coverage
+        run: npm run test:coverage -- --run
+
+      - name: Keepalive budget
+        run: npm run check:keepalive-budget
+
+      - name: Compute register
+        run: npm run check:compute-register
+
+      - name: Upload coverage artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v5
+        if: success()
+        with:
+          files: ./coverage/coverage-final.json
+          flags: unittests
+          name: codecov-umbrella
+
+  # Chain steps 21-23, and the pipeline's long pole. All three belong together:
+  # `check:bundle-size` reads the dist/ and chunk graph the build emits, and
+  # `test:e2e` runs against that SAME dist (PLAYWRIGHT_PREBUILT=1) so the bytes
+  # that are size-gated, tested, and deployed are one artifact rather than three
+  # independent builds.
+  build-e2e:
+    name: Build and e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       # Pins the browser directory explicitly rather than relying on
       # playwright-core's platform-dependent default, so the cache path and the
       # install location are the SAME value and cannot drift apart. The first
@@ -100,13 +301,19 @@ jobs:
           fi
           du -sh "$PLAYWRIGHT_BROWSERS_PATH"
 
-      - name: Run full verification suite
+      - name: Build
+        run: npm run build
+
+      - name: Bundle size
+        run: npm run check:bundle-size
+
+      - name: End-to-end tests
         # Skips the duplicate `tsc && vite build` inside Playwright's webServer:
-        # `npm run build` already ran earlier in this same chain and
+        # `npm run build` already ran earlier in this same job and
         # check:bundle-size gated that dist. See playwright.config.ts.
         env:
           PLAYWRIGHT_PREBUILT: '1'
-        run: npm run verify
+        run: npm run test:e2e
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -114,23 +321,6 @@ jobs:
           name: dist
           path: dist/
           retention-days: 7
-
-      - name: Upload coverage artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage/
-          if-no-files-found: warn
-          retention-days: 7
-      
-      - name: Upload coverage
-        uses: codecov/codecov-action@v5
-        if: success()
-        with:
-          files: ./coverage/coverage-final.json
-          flags: unittests
-          name: codecov-umbrella
 
       - name: Upload Playwright HTML report
         if: always()
@@ -140,7 +330,7 @@ jobs:
           path: playwright-report/
           if-no-files-found: warn
           retention-days: 7
-      
+
       - name: Upload Playwright traces and media
         if: always()
         uses: actions/upload-artifact@v4
@@ -163,7 +353,7 @@ jobs:
   #
   # Separate job rather than a step in `verify`, because the flag is a BUILD
   # input — the drag provider is tree-shaken out of a flag-off bundle — so this
-  # needs its own dist, and `verify`'s dist is the one the deploy jobs consume.
+  # needs its own dist, and `build-e2e`'s dist is the one the deploy jobs consume.
   # It runs in parallel and does not extend the pipeline's critical path.
   scene-drag:
     name: Scene drag (flag-on e2e)
@@ -182,7 +372,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Same pinned-path + version-keyed cache as `verify`; see the long note
+      # Same pinned-path + version-keyed cache as `build-e2e`; see the long note
       # there for why the path is written from a step and asserted afterwards.
       - name: Resolve Playwright version and browser path
         id: pw
@@ -267,10 +457,120 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+  # The flag-on Phase-6 acceptance (decision B6), and the sibling `scene-drag`
+  # spent months proving it needed: `e2e/scene-canvas.spec.ts` skips unless
+  # VITE_SCENE_CANVAS_ENABLED is set, so without this job it would be a keystone
+  # acceptance that cannot fail. It was written together with this job for that
+  # reason, and it carries the same not-skipped assertion.
+  #
+  # Its own job for the same reason as scene-drag: the flag is a BUILD input
+  # (Vite folds `import.meta.env.VITE_SCENE_CANVAS_ENABLED` and tree-shakes the
+  # canvas branch away when it is unset), so it needs a dist of its own. The two
+  # scene flags are also mutually exclusive in the product — the canvas branch
+  # suppresses the Phase-4 drop controller — so this cannot be one job with
+  # scene-drag either.
+  scene-canvas:
+    name: Scene canvas (flag-on e2e)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Same pinned-path + version-keyed cache as `build-e2e`; see the long note
+      # there for why the path is written from a step and asserted afterwards.
+      - name: Resolve Playwright version and browser path
+        id: pw
+        run: |
+          echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+          echo "PLAYWRIGHT_BROWSERS_PATH=$RUNNER_TEMP/pw-browsers" >> "$GITHUB_ENV"
+
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+          key: ${{ runner.os }}-playwright-${{ steps.pw.outputs.version }}
+
+      # chromium only, matching scene-drag: this job proves one flag-gated
+      # surface, not cross-browser parity.
+      - name: Install Playwright browsers
+        run: npx playwright install chromium
+
+      - name: Verify the browser cache is doing something
+        run: |
+          echo "cache-hit: ${{ steps.pw-cache.outputs.cache-hit || 'false' }}"
+          if [ ! -d "$PLAYWRIGHT_BROWSERS_PATH" ] || [ -z "$(ls -A "$PLAYWRIGHT_BROWSERS_PATH" 2>/dev/null)" ]; then
+            echo "::error::PLAYWRIGHT_BROWSERS_PATH is empty or missing after install."
+            exit 1
+          fi
+
+      - name: Build with the scene-canvas flag on
+        env:
+          VITE_SCENE_CANVAS_ENABLED: 'true'
+        run: npm run build
+
+      # The env var is needed TWICE, exactly as in scene-drag: Vite inlines it
+      # into the bundle at build time, and the spec's own `test.skip` guard reads
+      # process.env at test time.
+      - name: Run the flag-on acceptance
+        env:
+          VITE_SCENE_CANVAS_ENABLED: 'true'
+          PLAYWRIGHT_PREBUILT: '1'
+          PLAYWRIGHT_JSON_OUTPUT_NAME: scene-canvas-report.json
+        run: npx playwright test e2e/scene-canvas.spec.ts --project=chromium --reporter=list,json
+
+      # Same assertion as scene-drag, for the same reason: a fully skipped file
+      # exits 0, so the exit code alone cannot tell "passed" from "never ran".
+      - name: Assert the acceptance was not skipped
+        if: always()
+        run: |
+          node -e '
+            const report = require("./scene-canvas-report.json");
+            const specs = [];
+            const walk = (suite) => {
+              specs.push(...(suite.specs ?? []));
+              (suite.suites ?? []).forEach(walk);
+            };
+            (report.suites ?? []).forEach(walk);
+            const results = specs.flatMap((spec) =>
+              spec.tests.flatMap((test) => test.results.map((r) => r.status))
+            );
+            console.log(`${specs.length} spec(s): ${results.join(", ") || "none"}`);
+            const skipped = results.filter((s) => s === "skipped").length;
+            if (specs.length === 0 || skipped > 0) {
+              console.error(
+                `::error::scene-canvas acceptance did not execute (${specs.length} specs, ${skipped} skipped). ` +
+                  "VITE_SCENE_CANVAS_ENABLED is set by this job, so a skip means the spec no longer reads it."
+              );
+              process.exit(1);
+            }
+          '
+
+      - name: Upload Playwright traces and media
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results-scene-canvas
+          path: test-results/
+          if-no-files-found: warn
+          retention-days: 7
+
   deploy-preview:
     name: Deploy Preview
     runs-on: ubuntu-latest
-    needs: [verify]
+    # All five verify jobs, not just the one that emits dist/: the split must not
+    # turn "deploy after verify passes" into "deploy after the build passes".
+    needs: [lint-types, hygiene-docs, content-provenance, unit-tests, build-e2e]
     # Fork PRs do not receive the Netlify secrets, so a deploy attempt would
     # be a guaranteed red check. Only deploy previews for same-repo PRs.
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
@@ -310,7 +610,7 @@ jobs:
   deploy-production:
     name: Deploy Production
     runs-on: ubuntu-latest
-    needs: [verify]
+    needs: [lint-types, hygiene-docs, content-provenance, unit-tests, build-e2e]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     timeout-minutes: 15
     permissions:

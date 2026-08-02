@@ -324,21 +324,22 @@ describe('formatItemCost x mam3e — the price is a bare number, not {amount, cu
 
 describe('formatItemCost x dnd-3.5e — the catalog prices in free text, not always in coin', () => {
   /**
-   * This is the one divergence the shared loader HIDES rather than exposes.
-   * `normalizeLegacyEquipment` (src/utils/dataLoader.ts:346) seeds every 3.5e
-   * item with `{amount: 0, currency: 'gp'}` and overwrites it only when the raw
-   * string matches /^([\d,.]+)\s*(cp|sp|gp|pp)$/ — so the entries that are a
-   * rate or a qualifier rather than a coin amount ('Varies', '3 cp/mile',
-   * '1 sp/day') arrive at the formatter already laundered into a well-formed
-   * FALSE '0 gp'. That is a live defect, and it is upstream of this file: the
-   * formatter cannot tell a laundered zero from pf2e's legitimately free items.
+   * This is the one divergence the shared loader used to HIDE rather than
+   * expose. `normalizeLegacyEquipment` seeds every 3.5e item with
+   * `{amount: 0, currency: 'gp'}` and overwrites it only when the raw string
+   * matches /^([\d,.]+)\s*(cp|sp|gp|pp)$/ — so the entries that are a rate or a
+   * qualifier rather than a coin amount ('Varies', '3 cp/mile', '1 sp/day')
+   * used to arrive at the formatter already laundered into a well-formed FALSE
+   * '0 gp', which the formatter cannot tell apart from pf2e's legitimately free
+   * items. The normalizer now parks those on `costText`, and the Dock renders
+   * `item.costText ?? item.cost` (src/dock/Dock.tsx) — this asserts the pair.
    *
-   * The fixture is therefore the shipped 3.5e catalog module itself, which is
-   * the loader's own input and still real data — not a hand-written literal.
-   * It pins that the raw shape renders correctly the moment the normalizer
-   * stops rewriting it.
+   * Both ends are checked: the shipped catalog module (the loader's INPUT) is
+   * the denominator of non-coin prices, and the loaded rows are what the browser
+   * actually formats. Reading the denominator from the data rather than from a
+   * literal is what keeps the test honest if the catalog gains another one.
    */
-  it('prints a non-coin price verbatim instead of taking the em-dash', () => {
+  it('prints every non-coin price verbatim instead of a laundered 0 gp', () => {
     const raw = [
       ...dnd35eEquipment.weapons,
       ...dnd35eEquipment.armor,
@@ -347,12 +348,27 @@ describe('formatItemCost x dnd-3.5e — the catalog prices in free text, not alw
     ] as unknown as CatalogRow[];
     expect(raw.length, 'the 3.5e catalog module loaded no entries').toBeGreaterThan(0);
 
+    const nonCoin = new Map<string, string>();
     for (const item of raw) {
-      if (typeof item.cost !== 'string' || item.cost.trim() === '') continue;
-      const label = `dnd-3.5e/${item.id}.cost (raw)`;
+      if (typeof item.cost !== 'string') continue;
+      const text = item.cost.trim();
+      if (!text || /^[\d,.]+\s*(cp|sp|gp|pp)$/i.test(text)) continue;
+      nonCoin.set(item.id, text);
+    }
+    expect(nonCoin.size, 'the 3.5e catalog no longer prices anything in free text').toBe(8);
 
-      const rendered = expectNamesTheValue(formatItemCost(item.cost), label);
-      expect(rendered, `${label} did not survive the formatter intact`).toBe(item.cost.trim());
+    const loaded = new Map(itemRowsFor('dnd-3.5e').map((row) => [row.id, row]));
+    for (const [id, text] of nonCoin) {
+      const row = loaded.get(id);
+      expect(row, `dnd-3.5e/${id} never reached the browser`).toBeDefined();
+      const label = `dnd-3.5e/${id}.cost`;
+
+      const rendered = expectNamesTheValue(
+        formatItemCost((row as CatalogRow).costText ?? (row as CatalogRow).cost),
+        label
+      );
+      expect(rendered, `${label} did not survive the loader intact`).toBe(text);
+      expect(rendered, `${label} was laundered into a coin amount`).not.toBe('0 gp');
     }
   });
 });

@@ -15,6 +15,8 @@ vi.mock('../../utils/dataLoader', () => ({
   loadFeatsForSystem: vi.fn(() => Promise.resolve([manualFeat, automatedFeat])),
   loadEquipmentForSystem: vi.fn(() => Promise.resolve([])),
   loadMonstersForSystem: vi.fn(() => Promise.resolve([])),
+  loadAdvantagesForSystem: vi.fn(() => Promise.resolve([])),
+  loadPowerModifiersForSystem: vi.fn(() => Promise.resolve([])),
 }));
 
 // Neutral fixtures: one feat with no automatable grants (so the browser marks it

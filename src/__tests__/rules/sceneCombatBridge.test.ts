@@ -15,6 +15,7 @@ import {
   resolveAreaEffect,
   resolveAttack,
   resolveMultiTargetAttack,
+  resolveSceneAreaEffect,
   type EffectInstance,
   type SaveParticipant,
 } from '../../rules';
@@ -273,5 +274,62 @@ describe('area effect -> one scene damage event (N participants)', () => {
     expect(entry.type).toBe('fire');
     expect(entry.mitigation).toBe('resistant');
     expect(entry.raw).toBe(10);
+  });
+
+  /**
+   * The same join, on the AREA path — which the single-attack fix did not reach.
+   *
+   * `resolveSceneAreaEffect` built its own `{tokenId, amount}` entries inline
+   * instead of going through `areaEffectToDamageIntent`, so the per-participant
+   * channels the resolver had already computed were dropped at the last step and
+   * a fireball on a fire elemental dealt full damage. This drives the shipped
+   * scene entry point, not the bridge in isolation: typed effect -> area
+   * resolution -> scene intent -> validated event -> halved HP.
+   */
+  it('halves a resisted fireball through the scene area-effect path', () => {
+    const fireResistant = {
+      ...combatant('elemental', 40),
+      damageProfile: { resistances: ['fire' as const] },
+    };
+    const scene = sceneWith(combatant('wizard', 40), fireResistant, combatant('plain', 40));
+    const state = foldSceneEvents(scene).state;
+
+    const outcome = resolveSceneAreaEffect({
+      state,
+      sourceId: 'wizard',
+      // Every combatant() token sits at (1,1), so a radius-1 burst there covers
+      // both targets; the source is excluded by id, not by distance.
+      shape: { kind: 'burst', origin: { x: 1, y: 1 }, radius: 1 },
+      // Flat, so the shared damage is 10 with no dice to seed-chase.
+      damageEffects: [
+        {
+          id: makeEffectId(SID, 'damage.fire', 'wizard', 'fireball', 'flat', 0, 0),
+          systemId: SID,
+          target: 'damage.fire',
+          operation: 'add',
+          value: 10,
+          stackPolicy: 'sum',
+          source: { kind: 'spell', id: 'fireball', label: 'Fireball' },
+          label: 'Fireball',
+        },
+      ],
+      saveDC: 99, // everyone fails, so the test is about mitigation only
+      resolveStats: () => ({ attackEffects: [], damageEffects: [], armorClass: 10, reach: 1 }),
+      seed: 'fireball-mitigation',
+    });
+
+    expect(outcome.affected).toBe(2);
+    const damaged = applyIntent(scene, outcome.intent!, 'fb-1');
+    expect(40 - hp(damaged, 'elemental')).toBe(5); // halved by resistance
+    expect(40 - hp(damaged, 'plain')).toBe(10); // no profile, untouched
+
+    // The event explains its own number, exactly as the single-attack path does.
+    const event = damaged.events.find((e) => e.type === 'token.damaged');
+    const entry = (
+      event!.payload as {
+        damages: Array<{ tokenId: string; mitigation?: string; raw?: number; type?: string }>;
+      }
+    ).damages.find((d) => d.tokenId === 'elemental');
+    expect(entry).toMatchObject({ type: 'fire', mitigation: 'resistant', raw: 10 });
   });
 });

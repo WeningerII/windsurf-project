@@ -2033,6 +2033,12 @@ flight items are Broom / Carpet / Wings of Flying) and from SRD 5.2. Shipped at
 
 #### 18.5.3 `wrong-edition-attribution` — 78 records, 73 distinct entries
 
+> **RESOLVED 2026-08-01 — this class is now EMPTY (§26).** The count below is
+> the population as first audited; it fell to 68 as the allowlists were widened
+> to admit books by their true names and the deleted homebrew stopped shadowing
+> rows, then to 0 when those 68 were replaced or removed. The itemisation is
+> kept as the record of what was found, not as current state.
+
 Open content, **false citation**. No licence exposure, but the product asserts a
 provenance it does not have — the same defect class as §15(c).
 
@@ -2342,6 +2348,56 @@ owner decision.
 What is **not** an option: encoding from `Humans-and-Heroes`, from a Hero's
 Handbook PDF, or from recall. Each of those produces exactly the artifact §15 and
 §18 were opened to remove, and this time it would be produced knowingly.
+
+### 19.5 The search was run to exhaustion 2026-08-01 — option (d) is dead
+
+The owner attempted (d) directly and could not locate NPC stat blocks on the
+site. A systematic search of every GitHub-reachable source followed, since
+`raw.githubusercontent.com` is the only fetch route this sandbox has
+(`d20herosrd.com`, `d20pfsrd.com`, `aonprd.com`, `web.archive.org` and every
+proxy tried all return 000).
+
+**Every Foundry VTT M&M 3e system on GitHub ships EMPTY compendium packs.**
+Verified by fetching each `system.json`: `jonnyguio/foundryvtt-mutants-and-masterminds`,
+`matthewswar/foundryvtt-mutants-and-masterminds` (`"packs": []`),
+`Deyzeria/foundrymnm3e` (`"packs": []`), `Zakarik/foundry-mm3` (no `packs` field).
+Nobody has published an M&M 3e bestiary for the one platform whose whole format
+is shipping creature compendia. The character builders are the same story —
+`mcherm/hero-sheet` LINKS OUT to `d20herosrd.com` rather than embedding content.
+
+**One repo does carry real stat blocks, and it is disqualified — this is the
+finding worth keeping.** `thomasjeffreyandersontwin/mm3e-online-holistic`
+(`context/HeroesHandbook-statblocks.md`, 221 KB) holds Battlesuit, Paragon,
+Powerhouse, Speedster and ~44 more with full numeric traits. It is unusable:
+
+- **No `LICENSE`, `NOTICE` or `OGL.txt`** — all 404. README is a blank stub. The
+  strings "Open Game Content", "OGL" and "d20herosrd" appear nowhere in the repo.
+- `context/rules/` chunks the **entire Deluxe Hero's Handbook** into ~260 RAG
+  fragments. That is a digitization of the whole copyrighted book, not a curated
+  OGC excerpt.
+- The stat-block file itself interleaves named **Product Identity** — `Dr. Simian`,
+  `Marmo-Set` and setting narrative — which is proof no OGC/PI distinction was
+  ever drawn. It is an OCR dump of a purchased book.
+- `GuiMayer/mm3e-builder` carries an independent copy of the same chapter under
+  the same absent licence.
+
+Using either would be exactly the artifact this section already refuses, and a
+worse one than §17's: that content at least had a truthful label. **106 entries
+were deleted on 2026-07-30 for weaker cause than this.**
+
+**The sharper form of the gap, now established.** The stat blocks that exist are
+for the SAME 16 archetypes this product already ships as build templates. So the
+gap is not "M&M has no adversaries" — it is **"our archetypes have no stats, and
+the only reachable copy of those stats is an unlicensed scrape."** Worse, nothing
+reachable can establish whether that chapter is Open Game Content at all: no repo
+mirrors or enumerates d20herosrd's OGC boundary, so even the scrape gives no
+evidence either way about the licence.
+
+**Consequence: option (d) is exhausted and option (a) is taken** — see §19.4.
+Recorded as a source limitation rather than a search failure, because the data
+was FOUND and REFUSED on licensing grounds. If someone later establishes that the
+archetype chapter is OGC and pins a licensed copy, this reopens immediately; the
+16 archetypes are already wired and would only need their scores.
 
 ---
 
@@ -2984,3 +3040,196 @@ The third is the sharpest, because it was caught by its own verifier: the first 
 - **The full gate took seven passes**, stopping at steps 3 → 7 → 11 → 12 → 13 → 16 → 22. Only one failure was in lane work; the rest were integration-surface: a missing dependency, regenerated numbers, a doc count invalidated by adding a chain step, and a knip OOM from 42 restored worktrees.
 - **A lane contradicted a decision the plan had already recorded.** §3.1 states `mam3e` L5 is legitimately absent; the register lane filed M&M's effect economy there anyway. Reclassified to L8/L9 with **no number movement**, which is the tell that the rows were real work and only the filing was wrong.
 - **Concurrent Playwright runs share one `vite preview` server.** Whichever finishes first tears it down; three runs returned 3, 7 and 40 failures, every one a connection refusal with zero assertion failures.
+
+## 26. The wrong-edition tail — replacing 68 records exposed that most of them had nothing to replace them with (added 2026-08-01)
+
+**Status: CLOSED.** `check:provenance-over-inclusion` now reports
+`licensing-class total: none`. `wrong-edition-attribution` 68 → 0; with
+`genuine-non-open-content` already 0 since §17.3, the audit's entire licensing
+tail is empty.
+
+### 26.1 The rule, first
+
+**A remedy that presumes an equivalent exists must go find out, one record at a
+time, before it is called a plan.** The owner's ruling (`docs/OPEN_DECISIONS.md`
+A2/A3) was the expensive and correct one — *replace* each false-cited record with
+a genuine entry from its own edition, rather than re-tag and let
+`filterOpenContentBySource` drop it. The ruling was made on the reasonable
+assumption that a PF2e Basket exists. It does not. **PF2e has no Basket, Bell,
+Blanket, Bucket, Jug, Flask, Vial, Sealing Wax, Shovel, Saw, Ring Mail, Banded
+Mail, Siangham, Cestus or Boar Spear under any name in any book.** The 2e
+revision consolidated adventuring gear; those rows were never PF2e content that
+got mislabelled.
+
+So the population split three ways, and only the first was the job as briefed:
+
+| | rows | what happened |
+| --- | ---: | --- |
+| The edition HAS the item | 15 | replaced with its real stats and its true book |
+| The edition's own version ALREADY SHIPPED alongside it | 13 | the duplicate deleted |
+| No edition has the item | 40 | deleted |
+
+### 26.2 Absence is a claim, so it was made to two independent sources
+
+Every "PF2e does not have this" assertion here required BOTH to come back empty:
+the 1,027 distinct item names across `Pf2eToolsOrg/Pf2eTools` (`items-crb`,
+`baseitems`, `items-apg`, `items-som`, `items-gmg`), and a per-slug probe of
+`foundryvtt/pf2e`'s equipment pack. Two community datasets built from the same
+books by different people, disagreeing about naming but not about existence.
+
+Foundry's data turned out to carry something Pf2eTools does not:
+`system.publication.license`, per item, reading `OGL` or `ORC`. That is what let
+Treasure Vault be admitted on evidence rather than on belief — Atlatl, Boomerang
+and Earthbreaker each read `{"license":"OGL","remaster":false}` — and it is what
+keeps the Remaster line out, since Player Core reads `ORC`. Pf2eTools keeps both
+printings of every reprinted item, so an OGL citation is always available for
+anything the Remaster reissued; Hatchet and Pick are cited to Core Rulebook
+p.280/281, not to Player Core.
+
+### 26.3 The finding that settles whether these were a labelling problem
+
+They were not. **`Banded Mail` shipped in the PF2e catalog as `armorClass: 4,
+dexBonusMax: 1`, and `Ring Mail` as `5 / 0`** — numbers matching no row in a
+system whose heavy armour is Splint Mail, Half Plate and Full Plate. The `Bell`
+cost 1 gp, which is PF1e's price. These are d20 rows wearing a `system: 'pf2e'`
+field, and a PF2e sheet offering the player Banded Mail at Dex cap +1 is a
+defect, not content. Re-tagging them truthfully would have left the defect in
+place with an accurate label on it.
+
+The same shape appeared in the 2024 catalog from the other direction: the six
+flagged monsters (`Acolyte`, `Bugbear`, `Goblin`, `Hobgoblin`, `Kobold`,
+`Veteran`) had a same-edition equivalent all along — SRD 5.2.1's `Priest
+Acolyte`, `Bugbear Warrior`, `Goblin Warrior`, `Hobgoblin Warrior`, `Kobold
+Warrior`, `Warrior Veteran` — **and this catalog was already shipping every one
+of them**, generated from 5.2. The remedy was not to transcribe anything. It was
+to notice the duplicate. `Thug` is the one exception: zero hits in the 5.2.1
+bestiary under any name, and Bandit (CR 1/8) and Bandit Captain (CR 2) are
+different creatures, so it was deleted.
+
+### 26.4 The allowlists narrow back, and that is the point
+
+`src/utils/openContentPolicy.ts` widened the `pf2e` list on 2026-07-29 to admit
+the PF1e line and the d20 SRDs. That was never meant to be a resting state. The
+field had been doing two jobs — *is this open?* and *is this in scope?* — and the
+conflation produced the worst available outcome, because the only tag that passed
+the gate was the wrong one: 15 PF1e gear rows normalised to a bare
+`'Core Rulebook'` were compliant **and** falsely attributed. Widening made each
+row name its actual source so the wrong edition would stay visible as a wrong
+edition instead of being laundered into a right-looking one. Diagnosis, not cure.
+
+With the rows resolved, zero `pf2e` records carry any of those six strings, and
+zero `pf1e` records carry `'SRD 3.5'`. All seven are removed. **A dead string on
+an allowlist is a door nobody is watching** — it admits nothing today and admits
+the next wrong-edition row silently. The scope question and the licence question
+are finally separate in that file: everything remaining is both open-licensed and
+actually the right game.
+
+Two rows go the other way. `Chakram` and `Marbles` are genuine PF2e content from
+*Lost Omens: The Grand Bazaar*, which Foundry marks OGL — but the standing policy
+refuses the whole Lost Omens line as Paizo's setting line, and two rows already
+sit filtered under that rule. They keep the true tag and are dropped from the
+loaded corpus rather than having the line quietly admitted for their sake. True
+citation, conservative admission, no policy change smuggled in as a data fix.
+
+### 26.5 Side effects worth knowing
+
+- The 05-H2 versatile-damage regression fixture pinned the deleted 2024
+  Hobgoblin. It now pins the shipped SRD 5.2 **Dryad**, which is a stricter test:
+  its modifier is *negative* (`2 (1d6 - 1), or 3 (1d8 - 1)`), so a parser that
+  summed both clauses would also have to get the sign right to look plausible.
+- Four 2024 gear rows — `Hammer`, `Mess Kit`, `Piton`, `Soap` — were reclassified
+  rather than touched. Their `SRD 5.1` tag is true and admitted for that system,
+  and SRD 5.2.1 genuinely dropped them (pitons folded into the Climber's Kit).
+  They are `denominator-scope-defect`: the wired denominator is the 5.2 list
+  alone, so a truthfully-5.1-tagged row can never appear in it.
+- Product-reachable counts moved: pf2e equipment 182 → 148, pf2e spells 546 →
+  543, 2024 monsters 337 → 330, 2024 equipment 492 → 489, pf1e equipment
+  615 → 613. Every removal is a row the catalog was wrong to be offering.
+
+## 27. Closing the queue — six lanes, the Dock, and the blocker a name diff could not see (added 2026-08-02)
+
+**Status: CLOSED.** The last release blocker is gone (`WORK_PLAN` §8), both owner
+rulings that were still outstanding are executed (§4.3, §0.6), and the five work
+items the 2026-07-31 run surfaced are done. 314 test files, 3,301 tests, exit 0.
+
+### 27.1 The rule, first
+
+**A gate you have not watched fail is not a gate — and this run finally applied
+that rule to itself.** §25.1 stated it after three "checked and fine" verdicts
+were falsified. Here every new gate was made to fail on purpose before it was
+believed, and two of them earned it:
+
+| gate | the control that proved it |
+| --- | --- |
+| the fireball-mitigation test | revert `sceneCombat.ts` only → `expected 10 to be 5` |
+| Apply-on-accept in MapPanel | make `canApply` trust the flow → the correction-verdict test fails |
+| the client-stamped image size | stamp a fabricated 8000px image → `box-out-of-image` stops firing |
+| the static contrast lint | 40 baseline entries, each pinned to its measured ratio |
+
+### 27.2 The blocker a name diff structurally could not see
+
+The four 5e-2024 backgrounds were the last thing holding release, and they are
+the cleanest example in this repo of the §18.5.4 limit: they shipped **legitimate
+SRD 5.2 names over 2014-model text**, so the reverse diff scored them 100%
+covered with zero over-inclusion. No amount of tuning a name comparison finds
+that.
+
+The remedy on offer was a re-tag that drops them. What landed instead is the real
+content, re-encoded from `5e-bits/5e-database`'s 2024 set — which was **already
+this category's wired denominator**, so no new source had to be trusted. They now
+carry three ability scores, the Origin feat resolved against the shipped catalog,
+the skill/tool proficiencies and both lettered equipment packages. `feature`,
+`suggestedCharacteristics` and `description` became optional on the type, because
+SRD 5.2 genuinely has none of the three and a required field would have forced
+invention.
+
+**This was closed by hand, not by a gate.** The structural limit is unchanged:
+field-level comparison covers 5e monsters and backgrounds and nothing else, and
+prose fidelity is unaudited in all seven systems. Recorded so the close is not
+mistaken for the class being solved.
+
+### 27.3 Two dead channels declined
+
+§26.4 removed seven dead strings from the open-content allowlists on the grounds
+that *a dead string on an allowlist is a door nobody is watching*. The same
+reasoning applied twice more here, before either door was built:
+
+- **No `addPowerModifier` on the sheet-dispatch registry.** It was written, then
+  removed: no sheet in any system has a handler that adds a power modifier to a
+  character, and the wrapper being replaced was browse-only for modifiers too.
+  The Dock's Modifiers tab is `addVerb: false`, which is the honest description
+  of the capability that actually exists.
+- **No Remaster line on the pf2e allowlist** (§26.4), for the same shape of
+  reason from the licence side.
+
+The generalisation worth keeping: **build the narrowest channel the capability
+justifies, and check what would walk through it before widening.**
+
+### 27.4 Findings the lanes produced beyond their briefs
+
+- **A fireball on a fire elemental did not mitigate.** `resolveSceneAreaEffect`
+  built its own untyped intent inline and *discarded a channel breakdown
+  `resolveAreaEffect` had already computed*. The typed path existed and had no
+  caller. It does now, and the split runs on the POST-SAVE figure, so a saved
+  target is not re-inflated to full damage.
+- **The 8 laundered prices were exactly the 8 predicted** — `Varies`,
+  `3 cp/mile`, `1 sp/day` and friends, all 3.5e mount-gear and services. Fixed
+  at normalization time, where the original string is still in hand; the
+  formatter genuinely cannot tell a laundered `0 gp` from a free pf2e item.
+- **`SheetDispatchParity` caught a real capability change.** It pins *a doc id is
+  published iff some handler is*, and went red the moment M&M began publishing
+  `addAdvantage`. Its matrix was extended, not loosened — the difference between
+  a test noticing something and a test being in the way.
+- **Two spell tabs still told the user to "use the browser below"** after the
+  browser was deleted. Found by the agent repairing the tests, not by any gate:
+  no check reads user-facing copy for claims about UI that no longer exists.
+
+### 27.5 The CI split, and why it was safe now and not before
+
+CI's single `verify` job became five parallel jobs. That was blocked until
+`scripts/check-ci-parity.mjs` existed, and the reason is worth stating: the check
+compares CI's `npm run` steps against the verify chain **as a multiset**, so a
+split cannot silently drop a step. It reports `23 verify chain steps, all covered
+across 8 job(s)`. Building the check first is what made the change routine —
+§25.4 recorded that step-level drift was structurally zero *today* and the gate
+was prospective; this is the day it paid.

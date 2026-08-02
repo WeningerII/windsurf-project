@@ -16,7 +16,6 @@ import { D20FeatsTab } from './D20FeatsTab';
 import { D20InventoryTab } from './D20InventoryTab';
 import { D20NotesTab } from './D20NotesTab';
 import { D20SavesTab } from './D20SavesTab';
-import { D20SpellBrowserPanel } from './D20SpellBrowserPanel';
 import { D20SkillsTab } from './D20SkillsTab';
 import { D20SpellsTab } from './D20SpellsTab';
 
@@ -56,7 +55,6 @@ interface Props {
   traitOptions: Pf1eTrait[];
   traitsLoaded: boolean;
   selectedTraitId: string;
-  spellsLoaded: boolean;
   spells: Spell[];
   spellListIds: string[];
   trackedSpellIds: string[];
@@ -102,7 +100,6 @@ interface Props {
   onAddTrait: () => void;
   onRemoveTrait: (traitId: string) => void;
   onAddSpellLevel: () => void;
-  onAddKnownSpell: (spell: Spell) => void;
   onRemoveKnownSpell: (spellId: string) => void;
   onSetPreparedSpell: (level: number, slotIndex: number, spellId: string) => void;
   onUseSpellSlot: (level: number) => void;
@@ -142,7 +139,6 @@ export const D20LegacyTabs: React.FC<Props> = ({
   traitOptions,
   traitsLoaded,
   selectedTraitId,
-  spellsLoaded,
   spells,
   spellListIds,
   trackedSpellIds,
@@ -173,7 +169,6 @@ export const D20LegacyTabs: React.FC<Props> = ({
   onAddTrait,
   onRemoveTrait,
   onAddSpellLevel,
-  onAddKnownSpell,
   onRemoveKnownSpell,
   onSetPreparedSpell,
   onUseSpellSlot,
@@ -192,7 +187,6 @@ export const D20LegacyTabs: React.FC<Props> = ({
 
   const warmSpellsTab = () => {
     void onLoadSpells();
-    void D20SpellBrowserPanel.preload();
   };
 
   // The equipment CATALOG still loads for the Inventory tab's
@@ -319,7 +313,6 @@ export const D20LegacyTabs: React.FC<Props> = ({
 
       <TabsContent value="spells">
         <D20SpellsTab
-          spellsLoaded={spellsLoaded}
           spells={spells}
           spellListIds={spellListIds}
           trackedSpellIds={trackedSpellIds}
@@ -331,7 +324,6 @@ export const D20LegacyTabs: React.FC<Props> = ({
           arcaneSpecialtySchool={arcaneSpecialtySchool}
           canUpdate={canUpdate}
           onAddSpellLevel={onAddSpellLevel}
-          onAddKnownSpell={onAddKnownSpell}
           onRemoveKnownSpell={onRemoveKnownSpell}
           onSetPreparedSpell={onSetPreparedSpell}
           onUseSpellSlot={onUseSpellSlot}

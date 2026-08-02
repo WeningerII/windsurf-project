@@ -133,54 +133,6 @@ export const level6Spells: Spell[] = withPf2eSpellTraits([
     classes: ['sorcerer', 'wizard'],
   },
   {
-    id: 'geyser-pf2e',
-    name: 'Geyser',
-    system: 'pf2e',
-    source: 'Secrets of Magic',
-    level: 6,
-    school: 'evocation',
-    traditions: ['arcane', 'primal'],
-    castingTime: {
-      type: 'action',
-      amount: 2,
-    },
-    range: {
-      type: 'ranged',
-      feet: 120,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    areaOfEffect: {
-      type: 'cylinder',
-      radius: 10,
-      height: 60,
-    },
-    savingThrow: {
-      attribute: 'dex',
-      success: 'half',
-    },
-    savingThrowText: 'basic Reflex save',
-    damage: {
-      base: {
-        count: 7,
-        die: 'd12',
-        notation: '7d12',
-      },
-      type: 'fire',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'A geyser of boiling water erupts from the ground. Each creature in the area takes 7d12 fire damage with a basic Reflex save.',
-    classes: ['druid', 'sorcerer', 'wizard'],
-  },
-  {
     id: 'mislead-6-pf2e',
     name: 'Mislead',
     system: 'pf2e',

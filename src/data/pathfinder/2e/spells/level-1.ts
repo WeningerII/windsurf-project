@@ -204,35 +204,6 @@ export const level1Spells: Spell[] = withPf2eSpellTraits([
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
-    id: 'feather-step-pf2e',
-    name: 'Feather Step',
-    system: 'pf2e',
-    source: "Pathfinder 1e Advanced Player's Guide",
-    level: 1,
-    school: 'transmutation',
-    traditions: ['primal'],
-    castingTime: {
-      type: 'action',
-      amount: 2,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'minutes',
-      minutes: 1,
-    },
-    concentration: false,
-    ritual: false,
-    description: 'The target can move through difficult terrain without penalty for 1 minute.',
-    classes: ['druid', 'ranger'],
-  },
-  {
     id: 'grease-pf2e',
     name: 'Grease',
     system: 'pf2e',

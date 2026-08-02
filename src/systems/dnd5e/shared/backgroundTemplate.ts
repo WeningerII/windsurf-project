@@ -304,11 +304,30 @@ function updateBackgroundTemplateState(
   };
 }
 
+/**
+ * Quantity per item id for the package the template applies by default —
+ * package A, which `background.equipment` mirrors as a flat id list.
+ *
+ * `equipment` cannot carry a count, so this hardcoded `quantity: 1` was correct
+ * for every 2014-model background and silently wrong the moment the 2024
+ * re-encoding introduced packages that grant 20 Arrows, 10 Parchment or 2
+ * Daggers: the sheet rendered the real number and the character received one.
+ * Where `equipmentOptions` is present it is the authority on counts.
+ */
+function backgroundItemQuantities(background: Background): Map<string, number> {
+  const quantities = new Map<string, number>();
+  for (const entry of background.equipmentOptions?.[0]?.items ?? []) {
+    quantities.set(entry.itemId, entry.quantity);
+  }
+  return quantities;
+}
+
 function appendInventoryFromBackground(sys: Dnd5eLikeDataModel, background: Background): void {
   const inventoryIds = new Set(sys.inventory.map((item) => item.itemId));
+  const quantities = backgroundItemQuantities(background);
   const newEntries = background.equipment
     .filter((itemId) => !inventoryIds.has(itemId))
-    .map((itemId) => ({ itemId, quantity: 1 }));
+    .map((itemId) => ({ itemId, quantity: quantities.get(itemId) ?? 1 }));
 
   sys.inventory = [...sys.inventory, ...newEntries];
 }
@@ -356,14 +375,14 @@ export function applyDnd5eBackgroundTemplate<T extends Dnd5eLikeDataModel>(
     // Remove only the exact previous background feature (id AND source must
     // match, mirroring the duplicate guard on the add side). Matching on
     // either field alone deletes unrelated features that merely share an id
-    // or a source string.
-    sys.features = (sys.features || []).filter(
-      (feature) =>
-        !(
-          feature.id === previousBackground.feature.id &&
-          feature.source === previousBackground.feature.source
-        )
-    );
+    // or a source string. 2024-model backgrounds have no feature to remove.
+    const previousFeature = previousBackground.feature;
+    if (previousFeature) {
+      sys.features = (sys.features || []).filter(
+        (feature) =>
+          !(feature.id === previousFeature.id && feature.source === previousFeature.source)
+      );
+    }
   }
 
   const retainedTools = removeDerivedList(sys.toolProficiencies, previousDerivedTools);
@@ -411,12 +430,15 @@ export function applyDnd5eBackgroundTemplate<T extends Dnd5eLikeDataModel>(
   sys.toolProficiencies = dedupe([...retainedTools, ...nextDerivedTools]);
   sys.languageProficiencies = dedupe([...retainedLanguages, ...nextDerivedLanguages]);
 
-  const featureExists = (sys.features || []).some(
-    (feature) =>
-      feature.id === background.feature.id && feature.source === background.feature.source
-  );
-  if (!featureExists) {
-    sys.features = [...(sys.features || []), structuredClone(background.feature)];
+  const backgroundFeature = background.feature;
+  if (backgroundFeature) {
+    const featureExists = (sys.features || []).some(
+      (feature) =>
+        feature.id === backgroundFeature.id && feature.source === backgroundFeature.source
+    );
+    if (!featureExists) {
+      sys.features = [...(sys.features || []), structuredClone(backgroundFeature)];
+    }
   }
 
   if (!previousBackground && sys.currency.gold === 0) {

@@ -224,6 +224,52 @@ export const level5Spells: Spell[] = withPf2eSpellTraits([
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
+    id: 'geyser-pf2e',
+    name: 'Geyser',
+    system: 'pf2e',
+    source: 'Secrets of Magic',
+    level: 5,
+    school: 'evocation',
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 500,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    areaOfEffect: {
+      type: 'cylinder',
+      radius: 10,
+      height: 50,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'Reflex save',
+    concentration: false,
+    ritual: false,
+    description:
+      'A powerful geyser blasts up from the ground, dealing 3d6 bludgeoning damage and 4d6 fire damage with a Reflex save. On a failure the creature is pushed 20 feet into the air (40 feet on a critical failure) and falls unless it can stay aloft; the area is then filled with a cloud of steam for 1 round, concealing the creatures within it.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 1d6 bludgeoning and 1d6 fire.',
+    },
+    classes: ['druid', 'sorcerer', 'wizard'],
+  },
+  {
     id: 'passwall-pf2e',
     name: 'Passwall',
     system: 'pf2e',

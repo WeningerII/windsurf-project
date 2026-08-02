@@ -25,9 +25,9 @@ If `graphify` is not on PATH: `pip3 install --user graphifyy`, then use
 
 - `npm run dev` — Vite dev server; `npm run build` — typecheck + build
 - `npm test` — Vitest; `npm run test:e2e` — Playwright
-- `npm run verify` — the full CI gate, 23 steps, in chain order: node:check,
+- `npm run verify` — the full CI gate, 24 steps, in chain order: node:check,
   ci-parity, lint, typecheck:test, typecheck:netlify, format:check,
-  repo-hygiene, legal-notices, secret-exposure, mam-equipment, validate,
+  repo-hygiene, a11y-contrast, legal-notices, secret-exposure, mam-equipment, validate,
   generated-docs, doc-drift, rules-provenance, srd-fidelity,
   provenance-over-inclusion, dead-code, coverage, keepalive-budget,
   compute-register, build, bundle-size, e2e. `package.json` is the authority —

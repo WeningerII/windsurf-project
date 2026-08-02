@@ -27,6 +27,8 @@ import {
 import { shouldShowDnd5eManualFeatBadge } from '../utils/featManualBadge';
 import { lazyWithPreload } from '../utils/lazyWithPreload';
 import { useDragContext, useDragSource } from '../components/drag/dragContext';
+import type { Advantage } from '../types/mam/advantages';
+import type { PowerModifier } from '../types/mam/powerModifiers';
 import { DOCK_TABS } from './dockRegistry';
 import { PartyDockTab } from './PartyDockTab';
 import { useDockResources } from './useDockResources';
@@ -116,6 +118,22 @@ type MonsterBrowserProps = {
 const MonsterBrowser = lazyWithPreload<MonsterBrowserProps>(async () => {
   const module = await import('../components/MonsterBrowser');
   return { default: module.MonsterBrowser as ComponentType<MonsterBrowserProps> };
+});
+
+type AdvantageBrowserProps = {
+  advantages: Advantage[];
+  characterAdvantageNames?: ReadonlySet<string>;
+  onSelectAdvantage?: (advantage: Advantage) => void;
+};
+const AdvantageBrowser = lazyWithPreload<AdvantageBrowserProps>(async () => {
+  const module = await import('../components/AdvantageBrowser');
+  return { default: module.AdvantageBrowser as ComponentType<AdvantageBrowserProps> };
+});
+
+type PowerModifierBrowserProps = { modifiers: PowerModifier[] };
+const PowerModifierBrowser = lazyWithPreload<PowerModifierBrowserProps>(async () => {
+  const module = await import('../components/PowerModifierBrowser');
+  return { default: module.PowerModifierBrowser as ComponentType<PowerModifierBrowserProps> };
 });
 
 function systemLabel(systemId: GameSystemId): string {
@@ -263,9 +281,39 @@ function DockPanel({
   const makeDrag = useDragSource();
   const dragMounted = useDragContext() !== null;
 
+  /**
+   * A tab whose catalog is empty for the ACTIVE SYSTEM is hidden rather than
+   * shown reading zero. Advantages and Modifiers exist only for M&M, and six
+   * systems should not grow two permanently-empty tabs so that the seventh can
+   * have them. Applied only after loading resolves, so tabs do not flicker in.
+   */
+  const visibleTabs = useMemo(
+    () =>
+      DOCK_TABS.filter((tab) => {
+        if (resources.loading) return tab.kind !== 'advantage' && tab.kind !== 'powerModifier';
+        if (tab.kind === 'advantage') return resources.advantages.length > 0;
+        if (tab.kind === 'powerModifier') return resources.powerModifiers.length > 0;
+        return true;
+      }),
+    [resources.loading, resources.advantages.length, resources.powerModifiers.length]
+  );
+
+  /**
+   * The narrowing the ACTIVE SHEET published (§4.3). This is the capability the
+   * in-sheet `Pf2eSpellBrowserPanel` / `D20SpellBrowserPanel` wrappers had and
+   * the Dock did not: a class/tradition-scoped spell list. The Dock still
+   * cannot compute one — it is shared-layer and cannot see the character's
+   * classes — so the sheet hands over a predicate and the Dock just applies it.
+   */
+  const catalogFilter = dispatch.catalogFilter;
+  const filteredSpells = useMemo(
+    () => (catalogFilter?.spell ? resources.spells.filter(catalogFilter.spell) : resources.spells),
+    [resources.spells, catalogFilter]
+  );
+
   const browserSpells = useMemo<SpellBrowserSpell[]>(
     () =>
-      resources.spells.map((spell) => ({
+      filteredSpells.map((spell) => ({
         id: spell.id,
         name: spell.name,
         level: spell.level,
@@ -282,7 +330,7 @@ function DockPanel({
         area: spell.area ?? formatAreaOfEffect(spell.areaOfEffect),
         scaling: spell.atHigherLevels ?? spell.heightening?.summary,
       })),
-    [resources.spells]
+    [filteredSpells]
   );
 
   const browserFeats = useMemo<BrowserFeat[]>(
@@ -314,7 +362,10 @@ function DockPanel({
         name: item.name,
         type: item.type || 'gear',
         rarity: item.rarity || 'common',
-        cost: formatItemCost(item.cost),
+        // `costText` is set only where the catalog's price is not a coin amount
+        // ('Varies', '3 cp/mile'); `cost` carries a placeholder zero for those,
+        // so preferring the text is what keeps the row from printing '0 gp'.
+        cost: formatItemCost(item.costText ?? item.cost),
         ...(item.weight != null ? { weight: item.weight } : {}),
         description: item.description,
         properties:
@@ -363,8 +414,11 @@ function DockPanel({
 
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
         <Tabs value={activeTab} defaultValue={DOCK_TABS[0].id} onValueChange={onSelectTab}>
-          <TabsList className="grid w-full grid-cols-5 gap-1">
-            {DOCK_TABS.map((tab) => {
+          <TabsList
+            className="grid w-full gap-1"
+            style={{ gridTemplateColumns: `repeat(${visibleTabs.length}, minmax(0, 1fr))` }}
+          >
+            {visibleTabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <TabsTrigger key={tab.id} value={tab.id} className="flex items-center gap-1.5">
@@ -408,6 +462,12 @@ function DockPanel({
           </TabsContent>
 
           <TabsContent value="spell" className="space-y-4">
+            {catalogFilter?.spell && (
+              <p className="rounded-md border border-dashed px-2 py-1 text-xs text-muted-foreground">
+                Showing {catalogFilter.label} — {filteredSpells.length} of {resources.spells.length}{' '}
+                in the {systemLabel(selectedSystem)} catalog.
+              </p>
+            )}
             {resources.loading ? (
               BROWSER_FALLBACK
             ) : (
@@ -472,6 +532,29 @@ function DockPanel({
                       : undefined
                   }
                 />
+              </Suspense>
+            )}
+          </TabsContent>
+
+          <TabsContent value="advantage" className="space-y-4">
+            {resources.loading ? (
+              BROWSER_FALLBACK
+            ) : (
+              <Suspense fallback={BROWSER_FALLBACK}>
+                <AdvantageBrowser
+                  advantages={resources.advantages}
+                  onSelectAdvantage={dispatch.canAddAdvantage ? dispatch.addAdvantage : undefined}
+                />
+              </Suspense>
+            )}
+          </TabsContent>
+
+          <TabsContent value="powerModifier" className="space-y-4">
+            {resources.loading ? (
+              BROWSER_FALLBACK
+            ) : (
+              <Suspense fallback={BROWSER_FALLBACK}>
+                <PowerModifierBrowser modifiers={resources.powerModifiers} />
               </Suspense>
             )}
           </TabsContent>

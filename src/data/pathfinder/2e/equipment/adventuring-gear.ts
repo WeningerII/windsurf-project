@@ -260,19 +260,6 @@ export const mirror: Item = {
   requiresAttunement: false,
 };
 
-export const pouch: Item = {
-  id: 'pouch',
-  name: 'Pouch',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 0,
-  cost: { amount: 5, currency: 'cp' },
-  description: 'A belt pouch for small items.',
-  source: 'SRD 5.1',
-  requiresAttunement: false,
-};
-
 export const sack: Item = {
   id: 'sack',
   name: 'Sack',
@@ -312,107 +299,16 @@ export const spellbook: Item = {
   requiresAttunement: false,
 };
 
-export const ink: Item = {
-  id: 'ink',
-  name: 'Ink (1 oz vial)',
+export const writingSet: Item = {
+  id: 'writing-set',
+  name: 'Writing Set',
   system: 'pf2e',
   type: 'gear',
   rarity: 'common',
   weight: 0,
   cost: { amount: 1, currency: 'gp' },
-  description: 'A vial of black ink.',
-  source: 'SRD 3.5',
-  requiresAttunement: false,
-};
-
-export const pen: Item = {
-  id: 'pen',
-  name: 'Ink Pen',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 0,
-  cost: { amount: 2, currency: 'cp' },
-  description: 'A writing implement.',
-  source: 'SRD 5.1',
-  requiresAttunement: false,
-};
-
-export const parchment: Item = {
-  id: 'parchment',
-  name: 'Parchment (sheet)',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 0,
-  cost: { amount: 1, currency: 'sp' },
-  description: 'A sheet of parchment.',
-  source: 'SRD 3.5',
-  requiresAttunement: false,
-};
-
-export const sealing_wax: Item = {
-  id: 'sealing-wax',
-  name: 'Sealing Wax',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 0,
-  cost: { amount: 1, currency: 'sp' },
-  description: 'Wax for sealing letters.',
-  source: 'Pathfinder 1e Core Rulebook',
-  requiresAttunement: false,
-};
-
-export const vial: Item = {
-  id: 'vial',
-  name: 'Vial',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 0,
-  cost: { amount: 1, currency: 'gp' },
-  description: 'A small glass vial.',
-  source: 'Pathfinder 1e Core Rulebook',
-  requiresAttunement: false,
-};
-
-export const flask: Item = {
-  id: 'flask',
-  name: 'Flask',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 0,
-  cost: { amount: 3, currency: 'cp' },
-  description: 'A leather or metal flask.',
-  source: 'Pathfinder 1e Core Rulebook',
-  requiresAttunement: false,
-};
-
-export const jug: Item = {
-  id: 'jug',
-  name: 'Jug',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 1,
-  cost: { amount: 3, currency: 'cp' },
-  description: 'A ceramic jug.',
-  source: 'Pathfinder 1e Core Rulebook',
-  requiresAttunement: false,
-};
-
-export const bucket: Item = {
-  id: 'bucket',
-  name: 'Bucket',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 1,
-  cost: { amount: 5, currency: 'cp' },
-  description: 'A wooden bucket.',
-  source: 'SRD 5.1',
+  description: 'Paper, ink, a pen, sealing wax, and a simple seal.',
+  source: 'Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -481,19 +377,6 @@ export const lock: Item = {
   requiresAttunement: false,
 };
 
-export const blanket: Item = {
-  id: 'blanket',
-  name: 'Blanket',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 1,
-  cost: { amount: 5, currency: 'sp' },
-  description: 'A wool blanket.',
-  source: 'Pathfinder 1e Core Rulebook',
-  requiresAttunement: false,
-};
-
 export const candle: Item = {
   id: 'candle',
   name: 'Candle',
@@ -507,42 +390,16 @@ export const candle: Item = {
   requiresAttunement: false,
 };
 
-export const tinderbox: Item = {
-  id: 'tinderbox',
-  name: 'Tinderbox',
+export const flintAndSteel: Item = {
+  id: 'flint-and-steel',
+  name: 'Flint and Steel',
   system: 'pf2e',
   type: 'gear',
   rarity: 'common',
   weight: 0,
-  cost: { amount: 5, currency: 'sp' },
-  description: 'Flint and steel for starting fires.',
-  source: 'SRD 5.1',
-  requiresAttunement: false,
-};
-
-export const bell: Item = {
-  id: 'bell',
-  name: 'Bell',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 0,
-  cost: { amount: 1, currency: 'gp' },
-  description: 'A small bell.',
-  source: 'Pathfinder 1e Core Rulebook',
-  requiresAttunement: false,
-};
-
-export const horn: Item = {
-  id: 'horn',
-  name: 'Horn',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 1,
-  cost: { amount: 3, currency: 'sp' },
-  description: 'A signaling horn.',
-  source: 'SRD 5.1',
+  cost: { amount: 5, currency: 'cp' },
+  description: 'Flint and steel for catching a spark and starting a fire.',
+  source: 'Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -611,32 +468,6 @@ export const fishing_tackle: Item = {
   requiresAttunement: false,
 };
 
-export const net_fishing: Item = {
-  id: 'net-fishing',
-  name: 'Net (fishing)',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 2,
-  cost: { amount: 1, currency: 'gp' },
-  description: 'A fishing net.',
-  source: 'Pathfinder 1e Core Rulebook',
-  requiresAttunement: false,
-};
-
-export const trap: Item = {
-  id: 'trap',
-  name: 'Trap (hunting)',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 3,
-  cost: { amount: 5, currency: 'gp' },
-  description: 'A mechanical trap for hunting.',
-  source: 'SRD 5.1',
-  requiresAttunement: false,
-};
-
 export const whistle: Item = {
   id: 'whistle',
   name: 'Whistle',
@@ -650,45 +481,6 @@ export const whistle: Item = {
   requiresAttunement: false,
 };
 
-export const basket: Item = {
-  id: 'basket',
-  name: 'Basket',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 1,
-  cost: { amount: 4, currency: 'sp' },
-  description: 'A woven basket.',
-  source: 'Pathfinder 1e Core Rulebook',
-  requiresAttunement: false,
-};
-
-export const bottle: Item = {
-  id: 'bottle',
-  name: 'Bottle (glass)',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 1,
-  cost: { amount: 2, currency: 'gp' },
-  description: 'A glass bottle.',
-  source: 'Pathfinder 1e Core Rulebook',
-  requiresAttunement: false,
-};
-
-export const scrollCase: Item = {
-  id: 'scroll-case',
-  name: 'Map/Scroll Case',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 0,
-  cost: { amount: 1, currency: 'gp' },
-  description: 'A leather tube for maps.',
-  source: 'SRD 3.5',
-  requiresAttunement: false,
-};
-
 export const signal_whistle: Item = {
   id: 'signal-whistle',
   name: 'Signal Whistle',
@@ -699,84 +491,6 @@ export const signal_whistle: Item = {
   cost: { amount: 8, currency: 'sp' },
   description: 'A loud whistle for signaling.',
   source: 'Core Rulebook',
-  requiresAttunement: false,
-};
-
-export const rope_silk: Item = {
-  id: 'rope-silk',
-  name: 'Rope, Silk (50 ft.)',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 0,
-  cost: { amount: 10, currency: 'gp' },
-  description: 'Strong silk rope.',
-  source: 'SRD 3.5',
-  requiresAttunement: false,
-};
-
-export const shovel: Item = {
-  id: 'shovel',
-  name: 'Shovel',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 2,
-  cost: { amount: 2, currency: 'gp' },
-  description: 'A digging tool.',
-  source: 'Pathfinder 1e Core Rulebook',
-  requiresAttunement: false,
-};
-
-export const pickaxe: Item = {
-  id: 'pickaxe',
-  name: 'Pickaxe',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 3,
-  cost: { amount: 3, currency: 'gp' },
-  description: 'A mining tool.',
-  source: 'Pathfinder 1e Core Rulebook',
-  requiresAttunement: false,
-};
-
-export const sledgehammer: Item = {
-  id: 'sledgehammer',
-  name: 'Sledgehammer',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 4,
-  cost: { amount: 2, currency: 'gp' },
-  description: 'A heavy hammer for breaking.',
-  source: 'SRD 5.1',
-  requiresAttunement: false,
-};
-
-export const saw: Item = {
-  id: 'saw',
-  name: 'Saw',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 1,
-  cost: { amount: 4, currency: 'sp' },
-  description: 'A woodcutting saw.',
-  source: "Pathfinder 1e Advanced Player's Guide",
-  requiresAttunement: false,
-};
-
-export const block_tackle: Item = {
-  id: 'block-tackle',
-  name: 'Block and Tackle',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 2,
-  cost: { amount: 5, currency: 'gp' },
-  description: 'Pulley system for lifting.',
-  source: 'Pathfinder 1e Core Rulebook',
   requiresAttunement: false,
 };
 
@@ -799,36 +513,10 @@ export const marbles: Item = {
   system: 'pf2e',
   type: 'gear',
   rarity: 'common',
-  weight: 1,
-  cost: { amount: 1, currency: 'sp' },
-  description: 'Glass marbles.',
-  source: "Pathfinder 1e Advanced Player's Guide",
-  requiresAttunement: false,
-};
-
-export const ball_bearings: Item = {
-  id: 'ball-bearings',
-  name: 'Ball Bearings',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
-  weight: 1,
-  cost: { amount: 1, currency: 'gp' },
-  description: 'Metal ball bearings.',
-  source: 'SRD 5.1',
-  requiresAttunement: false,
-};
-
-export const dice: Item = {
-  id: 'dice',
-  name: 'Dice Set',
-  system: 'pf2e',
-  type: 'gear',
-  rarity: 'common',
   weight: 0,
-  cost: { amount: 1, currency: 'sp' },
-  description: 'Gaming dice.',
-  source: 'SRD 5.1',
+  cost: { amount: 2, currency: 'sp' },
+  description: 'Glass marbles.',
+  source: 'Lost Omens: The Grand Bazaar',
   requiresAttunement: false,
 };
 
@@ -897,19 +585,6 @@ export const alchemist_tools: Item = {
   requiresAttunement: false,
 };
 
-export const herbalism_kit: Item = {
-  id: 'herbalism-kit',
-  name: 'Herbalism Kit',
-  system: 'pf2e',
-  type: 'tool',
-  rarity: 'common',
-  weight: 1,
-  cost: { amount: 5, currency: 'gp' },
-  description: 'Tools for identifying and preparing herbs.',
-  source: 'SRD 5.1',
-  requiresAttunement: false,
-};
-
 export const pf2eGear = {
   backpack,
   bedroll,
@@ -931,54 +606,29 @@ export const pf2eGear = {
   piton,
   pole,
   mirror,
-  pouch,
   sack,
   soap,
   spellbook,
-  ink,
-  pen,
-  parchment,
-  sealing_wax,
-  vial,
-  flask,
-  jug,
-  bucket,
+  writingSet,
   chest,
   ladder,
   ironChain,
   manacles,
   lock,
-  blanket,
   candle,
-  tinderbox,
-  bell,
-  horn,
+  flintAndSteel,
   hourglass,
   magnifying_glass,
   spyglass,
   compass,
   fishing_tackle,
-  net_fishing,
-  trap,
   whistle,
-  basket,
-  bottle,
-  scrollCase,
   signal_whistle,
-  rope_silk,
-  shovel,
-  pickaxe,
-  sledgehammer,
-  saw,
-  block_tackle,
   caltrops,
   marbles,
-  ball_bearings,
-  dice,
   playing_cards,
   musical_instrument,
   disguise_kit,
   artisan_tools,
   alchemist_tools,
-  herbalism_kit,
 };

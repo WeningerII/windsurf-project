@@ -472,8 +472,8 @@
     "dnd-5e-2024/equipment|hammer": {
       "name": "Hammer",
       "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "Shipped tagged \"SRD 5.2\" but in SRD 5.1’s tool list (1 gp / 3 lb) but absent from SRD 5.2.1 equipment.md; it is NOT the Light Hammer weapon (2 gp / 2 lb), which ships separately. Open content (SRD 5.1, CC-BY-4.0), FALSE citation."
+      "class": "denominator-scope-defect",
+      "evidence": "Shipped tagged \"SRD 5.1\", which is TRUE and is an admitted source for this system (src/utils/openContentPolicy.ts: SRD 5.1 is CC-BY-4.0, as open as 5.2). SRD 5.1 tool-list entry (1 gp / 3 lb); SRD 5.2.1 equipment.md does not reprint it. NOT the Light Hammer weapon (2 gp / 2 lb), which ships separately. The denominator wired for dnd-5e-2024/equipment is the SRD 5.2 list alone, so a truthfully-5.1-tagged row can never appear in it. Reclassified from wrong-edition-attribution 2026-08-01: the citation names the edition the text came from, and there is no 2024 equivalent to replace it with."
     },
     "dnd-5e-2024/equipment|hide": {
       "name": "Hide",
@@ -496,14 +496,8 @@
     "dnd-5e-2024/equipment|messkit": {
       "name": "Mess Kit",
       "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "Shipped tagged \"SRD 5.2\" but in SRD 5.1’s adventuring gear but absent from SRD 5.2.1 equipment.md. Open content (SRD 5.1, CC-BY-4.0), FALSE citation."
-    },
-    "dnd-5e-2024/equipment|mirrorsteel": {
-      "name": "Mirror, Steel",
-      "taggedSource": "SRD 5.2",
-      "class": "wrong-edition-attribution",
-      "evidence": "Shipped tagged \"SRD 5.2\" but the verbatim SRD 5.1 name; SRD 5.2.1 names it \"Mirror\", which the loader ALSO ships with identical stats. Open content (SRD 5.1, CC-BY-4.0), FALSE citation."
+      "class": "denominator-scope-defect",
+      "evidence": "Shipped tagged \"SRD 5.1\", which is TRUE and is an admitted source for this system (src/utils/openContentPolicy.ts: SRD 5.1 is CC-BY-4.0, as open as 5.2). SRD 5.1 adventuring gear; SRD 5.2.1 equipment.md does not reprint it. The denominator wired for dnd-5e-2024/equipment is the SRD 5.2 list alone, so a truthfully-5.1-tagged row can never appear in it. Reclassified from wrong-edition-attribution 2026-08-01: the citation names the edition the text came from, and there is no 2024 equivalent to replace it with."
     },
     "dnd-5e-2024/equipment|padded": {
       "name": "Padded",
@@ -514,8 +508,8 @@
     "dnd-5e-2024/equipment|piton": {
       "name": "Piton",
       "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "Shipped tagged \"SRD 5.2\" but in SRD 5.1’s adventuring gear but absent from SRD 5.2.1 equipment.md — the 2024 revision folded pitons into the Climber’s Kit. Open content (SRD 5.1, CC-BY-4.0), FALSE citation."
+      "class": "denominator-scope-defect",
+      "evidence": "Shipped tagged \"SRD 5.1\", which is TRUE and is an admitted source for this system (src/utils/openContentPolicy.ts: SRD 5.1 is CC-BY-4.0, as open as 5.2). SRD 5.1 adventuring gear; the 2024 revision folded pitons into the Climber's Kit, so SRD 5.2.1 equipment.md does not list them separately. The denominator wired for dnd-5e-2024/equipment is the SRD 5.2 list alone, so a truthfully-5.1-tagged row can never appear in it. Reclassified from wrong-edition-attribution 2026-08-01: the citation names the edition the text came from, and there is no 2024 equivalent to replace it with."
     },
     "dnd-5e-2024/equipment|plate": {
       "name": "Plate",
@@ -546,12 +540,6 @@
       "taggedSource": "SRD 5.2",
       "class": "duplicate-alias",
       "evidence": "loadEquipmentForSystem('dnd-5e-2024') ALSO ships \"Robe of the Archmagi\", the verbatim SRD 5.2.1 magic-item heading; same rarity, differing only in the weight field. A duplicated catalog row."
-    },
-    "dnd-5e-2024/equipment|ropehempen50feet": {
-      "name": "Rope, Hempen (50 feet)",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "Shipped tagged \"SRD 5.2\" but the verbatim SRD 5.1 name (1 gp / 10 lb); SRD 5.2.1 equipment.md names it \"Rope\" (1 gp / 5 lb), which the loader ALSO ships with the 5 lb weight. Open content (SRD 5.1, CC-BY-4.0), FALSE citation."
     },
     "dnd-5e-2024/equipment|scrolloffireball": {
       "name": "Scroll of Fireball",
@@ -586,8 +574,8 @@
     "dnd-5e-2024/equipment|soap": {
       "name": "Soap",
       "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "Shipped tagged \"SRD 5.2\" but in SRD 5.1’s adventuring gear but absent from SRD 5.2.1 equipment.md. Open content (SRD 5.1, CC-BY-4.0), FALSE citation."
+      "class": "denominator-scope-defect",
+      "evidence": "Shipped tagged \"SRD 5.1\", which is TRUE and is an admitted source for this system (src/utils/openContentPolicy.ts: SRD 5.1 is CC-BY-4.0, as open as 5.2). SRD 5.1 adventuring gear; SRD 5.2.1 equipment.md does not reprint it. The denominator wired for dnd-5e-2024/equipment is the SRD 5.2 list alone, so a truthfully-5.1-tagged row can never appear in it. Reclassified from wrong-edition-attribution 2026-08-01: the citation names the edition the text came from, and there is no 2024 equivalent to replace it with."
     },
     "dnd-5e-2024/equipment|splint": {
       "name": "Splint",
@@ -601,65 +589,17 @@
       "class": "duplicate-alias",
       "evidence": "loadEquipmentForSystem('dnd-5e-2024') ALSO ships \"Studded Leather Armor\", the verbatim SRD 5.2 name; cost and weight are identical (only the alias carries an armorClass field, which is itself a defect in the SRD-named twin). A duplicated catalog row, not a missing SRD entry."
     },
-    "dnd-5e-2024/equipment|tenttwoperson": {
-      "name": "Tent, Two-Person",
-      "taggedSource": "SRD 5.2",
-      "class": "wrong-edition-attribution",
-      "evidence": "Shipped tagged \"SRD 5.2\" but the verbatim SRD 5.1 name; SRD 5.2.1 names it \"Tent\", which the loader ALSO ships with identical stats. Open content (SRD 5.1, CC-BY-4.0), FALSE citation."
-    },
     "dnd-5e-2024/equipment|wandofwebbing": {
       "name": "Wand of Webbing",
       "taggedSource": "SRD 5.2",
       "class": "duplicate-alias",
       "evidence": "loadEquipmentForSystem('dnd-5e-2024') ALSO ships \"Wand of Web\", the verbatim SRD 5.2.1 magic-item heading; same rarity, differing only in the weight field. A duplicated catalog row."
     },
-    "dnd-5e-2024/monsters|acolyte": {
-      "name": "Acolyte",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "\"Acolyte\" is a verbatim SRD 5.1 monster name (present in 5e-bits/5e-database 2014) and is shipped by loadMonstersForSystem('dnd-5e-2014') too, but it has NO stat block in the SRD 5.2.1 bestiary — which names only qualified forms (Goblin Warrior, Priest Acolyte, Kobold Warrior, Warrior Veteran, …). GAPS §15.4 independently confirms the content is 5.1 content. Open content, FALSE citation: it ships tagged \"SRD 5.2\"."
-    },
-    "dnd-5e-2024/monsters|bugbear": {
-      "name": "Bugbear",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "\"Bugbear\" is a verbatim SRD 5.1 monster name (present in 5e-bits/5e-database 2014) and is shipped by loadMonstersForSystem('dnd-5e-2014') too, but it has NO stat block in the SRD 5.2.1 bestiary — which names only qualified forms (Goblin Warrior, Priest Acolyte, Kobold Warrior, Warrior Veteran, …). GAPS §15.4 independently confirms the content is 5.1 content. Open content, FALSE citation: it ships tagged \"SRD 5.2\"."
-    },
-    "dnd-5e-2024/monsters|goblin": {
-      "name": "Goblin",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "\"Goblin\" is a verbatim SRD 5.1 monster name (present in 5e-bits/5e-database 2014) and is shipped by loadMonstersForSystem('dnd-5e-2014') too, but it has NO stat block in the SRD 5.2.1 bestiary — which names only qualified forms (Goblin Warrior, Priest Acolyte, Kobold Warrior, Warrior Veteran, …). GAPS §15.4 independently confirms the content is 5.1 content. Open content, FALSE citation: it ships tagged \"SRD 5.2\"."
-    },
-    "dnd-5e-2024/monsters|hobgoblin": {
-      "name": "Hobgoblin",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "\"Hobgoblin\" is a verbatim SRD 5.1 monster name (present in 5e-bits/5e-database 2014) and is shipped by loadMonstersForSystem('dnd-5e-2014') too, but it has NO stat block in the SRD 5.2.1 bestiary — which names only qualified forms (Goblin Warrior, Priest Acolyte, Kobold Warrior, Warrior Veteran, …). GAPS §15.4 independently confirms the content is 5.1 content. Open content, FALSE citation: it ships tagged \"SRD 5.2\"."
-    },
-    "dnd-5e-2024/monsters|kobold": {
-      "name": "Kobold",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "\"Kobold\" is a verbatim SRD 5.1 monster name (present in 5e-bits/5e-database 2014) and is shipped by loadMonstersForSystem('dnd-5e-2014') too, but it has NO stat block in the SRD 5.2.1 bestiary — which names only qualified forms (Goblin Warrior, Priest Acolyte, Kobold Warrior, Warrior Veteran, …). GAPS §15.4 independently confirms the content is 5.1 content. Open content, FALSE citation: it ships tagged \"SRD 5.2\"."
-    },
-    "dnd-5e-2024/monsters|thug": {
-      "name": "Thug",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "\"Thug\" is a verbatim SRD 5.1 monster name (present in 5e-bits/5e-database 2014) and is shipped by loadMonstersForSystem('dnd-5e-2014') too, but it has NO stat block in the SRD 5.2.1 bestiary — which names only qualified forms (Goblin Warrior, Priest Acolyte, Kobold Warrior, Warrior Veteran, …). GAPS §15.4 independently confirms the content is 5.1 content. Open content, FALSE citation: it ships tagged \"SRD 5.2\"."
-    },
-    "dnd-5e-2024/monsters|veteran": {
-      "name": "Veteran",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "\"Veteran\" is a verbatim SRD 5.1 monster name (present in 5e-bits/5e-database 2014) and is shipped by loadMonstersForSystem('dnd-5e-2014') too, but it has NO stat block in the SRD 5.2.1 bestiary — which names only qualified forms (Goblin Warrior, Priest Acolyte, Kobold Warrior, Warrior Veteran, …). GAPS §15.4 independently confirms the content is 5.1 content. Open content, FALSE citation: it ships tagged \"SRD 5.2\"."
-    },
     "mam3e/advantages|improvisedweapon": {
       "name": "Improvised Weapon",
       "taggedSource": "Hero's Handbook",
       "class": "denominator-scope-defect",
-      "evidence": "'Improvised Weapon' is an official M&M 3e Hero's Handbook COMBAT, RANKED advantage on p.85 (PCGen mm_abilities.lst: 'Improvised Weapon ... TYPE:SpecialQuality.Advantage.Combat Advantage.Ranked ... SOURCEPAGE:p.85', text 'you use your Close Combat: Unarmed skill bonus for attack checks ... Additional ranks ... give you a +1 bonus to Damage with improvised weapons per rank ... limited by power level' — matching the shipped record's type 'combat', ranked true and near-verbatim benefit text); the frnprt/mm3e-character-creator ADVANTAGES array (js/data.js, 73 entries) simply omits it, carrying only the unrelated General advantage 'Improvised Tools'."
+      "evidence": "'Improvised Weapon' is an official M&M 3e Hero's Handbook COMBAT, RANKED advantage on p.85 (PCGen mm_abilities.lst: 'Improvised Weapon ... TYPE:SpecialQuality.Advantage.Combat Advantage.Ranked ... SOURCEPAGE:p.85', text 'you use your Close Combat: Unarmed skill bonus for attack checks ... Additional ranks ... give you a +1 bonus to Damage with improvised weapons per rank ... limited by power level' — matching the shipped record's type 'combat', ranked true and near-verbatim benefit text); the frnprt/mm3e-character-creator ADVANTAGES array (js/data.js, 73 entries) simply omits it, carrying only the unrelated General advantage 'Improvised Tools'. CORROBORATED 2026-08-01 against the Hero SRD's own Advantages chapter (owner-supplied verbatim text): 'Improvised Weapon' appears in TABLE: COMBAT ADVANTAGES ('Use Unarmed Combat skill with improvised weapons, +1 damage bonus') and carries a full COMBAT, RANKED description. That is first-party confirmation of a classification previously resting on the PCGen list alone. The same text independently confirms the shipped advantage catalog is EXACTLY the SRD's 74 by name, with no non-SRD entry."
     },
     "mam3e/powers|alternateform": {
       "name": "Alternate Form",
@@ -810,12 +750,6 @@
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present in the pinned PSRD manifest under the Magic Items scope, not the scope this row diffs against. Both pf1e targets in src/scripts/srd-coverage.ts share one merged loader (loadEquipmentForSystem('pf1e'), 616 entries) but each diffs only half the manifest, so every entry in the other half prints as a false suspect."
-    },
-    "pf1e/equipment|amuletofhealth": {
-      "name": "Amulet of Health",
-      "taggedSource": "SRD 3.5",
-      "class": "wrong-edition-attribution",
-      "evidence": "Absent from the 590-entry PSRD PF1e Core item manifest (PF1e replaced it with 'Belt of Mighty Constitution', which the loader ships at 4,000 gp for +2 Con) but present verbatim in the D&D 3.5 SRD (srd-v3.5-md/magic-items/magic-items-v-wondrous-items.md: 'Amulet of Health: ... enhancement bonus to Constitution of +2, +4, or +6', minor table 'Amulet of health +2 — 4,000 gp'); shipped tagged source 'Core Rulebook' with an unsourced 30,000 gp price for the +2 version."
     },
     "pf1e/equipment|amuletofinescapablelocation": {
       "name": "Amulet of Inescapable Location",
@@ -1134,12 +1068,6 @@
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present in the pinned PSRD manifest under the Magic Items scope, not the scope this row diffs against. Both pf1e targets in src/scripts/srd-coverage.ts share one merged loader (loadEquipmentForSystem('pf1e'), 616 entries) but each diffs only half the manifest, so every entry in the other half prints as a false suspect."
-    },
-    "pf1e/equipment|cloakofcharisma": {
-      "name": "Cloak of Charisma",
-      "taggedSource": "SRD 3.5",
-      "class": "wrong-edition-attribution",
-      "evidence": "Absent from the PSRD PF1e Core item manifest (PF1e replaced it with 'Headband of Alluring Charisma', which the loader ships at 4,000 gp) but present verbatim in the D&D 3.5 SRD ('Cloak of Charisma: ... adds a +2, +4, or +6 enhancement bonus to her Charisma score'; minor table 'Cloak of Charisma +2 — 4,000 gp'); shipped tagged source 'Core Rulebook' at an unsourced 30,000 gp."
     },
     "pf1e/equipment|cloakofdisplacementmajor": {
       "name": "Cloak of Displacement, Major",
@@ -3031,12 +2959,6 @@
       "class": "denominator-scope-defect",
       "evidence": "Present in the pinned PSRD manifest under the Equipment scope, not the scope this row diffs against. Both pf1e targets in src/scripts/srd-coverage.ts share one merged loader (loadEquipmentForSystem('pf1e'), 616 entries) but each diffs only half the manifest, so every entry in the other half prints as a false suspect."
     },
-    "pf1e/magic-items|amuletofhealth": {
-      "name": "Amulet of Health",
-      "taggedSource": "SRD 3.5",
-      "class": "wrong-edition-attribution",
-      "evidence": "Absent from the 590-entry PSRD PF1e Core item manifest (PF1e replaced it with 'Belt of Mighty Constitution', which the loader ships at 4,000 gp for +2 Con) but present verbatim in the D&D 3.5 SRD (srd-v3.5-md/magic-items/magic-items-v-wondrous-items.md: 'Amulet of Health: ... enhancement bonus to Constitution of +2, +4, or +6', minor table 'Amulet of health +2 — 4,000 gp'); shipped tagged source 'Core Rulebook' with an unsourced 30,000 gp price for the +2 version."
-    },
     "pf1e/magic-items|antitoxin": {
       "name": "Antitoxin",
       "taggedSource": "Core Rulebook",
@@ -3288,12 +3210,6 @@
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present in the pinned PSRD manifest under the Equipment scope, not the scope this row diffs against. Both pf1e targets in src/scripts/srd-coverage.ts share one merged loader (loadEquipmentForSystem('pf1e'), 616 entries) but each diffs only half the manifest, so every entry in the other half prints as a false suspect."
-    },
-    "pf1e/magic-items|cloakofcharisma": {
-      "name": "Cloak of Charisma",
-      "taggedSource": "SRD 3.5",
-      "class": "wrong-edition-attribution",
-      "evidence": "Absent from the PSRD PF1e Core item manifest (PF1e replaced it with 'Headband of Alluring Charisma', which the loader ships at 4,000 gp) but present verbatim in the D&D 3.5 SRD ('Cloak of Charisma: ... adds a +2, +4, or +6 enhancement bonus to her Charisma score'; minor table 'Cloak of Charisma +2 — 4,000 gp'); shipped tagged source 'Core Rulebook' at an unsourced 30,000 gp."
     },
     "pf1e/magic-items|club": {
       "name": "Club",
@@ -4611,27 +4527,9 @@
     },
     "pf2e/equipment|atlatl": {
       "name": "Atlatl",
-      "taggedSource": "Pathfinder 1e Ultimate Combat",
-      "class": "wrong-edition-attribution",
-      "evidence": "Real PF2e content but not CRB: items/baseitems.json has 'Atlatl' with source TV (Treasure Vault), price 2 sp, bulk 1, propulsive - the shipped 2 sp / weight 1 matches that row exactly. Original is PF1e Ultimate Combat/Ultimate Equipment 'Atlatl' (2 gp). Tagged 'Core Rulebook' regardless."
-    },
-    "pf2e/equipment|ballbearings": {
-      "name": "Ball Bearings",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "D&D 5e SRD 'Ball Bearings (1 GP)' - shipped cost 1 gp is an exact match. No ball bearings in any Pathfinder source: nothing in items-crb.json, baseitems.json or the PF1e PSRD corpus."
-    },
-    "pf2e/equipment|bandedmail": {
-      "name": "Banded Mail",
-      "taggedSource": "SRD 3.5",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e/3.5 SRD armor (PSRD book-cr.db/book-ue.db 'Banded Mail', 250 gp, 35 lb, +7 AC, max Dex +1); shipped medium armor with dexBonusMax 1 and stealth disadvantage, 10 gp. No Banded Mail in items-crb.json or baseitems.json - PF2e's equivalent slot is Splint Mail, which the loader ships separately."
-    },
-    "pf2e/equipment|basket": {
-      "name": "Basket",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e SRD 'Basket' (PSRD, 4 sp, 1 lb) and D&D 5e SRD 'Basket (4 SP)' - shipped 4 sp, weight 1 matches both exactly. No basket in items-crb.json or baseitems.json."
+      "taggedSource": "Pathfinder 2e Treasure Vault",
+      "class": "denominator-scope-defect",
+      "evidence": "Re-recorded 2026-08-01. Previously 'wrong-edition-attribution' while tagged 'Pathfinder 1e Ultimate Combat'; the row has since been retranscribed from its PF2e printing, so the tag is now true rather than merely relabelled. items/baseitems.json carries 'Atlatl' with source TV (Treasure Vault p.30): simple dart, 1d6 piercing, propulsive, 2 sp, bulk 1, range 60 ft. - which the shipped record matches. Treasure Vault is admitted in openContentPolicy.ts on Foundry's per-item {\"license\":\"OGL\",\"remaster\":false}. It remains an over-inclusion suspect only because the pinned denominator fetches items/items-crb.json (467 rows) and never fetches items/baseitems.json or any per-book item file, so no base weapon and no non-CRB book can ever match."
     },
     "pf2e/equipment|bastardsword": {
       "name": "Bastard Sword",
@@ -4645,65 +4543,29 @@
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
-    "pf2e/equipment|bell": {
-      "name": "Bell",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e SRD 'Bell' (PSRD, 1 gp) and D&D 5e SRD 'Bell (1 GP)' - shipped cost 1 gp matches both exactly. items-crb.json contains no bell (only 'Belladonna')."
-    },
-    "pf2e/equipment|blanket": {
-      "name": "Blanket",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "'Blanket, winter' in the 3.5/PF1e SRD (PSRD, 5 sp, 3 lb) and 'Blanket (5 SP)' in the D&D 5e SRD - shipped cost 5 sp matches both exactly. PF2e CRB has no blanket."
-    },
-    "pf2e/equipment|blockandtackle": {
-      "name": "Block and Tackle",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "3.5/PF1e SRD 'Block and Tackle' (PSRD book-cr.db/book-ue.db, 5 gp, 5 lb) - shipped cost 5 gp is an exact match (the 5e SRD's is 1 GP). No block and tackle in items-crb.json or baseitems.json."
-    },
     "pf2e/equipment|blowgun": {
       "name": "Blowgun",
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
-    "pf2e/equipment|boarspear": {
-      "name": "Boar Spear",
-      "taggedSource": "Pathfinder 1e Advanced Player's Guide",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e Advanced Player's Guide / Ultimate Equipment 'Boar Spear' (5 gp, 8 lb, 1d8 piercing, brace vs charge) - shipped 1d8 piercing with reach, 5 sp (10x downshift), weight 4. Absent from items-crb.json, baseitems.json and every Pf2eTools items file."
-    },
     "pf2e/equipment|bola": {
       "name": "Bola",
-      "taggedSource": "SRD 3.5",
-      "class": "wrong-edition-attribution",
-      "evidence": "Real PF2e content but not CRB: items/baseitems.json 'Bola' appears with source PC1 and source TV at 5 sp, L bulk, thrown/nonlethal/ranged trip - shipped 5 sp, thrown, range 10 matches that price exactly. PF1e's is 'Bolas' (PSRD book-cr.db, 5 gp, 2 lb). Nothing named Bola is in items-crb.json."
+      "taggedSource": "Pathfinder 2e Advanced Player's Guide",
+      "class": "denominator-scope-defect",
+      "evidence": "Re-recorded 2026-08-01. Previously 'wrong-edition-attribution' tagged 'SRD 3.5' with 1d4 / range 10. items/baseitems.json carries 'Bola' as a martial sling: 1d6 bludgeoning, nonlethal/ranged trip/thrown 20 ft., 5 sp, L bulk - which the shipped record now matches. NOTE on the book: Pf2eTools files that record under source TV (Treasure Vault p.30) with otherSources.Reprinted = [\"APG|248\",\"LOGM|120\"], and separately under PC1 for the ORC remaster. The shipped tag names the APG printing per the wrong-edition brief; APG and TV are both OGL and both on the pf2e allowlist, so the citation is true either way, but TV is the primary record upstream. It remains an over-inclusion suspect only because the pinned denominator fetches items/items-crb.json (467 rows) and never fetches items/baseitems.json or any per-book item file, so no base weapon and no non-CRB book can ever match."
     },
     "pf2e/equipment|boomerang": {
       "name": "Boomerang",
-      "taggedSource": "Pathfinder 1e Advanced Player's Guide",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e Advanced Player's Guide / Ultimate Equipment 'Boomerang' (3 gp, 3 lb, 1d6 bludgeoning, 30 ft range increment) - shipped 1d6 bludgeoning, thrown, range 30, 3 sp (10x downshift). The PF2e port is items/baseitems.json source TV (2 sp, uncommon, recovery); not in CRB."
-    },
-    "pf2e/equipment|bottleglass": {
-      "name": "Bottle (glass)",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "3.5/PF1e SRD 'Bottle, wine, glass' (PSRD 'Bottle', 2 gp, 1 lb) and D&D 5e SRD 'Bottle, Glass (2 GP)' - shipped 2 gp, weight 1 matches both exactly. items-crb.json has only Bottled Air / Bottled Lightning (alchemical)."
+      "taggedSource": "Pathfinder 2e Treasure Vault",
+      "class": "denominator-scope-defect",
+      "evidence": "Re-recorded 2026-08-01. Previously 'wrong-edition-attribution' tagged 'Pathfinder 1e Advanced Player's Guide' with PF1e stats (3 sp, range 30, common). Retranscribed from items/baseitems.json 'Boomerang', source TV (Treasure Vault p.30): martial club, 1d6 bludgeoning, traits uncommon/recovery/thrown 60 ft., 2 sp, L bulk - which the shipped record now matches, including the uncommon rarity the PF1e row had lost. It remains an over-inclusion suspect only because the pinned denominator fetches items/items-crb.json (467 rows) and never fetches items/baseitems.json or any per-book item file, so no base weapon and no non-CRB book can ever match."
     },
     "pf2e/equipment|breastplate": {
       "name": "Breastplate",
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
-    },
-    "pf2e/equipment|bucket": {
-      "name": "Bucket",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "D&D 5e SRD 'Bucket (5 CP)' - shipped cost 5 cp is an exact match; PF1e's bucket is 5 sp. PF2e CRB has no bucket."
     },
     "pf2e/equipment|buckler": {
       "name": "Buckler",
@@ -4716,12 +4578,6 @@
       "taggedSource": "Core Rulebook",
       "class": "naming-variant",
       "evidence": "CRB has 'Candle (10)' (items-crb.json, Adventuring Gear, 1 cp); shipped 'Candle' costs 1 cp - exact price match, only the bundle-quantity suffix differs."
-    },
-    "pf2e/equipment|cestus": {
-      "name": "Cestus",
-      "taggedSource": "Pathfinder 1e Advanced Player's Guide",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e weapon (PSRD book-apg.db / book-ue.db 'Cestus', 5 gp, 1 lb, 1d4 bludgeoning, light); shipped 1d4 bludgeoning, light, weight 1, 5 sp - damage/weight identical with the catalog's recurring 10x price downshift. Absent from items-crb.json, baseitems.json and all 90 Pf2eTools item files."
     },
     "pf2e/equipment|chain": {
       "name": "Chain",
@@ -4746,12 +4602,6 @@
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
-    },
-    "pf2e/equipment|chakram": {
-      "name": "Chakram",
-      "taggedSource": "Pathfinder 1e Advanced Player's Guide",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e Advanced Player's Guide / Ultimate Equipment 'Chakram' (1 gp, 1 lb, thrown, 30 ft range increment) - shipped 1 gp, weight 1, thrown, range 30: price, weight and range all match PF1e exactly. The PF2e port exists only in items/items-lotgb.json (Lost Omens: The Grand Bazaar, 5 sp); nothing in items-crb.json."
     },
     "pf2e/equipment|chalk10pieces": {
       "name": "Chalk (10 pieces)",
@@ -4795,12 +4645,6 @@
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
-    "pf2e/equipment|diceset": {
-      "name": "Dice Set",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "D&D 5e SRD gaming set 'Dice Set (1 SP)' - shipped cost 1 sp is an exact match; PF1e Ultimate Equipment 'Dice' is also 1 sp. PF2e CRB has no dice."
-    },
     "pf2e/equipment|dogslicer": {
       "name": "Dogslicer",
       "taggedSource": "Core Rulebook",
@@ -4814,10 +4658,10 @@
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
     "pf2e/equipment|earthbreaker": {
-      "name": "Earth Breaker",
-      "taggedSource": "Pathfinder 1e Ultimate Equipment",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e Ultimate Equipment 'Earth Breaker' (40 gp, 14 lb, 2d6 bludgeoning); its PF2e port is items/baseitems.json 'Earthbreaker' source TV (Treasure Vault), 4 gp, bulk 2 - the shipped 4 gp matches the TV price exactly. Not in CRB under either spelling."
+      "name": "Earthbreaker",
+      "taggedSource": "Pathfinder 2e Treasure Vault",
+      "class": "denominator-scope-defect",
+      "evidence": "Re-recorded 2026-08-01. Previously 'wrong-edition-attribution' as PF1e Ultimate Equipment 'Earth Breaker' (1d12, weight 7). Retranscribed from items/baseitems.json 'Earthbreaker', source TV (Treasure Vault p.25): martial hammer, 1d6 bludgeoning, razing/shove/two-hand d10/versatile P, 4 gp, 2 bulk - which the shipped record now matches. Only traits with no WeaponProperty member ('razing', 'shove') are dropped; two-hand d10 and versatile P map to 'two-handed'/'versatile' as elsewhere in the catalog. It remains an over-inclusion suspect only because the pinned denominator fetches items/items-crb.json (467 rows) and never fetches items/baseitems.json or any per-book item file, so no base weapon and no non-CRB book can ever match."
     },
     "pf2e/equipment|elvencurveblade": {
       "name": "Elven Curve Blade",
@@ -4854,12 +4698,6 @@
       "taggedSource": "Core Rulebook",
       "class": "naming-variant",
       "evidence": "PF2e CRB names runes without the word \"Rune\": items/items-crb.json has item[name=\"Flaming\"], category \"Rune\", level 8+, price 500 gp. Shipped price 500 gp - exact match, so the only difference is the trailing \" Rune\" the loader appends."
-    },
-    "pf2e/equipment|flask": {
-      "name": "Flask",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e/3.5 SRD 'Flask' (PSRD, 3 cp, 1-1/2 lb) - shipped cost 3 cp is an exact match (the 5e SRD flask is 2 cp). PF2e CRB has no empty flask; its only 'Flask' is 'Acid Flask', an alchemical bomb."
     },
     "pf2e/equipment|fortificationrune": {
       "name": "Fortification Rune",
@@ -4963,29 +4801,23 @@
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
-    "pf2e/equipment|handaxe": {
-      "name": "Handaxe",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "Not a PF2e name - CRB's equivalent is 'Hatchet' (items/baseitems.json source CRB: 1d6 slashing, agile+sweep, thrown 10 ft, 1 sp, L bulk), which the loader does NOT ship. The shipped stats instead match the D&D 5e SRD Handaxe row exactly: 1d6 Slashing, Light + Thrown (Range 20/60), 5 GP -> shipped 1d6 slashing, properties ['light','thrown'], range 20, 5 sp (the catalog's recurring gp->sp downshift). PF1e's Handaxe (6 gp, 3 lb) is not thrown, so 5e is the source."
-    },
     "pf2e/equipment|handcrossbow": {
       "name": "Hand Crossbow",
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
+    "pf2e/equipment|hatchet": {
+      "name": "Hatchet",
+      "taggedSource": "Core Rulebook",
+      "class": "denominator-scope-defect",
+      "evidence": "Recorded 2026-08-01: this row replaced the D&D-5e-derived 'Handaxe' under the wrong-edition ruling. 'Hatchet' is present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (CRB p.280): martial axe, 1d6 slashing, agile/sweep/thrown 10 ft., 4 sp, L bulk - which the shipped record now matches ('agile' maps to 'light', the catalog's standing convention; 'sweep' has no WeaponProperty member and is dropped). Like every other CRB base weapon here it is scored as over-inclusion because the denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json."
+    },
     "pf2e/equipment|heavycrossbow": {
       "name": "Heavy Crossbow",
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
-    },
-    "pf2e/equipment|herbalismkit": {
-      "name": "Herbalism Kit",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "D&D 5e SRD tool 'Herbalism Kit (5 GP)' - shipped cost 5 gp is an exact match. PF2e CRB's healing tool is \"Healer's Tools\" (which the loader ships separately) and there is no herbalism kit in Pf2eTools or the PF1e PSRD corpus."
     },
     "pf2e/equipment|hidearmor": {
       "name": "Hide Armor",
@@ -4999,41 +4831,17 @@
       "class": "naming-variant",
       "evidence": "PF2e CRB names runes without the word \"Rune\": items/items-crb.json has item[name=\"Holy\"], category \"Rune\", level 11, price 1400 gp. Shipped price 1400 gp - exact match, so the only difference is the trailing \" Rune\" the loader appends."
     },
-    "pf2e/equipment|horn": {
-      "name": "Horn",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "CORRECTED 2026-07-26. Prior evidence claimed \"the D&D 5e SRD has no horn either\" - contradicted by this audit's own manifest, where \"Horn\" appears in BOTH .denominators[\"dnd-5e-2014/equipment\"] and [\"dnd-5e-2024/equipment\"]. Open content under an identical name in a cited source; the exposure is the \"Core Rulebook\" tag, not the licence."
-    },
     "pf2e/equipment|horsechopper": {
       "name": "Horsechopper",
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
-    "pf2e/equipment|ink1ozvial": {
-      "name": "Ink (1 oz vial)",
-      "taggedSource": "SRD 3.5",
-      "class": "wrong-edition-attribution",
-      "evidence": "'Ink (1 oz. vial)' is the verbatim 3.5/PF1e SRD Goods and Services row (PSRD book-cr.db 'Ink', 8 gp). PF2e CRB has no standalone ink - it bundles ink into 'Writing Set' (1 gp) and 'Extra Ink and Paper' (1 sp), neither of which the loader ships. Shipped 1 gp coincides with the Writing Set price, but the name and the '1 oz vial' unit are d20-SRD."
-    },
-    "pf2e/equipment|inkpen": {
-      "name": "Ink Pen",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "D&D 5e SRD gear entry 'Ink Pen (2 CP)' - shipped cost is exactly 2 cp. PF1e's is 'Inkpen' (1 sp) and PF2e CRB has no pen at all (only 'Writing Set'), so neither the name nor the price comes from the cited source."
-    },
     "pf2e/equipment|javelin": {
       "name": "Javelin",
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
-    },
-    "pf2e/equipment|jug": {
-      "name": "Jug",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e/3.5 SRD 'Jug, clay' (PSRD, 3 cp) - shipped cost 3 cp is an exact match (the 5e SRD jug is 2 cp). No jug of any kind in items-crb.json or baseitems.json."
     },
     "pf2e/equipment|kama": {
       "name": "Kama",
@@ -5089,6 +4897,12 @@
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
+    "pf2e/equipment|longspear": {
+      "name": "Longspear",
+      "taggedSource": "Core Rulebook",
+      "class": "denominator-scope-defect",
+      "evidence": "Recorded 2026-08-01: this row replaced the D&D-5e-derived 'Pike' under the wrong-edition ruling. 'Longspear' is present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (CRB p.280): simple spear, 1d8 piercing, reach, hands 2, 5 sp, 2 bulk - which the shipped record now matches ('two-handed' is retained alongside 'reach' because that is how the catalog already encodes hands 2 for Glaive, Halberd and Ranseur). Like every other CRB base weapon here it is scored as over-inclusion because the denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json."
+    },
     "pf2e/equipment|longsword": {
       "name": "Longsword",
       "taggedSource": "Core Rulebook",
@@ -5113,18 +4927,6 @@
       "class": "denominator-scope-defect",
       "evidence": "Lives in items/items-crb.json at item[name=\"Striking\"].variants[variantType=\"major striking\"] (level 19, price 31065 gp); the coverage script only reads top-level item[].name and never expands the nested variants[] array, so no graded rune can ever match. Shipped price 31065 gp matches exactly. Normalising the trailing \" Rune\" is also needed."
     },
-    "pf2e/equipment|mapscrollcase": {
-      "name": "Map/Scroll Case",
-      "taggedSource": "SRD 3.5",
-      "class": "wrong-edition-attribution",
-      "evidence": "D&D 5e SRD 'Case, Map or Scroll (1 GP)' and PF1e SRD 'Scroll Case' (1 gp, 1/2 lb) - shipped 1 gp matches both exactly. PF2e CRB has no map or scroll case."
-    },
-    "pf2e/equipment|marbles": {
-      "name": "Marbles",
-      "taggedSource": "Pathfinder 1e Advanced Player's Guide",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e APG / Ultimate Equipment 'Marbles' (PSRD, 1 sp, 2 lb) - shipped cost 1 sp is an exact match. Absent from items-crb.json, baseitems.json and the D&D 5e SRD."
-    },
     "pf2e/equipment|maul": {
       "name": "Maul",
       "taggedSource": "Core Rulebook",
@@ -5140,14 +4942,8 @@
     "pf2e/equipment|net": {
       "name": "Net",
       "taggedSource": "Pathfinder 2e Advanced Player's Guide",
-      "class": "wrong-edition-attribution",
-      "evidence": "Real Pathfinder 2e content from the wrong book: items/items-apg.json and items/items-pc1.json both carry 'Net' as Adventuring Gear at 1 gp, bulk 1 - shipped price 1 gp, weight 1. It is not in items-crb.json. The 'restrains on hit' wording and 1 gp also match the D&D 5e SRD Net; PF1e's Net is 20 gp."
-    },
-    "pf2e/equipment|netfishing": {
-      "name": "Net (fishing)",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "3.5/PF1e SRD 'Fishing net, 25 sq. ft.' (PSRD book-cr.db 'Fishing Net', 4 gp, 5 lb); PF2e CRB's counterpart is 'Fishing Tackle' (8 sp), which the loader already ships under that exact name. Shipped 1 gp matches neither price, so the identification rests on the d20-SRD name and function."
+      "class": "denominator-scope-defect",
+      "evidence": "Re-recorded 2026-08-01. The taggedSource was already the true book; what changed is the shipped record and therefore the class. items/items-apg.json and items/items-pc1.json both carry 'Net' as Adventuring Gear at 1 gp, bulk 1, hands 2 - shipped price 1 gp, weight 1, and the description has been rewritten from the D&D 5e SRD 'restrains on hit' wording to the PF2e behaviour (roped, it lets you Grapple a creature up to 10 feet away). The row is still typed as a Weapon with damage 1d4 bludgeoning / thrown, which PF2e's Net has no counterpart for; correcting that is a shape change, not a provenance one. It remains an over-inclusion suspect only because the pinned denominator fetches items/items-crb.json (467 rows) and Net is not a CRB item."
     },
     "pf2e/equipment|nunchaku": {
       "name": "Nunchaku",
@@ -5155,11 +4951,11 @@
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
-    "pf2e/equipment|orcdoubleaxe": {
-      "name": "Orc Double Axe",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e weapon (PSRD book-ue.db 'Orc Double Axe', 60 gp, 15 lb, double weapon 1d8/1d8 slashing); shipped 1d8 slashing two-handed, 6 gp (exactly 60 gp / 10), weight 7 (~15 lb / 2). Absent from every Pf2eTools file."
+    "pf2e/equipment|orcnecksplitter": {
+      "name": "Orc Necksplitter",
+      "taggedSource": "Core Rulebook",
+      "class": "denominator-scope-defect",
+      "evidence": "Recorded 2026-08-01: this row replaced the PF1e 'Orc Double Axe' under the wrong-edition ruling. 'Orc Necksplitter' is present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (CRB p.281): advanced axe, 1d8 slashing, forceful/orc/sweep, uncommon, 2 gp, 1 bulk - which the shipped record now matches. weaponType is 'martial' because the shipped union has no 'advanced' member, the same compromise the catalog already makes for Dwarven Waraxe, Elven Curve Blade, Katana and Bastard Sword; forceful/orc/sweep have no WeaponProperty members and are dropped. Like every other CRB base weapon here it is scored as over-inclusion because the denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json."
     },
     "pf2e/equipment|paddedarmor": {
       "name": "Padded Armor",
@@ -5167,41 +4963,17 @@
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
-    "pf2e/equipment|parchmentsheet": {
-      "name": "Parchment (sheet)",
-      "taggedSource": "SRD 3.5",
-      "class": "wrong-edition-attribution",
-      "evidence": "The '(sheet)' unit is the 3.5/PF1e SRD row 'Parchment (sheet)' (PSRD, 2 sp), and the shipped 1 sp is exactly the D&D 5e SRD 'Parchment (1 SP)'. PF2e CRB has no parchment row (its nearest is 'Extra Ink and Paper', 1 sp)."
-    },
     "pf2e/equipment|pick": {
       "name": "Pick",
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
-    "pf2e/equipment|pickaxe": {
-      "name": "Pickaxe",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "3.5/PF1e SRD \"Pick, Miner's\" (PSRD book-cr.db, 3 gp, 10 lb) - shipped cost 3 gp is an exact match. PF2e CRB's 'Pick' and 'Greatpick' are weapons, not mining tools, and the loader ships 'Pick' separately."
-    },
-    "pf2e/equipment|pike": {
-      "name": "Pike",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "No Pike in items-crb.json, baseitems.json (any source) or any Pf2eTools items file, and none in the PF1e PSRD corpus; the D&D 5e SRD weapons table row is 'Pike | 1d10 Piercing | Heavy, Reach, Two-Handed | 5 GP', and the shipped record is 1d10 piercing with reach + two-handed. Price 1 gp diverges."
-    },
     "pf2e/equipment|pole10ft": {
       "name": "Pole (10 ft.)",
       "taggedSource": "Core Rulebook",
       "class": "naming-variant",
       "evidence": "CRB has 'Ten-Foot Pole' (items-crb.json, Adventuring Gear, 1 cp); shipped 'Pole (10 ft.)' is the d20-SRD rendering of the same object. Price 5 cp matches the 3.5/PF1e SRD and 5e SRD pole (5 cp) rather than CRB's 1 cp, so the name maps cleanly but the price is inherited from the wrong edition."
-    },
-    "pf2e/equipment|pouch": {
-      "name": "Pouch",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF2e CRB has no pouch other than 'Material Component Pouch' (a distinct item the loader ships separately). The named counterparts are the 3.5/PF1e SRD 'Belt Pouch' (1 gp, 1/2 lb; PSRD book-cr.db) and the D&D 5e SRD 'Pouch' (5 SP) - the shipped description is literally 'A belt pouch for small items'. Weak stat evidence: the shipped 5 cp matches neither price, so the attribution rests on name and description."
     },
     "pf2e/equipment|ranseur": {
       "name": "Ranseur",
@@ -5227,23 +4999,11 @@
       "class": "naming-variant",
       "evidence": "PF2e CRB names runes without the word \"Rune\": items/items-crb.json has item[name=\"Returning\"], category \"Rune\", level 3, price 55 gp. Shipped price 55 gp - exact match, so the only difference is the trailing \" Rune\" the loader appends."
     },
-    "pf2e/equipment|ringmail": {
-      "name": "Ring Mail",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "D&D 5e SRD armor table row 'Ring Mail | AC 14 | Disadvantage (Stealth) | 40 lb. | 30 GP'; shipped is heavy armor, dexBonusMax 0, stealthDisadvantage true, 10 gp. Ring Mail does not exist in PF2e (no match in items-crb.json or baseitems.json) nor in the PF1e PSRD corpus."
-    },
     "pf2e/equipment|rope50ft": {
       "name": "Rope (50 ft.)",
       "taggedSource": "Core Rulebook",
       "class": "naming-variant",
       "evidence": "CRB has 'Rope (50 feet)' (items-crb.json, Adventuring Gear, 5 sp, L bulk); shipped 'Rope (50 ft.)' costs 5 sp - exact price match, only the abbreviation of 'feet' differs."
-    },
-    "pf2e/equipment|ropesilk50ft": {
-      "name": "Rope, Silk (50 ft.)",
-      "taggedSource": "SRD 3.5",
-      "class": "wrong-edition-attribution",
-      "evidence": "The 'Rope, Silk (50 ft.)' title is the verbatim 3.5 SRD / PF1e Goods and Services row (PSRD book-ue.db 'Silk Rope', 10 gp, 5 lb) - shipped cost 10 gp is an exact match. PF2e CRB stocks only hemp 'Rope (50 feet)' (5 sp); there is no silk rope anywhere in Pf2eTools."
     },
     "pf2e/equipment|sack": {
       "name": "Sack",
@@ -5256,12 +5016,6 @@
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
-    },
-    "pf2e/equipment|saw": {
-      "name": "Saw",
-      "taggedSource": "Pathfinder 1e Advanced Player's Guide",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e Ultimate Equipment 'Saw' (PSRD book-ue.db, 4 cp, 2 lb); shipped 4 sp, weight 1 - same numeral with a shifted denomination. No saw of any kind in items-crb.json (only 'Sawtooth Saber', a weapon) and none in the 5e SRD."
     },
     "pf2e/equipment|scalemail": {
       "name": "Scale Mail",
@@ -5280,12 +5034,6 @@
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
-    },
-    "pf2e/equipment|sealingwax": {
-      "name": "Sealing Wax",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "3.5/PF1e SRD Goods and Services row 'Sealing Wax' (PSRD book-cr.db/book-ue.db, 1 gp, 1 lb); shipped 1 sp (the catalog's recurring 10x downshift). No sealing wax exists anywhere in items-crb.json or baseitems.json."
     },
     "pf2e/equipment|shadowrune": {
       "name": "Shadow Rune",
@@ -5311,35 +5059,17 @@
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
-    "pf2e/equipment|shovel": {
-      "name": "Shovel",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "D&D 5e SRD 'Shovel (2 GP)' - shipped cost 2 gp is an exact match. PF1e lists a shovel in Ultimate Equipment; PF2e CRB has none."
-    },
     "pf2e/equipment|shuriken": {
       "name": "Shuriken",
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
-    "pf2e/equipment|siangham": {
-      "name": "Siangham",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e CRB monk weapon (PSRD book-cr.db 'Siangham', 3 gp, 1 lb, 1d6 piercing); shipped 1d6 piercing, light, weight 1, 3 sp (10x downshift). Absent from items-crb.json/baseitems.json and all Pf2eTools item files."
-    },
     "pf2e/equipment|sickle": {
       "name": "Sickle",
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
-    },
-    "pf2e/equipment|sledgehammer": {
-      "name": "Sledgehammer",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "CORRECTED 2026-07-26. Prior evidence said no sledgehammer exists in the 5e SRD and dismissed the 3.5/PF1e \"Sledge\" on a price mismatch. The pinned dnd-5e-2014/equipment denominator contains \"Hammer, sledge\"; the audit's normalizer missed it because norm(\"Hammer, sledge\")=\"hammersledge\" != \"sledgehammer\". The class tests for absence UNDER ANY NAME, so a cost difference cannot rebut a name counterpart."
     },
     "pf2e/equipment|slickrune": {
       "name": "Slick Rune",
@@ -5413,35 +5143,17 @@
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
     },
-    "pf2e/equipment|throwingaxe": {
-      "name": "Throwing Axe",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e CRB weapon (PSRD book-cr.db 'Throwing Axe', 8 gp, 2 lb, 1d6 slashing, 10 ft range increment) - shipped 1d6 slashing, thrown, range 10, 8 sp (exact 10x price downshift). PF2e CRB's thrown axe is 'Hatchet'; no Throwing Axe in any Pf2eTools file."
-    },
     "pf2e/equipment|thunderingrune": {
       "name": "Thundering Rune",
       "taggedSource": "Core Rulebook",
       "class": "naming-variant",
       "evidence": "PF2e CRB names runes without the word \"Rune\": items/items-crb.json has item[name=\"Thundering\"], category \"Rune\", level 8+, price 500 gp. Shipped price 500 gp - exact match, so the only difference is the trailing \" Rune\" the loader appends."
     },
-    "pf2e/equipment|tinderbox": {
-      "name": "Tinderbox",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "D&D 5e SRD 'Tinderbox (5 SP)' - shipped cost is exactly 5 sp. PF2e CRB's fire-starter is 'Flint and Steel' (5 cp), which the loader does not ship; PF1e's is 'Tindertwig' (1 gp). No tinderbox in any Pathfinder source."
-    },
     "pf2e/equipment|towershield": {
       "name": "Tower Shield",
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
-    },
-    "pf2e/equipment|traphunting": {
-      "name": "Trap (hunting)",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "D&D 5e SRD 'Hunting Trap (5 GP)' - shipped cost 5 gp is an exact match. PF1e's equivalent is 'Bear Trap' (2 gp, APG/UE); PF2e CRB has no hunting trap of any name."
     },
     "pf2e/equipment|trident": {
       "name": "Trident",
@@ -5461,12 +5173,6 @@
       "class": "naming-variant",
       "evidence": "PF2e CRB names runes without the word \"Rune\": items/items-crb.json has item[name=\"Unholy\"], category \"Rune\", level 11, price 1400 gp. Shipped price 1400 gp - exact match, so the only difference is the trailing \" Rune\" the loader appends."
     },
-    "pf2e/equipment|vial": {
-      "name": "Vial",
-      "taggedSource": "Pathfinder 1e Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "3.5/PF1e SRD 'Vial, ink or potion' (PSRD, 1 gp) and D&D 5e SRD 'Vial (1 GP)' - shipped cost 1 gp matches both exactly. PF2e CRB contains no plain vial (only 'Frost Vial', an alchemical bomb)."
-    },
     "pf2e/equipment|vorpalrune": {
       "name": "Vorpal Rune",
       "taggedSource": "Core Rulebook",
@@ -5475,21 +5181,15 @@
     },
     "pf2e/equipment|wakizashi": {
       "name": "Wakizashi",
-      "taggedSource": "Pathfinder 1e Ultimate Combat",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e Ultimate Combat/Ultimate Equipment 'Wakizashi' (35 gp, 2 lb, 1d6 slashing); shipped 1d6 slashing, weight 2, 3 gp. The PF2e ports are items/baseitems.json 'Wakizashi' source APG and PC1 (1 gp, L bulk, agile/deadly d8/finesse/versatile p) - so it is open content, but from APG/PC1 or PF1e, never the CRB."
+      "taggedSource": "Pathfinder 2e Advanced Player's Guide",
+      "class": "denominator-scope-defect",
+      "evidence": "Re-recorded 2026-08-01. Previously 'wrong-edition-attribution' as PF1e Ultimate Combat (1d6, weight 2, 3 gp). Retranscribed from items/baseitems.json 'Wakizashi', source APG (APG p.248): martial sword, 1d4 slashing, agile/deadly d8/finesse/versatile P, 1 gp, L bulk - which the shipped record now matches. Properties map agile to 'light' (the catalog's standing convention) and versatile P to 'versatile'; 'deadly d8' has no WeaponProperty member and is dropped. It remains an over-inclusion suspect only because the pinned denominator fetches items/items-crb.json (467 rows) and never fetches items/baseitems.json or any per-book item file, so no base weapon and no non-CRB book can ever match."
     },
     "pf2e/equipment|warhammer": {
       "name": "Warhammer",
       "taggedSource": "Core Rulebook",
       "class": "denominator-scope-defect",
       "evidence": "Present verbatim as items/baseitems.json baseitem[] with source \"CRB\" (92 CRB base items); the coverage script's denominator fetches only items/items-crb.json (467 rows) and never fetches baseitems.json, so every CRB base weapon/armor/shield is scored as over-inclusion."
-    },
-    "pf2e/equipment|warpick": {
-      "name": "War Pick",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF2e CRB's pick family is 'Pick' (1d6 P, fatal d10) and 'Greatpick'; no 'War Pick' anywhere in Pf2eTools or the PF1e PSRD corpus. The D&D 5e SRD row is 'War Pick | 1d8 Piercing | Versatile (1d10) | 5 GP' and the shipped record is 1d8 piercing, 5 sp (10x downshift)."
     },
     "pf2e/equipment|whip": {
       "name": "Whip",
@@ -5515,12 +5215,6 @@
       "class": "denominator-scope-defect",
       "evidence": "Real CRB open content, but it is the Aid *basic action* (CRB p.470; Pf2eTools data/actions.json 'Aid', actionType.basic, '+1 circumstance bonus to the triggering check, +2/+3 if master/legendary'), not a spell - the shipped record reproduces that proficiency-scaled bonus text verbatim while typed as a level-2 divine/occult spell, so the spells-crb.json denominator can never contain it; the real defect is loader miscategorisation, not missing open content."
     },
-    "pf2e/spells|delayedblastfireball": {
-      "name": "Delayed Blast Fireball",
-      "taggedSource": "Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e/3.5 SRD spell (PSRD book-cr.db section 138: sorcerer 7 / wizard 7, '1d6/level fire damage; you can postpone blast for up to 5 rounds'); shipped record is level 7 arcane sorcerer/wizard with 'You can delay the explosion for up to 5 rounds' - identical spell, but absent from every Pf2eTools PF2e file and tagged source 'Core Rulebook' in the PF2e catalog."
-    },
     "pf2e/spells|dimensionanchor": {
       "name": "Dimension Anchor",
       "taggedSource": "Core Rulebook",
@@ -5539,29 +5233,17 @@
       "class": "duplicate-alias",
       "evidence": "The loader already ships CRB Enlarge at src/data/pathfinder/2e/spells/level-2.ts:327 and this row at level-2.ts:367; the shipped description is verbatim spells-crb.json Enlarge entries ('Bolstered by magical power, the target grows to size Large... The creature is clumsy 1. Its reach increases by 5 feet'), same level 2 transmutation - the name is the D&D 5e style merge of PF2e's separate Enlarge and Shrink."
     },
-    "pf2e/spells|featherstep": {
-      "name": "Feather Step",
-      "taggedSource": "Pathfinder 1e Advanced Player's Guide",
-      "class": "wrong-edition-attribution",
-      "evidence": "Pathfinder 1e Advanced Player's Guide spell (PSRD book-apg.db section 108: 'Subject ignores adverse movement effects in difficult terrain', bard 1 / druid 1 / ranger 1); shipped record is level 1, druid+ranger, 'move through difficult terrain without penalty' - same effect and same level, but tagged source 'Core Rulebook' inside the PF2e catalog, and no spell of this name exists in any Pf2eTools PF2e file."
-    },
-    "pf2e/spells|firestorm": {
-      "name": "Firestorm",
-      "taggedSource": "Core Rulebook",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e/3.5 SRD 'Fire Storm' (PSRD book-cr.db section 226: druid 7 / cleric 8, 1d6 fire per caster level, Reflex save); shipped record is level 7 divine+primal cleric/druid with a Reflex save and an area given as 'five 10-foot cubes' - the N-10-foot-cubes area idiom is 3.5/PF1e Fire Storm's, and no Pf2eTools file contains any spell named Firestorm or Fire Storm."
-    },
     "pf2e/spells|forcecage": {
-      "name": "Forcecage",
-      "taggedSource": "SRD 5.1",
-      "class": "wrong-edition-attribution",
-      "evidence": "PF1e/3.5 SRD spell (PSRD book-cr.db section 238: sorcerer 7 / wizard 7, 'Cube or cage of force imprisons all inside', 'immobile, invisible cubical prison ... of force'); shipped record is level 7 arcane sorcerer/wizard, 'invisible, immobile, cube-shaped prison of magical force' - not present in any Pf2eTools PF2e file, yet tagged 'Core Rulebook'."
+      "name": "Force Cage",
+      "taggedSource": "Pathfinder 2e Advanced Player's Guide",
+      "class": "denominator-scope-defect",
+      "evidence": "Re-recorded 2026-08-01 (OPEN_DECISIONS A-DECIDED, replace-with-same-edition): the shipped row is no longer the 5.1-tagged D&D import but a transcription of PF2e Force Cage, spells/spells-apg.json (APG p.219, level 7, evocation/force, arcane+occult, 3 actions M/S/V, range 30 ft, area '1 cube 20 feet on each side', Reflex save, duration 1 minute sustained, 'AC 10, Hardness 20, and 40 Hit Points'). It is absent from the denominator only because this target pins spells-crb.json alone (src/scripts/srd-coverage.ts srdSource 'Core Rulebook (Pf2eToolsOrg/Pf2eTools spells-crb.json)'), which cannot contain an APG spell; the APG is on the pf2e allowlist under this exact tag."
     },
     "pf2e/spells|geyser": {
       "name": "Geyser",
       "taggedSource": "Secrets of Magic",
-      "class": "wrong-edition-attribution",
-      "evidence": "Not in spells-crb.json under any name; the only PF2e Geyser is spells/spells-som.json (Secrets of Magic, level 5, 3d6 bludgeoning + 4d6 fire), while the shipped record (level 6, 7d12 fire, arcane+primal, druid/sorcerer/wizard, 'geyser of boiling water') tracks PF1e APG Geyser (PSRD book-apg.db section 131, 'Creates a geyser of boiling water', druid 4 / sorcerer 5 / wizard 5) - either way the 'Core Rulebook' source tag is wrong."
+      "class": "denominator-scope-defect",
+      "evidence": "Re-recorded 2026-08-01 (OPEN_DECISIONS A-DECIDED, replace-with-same-edition): the shipped row is no longer the PF1e-APG-derived level 6 / 7d12 fire record but a transcription of PF2e Geyser, spells/spells-som.json (Secrets of Magic p.108, level 5, evocation/fire/water, arcane+primal, 2 actions S/V, range 500 ft, '10-foot radius, 50-foot-tall cylinder', Reflex save, duration 1 round, 3d6 bludgeoning + 4d6 fire, heightened (+1) 1d6 each). It is absent from the denominator only because this target pins spells-crb.json alone, which cannot contain a Secrets of Magic spell; SoM is on the pf2e allowlist under this exact tag."
     }
   }
 }

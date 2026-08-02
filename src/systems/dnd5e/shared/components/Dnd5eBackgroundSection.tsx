@@ -2,6 +2,7 @@
 import { Badge } from '../../../../components/ui/Badge';
 import { Background } from '../../../../types/character-options/backgrounds';
 import { formatBackgroundToolLabel } from '../backgroundTemplate';
+import { DND5E_ABILITY_NAMES } from '../dnd5eSheetConstants';
 
 type ChoiceSlot = {
   slotIndex: number;
@@ -9,6 +10,14 @@ type ChoiceSlot = {
   value: string;
   options: string[];
 };
+
+// Equipment ids carry a `-2024` suffix where the 2024 catalog re-encodes an
+// entry the 2014 catalog already owns; the suffix is a keying detail, not part
+// of the item's name.
+function formatEquipmentLabel(itemId: string, quantity: number): string {
+  const label = formatBackgroundToolLabel(itemId.replace(/-2024$/, ''));
+  return quantity > 1 ? `${quantity} ${label}` : label;
+}
 
 interface Props {
   selectedBackground: Background;
@@ -37,7 +46,29 @@ export function Dnd5eBackgroundSection({
           Background
         </Badge>
       </div>
-      <p className="mt-2 text-sm text-muted-foreground">{selectedBackground.feature.name}</p>
+      {selectedBackground.feature && (
+        <p className="mt-2 text-sm text-muted-foreground">{selectedBackground.feature.name}</p>
+      )}
+      {selectedBackground.abilityScores && selectedBackground.abilityScores.length > 0 && (
+        <div className="mt-3 space-y-2">
+          <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Ability Scores
+          </div>
+          <p className="text-sm text-muted-foreground">
+            {selectedBackground.abilityScores
+              .map((ability) => DND5E_ABILITY_NAMES[ability] || ability)
+              .join(', ')}
+          </p>
+        </div>
+      )}
+      {selectedBackground.originFeat && (
+        <div className="mt-3 space-y-2">
+          <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Origin Feat
+          </div>
+          <p className="text-sm text-muted-foreground">{selectedBackground.originFeat.name}</p>
+        </div>
+      )}
       {(backgroundFixedTools.length > 0 || backgroundToolSlots.length > 0) && (
         <div className="mt-3 space-y-2">
           <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -101,6 +132,22 @@ export function Dnd5eBackgroundSection({
               </label>
             ))
           )}
+        </div>
+      )}
+      {selectedBackground.equipmentOptions && selectedBackground.equipmentOptions.length > 0 && (
+        <div className="mt-3 space-y-2">
+          <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Starting Equipment
+          </div>
+          {selectedBackground.equipmentOptions.map((option) => (
+            <p key={option.label} className="text-sm text-muted-foreground">
+              <span className="font-medium">{option.label}:</span>{' '}
+              {[
+                ...option.items.map((item) => formatEquipmentLabel(item.itemId, item.quantity)),
+                ...(option.gold > 0 ? [`${option.gold} GP`] : []),
+              ].join(', ')}
+            </p>
+          ))}
         </div>
       )}
     </section>

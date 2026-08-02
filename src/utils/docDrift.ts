@@ -147,7 +147,17 @@ function buildDocDriftTruth(rootDir: string): DocDriftTruth {
     workflowText.match(/node-version:\s*['"]?([^'"\n]+)['"]?/)?.[1] ?? null;
   const workflowNodeVersionFile =
     workflowText.match(/node-version-file:\s*['"]?([^'"\n]+)['"]?/)?.[1] ?? null;
-  const workflowVerifyCommand = workflowText.match(/run:\s*(npm run [^\n]+)/)?.[1] ?? null;
+  // Until the five-job CI split this read the FIRST `run: npm run …` step in
+  // ci.yml and asserted it was the whole verify chain — which held only because
+  // one job delegated wholesale with `npm run verify`. The split ended that: no
+  // single step runs the chain any more, so that derivation now reports drift on
+  // a correct workflow. What replaces it is `check:ci-parity`, which compares
+  // CI's npm-script multiset against `scripts.verify` step by step — strictly
+  // stronger than the string equality this used to do. So the invariant left to
+  // pin here is that ci.yml RUNS that gate, which is also the one thing the gate
+  // cannot pin about itself: a gate that no longer runs cannot report that it no
+  // longer runs.
+  const workflowRunsParityGate = /run:\s*npm run check:ci-parity\b/.test(workflowText);
   const systemLabels = Object.fromEntries(
     SYSTEM_DEFINITIONS.map((definition) => [definition.id, definition.label])
   ) as Record<GameSystemId, string>;
@@ -173,7 +183,7 @@ function buildDocDriftTruth(rootDir: string): DocDriftTruth {
     workflowNodeVersion,
     workflowNodeVersionFile,
     workflowUsesNetlify: workflowText.includes('Netlify'),
-    workflowVerifyCommand,
+    workflowRunsParityGate,
     verificationBaseline,
     spellCounts: {
       'dnd-5e-2014': roadmapMetrics.productReachableSummary['dnd-5e-2014'].spells,
@@ -629,11 +639,13 @@ function validateWorkflowRuntime(rootDir: string): DocDriftIssue[] {
   const issues: DocDriftIssue[] = [];
   const truth = buildDocDriftTruth(rootDir);
 
-  if (truth.workflowVerifyCommand !== truth.verificationBaseline.verifyCommand) {
+  if (!truth.workflowRunsParityGate) {
     issues.push({
       path: '.github/workflows/ci.yml',
       rule: 'command_rule',
-      message: `Workflow verify command drifted to \`${truth.workflowVerifyCommand ?? 'missing'}\`. Expected \`${truth.verificationBaseline.verifyCommand}\`.`,
+      message:
+        'Workflow no longer runs `npm run check:ci-parity`, so nothing asserts that its jobs ' +
+        `cover \`${truth.verificationBaseline.verifyCommand}\`. Restore the step, or have a job run the chain wholesale.`,
     });
   }
 

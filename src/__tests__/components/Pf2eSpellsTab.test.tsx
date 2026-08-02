@@ -27,7 +27,6 @@ describe('Pf2eSpellsTab', () => {
     render(
       <Pf2eSpellsTab
         classId="wizard"
-        spellsLoaded={false}
         spells={[focusPulseSpell]}
         spellcasting={{
           tradition: 'arcane',

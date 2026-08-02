@@ -1,0 +1,255 @@
+{
+  "note": "Contrast pairs in src/components and src/dock that are below WCAG AA TODAY, each pinned to its EXACT measured ratio. This is a RATCHET, not an allowlist, and the entries are DEBT, not approval: any baselined pair whose ratio changes at all — improved or worsened — fails scripts/check-a11y-contrast.mjs, as does any pair that stops occurring, as does any NEW failure. It exists because the lint landed on a tree that already had these; the gate would otherwise have had to be either red on arrival or narrowed until it could not fail, and WORK_PLAN §6.4 exists precisely because the second thing keeps happening here. Re-record with `npm run a11y:contrast:record` after a reviewed change, and keep the note.",
+  "pairs": {
+    "src/App.tsx|light|text-primary|bg-primary/10": {
+      "ratio": 4.49,
+      "threshold": 4.5,
+      "note": "Glyph-only (the install-prompt Download icon in its tinted square, no text). Clears 1.4.11 non-text at 3:1; recorded because the parser reports every colour at the text threshold. --primary is blue-600, which clears AA on white (5.17:1) but lands at 4.49:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    },
+    "src/components/CampaignManager.tsx|light|text-primary|bg-primary/10": {
+      "ratio": 4.49,
+      "threshold": 4.5,
+      "note": "--primary is blue-600, which clears AA on white (5.17:1) but lands at 4.49:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    },
+    "src/components/CharacterCard.tsx|light|text-primary|bg-primary/10": {
+      "ratio": 4.49,
+      "threshold": 4.5,
+      "note": "--primary is blue-600, which clears AA on white (5.17:1) but lands at 4.49:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    },
+    "src/components/DamageHealControl.tsx|light|text-green-600|(theme surface)": {
+      "ratio": 3.3,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text). WCAG holds it to 1.4.11 non-text at 3:1, which it clears; it is recorded because the parser cannot tell a glyph class string from a label one and reports every colour at the text threshold."
+    },
+    "src/components/EquipmentBrowser.tsx|light|text-primary|bg-primary/10": {
+      "ratio": 4.49,
+      "threshold": 4.5,
+      "note": "--primary is blue-600, which clears AA on white (5.17:1) but lands at 4.49:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    },
+    "src/components/EquippedItemsSection.tsx|dark|text-muted-foreground/50|(theme surface)": {
+      "ratio": 2.7,
+      "threshold": 4.5,
+      "note": "REAL body-text failure, both themes: the italic 10px \"Empty\" slot placeholder. --muted-foreground at 50% alpha is 2.06:1 light / 2.70:1 dark. Fixing it is dropping the /50, not retuning the token."
+    },
+    "src/components/EquippedItemsSection.tsx|light|text-muted-foreground/50|(theme surface)": {
+      "ratio": 2.06,
+      "threshold": 4.5,
+      "note": "REAL body-text failure, both themes: the italic 10px \"Empty\" slot placeholder. --muted-foreground at 50% alpha is 2.06:1 light / 2.70:1 dark. Fixing it is dropping the /50, not retuning the token."
+    },
+    "src/components/EquippedItemsSection.tsx|light|text-primary|bg-primary/10": {
+      "ratio": 4.49,
+      "threshold": 4.5,
+      "note": "--primary is blue-600, which clears AA on white (5.17:1) but lands at 4.49:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    },
+    "src/components/GameSystemSelector.tsx|light|text-emerald-600|(theme surface)": {
+      "ratio": 3.77,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text). WCAG holds it to 1.4.11 non-text at 3:1, which it clears; it is recorded because the parser cannot tell a glyph class string from a label one and reports every colour at the text threshold."
+    },
+    "src/components/GameSystemSelector.tsx|light|text-red-500|(theme surface)": {
+      "ratio": 3.76,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text). WCAG holds it to 1.4.11 non-text at 3:1, which it clears; it is recorded because the parser cannot tell a glyph class string from a label one and reports every colour at the text threshold."
+    },
+    "src/components/LegalNotices.tsx|light|text-primary|bg-primary/10": {
+      "ratio": 4.49,
+      "threshold": 4.5,
+      "note": "--primary is blue-600, which clears AA on white (5.17:1) but lands at 4.49:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    },
+    "src/components/SceneGridView.tsx|light|text-primary|bg-primary/15": {
+      "ratio": 4.2,
+      "threshold": 4.5,
+      "note": "--primary is blue-600, which clears AA on white (5.17:1) but lands at 4.20:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    },
+    "src/components/ServiceWorkerUpdateBanner.tsx|light|text-sky-400|(theme surface)": {
+      "ratio": 2.14,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text), and REAL: 2.14:1 is below the 3:1 WCAG 1.4.11 non-text threshold that actually applies to it, not just the 4.5:1 the lint reports."
+    },
+    "src/components/SignIn.tsx|light|text-green-600|(theme surface)": {
+      "ratio": 3.3,
+      "threshold": 4.5,
+      "note": "REAL body-text failure: the sign-in success message at text-sm. green-600 is 3.30:1 on white; green-700 clears AA. The dark override (green-400) already passes."
+    },
+    "src/components/SpellBrowser.tsx|light|text-primary|bg-primary/10": {
+      "ratio": 4.49,
+      "threshold": 4.5,
+      "note": "--primary is blue-600, which clears AA on white (5.17:1) but lands at 4.49:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    },
+    "src/components/SystemStatusDashboard.tsx|dark|text-indigo-500|(theme surface)": {
+      "ratio": 4.48,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text). WCAG holds it to 1.4.11 non-text at 3:1, which it clears; it is recorded because the parser cannot tell a glyph class string from a label one and reports every colour at the text threshold."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-amber-500|(theme surface)": {
+      "ratio": 2.15,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text), and REAL: 2.15:1 is below the 3:1 WCAG 1.4.11 non-text threshold that actually applies to it, not just the 4.5:1 the lint reports."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-blue-500|(theme surface)": {
+      "ratio": 3.68,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text). WCAG holds it to 1.4.11 non-text at 3:1, which it clears; it is recorded because the parser cannot tell a glyph class string from a label one and reports every colour at the text threshold."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-cyan-500|(theme surface)": {
+      "ratio": 2.43,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text), and REAL: 2.43:1 is below the 3:1 WCAG 1.4.11 non-text threshold that actually applies to it, not just the 4.5:1 the lint reports."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-emerald-500|(theme surface)": {
+      "ratio": 2.54,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text), and REAL: 2.54:1 is below the 3:1 WCAG 1.4.11 non-text threshold that actually applies to it, not just the 4.5:1 the lint reports."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-fuchsia-500|(theme surface)": {
+      "ratio": 3.46,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text). WCAG holds it to 1.4.11 non-text at 3:1, which it clears; it is recorded because the parser cannot tell a glyph class string from a label one and reports every colour at the text threshold."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-green-500|(theme surface)": {
+      "ratio": 2.28,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text), and REAL: 2.28:1 is below the 3:1 WCAG 1.4.11 non-text threshold that actually applies to it, not just the 4.5:1 the lint reports."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-indigo-500|(theme surface)": {
+      "ratio": 4.47,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text). WCAG holds it to 1.4.11 non-text at 3:1, which it clears; it is recorded because the parser cannot tell a glyph class string from a label one and reports every colour at the text threshold."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-orange-500|(theme surface)": {
+      "ratio": 2.8,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text), and REAL: 2.80:1 is below the 3:1 WCAG 1.4.11 non-text threshold that actually applies to it, not just the 4.5:1 the lint reports."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-pink-500|(theme surface)": {
+      "ratio": 3.53,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text). WCAG holds it to 1.4.11 non-text at 3:1, which it clears; it is recorded because the parser cannot tell a glyph class string from a label one and reports every colour at the text threshold."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-purple-500|(theme surface)": {
+      "ratio": 3.96,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text). WCAG holds it to 1.4.11 non-text at 3:1, which it clears; it is recorded because the parser cannot tell a glyph class string from a label one and reports every colour at the text threshold."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-red-500|(theme surface)": {
+      "ratio": 3.76,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text). WCAG holds it to 1.4.11 non-text at 3:1, which it clears; it is recorded because the parser cannot tell a glyph class string from a label one and reports every colour at the text threshold."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-rose-500|(theme surface)": {
+      "ratio": 3.67,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text). WCAG holds it to 1.4.11 non-text at 3:1, which it clears; it is recorded because the parser cannot tell a glyph class string from a label one and reports every colour at the text threshold."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-sky-500|(theme surface)": {
+      "ratio": 2.77,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text), and REAL: 2.77:1 is below the 3:1 WCAG 1.4.11 non-text threshold that actually applies to it, not just the 4.5:1 the lint reports."
+    },
+    "src/components/SystemStatusDashboard.tsx|light|text-violet-500|(theme surface)": {
+      "ratio": 4.23,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text). WCAG holds it to 1.4.11 non-text at 3:1, which it clears; it is recorded because the parser cannot tell a glyph class string from a label one and reports every colour at the text threshold."
+    },
+    "src/components/UserMenu.tsx|light|text-amber-500|(theme surface)": {
+      "ratio": 2.15,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text), and REAL: 2.15:1 is below the 3:1 WCAG 1.4.11 non-text threshold that actually applies to it, not just the 4.5:1 the lint reports."
+    },
+    "src/components/UserMenu.tsx|light|text-green-500|(theme surface)": {
+      "ratio": 2.28,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text), and REAL: 2.28:1 is below the 3:1 WCAG 1.4.11 non-text threshold that actually applies to it, not just the 4.5:1 the lint reports."
+    },
+    "src/components/UserMenu.tsx|light|text-red-500|(theme surface)": {
+      "ratio": 3.76,
+      "threshold": 4.5,
+      "note": "Glyph-only class string (the element wraps a lucide icon, no text). WCAG holds it to 1.4.11 non-text at 3:1, which it clears; it is recorded because the parser cannot tell a glyph class string from a label one and reports every colour at the text threshold."
+    },
+    "src/components/campaign/QuestList.tsx|light|text-emerald-600|bg-emerald-500/15": {
+      "ratio": 3.28,
+      "threshold": 4.5,
+      "note": "REAL body-text failure: the \"completed\" quest badge. emerald-600 on its own 15% tint is 3.28:1; emerald-700 clears AA. Same shape as the amber-600 finding §6.4 fixed, in a component the rendered scan never visits."
+    },
+    "src/components/campaign/QuestList.tsx|light|text-primary|bg-primary/15": {
+      "ratio": 4.2,
+      "threshold": 4.5,
+      "note": "--primary is blue-600, which clears AA on white (5.17:1) but lands at 4.20:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    },
+    "src/components/drag/DragLayer.tsx|dark|text-primary-foreground|bg-primary/90": {
+      "ratio": 4.1,
+      "threshold": 4.5,
+      "note": "REAL body-text failure, both themes: the drag chip label at text-xs. --primary-foreground over --primary at 90% is 4.13:1 light / 4.10:1 dark. The pair passes at full opacity — it is the /90 that costs it AA."
+    },
+    "src/components/drag/DragLayer.tsx|light|text-primary-foreground|bg-primary/90": {
+      "ratio": 4.13,
+      "threshold": 4.5,
+      "note": "REAL body-text failure, both themes: the drag chip label at text-xs. --primary-foreground over --primary at 90% is 4.13:1 light / 4.10:1 dark. The pair passes at full opacity — it is the /90 that costs it AA."
+    },
+    "src/components/scene/CheckPanel.tsx|light|text-emerald-600|bg-emerald-500/15": {
+      "ratio": 3.28,
+      "threshold": 4.5,
+      "note": "REAL body-text failure: the check \"success\" badge, identical colour pair to the QuestList one."
+    },
+    "src/components/scene/MarkerPanel.tsx|light|text-primary|bg-primary/10": {
+      "ratio": 4.49,
+      "threshold": 4.5,
+      "note": "--primary is blue-600, which clears AA on white (5.17:1) but lands at 4.49:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    },
+    "src/components/scene/RecapPanel.tsx|light|text-emerald-600|(theme surface)": {
+      "ratio": 3.77,
+      "threshold": 4.5,
+      "note": "REAL body-text failure: the recap confirmation line at text-xs. emerald-600 is 3.77:1 on white."
+    },
+    "src/dock/PartyDockTab.tsx|light|text-primary|bg-primary/10": {
+      "ratio": 4.49,
+      "threshold": 4.5,
+      "note": "--primary is blue-600, which clears AA on white (5.17:1) but lands at 4.49:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    },
+    "src/systems/d20-legacy/components/D20SpellsTab.tsx|light|text-primary|bg-primary/10": {
+      "ratio": 4.49,
+      "threshold": 4.5,
+      "note": "REAL body-text failure: the prepared-spell pill, 12px text-primary on bg-primary/10. Surfaced only when the scan widened past src/components. --primary is blue-600, which clears AA on white (5.17:1) but lands at 4.49:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    },
+    "src/systems/dnd5e/shared/components/Dnd5eOverviewSection.tsx|light|text-blue-500|(theme surface)": {
+      "ratio": 3.68,
+      "threshold": 4.5,
+      "note": "REAL body-text failure: the \"+N temp\" hit-point readout, 12px text-blue-500 on the page surface, 3.68:1 light. Dark is fine. The convention this repo already settled on for exactly this colour is CurrencyEditor electrum — text-blue-600 dark:text-blue-400 (5.17 / 7.87) — so the fix is a one-line pairing, but it is a visible sheet change in two systems and belongs to a design lane, not to the lint that found it."
+    },
+    "src/systems/dnd5e/shared/components/Dnd5eSpellsTab.tsx|light|text-primary|bg-primary/10": {
+      "ratio": 4.49,
+      "threshold": 4.5,
+      "note": "REAL body-text failure: the prepared-spell pill, 12px text-primary on bg-primary/10. Surfaced only when the scan widened past src/components. --primary is blue-600, which clears AA on white (5.17:1) but lands at 4.49:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    },
+    "src/systems/pf2e/components/Pf2eOverview.tsx|light|text-blue-500|(theme surface)": {
+      "ratio": 3.68,
+      "threshold": 4.5,
+      "note": "REAL body-text failure: the \"+N temp\" hit-point readout, 12px text-blue-500 on the page surface, 3.68:1 light. Same defect and same one-line fix as the dnd5e overview above; paired so both move together."
+    },
+    "src/systems/pf2e/components/Pf2eProficiencyBadge.tsx|light|text-amber-500|(theme surface)": {
+      "ratio": 2.15,
+      "threshold": 4.5,
+      "note": "REAL text failure: TIER_COLORS.master on the single-letter proficiency badge (\"M\"), 2.15:1 light — the worst of the ramp — and no dark: override. Part of the four-row tier ramp decision recorded on the .trained entry."
+    },
+    "src/systems/pf2e/components/Pf2eProficiencyBadge.tsx|light|text-blue-500|(theme surface)": {
+      "ratio": 3.68,
+      "threshold": 4.5,
+      "note": "REAL text failure: TIER_COLORS.trained on the single-letter proficiency badge (\"T\"). All four coloured tiers fail light-mode AA (blue 3.68, purple 3.96, red 3.76, amber 2.15) and none carries a dark: override; untrained uses text-muted-foreground and passes. Fixing it means picking a five-tier ramp that clears 4.5:1 in both themes — one decision covering all four rows, not four edits."
+    },
+    "src/systems/pf2e/components/Pf2eProficiencyBadge.tsx|light|text-purple-500|(theme surface)": {
+      "ratio": 3.96,
+      "threshold": 4.5,
+      "note": "REAL text failure: TIER_COLORS.expert on the single-letter proficiency badge (\"E\"), 3.96:1 light, no dark: override. Part of the four-row tier ramp decision recorded on the .trained entry."
+    },
+    "src/systems/pf2e/components/Pf2eProficiencyBadge.tsx|light|text-red-500|(theme surface)": {
+      "ratio": 3.76,
+      "threshold": 4.5,
+      "note": "REAL text failure: TIER_COLORS.legendary on the single-letter proficiency badge (\"L\"), 3.76:1 light, no dark: override. Part of the four-row tier ramp decision recorded on the .trained entry."
+    },
+    "src/systems/pf2e/components/Pf2eSpellsTab.tsx|light|text-primary|bg-primary/10": {
+      "ratio": 4.49,
+      "threshold": 4.5,
+      "note": "REAL body-text failure: the prepared-spell pill, 12px text-primary on bg-primary/10. Surfaced only when the scan widened past src/components. --primary is blue-600, which clears AA on white (5.17:1) but lands at 4.49:1 over its own tint. Hairline and shared: closing it moves the --primary token, which recolours every solid primary button in all seven systems, so it is a token decision rather than a per-site edit."
+    }
+  }
+}
