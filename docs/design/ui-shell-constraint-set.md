@@ -142,8 +142,36 @@ implemented — there is no `onUpdate = canEdit` enforcement path.
 
 Of the eleven build-spec tasks, this document is 8, 9 and 10.
 
-- **Tasks 1–3, hash-sync restore-on-reload** — open.
-- **Task 4, interaction-latency gate** — open.
+- ~~**Tasks 1–3, hash-sync restore-on-reload**~~ — **DONE 2026-08-02.**
+  `encodeShellNav` / `decodeShellNav` / `sanitizeRestoredNav` beside the reducer,
+  seeded on mount and mirrored back through `history.replaceState`. Decoding is
+  total and falls back per field, so a hand-edited hash or a bookmark from an
+  older build lands on Characters rather than white-screening.
+- **Task 4, interaction-latency gate — SUPERSEDED, not open.** Do not build it.
+
+  The task says to promote the Phase-1 `performance.mark`/`measure`
+  surface-switch instrument into a wall-clock CI gate. The Phase-7 budgets work
+  then established, with measurements, that such a gate cannot be sound here:
+
+  1. **The instrument does not measure what the gate would assert.**
+     `useSurfaceSwitchMetrics` measures from the PREVIOUS surface's mark, so the
+     span is dwell time plus the switch. In `phase1-scene-keepalive.spec.ts` the
+     `library->scene` measure includes scene creation and a 30-second-timeout
+     wait for a lazily fetched chunk. A threshold over that gates on how long a
+     test lingered, and stays green while the keepalive mechanism regresses.
+  2. **The spread swamps the signal.** 12.6 ms – 48.5 ms across 42 switches on
+     an idle local container — ~3.9x on identical work, before CI co-tenancy,
+     GC or cold JIT.
+  3. **The repo has already lived this.** `src/__tests__/drag/gateBudget.test.tsx`
+     is its one wall-clock budget (50 ms). During the Phase-7 work it measured
+     **14.99 ms alone and 73.41 ms under full-suite load** — over budget, red
+     build — in the same commit, on one machine, with no code change between.
+
+  What replaced it shipped: `check:keepalive-budget`, a DETERMINISTIC counted
+  gate (4 attribute writes, 0 structural mutations, 0 remounts) already in the
+  verify chain. Counts do not vary with machine load, which is why they can be
+  asserted hard. Building task 4 as written would re-introduce exactly the
+  flake the deterministic gate exists to avoid.
 - **Task 5, chrome-dominance gate** — **blocked, not merely undone.** Its budget
   (~10% non-content chrome) is only satisfiable after Phase 6's slice 5b demotes
   the 20rem right rail; against the current docked rail (~320px) it would fail by
