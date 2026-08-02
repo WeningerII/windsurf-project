@@ -56,6 +56,31 @@ const TASK_SCHEMAS: Partial<Record<AiTask, z.ZodTypeAny>> = {
     spellIds: z.array(z.string()).optional(),
     rationale: z.string().optional(),
   }),
+  // Shape only. `kind` and `suggestedPreset` are plain strings here on purpose:
+  // their vocabularies belong to src/scene/gridGeometryProposal.ts, and pinning
+  // an enum in this file would fork that definition across the network boundary
+  // and let the two drift silently.
+  'analyze-map': z.object({
+    registration: z.object({
+      offsetX: z.number(),
+      offsetY: z.number(),
+      cellSizePx: z.number(),
+    }),
+    boxes: z.array(
+      z.object({
+        kind: z.string(),
+        rect: z.object({
+          x: z.number(),
+          y: z.number(),
+          width: z.number(),
+          height: z.number(),
+        }),
+        label: z.string().optional(),
+        suggestedPreset: z.string().optional(),
+      })
+    ),
+    reason: z.string().optional(),
+  }),
 };
 
 /** Image-output tasks route to the image model instead of `generateObject`. */

@@ -1,5 +1,7 @@
-import { useRef } from 'react';
-import { Image as ImageIcon, Trash2 } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Image as ImageIcon, Trash2, Wand2 } from 'lucide-react';
+import type { AnalyzeMapResult } from '../../ai/analyzeMapFlow';
+import type { GridGeometryProposal } from '../../scene/gridGeometryProposal';
 import type { SceneGridRegistration, SceneMapReference } from '../../types/core/scene';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
@@ -17,6 +19,16 @@ interface MapPanelProps {
   onRemoveMap: () => void;
   /** Import/storage problem to surface (oversized image, full storage, ...). */
   notice?: string | null;
+  /**
+   * Run the Phase 10 vision analysis over the current map (RFC 002 × RFC 006).
+   * Injected as a closure that already holds the decoded image and its MEASURED
+   * pixel dimensions, so this panel needs no knowledge of either — and testing
+   * it needs no gateway. Absent when AI is off or the image cannot be measured,
+   * which is also the panel's only signal to hide the affordance.
+   */
+  onAnalyzeGrid?: (hint?: string) => Promise<AnalyzeMapResult>;
+  /** Apply an ACCEPTED proposal: registration + terrain/cover/hazard markers. */
+  onApplyAnalysis?: (proposal: GridGeometryProposal) => void;
 }
 
 /**
@@ -25,6 +37,13 @@ interface MapPanelProps {
  * origin plus image pixels per cell, adjusted live over the rendered image.
  * The map is document metadata, not an event: edits here never touch the
  * replayable event log.
+ *
+ * Phase 10 adds the vision affordance, and it is deliberately a PROPOSAL
+ * REVIEW, not an action: the model's geometry is run through
+ * `validateGridGeometryProposal` by the flow, the verdict and every issue are
+ * shown, and Apply is offered only on an `accept`. A `manual-correction`
+ * verdict still shows its numbers — the human can read them, dismiss, and dial
+ * the offsets in by hand with the same three inputs as always.
  */
 export function MapPanel({
   map,
@@ -33,9 +52,13 @@ export function MapPanel({
   onChangeRegistration,
   onRemoveMap,
   notice,
+  onAnalyzeGrid,
+  onApplyAnalysis,
 }: MapPanelProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const registration = map?.gridRegistration;
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysis, setAnalysis] = useState<AnalyzeMapResult | null>(null);
 
   const changeField = (field: keyof SceneGridRegistration, raw: string) => {
     if (!registration) return;
@@ -45,6 +68,25 @@ export function MapPanel({
     if (field === 'cellSizePx' && parsed <= 0) return;
     onChangeRegistration({ ...registration, [field]: parsed });
   };
+
+  const handleAnalyze = async () => {
+    if (!onAnalyzeGrid || analyzing) return;
+    setAnalyzing(true);
+    setAnalysis(null);
+    try {
+      setAnalysis(await onAnalyzeGrid());
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
+  const handleApply = () => {
+    if (!analysis?.ok || !onApplyAnalysis) return;
+    onApplyAnalysis(analysis.proposal);
+    setAnalysis(null);
+  };
+
+  const canApply = Boolean(analysis?.ok && analysis.validation.verdict === 'accept');
 
   return (
     <div className="rounded-lg border bg-card p-3">
@@ -117,6 +159,69 @@ export function MapPanel({
                 />
               </label>
             </div>
+
+            {onAnalyzeGrid && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full"
+                disabled={analyzing}
+                onClick={() => void handleAnalyze()}
+              >
+                <Wand2 className="mr-1.5 h-4 w-4" />
+                {analyzing ? 'Analyzing map…' : 'Detect Grid with AI'}
+              </Button>
+            )}
+
+            {analysis && !analysis.ok && (
+              <p className="text-xs text-destructive">{analysis.error}</p>
+            )}
+
+            {analysis?.ok && (
+              <div className="space-y-1.5 rounded-md border border-dashed p-2">
+                <p className="text-xs font-medium">
+                  {analysis.validation.verdict === 'accept'
+                    ? 'Proposed grid'
+                    : 'Proposed grid — needs a look'}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Offset {Math.round(analysis.proposal.registration.offsetX)},{' '}
+                  {Math.round(analysis.proposal.registration.offsetY)} px ·{' '}
+                  {Math.round(analysis.proposal.registration.cellSizePx)} px per cell ·{' '}
+                  {analysis.proposal.boxes.length}{' '}
+                  {analysis.proposal.boxes.length === 1 ? 'region' : 'regions'}
+                </p>
+                {analysis.reason && (
+                  <p className="text-xs text-muted-foreground">{analysis.reason}</p>
+                )}
+                {analysis.validation.issues.length > 0 && (
+                  <ul className="space-y-0.5 text-xs text-muted-foreground">
+                    {analysis.validation.issues.map((issue) => (
+                      <li key={`${issue.code}-${issue.boxIndex ?? 'all'}`}>• {issue.message}</li>
+                    ))}
+                  </ul>
+                )}
+                <div className="flex gap-2">
+                  <Button size="sm" className="flex-1" disabled={!canApply} onClick={handleApply}>
+                    Apply
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => setAnalysis(null)}
+                  >
+                    Dismiss
+                  </Button>
+                </div>
+                {!canApply && (
+                  <p className="text-xs text-muted-foreground">
+                    Adjust the grid by hand above — this proposal is not accurate enough to apply.
+                  </p>
+                )}
+              </div>
+            )}
+
             <Button
               variant="ghost"
               size="sm"

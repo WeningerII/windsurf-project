@@ -12,9 +12,10 @@
  * `illustrate-scene` task therefore fails on this provider with a clear
  * provider error (normalized to the typed `provider-error` failure, HTTP 502)
  * and the client falls back to its manual tools — exactly as it does for any
- * other provider failure. It is NOT faked, and the other four tasks
- * (`encounter-draft`, `scene-narration`, `identify-creature` — Claude's vision
- * covers that one — and `character-draft`) are served normally.
+ * other provider failure. It is NOT faked, and the other five tasks
+ * (`encounter-draft`, `scene-narration`, `character-draft`, and the two vision
+ * tasks `identify-creature` and `analyze-map`, both of which Claude's vision
+ * covers) are served normally.
  */
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createAiSdkAdapter } from './aiSdkAdapter.mts';

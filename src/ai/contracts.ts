@@ -20,6 +20,7 @@ export const AI_GATEWAY_TASKS = [
   'identify-creature',
   'illustrate-scene',
   'character-draft',
+  'analyze-map',
 ] as const;
 export type AiTask = (typeof AI_GATEWAY_TASKS)[number];
 
@@ -53,6 +54,7 @@ export const AI_TASK_CLASS: Record<AiTask, AiTaskClass> = {
   'identify-creature': 'vision',
   'illustrate-scene': 'image',
   'character-draft': 'text',
+  'analyze-map': 'vision',
 };
 
 /**
@@ -68,6 +70,9 @@ export const AI_TASK_UNIT_COST: Record<AiTask, number> = {
   'identify-creature': 2,
   'illustrate-scene': 5,
   'character-draft': 1,
+  // Vision, like identify-creature — but over a whole battle map rather than a
+  // single creature, so the image is larger and the output structured.
+  'analyze-map': 2,
 };
 
 /**
@@ -258,6 +263,8 @@ function parseTaskPayload(task: AiTask, payload: unknown): AiParse<unknown> {
       return parseIllustrateScenePayload(payload);
     case 'character-draft':
       return parseCharacterDraftPayload(payload);
+    case 'analyze-map':
+      return parseAnalyzeMapPayload(payload);
     default:
       return { ok: false, message: `No validator for task '${task}'.` };
   }
@@ -307,6 +314,8 @@ export function parseTaskData(task: AiTask, raw: unknown): AiParse<unknown> {
       return parseGeneratedImageData(raw);
     case 'character-draft':
       return parseCharacterDraftData(raw);
+    case 'analyze-map':
+      return parseAnalyzeMapData(raw);
     default:
       return { ok: false, message: `No output validator for task '${task}'.` };
   }
@@ -668,4 +677,127 @@ function parseIllustrateScenePayload(raw: unknown): AiParse<IllustrateScenePaylo
 /** The model's image output uses the same envelope (and validation) as input. */
 function parseGeneratedImageData(raw: unknown): AiParse<GeneratedImageData> {
   return parseAiImageInput(raw);
+}
+
+// --- Task: analyze-map (vision) --------------------------------------------
+
+/**
+ * Upper bound on boxes a single proposal may carry. A battle map has tens of
+ * regions, not thousands; the cap keeps one malformed response from producing a
+ * proposal the validator must walk unboundedly.
+ */
+export const MAX_ANALYZE_MAP_BOXES = 64;
+
+export interface AnalyzeMapPayload {
+  /** The battle-map image to analyze. */
+  image: AiImageInput;
+  /**
+   * The image's true pixel dimensions, MEASURED BY THE CLIENT from the decoded
+   * asset. Sent so the model can reason in the same coordinate space, but the
+   * flow re-stamps them onto the proposal rather than trusting the echo — a
+   * model that misreports the image size cannot make an off-image box look
+   * in-bounds.
+   */
+  imageSize: { widthPx: number; heightPx: number };
+  /** Optional free-text steer (e.g. "the stairs are difficult terrain"). */
+  hint?: string;
+}
+
+/**
+ * What the model returns. Deliberately NARROWER than `GridGeometryProposal`
+ * (`src/scene/gridGeometryProposal.ts`): the envelope `version` and the `image`
+ * dimensions are NOT model-supplied — the flow stamps both. The model proposes
+ * only the geometry it can actually see, and `validateGridGeometryProposal`
+ * decides whether any of it may become scene state.
+ */
+export interface AnalyzeMapData {
+  registration: { offsetX: number; offsetY: number; cellSizePx: number };
+  boxes: Array<{
+    kind: string;
+    rect: { x: number; y: number; width: number; height: number };
+    label?: string;
+    suggestedPreset?: string;
+  }>;
+  /** One-line account of how the grid was located, optional. */
+  reason?: string;
+}
+
+export type AnalyzeMapRequest = AiRequest<'analyze-map', AnalyzeMapPayload>;
+
+function parseAnalyzeMapPayload(raw: unknown): AiParse<AnalyzeMapPayload> {
+  if (!isRecord(raw)) return { ok: false, message: 'Analyze-map payload must be an object.' };
+  const image = parseAiImageInput(raw.image);
+  if (!image.ok) return image;
+  if (!isRecord(raw.imageSize)) {
+    return { ok: false, message: 'Analyze-map payload needs an imageSize.' };
+  }
+  const { widthPx, heightPx } = raw.imageSize;
+  if (!isPositiveInt(widthPx) || !isPositiveInt(heightPx)) {
+    return { ok: false, message: 'Analyze-map imageSize needs positive integer pixel dimensions.' };
+  }
+  return {
+    ok: true,
+    value: {
+      image: image.value,
+      imageSize: { widthPx, heightPx },
+      ...(typeof raw.hint === 'string' && raw.hint ? { hint: raw.hint } : {}),
+    },
+  };
+}
+
+function isPositiveInt(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value) && value > 0;
+}
+
+function isFiniteNum(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
+/**
+ * Envelope-only validation. Every field is checked for SHAPE, never for
+ * plausibility — whether a registration is usable, a preset legal, or a box on
+ * the grid is `validateGridGeometryProposal`'s job, and duplicating any of it
+ * here would create a second, quieter opinion about legality.
+ */
+function parseAnalyzeMapData(raw: unknown): AiParse<AnalyzeMapData> {
+  if (!isRecord(raw)) return { ok: false, message: 'Output must be an object.' };
+  if (!isRecord(raw.registration)) {
+    return { ok: false, message: 'Analyze-map output needs a registration.' };
+  }
+  const { offsetX, offsetY, cellSizePx } = raw.registration;
+  if (!isFiniteNum(offsetX) || !isFiniteNum(offsetY) || !isFiniteNum(cellSizePx)) {
+    return { ok: false, message: 'Registration needs finite offsetX, offsetY and cellSizePx.' };
+  }
+  if (!Array.isArray(raw.boxes)) {
+    return { ok: false, message: 'Analyze-map output needs a boxes array.' };
+  }
+  if (raw.boxes.length > MAX_ANALYZE_MAP_BOXES) {
+    return { ok: false, message: 'Analyze-map output proposes too many boxes.' };
+  }
+  const boxes: AnalyzeMapData['boxes'] = [];
+  for (const box of raw.boxes) {
+    if (!isRecord(box) || typeof box.kind !== 'string' || !isRecord(box.rect)) {
+      return { ok: false, message: 'Each box needs a kind and a rect.' };
+    }
+    const { x, y, width, height } = box.rect;
+    if (!isFiniteNum(x) || !isFiniteNum(y) || !isFiniteNum(width) || !isFiniteNum(height)) {
+      return { ok: false, message: 'Each box rect needs finite x, y, width and height.' };
+    }
+    boxes.push({
+      kind: box.kind,
+      rect: { x, y, width, height },
+      ...(typeof box.label === 'string' && box.label ? { label: box.label } : {}),
+      ...(typeof box.suggestedPreset === 'string' && box.suggestedPreset
+        ? { suggestedPreset: box.suggestedPreset }
+        : {}),
+    });
+  }
+  return {
+    ok: true,
+    value: {
+      registration: { offsetX, offsetY, cellSizePx },
+      boxes,
+      ...(typeof raw.reason === 'string' && raw.reason ? { reason: raw.reason } : {}),
+    },
+  };
 }
