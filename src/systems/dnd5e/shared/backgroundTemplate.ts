@@ -304,11 +304,30 @@ function updateBackgroundTemplateState(
   };
 }
 
+/**
+ * Quantity per item id for the package the template applies by default —
+ * package A, which `background.equipment` mirrors as a flat id list.
+ *
+ * `equipment` cannot carry a count, so this hardcoded `quantity: 1` was correct
+ * for every 2014-model background and silently wrong the moment the 2024
+ * re-encoding introduced packages that grant 20 Arrows, 10 Parchment or 2
+ * Daggers: the sheet rendered the real number and the character received one.
+ * Where `equipmentOptions` is present it is the authority on counts.
+ */
+function backgroundItemQuantities(background: Background): Map<string, number> {
+  const quantities = new Map<string, number>();
+  for (const entry of background.equipmentOptions?.[0]?.items ?? []) {
+    quantities.set(entry.itemId, entry.quantity);
+  }
+  return quantities;
+}
+
 function appendInventoryFromBackground(sys: Dnd5eLikeDataModel, background: Background): void {
   const inventoryIds = new Set(sys.inventory.map((item) => item.itemId));
+  const quantities = backgroundItemQuantities(background);
   const newEntries = background.equipment
     .filter((itemId) => !inventoryIds.has(itemId))
-    .map((itemId) => ({ itemId, quantity: 1 }));
+    .map((itemId) => ({ itemId, quantity: quantities.get(itemId) ?? 1 }));
 
   sys.inventory = [...sys.inventory, ...newEntries];
 }

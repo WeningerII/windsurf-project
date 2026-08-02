@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { acolyte } from '../../data/dnd/5e-2014/backgrounds/acolyte';
+import { soldier as soldier2024 } from '../../data/dnd/5e-2024/backgrounds/soldier';
 import { Background } from '../../types/character-options/backgrounds';
 import { createDefaultDnd5eData, Dnd5eDataModel } from '../../systems/dnd5e/data-model';
 import { CharacterDocument } from '../../types/core/document';
@@ -323,5 +324,37 @@ describe('background switch feature removal (id AND source match)', () => {
     expect(ids).toContain('outlaw-contact|Homebrew');
     // The actual previous background feature (id AND source) is removed.
     expect(ids).not.toContain('outlaw-contact|Outlaw Background');
+  });
+});
+
+describe('applyDnd5eBackgroundTemplate — 2024 equipment quantities', () => {
+  it('grants the count package A prints, not one of each', () => {
+    // The SRD 5.2 Soldier's package A includes 20 Arrows. `background.equipment`
+    // is a flat id list and cannot carry a count, so the applier hardcoded
+    // `quantity: 1` — correct for every 2014-model background, and silently
+    // wrong the moment the 2024 re-encoding introduced real quantities. The
+    // sheet rendered "20 Arrows" and the character received one.
+    const updated = applyDnd5eBackgroundTemplate(makeDoc(), soldier2024);
+
+    const arrows = updated.system.inventory.find((item) => item.itemId === 'arrows');
+    expect(arrows).toBeDefined();
+    expect(arrows!.quantity).toBe(20);
+
+    // Every other id still resolves, and single items stay at 1.
+    const packageA = soldier2024.equipmentOptions![0].items;
+    for (const entry of packageA) {
+      const granted = updated.system.inventory.find((item) => item.itemId === entry.itemId);
+      expect(granted, `missing ${entry.itemId}`).toBeDefined();
+      expect(granted!.quantity, entry.itemId).toBe(entry.quantity);
+    }
+  });
+
+  it('still grants one of each for a 2014-model background with no packages', () => {
+    const updated = applyDnd5eBackgroundTemplate(makeDoc(), acolyte);
+
+    expect(acolyte.equipmentOptions).toBeUndefined();
+    for (const item of updated.system.inventory) {
+      expect(item.quantity).toBe(1);
+    }
   });
 });
