@@ -29,7 +29,7 @@ import { tokenAllegiance } from '../../scene/allegiance';
 import { resolveAttack } from '../resolver/attackResolution';
 import { gridDistance } from '../resolver/areaTargeting';
 import { participantRng } from '../resolver/participantResolution';
-import { attackToDamageIntent } from '../resolver/sceneCombat';
+import { areaEffectToDamageIntent, attackToDamageIntent } from '../resolver/sceneCombat';
 import { collectSceneConditionEffects, mam3eBruisePenalty } from '../conditions/sceneConditions';
 import { collectTerrainEffectsAt } from '../terrain/sceneTerrain';
 import { resolveEffects } from '../resolver/resolve';
@@ -500,9 +500,14 @@ export function resolveSceneAreaEffect(params: {
     })),
   });
 
-  const damages = result.perTarget
-    .filter((outcome) => outcome.damageTaken > 0)
-    .map((outcome) => ({ tokenId: outcome.targetId, amount: outcome.damageTaken }));
+  // Through the shared bridge, not an inline intent: this path used to build its
+  // own `{tokenId, amount}` entries and so dropped the damage type the resolver
+  // had already worked out — a fireball on a fire elemental dealt full damage.
+  // `areaEffectToDamageIntent` emits one entry per typed channel, which the
+  // runtime mitigates independently against each token's snapshotted profile at
+  // event-build time. Untyped area effects resolve to a single untyped channel
+  // and therefore still produce the identical entries they always did.
+  const intent = areaEffectToDamageIntent(result, params.cause);
   const nameOf = (tokenId: string) => state.tokens[tokenId]?.name ?? tokenId;
   const detail = result.perTarget
     .map(
@@ -512,15 +517,7 @@ export function resolveSceneAreaEffect(params: {
     .join('; ');
 
   return {
-    ...(damages.length
-      ? {
-          intent: {
-            type: 'apply-damage',
-            damages,
-            cause: params.cause,
-          } as SceneActionIntent,
-        }
-      : {}),
+    ...(intent ? { intent } : {}),
     log: `Area effect (${result.sharedDamage} rolled): ${detail}.`,
     affected: targets.length,
   };

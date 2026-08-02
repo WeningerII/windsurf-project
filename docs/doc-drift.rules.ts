@@ -36,7 +36,8 @@ export interface DocDriftTruth {
   workflowNodeVersion: string | null;
   workflowNodeVersionFile: string | null;
   workflowUsesNetlify: boolean;
-  workflowVerifyCommand: string | null;
+  /** Whether ci.yml still runs the gate that proves it covers `scripts.verify`. */
+  workflowRunsParityGate: boolean;
   verificationBaseline: VerificationBaseline;
   spellCounts: Record<GameSystemId, number>;
   systemSupportLevels: Record<GameSystemId, 'full' | 'partial' | 'scaffold'>;

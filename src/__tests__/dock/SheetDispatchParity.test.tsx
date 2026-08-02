@@ -41,6 +41,7 @@ function DispatchProbe() {
       <span data-testid="canSpell">{String(dispatch.canAddSpell)}</span>
       <span data-testid="canFeat">{String(dispatch.canAddFeat)}</span>
       <span data-testid="canEquip">{String(dispatch.canAddEquipment)}</span>
+      <span data-testid="canAdvantage">{String(dispatch.canAddAdvantage)}</span>
       <span data-testid="activeDoc">{dispatch.activeDocId ?? 'none'}</span>
       <button type="button" onClick={() => dispatch.addSpell(SPELL)}>
         add-spell
@@ -87,6 +88,7 @@ interface ParityCase {
   canSpell: boolean;
   canFeat: boolean;
   canEquip: boolean;
+  canAdvantage: boolean;
 }
 
 const CASES: ParityCase[] = [
@@ -101,6 +103,7 @@ const CASES: ParityCase[] = [
     canSpell: true,
     canFeat: true,
     canEquip: true,
+    canAdvantage: false,
   },
   {
     name: 'dnd5e-2024',
@@ -110,6 +113,7 @@ const CASES: ParityCase[] = [
     canSpell: true,
     canFeat: true,
     canEquip: true,
+    canAdvantage: false,
   },
   {
     name: 'dnd35e',
@@ -119,6 +123,7 @@ const CASES: ParityCase[] = [
     canSpell: true,
     canFeat: false, // no add-feat-by-definition handler in the d20-legacy family
     canEquip: true,
+    canAdvantage: false,
   },
   {
     name: 'pf1e',
@@ -128,6 +133,7 @@ const CASES: ParityCase[] = [
     canSpell: true,
     canFeat: false,
     canEquip: true,
+    canAdvantage: false,
   },
   {
     name: 'pf2e',
@@ -137,6 +143,7 @@ const CASES: ParityCase[] = [
     canSpell: true,
     canFeat: false, // pf2e feats are template/class-granted, no add-by-definition handler
     canEquip: true,
+    canAdvantage: false,
   },
   {
     name: 'mam3e',
@@ -144,10 +151,13 @@ const CASES: ParityCase[] = [
     data: createDefaultMam3eData() as unknown as SystemDataModel,
     render: (doc, onUpdate) => <Mam3eCharacterSheet document={doc as never} onUpdate={onUpdate} />,
     // Superhero system: powers/advantages, not spells/feats; its equipment
-    // browser is browse-only with no add handler. Nothing publishable.
+    // browser is browse-only with no add handler. Since WORK_PLAN §4.3 it DOES
+    // publish addAdvantage — the handler the deleted in-sheet advantage browser
+    // used — which is the whole reason the Dock grew an Advantages tab.
     canSpell: false,
     canFeat: false,
     canEquip: false,
+    canAdvantage: true,
   },
   {
     name: 'daggerheart',
@@ -159,6 +169,7 @@ const CASES: ParityCase[] = [
     canSpell: false,
     canFeat: false,
     canEquip: false,
+    canAdvantage: false,
   },
 ];
 
@@ -171,7 +182,7 @@ describe('Dock <-> sheet dispatch parity (Phase 5)', () => {
 
   it.each(CASES)(
     '$name publishes exactly its available add-handlers to the Dock',
-    async ({ systemId, data, render: renderSheet, canSpell, canFeat, canEquip }) => {
+    async ({ systemId, data, render: renderSheet, canSpell, canFeat, canEquip, canAdvantage }) => {
       const doc = makeDoc(systemId, data);
       render(
         <SheetDispatchProvider>
@@ -185,8 +196,9 @@ describe('Dock <-> sheet dispatch parity (Phase 5)', () => {
       });
       expect(screen.getByTestId('canFeat').textContent).toBe(String(canFeat));
       expect(screen.getByTestId('canEquip').textContent).toBe(String(canEquip));
+      expect(screen.getByTestId('canAdvantage').textContent).toBe(String(canAdvantage));
 
-      const publishesAnything = canSpell || canFeat || canEquip;
+      const publishesAnything = canSpell || canFeat || canEquip || canAdvantage;
       expect(screen.getByTestId('activeDoc').textContent).toBe(publishesAnything ? doc.id : 'none');
     }
   );

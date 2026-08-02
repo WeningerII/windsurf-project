@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { MamPowerModifierBrowser } from '../../systems/mam3e/components/MamPowerModifierBrowser';
+import { PowerModifierBrowser } from '../../components/PowerModifierBrowser';
 import { accurate } from '../../data/mutants-and-masterminds/3e/modifiers/extras';
 import { activation } from '../../data/mutants-and-masterminds/3e/modifiers/flaws';
 
-describe('MamPowerModifierBrowser', () => {
+describe('PowerModifierBrowser', () => {
   it('renders modifier details and cost formatting', () => {
-    render(<MamPowerModifierBrowser modifiers={[accurate, activation]} />);
+    render(<PowerModifierBrowser modifiers={[accurate, activation]} />);
 
     expect(screen.getByText('Accurate')).toBeInTheDocument();
     // Accurate is a flat extra (1 point per rank of Accurate — Hero's
@@ -20,7 +20,7 @@ describe('MamPowerModifierBrowser', () => {
   it('filters modifiers by type and search', async () => {
     const user = userEvent.setup();
 
-    render(<MamPowerModifierBrowser modifiers={[accurate, activation]} />);
+    render(<PowerModifierBrowser modifiers={[accurate, activation]} />);
 
     await user.selectOptions(screen.getByLabelText(/filter modifiers by type/i), 'flaw');
 

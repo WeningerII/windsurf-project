@@ -1,8 +1,23 @@
+/**
+ * Shared browser for M&M power modifiers (extras and flaws).
+ *
+ * Moved out of `src/systems/mam3e/components/` for `WORK_PLAN` §4.3: the Dock
+ * had no power-modifier tab at all, so this catalog was reachable only through
+ * an in-sheet wrapper, which is why that wrapper could not simply be deleted
+ * with the other six. Nothing here is system-coupled — it renders shared
+ * `PowerModifier` records — so the move is a relocation, not a rewrite, and the
+ * shared Dock can import it without crossing the layer boundary.
+ */
 import React, { useDeferredValue, useMemo, useState } from 'react';
 import { Search, Wand2 } from 'lucide-react';
-import type { PowerModifier } from '../../../data/mutants-and-masterminds/3e/modifiers/extras';
+import type { PowerModifier } from '../types/mam/powerModifiers';
 
-interface MamPowerModifierBrowserProps {
+interface PowerModifierBrowserProps {
+  /**
+   * Browse-only by design: no sheet has a handler that adds a power modifier to
+   * a character, so this browser deliberately carries no click-add verb — the
+   * wrapper it replaces did not either.
+   */
   modifiers: PowerModifier[];
 }
 
@@ -19,7 +34,7 @@ function formatModifierCost(modifier: PowerModifier): string {
   return [perRank, flatCost].filter(Boolean).join(', ') || 'No cost change';
 }
 
-export const MamPowerModifierBrowser: React.FC<MamPowerModifierBrowserProps> = ({ modifiers }) => {
+export const PowerModifierBrowser: React.FC<PowerModifierBrowserProps> = ({ modifiers }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const deferredSearchTerm = useDeferredValue(searchTerm);
   const [typeFilter, setTypeFilter] = useState<'all' | PowerModifier['type']>('all');

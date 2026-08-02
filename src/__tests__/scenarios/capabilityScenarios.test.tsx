@@ -403,6 +403,10 @@ describe('Capability scenarios', () => {
           spells: [],
         },
       },
+      'analyze-map': {
+        image: { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
+        imageSize: { widthPx: 1000, heightPx: 800 },
+      },
     };
     const fixtures: Record<AiTask, unknown> = {
       'encounter-draft': { selections: [{ monsterId: 'goblin', count: 2 }] },
@@ -410,6 +414,10 @@ describe('Capability scenarios', () => {
       'identify-creature': { monsterId: 'goblin', confidence: 0.8 },
       'illustrate-scene': { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
       'character-draft': { name: 'Sir Reginald', classId: 'fighter' },
+      'analyze-map': {
+        registration: { offsetX: 0, offsetY: 0, cellSizePx: 50 },
+        boxes: [{ kind: 'spawn', rect: { x: 0, y: 0, width: 100, height: 100 } }],
+      },
     };
 
     for (const task of AI_GATEWAY_TASKS) {

@@ -3,6 +3,7 @@ import {
   SheetDispatchRegistryContext,
   SheetDispatchStateContext,
   type SheetAddHandlers,
+  type SheetCatalogFilter,
   type SheetDispatchRegistry,
   type SheetDispatchState,
 } from './sheet-dispatch-context';
@@ -32,9 +33,18 @@ export function SheetDispatchProvider({ children }: { children: ReactNode }) {
     handlers: {},
   });
 
-  const register = useCallback((docId: string | null, handlers: SheetAddHandlers) => {
-    setState({ activeDocId: docId, handlers: docId ? handlers : {} });
-  }, []);
+  const register = useCallback(
+    (docId: string | null, handlers: SheetAddHandlers, catalogFilter?: SheetCatalogFilter) => {
+      setState({
+        activeDocId: docId,
+        handlers: docId ? handlers : {},
+        // A filter without an owning document would narrow the Dock's catalog
+        // on behalf of nothing — dropped with the handlers, not kept.
+        ...(docId && catalogFilter ? { catalogFilter } : {}),
+      });
+    },
+    []
+  );
 
   const unregister = useCallback((docId: string) => {
     // Only the sheet that currently owns the registry may clear it — a late

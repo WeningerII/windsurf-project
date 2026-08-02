@@ -494,6 +494,110 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       note: 'Wired 2026-07-21 (helper-only → wired): the shared DND5E_DERIVED_QUANTITIES card (dnd5e.L8.concentration-dc) is applied by the shared 5e engine and rendered on the 2024 sheet just as on 2014, pinned by the generic derivation test. The DC scales with in-play damage, so the card shows the RAW min-10 floor with the damage-scaling rule in its hint.',
     },
     {
+      id: 'dnd5e2024.L8.damage-mitigation-branch',
+      layer: 'L8',
+      quantity: 'Typed-damage mitigation branch (immune / resistant / vulnerable / none)',
+      formula:
+        'immunity wins outright; resistant ∧ vulnerable → halve then double → unchanged, reported as none; an undeclared type, or no type at all, → none',
+      inputs: ["target's snapshotted damage profile", 'damage type of the channel'],
+      edgeCases: [
+        'immunity beats a simultaneous resistance and vulnerability',
+        'resistant and vulnerable together net to no change',
+        'untyped damage is never mitigated',
+      ],
+      stacking: 'Non-cumulative: a second declaration of the same type changes nothing.',
+      source: `${SRD}: Rules Glossary (Resistance, Vulnerability, Immunity)`,
+      status: 'verified',
+      testRef: 'src/__tests__/rules/damageMitigation.test.ts :: resolveDamageMitigation',
+      note: 'Same shared, edition-agnostic transform the 2014 register registers (src/rules/resolver/damageMitigation.ts) — the scene runtime does not branch on edition, and SRD 5.2 keeps the halve/double/zero arithmetic. Applied at scene-event BUILD time so RFC 006 replay stays byte-identical; profiles are snapshotted onto the token at placement rather than looked up from src/data/ at replay time.',
+    },
+    {
+      id: 'dnd5e2024.L8.damage-mitigation-amount',
+      layer: 'L8',
+      quantity: 'Mitigated hit-point amount',
+      formula: 'immune → 0; resistant → floor(damage / 2); vulnerable → damage × 2; none → damage',
+      inputs: ['signed hit-point delta', 'mitigation branch'],
+      edgeCases: [
+        'odd damage halves rounding down',
+        'healing (negative amount) untouched under every branch',
+      ],
+      source: `${SRD}: Rules Glossary (Resistance, Vulnerability, Immunity)`,
+      status: 'verified',
+      testRef: 'src/__tests__/rules/damageMitigation.test.ts :: applyDamageMitigation',
+      note: 'Scene damage carries a SIGNED amount where negative is healing, so the healing case is asserted directly — a fire-immune creature is not immune to being healed.',
+    },
+    {
+      id: 'dnd5e2024.L8.damage-channels',
+      layer: 'L8',
+      quantity: 'Typed damage channels of one hit',
+      formula:
+        'one channel per damage.<type> effect target in first-seen declaration order; every non-typed target merges into ONE untyped channel; a channel resolving to ≤ 0 takes no part',
+      inputs: ['resolved damage fold (byTarget totals)'],
+      edgeCases: [
+        'typed and untyped in the same hit stay separate',
+        'two effects of the same type merge into one channel',
+      ],
+      source: `${SRD}: Damage Types; Rules Glossary (Resistance, Vulnerability, Immunity)`,
+      status: 'verified',
+      testRef: 'src/__tests__/rules/damageChannelSplit.test.ts :: collectDamageChannels',
+      note: 'Shared with 2014 (src/rules/resolver/damageChannelSplit.ts). The untyped channel is kept whole and separate because untyped damage is never mitigated, so folding it into a typed bucket would let resistance eat points it has no claim to.',
+    },
+    {
+      id: 'dnd5e2024.L8.damage-channel-split',
+      layer: 'L8',
+      quantity: "Per-channel share of a multi-channel hit's total",
+      formula:
+        'largest-remainder (Hamilton): each channel takes floor(total × weight / Σweights), then the leftover units are handed out by descending fractional remainder. Parts sum EXACTLY to the total',
+      inputs: ['damage total (post-crit)', 'channel weights (pre-crit resolved totals)'],
+      edgeCases: [
+        'a single channel takes the whole total',
+        'a zero-weight channel never collects a rounding unit',
+        'negative total (healing) splits on its magnitude and is re-signed',
+        'non-integer total, and a non-zero total across zero channels, throw rather than losing damage',
+      ],
+      source: `${SRD}: Rules Glossary (Resistance, Vulnerability, Immunity)`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/damageChannelSplit.test.ts :: splitDamageAcrossChannels — the post-condition',
+      note: 'THE APPORTIONMENT RULE IS NOT SRD TEXT — it is an engine decision (WORK_PLAN §3.2, decision B1), registered under the rule it serves. resolveAttack collapses every damage channel into one scalar that crit math then multiplies as a whole, so the per-type breakdown has to be reconstructed before a per-type resistance can be applied at all. Identical code and identical numbers for both 5e editions; see dnd5e2014.L8.damage-channel-split for the full reasoning.',
+    },
+    {
+      id: 'dnd5e2024.L8.damage-channel-split-tiebreak',
+      layer: 'L8',
+      quantity: 'Leftover-unit order when channel remainders tie',
+      formula:
+        'rank by fractional remainder desc, then WEIGHT desc, then declaration order — a total order over the input array',
+      inputs: ['channel remainders', 'channel weights', 'declaration order'],
+      edgeCases: [
+        'equal remainders break toward the larger weight, wherever it is declared',
+        'equal remainders AND equal weights break toward the earlier declared channel',
+        'the result does not depend on object key enumeration',
+      ],
+      source: `${SRD}: Rules Glossary (Resistance, Vulnerability, Immunity)`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/damageChannelSplit.test.ts :: splitDamageAcrossChannels — tie-breaking',
+      note: 'Registered separately because it is what makes the split REPLAYABLE: RFC 006 promises byte-identical replay, and a tie broken on key enumeration would let the same event log resolve to different numbers. Decision B1, not SRD text.',
+    },
+    {
+      id: 'dnd5e2024.L8.multi-channel-mitigation',
+      layer: 'L8',
+      quantity: 'Per-channel mitigation of a mixed-type hit',
+      formula:
+        'each channel is mitigated independently against the target profile; the recorded event carries amount, type, mitigation and raw per channel',
+      inputs: ['split channels', "target's snapshotted damage profile"],
+      edgeCases: [
+        'slashing 6 + fire 4 against fire-resistant → 8; immune → 6; vulnerable → 14',
+        'typed + untyped mixed hit: the untyped points survive immunity',
+        'a single-channel attack keeps the original one-entry event shape exactly',
+      ],
+      source: `${SRD}: Rules Glossary (Resistance, Vulnerability, Immunity)`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/damageChannelSplit.test.ts :: multi-channel damage reaching the grid',
+      note: 'The composition of the three rows above, at the seam where damage reaches a token; independence per channel is the RAW claim and no unit-level row can show it. Edition-agnostic scene path, so the 2024 numbers are the 2014 numbers.',
+    },
+    {
       id: 'dnd5e2024.L9.ability-score-cap',
       layer: 'L9',
       quantity: 'Ability score cap (base score ≤ 20)',

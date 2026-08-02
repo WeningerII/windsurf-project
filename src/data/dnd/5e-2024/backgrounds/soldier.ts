@@ -1,10 +1,16 @@
 import { Background } from '../../../../types/character-options/backgrounds';
 
+// Transcribed from SRD 5.2.1 "Character Origins" > Soldier, corroborated field
+// for field by 5e-bits/5e-database `src/2024/en/5e-SRD-Backgrounds.json`.
 export const soldier: Background = {
   id: 'soldier-2024',
   name: 'Soldier',
   system: 'dnd-5e-2024',
   source: 'SRD 5.2',
+
+  abilityScores: ['str', 'dex', 'con'],
+
+  originFeat: { id: 'savage-attacker', name: 'Savage Attacker' },
 
   skillProficiencies: ['athletics', 'intimidation'],
 
@@ -14,42 +20,34 @@ export const soldier: Background = {
   // scripts/data/srd-fidelity-baseline.json for why the pinned source reads ''.
   toolProficiencies: ['one-gaming-set'],
 
-  equipment: [
-    'insignia-of-rank',
-    'trophy-from-fallen-enemy',
-    'gaming-set',
-    'common-clothes',
-    'pouch',
+  equipmentOptions: [
+    {
+      label: 'A',
+      items: [
+        { itemId: 'spear', quantity: 1 },
+        { itemId: 'shortbow', quantity: 1 },
+        { itemId: 'arrows', quantity: 20 },
+        // "Gaming Set (same as above)" — the same set taken as the tool
+        // proficiency, so it carries the choice token rather than an item id.
+        { itemId: 'one-gaming-set', quantity: 1 },
+        { itemId: 'healers-kit-2024', quantity: 1 },
+        { itemId: 'quiver', quantity: 1 },
+        { itemId: 'clothes-travelers', quantity: 1 },
+      ],
+      gold: 14,
+    },
+    { label: 'B', items: [], gold: 50 },
   ],
 
-  gold: 10,
+  equipment: [
+    'spear',
+    'shortbow',
+    'arrows',
+    'one-gaming-set',
+    'healers-kit-2024',
+    'quiver',
+    'clothes-travelers',
+  ],
 
-  suggestedCharacteristics: {
-    traits: [
-      "I'm always polite and respectful",
-      "I'm haunted by memories of war",
-      'I can stare down a hell hound without flinching',
-      'I enjoy being strong and like breaking things',
-    ],
-    ideals: ['Greater Good', 'Responsibility', 'Independence', 'Might'],
-    bonds: [
-      'I would still lay down my life for the people I served with',
-      'Someone saved my life on the battlefield',
-    ],
-    flaws: [
-      'The monstrous enemy we faced in battle still leaves me quivering with fear',
-      'I obey the law, even if the law causes misery',
-    ],
-  },
-
-  feature: {
-    id: 'military-rank',
-    name: 'Military Rank',
-    source: 'Soldier Background',
-    description:
-      'You have a military rank from your career as a soldier. Soldiers loyal to your former military organization still recognize your authority and influence, and they defer to you if they are of a lower rank. You can invoke your rank to exert influence over other soldiers and requisition simple equipment or horses for temporary use. You can also usually gain access to friendly military encampments and fortresses where your rank is recognized.',
-  },
-
-  description:
-    'War has been your life for as long as you care to remember. You trained as a youth, studied the use of weapons and armor, learned basic survival techniques, including how to stay alive on the battlefield.',
+  gold: 14,
 };

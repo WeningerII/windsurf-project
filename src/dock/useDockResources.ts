@@ -4,15 +4,19 @@ import type { Monster } from '../types/creatures/monsters';
 import type { Item } from '../types/equipment/items';
 import type { GameSystemId } from '../types/game-systems';
 import type { Spell } from '../types/magic/spells';
+import type { Advantage } from '../types/mam/advantages';
+import type { PowerModifier } from '../types/mam/powerModifiers';
 import {
+  loadAdvantagesForSystem,
   loadEquipmentForSystem,
   loadFeatsForSystem,
   loadMonstersForSystem,
+  loadPowerModifiersForSystem,
   loadSpellsForSystem,
 } from '../utils/dataLoader';
 
 /**
- * Shared loader for the Dock's four SRD catalogs (Phase 3), keyed by an
+ * Shared loader for the Dock's SRD catalogs (Phase 3), keyed by an
  * EXPLICIT active-system selector passed in — NOT read from any sheet
  * controller (the Dock is shared-layer and must not import `src/systems/**`).
  * It calls only the shared `dataLoader` loaders. The party tab is sourced from
@@ -27,6 +31,10 @@ export interface DockResources {
   feats: FeatDefinition[];
   equipment: Item[];
   monsters: Monster[];
+  /** Empty for every system but M&M — its tab hides rather than showing 0. */
+  advantages: Advantage[];
+  /** Likewise: M&M's power extras + flaws, empty elsewhere. */
+  powerModifiers: PowerModifier[];
   loading: boolean;
 }
 
@@ -35,6 +43,8 @@ const EMPTY: DockResources = {
   feats: [],
   equipment: [],
   monsters: [],
+  advantages: [],
+  powerModifiers: [],
   loading: true,
 };
 
@@ -53,18 +63,36 @@ export function useDockResources(systemId: GameSystemId): DockResources {
       loadFeatsForSystem(requestSystemId),
       loadEquipmentForSystem(requestSystemId),
       loadMonstersForSystem(requestSystemId),
+      loadAdvantagesForSystem(requestSystemId),
+      loadPowerModifiersForSystem(requestSystemId),
     ])
-      .then(([spells, feats, equipment, monsters]) => {
+      .then(([spells, feats, equipment, monsters, advantages, powerModifiers]) => {
         if (cancelled || activeSystemRef.current !== requestSystemId) {
           return;
         }
-        setState({ spells, feats, equipment, monsters, loading: false });
+        setState({
+          spells,
+          feats,
+          equipment,
+          monsters,
+          advantages,
+          powerModifiers,
+          loading: false,
+        });
       })
       .catch(() => {
         if (cancelled || activeSystemRef.current !== requestSystemId) {
           return;
         }
-        setState({ spells: [], feats: [], equipment: [], monsters: [], loading: false });
+        setState({
+          spells: [],
+          feats: [],
+          equipment: [],
+          monsters: [],
+          advantages: [],
+          powerModifiers: [],
+          loading: false,
+        });
       });
 
     return () => {

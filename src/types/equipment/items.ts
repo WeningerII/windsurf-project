@@ -20,6 +20,15 @@ export interface Item {
   weight: number;
   cost: { amount: number; currency: 'cp' | 'sp' | 'gp' | 'pp' };
 
+  /**
+   * The catalog's own price string, kept ONLY when it is not a coin amount and
+   * therefore cannot be carried by `cost` — a rate ('3 cp/mile', '1 sp/day') or
+   * a qualifier ('Varies'). `cost` still holds the `{0, 'gp'}` placeholder the
+   * arithmetic consumers need, so this is what a price is DISPLAYED as when it
+   * is present. Absent means `cost` is the whole truth.
+   */
+  costText?: string;
+
   description: string;
   requiresAttunement: boolean;
 

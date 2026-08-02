@@ -3,15 +3,14 @@ import type { CharacterDocument, SystemDataModel } from '../../types/core/docume
 import type { Mam3eDataModel } from './data-model';
 import {
   Shield,
-  Zap,
   Brain,
   Activity,
   AlertTriangle,
   Target,
-  Star,
   StickyNote,
   HeartPulse,
 } from 'lucide-react';
+import { useSheetDispatchRegister } from '../../contexts/sheet-dispatch-context';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { Badge } from '../../components/ui/Badge';
 import { presentDerivedQuantities } from '../../rules/derivation';
@@ -19,8 +18,6 @@ import { MAM3E_DERIVED_QUANTITIES } from './derivedQuantities';
 import { MamDerivedStats } from './components/MamDerivedStats';
 import { MamArchetypesTab } from './components/MamArchetypesTab';
 import { MamComplicationsTab } from './components/MamComplicationsTab';
-import { MamPowerBrowserTab } from './components/MamPowerBrowserTab';
-import { MamAdvantageBrowserTab } from './components/MamAdvantageBrowserTab';
 import { MamHeader } from './components/MamHeader';
 import { MamAbilitiesTab } from './components/MamAbilitiesTab';
 import { MamSkillsAdvantagesTab } from './components/MamSkillsAdvantagesTab';
@@ -36,6 +33,15 @@ interface Props {
 
 export const Mam3eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
   const controller = useMam3eSheetController({ document, onUpdate });
+  // M&M never registered with the shared Dock, because the Dock had no surface
+  // its add verb could route through: `loadFeatsForSystem('mam3e')` returns []
+  // so the Feats tab is empty here. With the Dock's Advantages tab built
+  // (WORK_PLAN §4.3) the handler the deleted MamAdvantageBrowserTab used is
+  // published up unchanged, and the in-sheet browser is gone.
+  const { onAddAdvantage } = controller.advantageBrowserTabProps;
+  useSheetDispatchRegister(onUpdate ? document.id : null, {
+    addAdvantage: onUpdate ? onAddAdvantage : undefined,
+  });
   const derivedCards = presentDerivedQuantities(
     MAM3E_DERIVED_QUANTITIES,
     controller.data,
@@ -93,24 +99,6 @@ export const Mam3eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => 
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger
-            value="power-browser"
-            className="flex items-center gap-1.5"
-            onClick={controller.warmPowerBrowser}
-            onFocus={controller.warmPowerBrowser}
-            onPointerEnter={controller.warmPowerBrowser}
-          >
-            <Zap className="w-4 h-4" /> Powers DB
-          </TabsTrigger>
-          <TabsTrigger
-            value="advantage-browser"
-            className="flex items-center gap-1.5"
-            onClick={controller.warmAdvantages}
-            onFocus={controller.warmAdvantages}
-            onPointerEnter={controller.warmAdvantages}
-          >
-            <Star className="w-4 h-4" /> Advantages DB
-          </TabsTrigger>
           <TabsTrigger value="conditions" className="flex items-center gap-1.5">
             <HeartPulse className="w-4 h-4" /> Conditions
             {(controller.conditionTrack.bruised > 0 ||
@@ -166,14 +154,6 @@ export const Mam3eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => 
 
         <TabsContent value="complications">
           <MamComplicationsTab {...controller.complicationsTabProps} />
-        </TabsContent>
-
-        <TabsContent value="power-browser">
-          <MamPowerBrowserTab {...controller.powerBrowserTabProps} />
-        </TabsContent>
-
-        <TabsContent value="advantage-browser">
-          <MamAdvantageBrowserTab {...controller.advantageBrowserTabProps} />
         </TabsContent>
 
         <TabsContent value="notes">

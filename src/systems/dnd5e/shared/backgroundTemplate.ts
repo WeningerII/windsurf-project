@@ -356,14 +356,14 @@ export function applyDnd5eBackgroundTemplate<T extends Dnd5eLikeDataModel>(
     // Remove only the exact previous background feature (id AND source must
     // match, mirroring the duplicate guard on the add side). Matching on
     // either field alone deletes unrelated features that merely share an id
-    // or a source string.
-    sys.features = (sys.features || []).filter(
-      (feature) =>
-        !(
-          feature.id === previousBackground.feature.id &&
-          feature.source === previousBackground.feature.source
-        )
-    );
+    // or a source string. 2024-model backgrounds have no feature to remove.
+    const previousFeature = previousBackground.feature;
+    if (previousFeature) {
+      sys.features = (sys.features || []).filter(
+        (feature) =>
+          !(feature.id === previousFeature.id && feature.source === previousFeature.source)
+      );
+    }
   }
 
   const retainedTools = removeDerivedList(sys.toolProficiencies, previousDerivedTools);
@@ -411,12 +411,15 @@ export function applyDnd5eBackgroundTemplate<T extends Dnd5eLikeDataModel>(
   sys.toolProficiencies = dedupe([...retainedTools, ...nextDerivedTools]);
   sys.languageProficiencies = dedupe([...retainedLanguages, ...nextDerivedLanguages]);
 
-  const featureExists = (sys.features || []).some(
-    (feature) =>
-      feature.id === background.feature.id && feature.source === background.feature.source
-  );
-  if (!featureExists) {
-    sys.features = [...(sys.features || []), structuredClone(background.feature)];
+  const backgroundFeature = background.feature;
+  if (backgroundFeature) {
+    const featureExists = (sys.features || []).some(
+      (feature) =>
+        feature.id === backgroundFeature.id && feature.source === backgroundFeature.source
+    );
+    if (!featureExists) {
+      sys.features = [...(sys.features || []), structuredClone(backgroundFeature)];
+    }
   }
 
   if (!previousBackground && sys.currency.gold === 0) {

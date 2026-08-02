@@ -40,6 +40,52 @@ describe('legacy equipment normalization (review M-3)', () => {
   });
 });
 
+describe('non-coin legacy prices survive normalization', () => {
+  // The 3.5e catalog prices 8 of its entries as a rate or a qualifier rather
+  // than an amount of coin. `cost` cannot hold either, and the placeholder
+  // `{0, 'gp'}` it falls back to is indistinguishable downstream from a
+  // legitimately free item — so the string is kept on `costText` here, where
+  // it is still in hand, and that is what the browser prints.
+  const NON_COIN = [
+    { id: 'barding-medium', name: 'Barding, Medium Creature', costText: 'Varies' },
+    { id: 'barding-large', name: 'Barding, Large Creature', costText: 'Varies' },
+    { id: 'saddle-exotic', name: 'Saddle, Exotic', costText: 'Varies' },
+    { id: 'coach-hire', name: 'Coach Hire', costText: '3 cp/mile' },
+    { id: 'hireling-untrained', name: 'Hireling, Untrained', costText: '1 sp/day' },
+    { id: 'hireling-trained', name: 'Hireling, Trained', costText: '3 sp/day' },
+    { id: 'messenger', name: 'Messenger', costText: '2 cp/mile' },
+    { id: 'ship-passage', name: 'Ship Passage', costText: '1 sp/mile' },
+  ] as const;
+
+  it.each(NON_COIN)('keeps $name priced at "$costText"', async ({ id, name, costText }) => {
+    const items = await loadEquipmentForSystem('dnd-3.5e');
+    const item = items.find((candidate) => candidate.id === id);
+    expect(item, `${id} is no longer in the 3.5e catalog`).toBeDefined();
+    expect(item?.name, `${id} was renamed`).toBe(name);
+    expect(item?.costText, `${id} lost its non-coin price`).toBe(costText);
+    // The placeholder stays so the arithmetic consumers keep their shape; it
+    // is `costText` that makes it readable AS a placeholder rather than a zero.
+    expect(item?.cost).toEqual({ amount: 0, currency: 'gp' });
+  });
+
+  it('marks those 8 and no others across the two legacy catalogs', async () => {
+    for (const systemId of ['dnd-3.5e', 'pf1e'] as const) {
+      const items = await loadEquipmentForSystem(systemId);
+      const marked = items.filter((item) => item.costText !== undefined).map((item) => item.id);
+      const expected = systemId === 'dnd-3.5e' ? NON_COIN.map((entry) => entry.id) : [];
+      expect(marked.sort(), `${systemId} costText set`).toEqual([...expected].sort());
+    }
+  });
+
+  it('never sets costText for a price the coin parser understood', async () => {
+    const items = await loadEquipmentForSystem('dnd-3.5e');
+    for (const item of items) {
+      if (item.costText === undefined) continue;
+      expect(item.costText, `${item.id} costText`).not.toMatch(/^[\d,.]+\s*(cp|sp|gp|pp)$/i);
+    }
+  });
+});
+
 describe('5e-2014 equipment consolidation (review M-2)', () => {
   it('serves a single object per id — no dual-identity entries', async () => {
     const items = await loadEquipmentForSystem('dnd-5e-2014');

@@ -8,7 +8,6 @@ import {
 import { D20_LEGACY_MANUAL_NOTES } from '../../../utils/documentationCopy';
 import { D20_ARCANE_SCHOOLS } from '../../shared/d20LegacySpellcasting';
 import type { D20LegacyData } from '../d20LegacySheetShared';
-import { D20SpellBrowserPanel } from './D20SpellBrowserPanel';
 
 function titleCase(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
@@ -27,7 +26,6 @@ function formatSpellLevel(level: number): string {
 }
 
 interface Props {
-  spellsLoaded: boolean;
   spells: Spell[];
   spellListIds: string[];
   trackedSpellIds: string[];
@@ -39,7 +37,6 @@ interface Props {
   arcaneSpecialtySchool?: string;
   canUpdate: boolean;
   onAddSpellLevel: () => void;
-  onAddKnownSpell: (spell: Spell) => void;
   onRemoveKnownSpell: (spellId: string) => void;
   onSetPreparedSpell: (level: number, slotIndex: number, spellId: string) => void;
   onUseSpellSlot: (level: number) => void;
@@ -50,7 +47,6 @@ interface Props {
 }
 
 export const D20SpellsTab: React.FC<Props> = ({
-  spellsLoaded,
   spells,
   spellListIds,
   trackedSpellIds,
@@ -62,7 +58,6 @@ export const D20SpellsTab: React.FC<Props> = ({
   arcaneSpecialtySchool,
   canUpdate,
   onAddSpellLevel,
-  onAddKnownSpell,
   onRemoveKnownSpell,
   onSetPreparedSpell,
   onUseSpellSlot,
@@ -307,8 +302,8 @@ export const D20SpellsTab: React.FC<Props> = ({
 
         {spellConcepts.trackedSpells.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            No spells tracked yet. Use the browser below to add prepared spell options and spellbook
-            entries.
+            No spells tracked yet. Add spells from the toolkit dock&apos;s Spells tab, which is
+            filtered to this character&apos;s class lists.
           </p>
         ) : (
           <div className="space-y-2">
@@ -436,12 +431,6 @@ export const D20SpellsTab: React.FC<Props> = ({
           ))}
         </ul>
       </section>
-
-      {!spellsLoaded ? (
-        <div className="text-center py-8 text-muted-foreground">Click to load spells...</div>
-      ) : (
-        <D20SpellBrowserPanel spells={browseableSpells} onSelectSpell={onAddKnownSpell} />
-      )}
     </>
   );
 };

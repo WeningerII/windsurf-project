@@ -11,12 +11,10 @@ import { PF2E_SPELLS_COPY } from '../../../utils/documentationCopy';
 import type { Pf2eSpellcasting } from '../data-model';
 import { pf2eAttackModifier } from '../derivedMath';
 import { Pf2eProficiencyBadge } from './Pf2eProficiencyBadge';
-import { Pf2eSpellBrowserPanel } from './Pf2eSpellBrowserPanel';
 
 interface Props {
   classId?: string;
   spellcasting?: Pf2eSpellcasting;
-  spellsLoaded: boolean;
   spells: Spell[];
   /** Key-ability score for spell attack/DC, or null when no key ability is set. */
   spellAbilityScore?: number | null;
@@ -57,7 +55,6 @@ function prunePreparedRanks(
 export const Pf2eSpellsTab = (({
   classId,
   spellcasting,
-  spellsLoaded,
   spells,
   spellAbilityScore,
   onSpellProficiencyTierCycle,
@@ -88,24 +85,6 @@ export const Pf2eSpellsTab = (({
         resolveSpellPreparationEntry(spellId, spellsById)
       ),
     [spellcasting?.focusSpells, spellsById]
-  );
-
-  const handleLearnSpell = React.useCallback(
-    (spell: Spell) => {
-      if (!spellcasting || !onSpellcastingChange) return;
-      if (
-        spellcasting.spellsKnown.includes(spell.id) ||
-        spellcasting.alwaysPreparedSpellIds?.includes(spell.id)
-      ) {
-        return;
-      }
-
-      onSpellcastingChange({
-        ...spellcasting,
-        spellsKnown: [...spellcasting.spellsKnown, spell.id],
-      });
-    },
-    [onSpellcastingChange, spellcasting]
   );
 
   const handleForgetSpell = React.useCallback(
@@ -378,7 +357,8 @@ export const Pf2eSpellsTab = (({
 
             {knownSpellEntries.length === 0 ? (
               <p className="text-sm text-muted-foreground">
-                No spells tracked yet. Use the browser below to add spells.
+                No spells tracked yet. Add spells from the toolkit dock&apos;s Spells tab, which is
+                filtered to this character&apos;s class list.
               </p>
             ) : (
               <div className="space-y-2">
@@ -502,14 +482,11 @@ export const Pf2eSpellsTab = (({
           )}
         </section>
       )}
-
-      {!spellsLoaded ? (
-        <div className="text-center py-8 text-muted-foreground">Click to load spells...</div>
-      ) : (
-        <Pf2eSpellBrowserPanel spells={browseableSpells} onSelectSpell={handleLearnSpell} />
-      )}
     </>
   );
 }) as Pf2eSpellsTabComponent;
 
-Pf2eSpellsTab.preload = () => Pf2eSpellBrowserPanel.preload();
+// Nothing lazy is left on this tab: the spell BROWSER moved to the Dock
+// (WORK_PLAN §4.3), which applies this character's class filter through the
+// published catalog-filter seam. Kept as a no-op so callers need no change.
+Pf2eSpellsTab.preload = () => Promise.resolve();

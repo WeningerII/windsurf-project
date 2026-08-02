@@ -9,22 +9,28 @@ vi.mock('../../utils/dataLoader', () => ({
   loadFeatsForSystem: vi.fn(),
   loadEquipmentForSystem: vi.fn(),
   loadMonstersForSystem: vi.fn(),
+  loadAdvantagesForSystem: vi.fn(),
+  loadPowerModifiersForSystem: vi.fn(),
 }));
 
 const spell = { id: 's1', name: 'Spell 1' };
 const feat = { id: 'f1', name: 'Feat 1' };
 const item = { id: 'i1', name: 'Item 1' };
 const monster = { id: 'm1', name: 'Monster 1' };
+const advantage = { id: 'a1', name: 'Advantage 1' };
+const modifier = { id: 'pm1', name: 'Modifier 1' };
 
 beforeEach(() => {
   vi.mocked(dataLoader.loadSpellsForSystem).mockResolvedValue([spell] as never);
   vi.mocked(dataLoader.loadFeatsForSystem).mockResolvedValue([feat] as never);
   vi.mocked(dataLoader.loadEquipmentForSystem).mockResolvedValue([item] as never);
   vi.mocked(dataLoader.loadMonstersForSystem).mockResolvedValue([monster] as never);
+  vi.mocked(dataLoader.loadAdvantagesForSystem).mockResolvedValue([advantage] as never);
+  vi.mocked(dataLoader.loadPowerModifiersForSystem).mockResolvedValue([modifier] as never);
 });
 
 describe('useDockResources', () => {
-  it('loads the four SRD catalogs for the explicit system selector', async () => {
+  it('loads every SRD catalog for the explicit system selector', async () => {
     const { result } = renderHook(() => useDockResources('dnd-5e-2014'));
 
     expect(result.current.loading).toBe(true);
@@ -37,6 +43,8 @@ describe('useDockResources', () => {
     expect(dataLoader.loadFeatsForSystem).toHaveBeenCalledWith('dnd-5e-2014');
     expect(dataLoader.loadEquipmentForSystem).toHaveBeenCalledWith('dnd-5e-2014');
     expect(dataLoader.loadMonstersForSystem).toHaveBeenCalledWith('dnd-5e-2014');
+    expect(dataLoader.loadAdvantagesForSystem).toHaveBeenCalledWith('dnd-5e-2014');
+    expect(dataLoader.loadPowerModifiersForSystem).toHaveBeenCalledWith('dnd-5e-2014');
 
     expect(result.current.spells).toEqual([spell]);
     expect(result.current.feats).toEqual([feat]);

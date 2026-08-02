@@ -4,6 +4,12 @@ import { Background } from '../../types/character-options/backgrounds';
 import { createDefaultDnd5eData, Dnd5eDataModel } from '../../systems/dnd5e/data-model';
 import { CharacterDocument } from '../../types/core/document';
 import { applyDnd5eBackgroundTemplate } from '../../systems/dnd5e/shared/backgroundTemplate';
+import { Feature } from '../../types/core/character';
+
+// `Background['feature']` is optional because SRD 5.2 backgrounds have none;
+// the SRD 5.1 Acolyte imported above is a 2014-model entry and always carries
+// one, so these tests bind it once rather than guarding at every use.
+const acolyteFeature = acolyte.feature as Feature;
 
 // Neutral test fixtures. The only SRD 5.1 background is Acolyte (imported above);
 // these generic backgrounds exist purely to exercise the template logic (skill
@@ -164,6 +170,7 @@ describe('applyDnd5eBackgroundTemplate', () => {
   });
 
   it('does not auto-apply unresolved choice-based proficiencies or overwrite existing gold', () => {
+    const customFeature: Feature = { ...acolyteFeature, source: 'Choice Background' };
     const customBackground: Background = {
       ...acolyte,
       id: 'choice-background',
@@ -184,14 +191,11 @@ describe('applyDnd5eBackgroundTemplate', () => {
         label: 'Choose one language',
       },
       equipment: ['pouch'],
-      feature: {
-        ...acolyte.feature,
-        source: 'Choice Background',
-      },
+      feature: customFeature,
     };
     const document = makeDoc({
       currency: { copper: 0, silver: 0, electrum: 0, gold: 7, platinum: 0 },
-      features: [structuredClone(customBackground.feature)],
+      features: [structuredClone(customFeature)],
       inventory: [{ itemId: 'pouch', quantity: 1 }],
     });
 
@@ -200,7 +204,7 @@ describe('applyDnd5eBackgroundTemplate', () => {
     expect(updated.system.skillProficiencies).toEqual({});
     expect(updated.system.toolProficiencies).toEqual([]);
     expect(updated.system.languageProficiencies).toEqual([]);
-    expect(updated.system.features).toEqual([customBackground.feature]);
+    expect(updated.system.features).toEqual([customFeature]);
     expect(updated.system.currency.gold).toBe(7);
     expect(updated.system.inventory).toEqual([{ itemId: 'pouch', quantity: 1 }]);
   });
@@ -270,7 +274,7 @@ describe('applyDnd5eBackgroundTemplate', () => {
         {
           id: 'legacy-note',
           name: 'Legacy Note',
-          source: acolyte.feature.source,
+          source: acolyteFeature.source,
           description: 'Old background marker.',
         },
       ],

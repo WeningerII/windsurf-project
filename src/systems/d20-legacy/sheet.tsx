@@ -1,6 +1,7 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { Item } from '../../types/equipment/items';
+import type { Spell } from '../../types/magic/spells';
 import { useSheetDispatchRegister } from '../../contexts/sheet-dispatch-context';
 import { RestControls } from '../../components/RestControls';
 import { D20ClassesSection } from './components/D20ClassesSection';
@@ -40,10 +41,29 @@ export const D20LegacySheet: React.FC<Props> = ({ document, onUpdate }) => {
       }),
     [onAddItem]
   );
-  useSheetDispatchRegister(onUpdate ? document.id : null, {
-    addSpell: onUpdate ? onAddKnownSpell : undefined,
-    addEquipment: onUpdate ? addEquipment : undefined,
-  });
+  // The spell-list narrowing the deleted in-sheet D20SpellBrowserPanel applied
+  // locally (WORK_PLAN §4.3). Published UP so the Dock's spell tab shows this
+  // character's class lists rather than the whole 3.5e/PF1e catalog.
+  const { spellListIds } = tabsProps;
+  const catalogFilter = useMemo(
+    () =>
+      spellListIds.length > 0
+        ? {
+            label: spellListIds.length === 1 ? `${spellListIds[0]} spells` : 'class spell lists',
+            spell: (spell: Spell) =>
+              spell.classes.some((classId) => spellListIds.includes(classId)),
+          }
+        : undefined,
+    [spellListIds]
+  );
+  useSheetDispatchRegister(
+    onUpdate ? document.id : null,
+    {
+      addSpell: onUpdate ? onAddKnownSpell : undefined,
+      addEquipment: onUpdate ? addEquipment : undefined,
+    },
+    catalogFilter
+  );
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 p-6">

@@ -15,6 +15,8 @@ vi.mock('../../utils/dataLoader', () => ({
   loadFeatsForSystem: vi.fn(() => Promise.resolve([])),
   loadEquipmentForSystem: vi.fn(() => Promise.resolve([])),
   loadMonstersForSystem: vi.fn(() => Promise.resolve([])),
+  loadAdvantagesForSystem: vi.fn(() => Promise.resolve([])),
+  loadPowerModifiersForSystem: vi.fn(() => Promise.resolve([])),
 }));
 
 function makeDoc(id: string, name: string): CharacterDocument {
@@ -37,6 +39,8 @@ describe('Dock', () => {
     vi.mocked(dataLoader.loadFeatsForSystem).mockResolvedValue([]);
     vi.mocked(dataLoader.loadEquipmentForSystem).mockResolvedValue([]);
     vi.mocked(dataLoader.loadMonstersForSystem).mockResolvedValue([]);
+    vi.mocked(dataLoader.loadAdvantagesForSystem).mockResolvedValue([]);
+    vi.mocked(dataLoader.loadPowerModifiersForSystem).mockResolvedValue([]);
   });
 
   it('is collapsed to a summon control by default, with no dock tabs shown', () => {
@@ -45,7 +49,7 @@ describe('Dock', () => {
     expect(screen.queryByRole('tab')).not.toBeInTheDocument();
   });
 
-  it('summons a panel with exactly the five typed tabs', async () => {
+  it('summons a panel with the five universal tabs, hiding the two M&M-only ones', async () => {
     const user = userEvent.setup();
     render(<Dock documents={[makeDoc('a', 'Aragorn')]} />);
 
@@ -56,7 +60,30 @@ describe('Dock', () => {
     expect(screen.getByRole('tab', { name: /spells/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /feats/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /equipment/i })).toBeInTheDocument();
+    // Advantages and Modifiers exist only for M&M (WORK_PLAN §4.3). A tab whose
+    // catalog is empty for the active system hides rather than reading zero, so
+    // the other six systems do not grow two permanently-dead tabs.
+    expect(screen.queryByRole('tab', { name: /advantages/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('tab', { name: /modifiers/i })).not.toBeInTheDocument();
     expect(screen.getAllByRole('tab')).toHaveLength(5);
+  });
+
+  it('grows the Advantages and Modifiers tabs when the active system has those catalogs', async () => {
+    vi.mocked(dataLoader.loadAdvantagesForSystem).mockResolvedValue([
+      { id: 'a1', name: 'Improved Initiative' },
+    ] as never);
+    vi.mocked(dataLoader.loadPowerModifiersForSystem).mockResolvedValue([
+      { id: 'pm1', name: 'Accurate' },
+    ] as never);
+
+    const user = userEvent.setup();
+    render(<Dock documents={[makeDoc('a', 'Aragorn')]} />);
+
+    await user.click(screen.getByRole('button', { name: /toggle toolkit dock/i }));
+
+    expect(await screen.findByRole('tab', { name: /advantages/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /modifiers/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('tab')).toHaveLength(7);
   });
 
   it('shows the party roster (default tab) and an explicit system selector', async () => {
@@ -205,6 +232,37 @@ describe('Dock', () => {
       expect(screen.getByText('1 ep')).toBeInTheDocument();
       expect(screen.queryByText(/undefined/)).not.toBeInTheDocument();
       expect(screen.queryByText(/lbs/)).not.toBeInTheDocument();
+    });
+
+    it('prints a 3.5e non-coin price verbatim instead of its placeholder cost', async () => {
+      const user = userEvent.setup();
+      vi.mocked(dataLoader.loadEquipmentForSystem).mockResolvedValue([
+        // `normalizeLegacyEquipment` cannot hold a rate or a qualifier in
+        // `cost`, so it parks the catalog's own words on `costText` and leaves
+        // `cost` carrying the {0, 'gp'} placeholder the arithmetic consumers
+        // need. The row builder must PREFER the text: rendering `cost` alone
+        // prints a well-formed '0 gp' that is indistinguishable from a
+        // legitimately free item. This is the only render site, so it is the
+        // only place that preference can be pinned.
+        {
+          id: 'coach-hire',
+          name: 'Coach Hire',
+          type: 'gear',
+          rarity: 'common',
+          cost: { amount: 0, currency: 'gp' },
+          costText: '3 cp/mile',
+          weight: 0,
+          description: 'Per mile.',
+        },
+      ] as unknown as Item[]);
+
+      render(<Dock documents={[]} activeSystemId="dnd-3.5e" />);
+      await user.click(screen.getByRole('button', { name: /toggle toolkit dock/i }));
+      await user.click(screen.getByRole('tab', { name: /equipment/i }));
+
+      expect(await screen.findByText('Coach Hire')).toBeInTheDocument();
+      expect(screen.getByText('3 cp/mile')).toBeInTheDocument();
+      expect(screen.queryByText('0 gp')).not.toBeInTheDocument();
     });
 
     it('captions PF2e item weight as Bulk, not pounds', async () => {

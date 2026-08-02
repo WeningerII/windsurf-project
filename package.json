@@ -19,6 +19,8 @@
     "build": "npm run node:check && tsc && vite build",
     "check:bundle-size": "node scripts/check-bundle-size.mjs",
     "check:keepalive-budget": "node scripts/check-keepalive-budget.mjs",
+    "check:a11y-contrast": "npm run node:check && node scripts/check-a11y-contrast.mjs",
+    "a11y:contrast:record": "npm run node:check && node scripts/check-a11y-contrast.mjs --record",
     "check:doc-drift": "npm run node:check && tsx scripts/check-doc-drift.mjs",
     "check:generated-docs": "npm run node:check && node scripts/check-generated-docs.mjs",
     "check:repo-hygiene": "npm run node:check && node scripts/check-repo-hygiene.mjs",
