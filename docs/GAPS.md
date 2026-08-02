@@ -3145,3 +3145,91 @@ citation, conservative admission, no policy change smuggled in as a data fix.
 - Product-reachable counts moved: pf2e equipment 182 → 148, pf2e spells 546 →
   543, 2024 monsters 337 → 330, 2024 equipment 492 → 489, pf1e equipment
   615 → 613. Every removal is a row the catalog was wrong to be offering.
+
+## 27. Closing the queue — six lanes, the Dock, and the blocker a name diff could not see (added 2026-08-02)
+
+**Status: CLOSED.** The last release blocker is gone (`WORK_PLAN` §8), both owner
+rulings that were still outstanding are executed (§4.3, §0.6), and the five work
+items the 2026-07-31 run surfaced are done. 314 test files, 3,301 tests, exit 0.
+
+### 27.1 The rule, first
+
+**A gate you have not watched fail is not a gate — and this run finally applied
+that rule to itself.** §25.1 stated it after three "checked and fine" verdicts
+were falsified. Here every new gate was made to fail on purpose before it was
+believed, and two of them earned it:
+
+| gate | the control that proved it |
+| --- | --- |
+| the fireball-mitigation test | revert `sceneCombat.ts` only → `expected 10 to be 5` |
+| Apply-on-accept in MapPanel | make `canApply` trust the flow → the correction-verdict test fails |
+| the client-stamped image size | stamp a fabricated 8000px image → `box-out-of-image` stops firing |
+| the static contrast lint | 40 baseline entries, each pinned to its measured ratio |
+
+### 27.2 The blocker a name diff structurally could not see
+
+The four 5e-2024 backgrounds were the last thing holding release, and they are
+the cleanest example in this repo of the §18.5.4 limit: they shipped **legitimate
+SRD 5.2 names over 2014-model text**, so the reverse diff scored them 100%
+covered with zero over-inclusion. No amount of tuning a name comparison finds
+that.
+
+The remedy on offer was a re-tag that drops them. What landed instead is the real
+content, re-encoded from `5e-bits/5e-database`'s 2024 set — which was **already
+this category's wired denominator**, so no new source had to be trusted. They now
+carry three ability scores, the Origin feat resolved against the shipped catalog,
+the skill/tool proficiencies and both lettered equipment packages. `feature`,
+`suggestedCharacteristics` and `description` became optional on the type, because
+SRD 5.2 genuinely has none of the three and a required field would have forced
+invention.
+
+**This was closed by hand, not by a gate.** The structural limit is unchanged:
+field-level comparison covers 5e monsters and backgrounds and nothing else, and
+prose fidelity is unaudited in all seven systems. Recorded so the close is not
+mistaken for the class being solved.
+
+### 27.3 Two dead channels declined
+
+§26.4 removed seven dead strings from the open-content allowlists on the grounds
+that *a dead string on an allowlist is a door nobody is watching*. The same
+reasoning applied twice more here, before either door was built:
+
+- **No `addPowerModifier` on the sheet-dispatch registry.** It was written, then
+  removed: no sheet in any system has a handler that adds a power modifier to a
+  character, and the wrapper being replaced was browse-only for modifiers too.
+  The Dock's Modifiers tab is `addVerb: false`, which is the honest description
+  of the capability that actually exists.
+- **No Remaster line on the pf2e allowlist** (§26.4), for the same shape of
+  reason from the licence side.
+
+The generalisation worth keeping: **build the narrowest channel the capability
+justifies, and check what would walk through it before widening.**
+
+### 27.4 Findings the lanes produced beyond their briefs
+
+- **A fireball on a fire elemental did not mitigate.** `resolveSceneAreaEffect`
+  built its own untyped intent inline and *discarded a channel breakdown
+  `resolveAreaEffect` had already computed*. The typed path existed and had no
+  caller. It does now, and the split runs on the POST-SAVE figure, so a saved
+  target is not re-inflated to full damage.
+- **The 8 laundered prices were exactly the 8 predicted** — `Varies`,
+  `3 cp/mile`, `1 sp/day` and friends, all 3.5e mount-gear and services. Fixed
+  at normalization time, where the original string is still in hand; the
+  formatter genuinely cannot tell a laundered `0 gp` from a free pf2e item.
+- **`SheetDispatchParity` caught a real capability change.** It pins *a doc id is
+  published iff some handler is*, and went red the moment M&M began publishing
+  `addAdvantage`. Its matrix was extended, not loosened — the difference between
+  a test noticing something and a test being in the way.
+- **Two spell tabs still told the user to "use the browser below"** after the
+  browser was deleted. Found by the agent repairing the tests, not by any gate:
+  no check reads user-facing copy for claims about UI that no longer exists.
+
+### 27.5 The CI split, and why it was safe now and not before
+
+CI's single `verify` job became five parallel jobs. That was blocked until
+`scripts/check-ci-parity.mjs` existed, and the reason is worth stating: the check
+compares CI's `npm run` steps against the verify chain **as a multiset**, so a
+split cannot silently drop a step. It reports `23 verify chain steps, all covered
+across 8 job(s)`. Building the check first is what made the change routine —
+§25.4 recorded that step-level drift was structurally zero *today* and the gate
+was prospective; this is the day it paid.

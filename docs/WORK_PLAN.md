@@ -55,10 +55,10 @@ silently dropped: the **62 remote branch deletions** (§0.2), the **orphaned
 feat-automation copy** (§4.3), and **ratification of the four kept sheet
 wrappers** (§4.3).
 
-### 0.1 ~~Open-content licensing: two populations shipping under source tags they do not have~~ — **M&M HALF DECIDED AND EXECUTED 2026-07-30; backgrounds still open**
+### 0.1 ~~Open-content licensing: two populations shipping under source tags they do not have~~ — **FULLY CLOSED 2026-08-02**
 
 - ~~**M&M 3e equipment.**~~ **DONE.** The finding was that 64 entries had no Hero SRD counterpart (of the original 79 suspects, 7 were duplicate rows of an SRD entry that also ships, 6 pre-built instances of a generic SRD row, 2 too ambiguous to call). They were honestly labelled `Original Content (not SRD)` and machine-separated, so nothing was *mislabelled*; what remained was trade dress — `Power Ring`, `Web Shooters`, `Mystic Amulet`, `Magic Wand`. **Owner decision: delete.** All 79 entries in that module are gone, and so are the other 27 that shipped through the same `originalContentSources` channel across the d20 catalogs — 106 in total, plus 2 more (`Cloak of the Archmagi`, `Pegasus Boots`) that were the same invented content still carrying a false `SRD 5.2` tag in the 2024 catalog. The channel itself is deleted, so self-authored content now fails the gate instead of being admitted. `genuine-non-open-content` in the over-inclusion ledger went **89 → 0**. See `GAPS` §17.3.
-- **5e-2024 backgrounds — STILL OPEN.** All four ship tagged `SRD 5.2` while carrying the *2014* model. SRD 5.1 contains exactly one background (Acolyte), so the Criminal / Sage / Soldier text is *Player's Handbook* content — not open. The name-based reverse diff cannot see this, because the names are legitimate SRD 5.2 names. This is the `wrong-edition-attribution` class (§2.1), not the deleted-homebrew class: the remedy is a re-tag that drops them, or replacement with genuine SRD 5.2 origins.
+- ~~**5e-2024 backgrounds — STILL OPEN.**~~ **CLOSED 2026-08-02 by re-encoding, not by re-tagging.** All four shipped tagged `SRD 5.2` while carrying the *2014* model — no ability scores, no origin feat. SRD 5.1 contains exactly one background (Acolyte), so the Criminal / Sage / Soldier text was *Player's Handbook* content, and the name-based reverse diff could not see it: the names are legitimate SRD 5.2 names, so it scored them 100% covered with zero over-inclusion. The remedy on offer was a re-tag that drops them; what landed instead is the real thing. All four are re-encoded from `5e-bits/5e-database`'s 2024 set — which was **already this category's wired denominator** in `src/scripts/srd-coverage.ts`, so the source needed no new trust — and now carry three ability scores, the Origin feat resolved against the shipped catalog, the skill/tool proficiencies and both lettered equipment packages. `feature`, `suggestedCharacteristics` and `description` became optional on the type, because SRD 5.2 genuinely has none of the three.
 
 **Unblocks:** the Phase-1 content close-out, and `p7.release` — neither should ship with an unresolved licensing question.
 
@@ -120,7 +120,16 @@ Two separate features, same shape: **the expensive half is built and the cheap h
 
 **`character-draft` — DONE 2026-07-27.** Reachable from the new-character dialog's "Draft with AI" mode, rendered only when `isAiEnabled()`, loaded by dynamic import so the AI-off eager chunk is unchanged. The draft applies through the system's *own* creation plan and is gated on its own `registry.validateDocument`, and the proposal is shown before anything is created — model proposes, validators decide. It also gave `makeMeAGameFlow` a shared seam instead of a second inline copy of that logic.
 
-**Phase 10 — DECIDED 2026-08-01: BUILD IT.** The owner chose the `analyze-map` task plus a MapPanel affordance (~1 day) over closing it as a documented seam. Original framing follows.
+**Phase 10 — DECIDED 2026-08-01: BUILD IT. BUILT 2026-08-02.** The owner chose the `analyze-map` task plus a MapPanel affordance over closing it as a documented seam.
+
+`analyze-map` is a vision task on the RFC 002 gateway, registered at every point the allowlist requires (task class, unit cost, payload/output parsers, prompt template with a pinned fingerprint, deterministic mock, AI-SDK schema). `src/ai/analyzeMapFlow.ts` runs `validateGridGeometryProposal` before the UI may show anything as applicable, and the MapPanel affordance is a **proposal review, not an action**: verdict, offsets, cell size, region count and every issue are shown, and Apply is offered only on an `accept`.
+
+Two things the model does not get to own, both regression-tested with a control run that was watched failing:
+
+- **The image's pixel dimensions are the client's.** They ride the payload so the model can reason in the right space, but the flow stamps the MEASURED values onto the proposal. A model that places a box at x=4000 *and* claims the image is 8000px wide still trips `box-out-of-image`.
+- **The envelope version is pinned in the flow**, so a model cannot opt into a schema version this build does not implement.
+
+The stated prerequisite is closed: `SceneManager` already had `measureImageSize` for the import path and now measures the decoded asset too. A map that cannot be decoded yields no measurement, which is also the panel's signal to hide the affordance rather than send a request that could not be validated. Original framing follows.
 
 **Phase 10 — was still open, and this was the decision that remained.** Build the `analyze-map` task plus a MapPanel affordance (~1 day), or close Phase 10 formally and reclassify the validator as a permanent documented seam. **Do not delete the validator** — it is the careful half, and the retired shelf branch's version was strictly worse. One prerequisite for whoever builds it: `MapPanel` never learns the image's pixel dimensions, and the shipped validator requires `image: { widthPx, heightPx }`.
 
@@ -334,7 +343,18 @@ Six of the ten in-sheet browser wrappers are deleted and every affected tab grid
 
 **What the eviction left, one still open:**
 
-1. ~~**DECIDE — the four kept wrappers need ratification.**~~ **DECIDED 2026-08-01: NOT ratified — build the Dock capability instead.** The owner declined to accept two browse routes as the shipped design. Build the Advantage tab, the Power-Modifier tab, and a seam letting a sheet publish a catalog filter the Dock applies; then delete the four wrappers, restoring the single browse route Phase 5 intended. Original framing follows.
+1. ~~**DECIDE — the four kept wrappers need ratification.**~~ **DECIDED 2026-08-01: NOT ratified — build the Dock capability instead. EXECUTED 2026-08-02.** The owner declined to accept two browse routes as the shipped design.
+
+   What shipped: an **Advantages** tab (click-add) and a **Modifiers** tab; `PowerModifierBrowser` moved into the shared layer and `AdvantageBrowser` was extracted from the wrapper's markup with search added; and the **catalog-filter seam** — `SheetCatalogFilter` on `useSheetDispatchRegister`'s third argument. All four wrappers are deleted, with the M&M sheet's two catalog tabs.
+
+   The seam publishes a **predicate, not a descriptor**, and that is the load-bearing choice: a predicate is a runtime value the sheet hands over, so no static import crosses the layer boundary and the Dock never has to learn what a "tradition" or a "spell list" *is* in order to honour one. PF2e publishes its class filter, d20-legacy its spell-list filter, and the Dock shows a chip naming the narrowing.
+
+   Two decisions taken while building, both recorded because the cheap option was available:
+
+   - **There is no `addPowerModifier` channel.** It was built, then removed: no sheet in any system has a handler that adds a power modifier to a character, and the wrapper being replaced was browse-only for modifiers too. Declaring the channel anyway would put a door on the dispatch registry that nothing walks through — the same defect as a dead allowlist string (`GAPS` §26.4). The tab is `addVerb: false`.
+   - **A tab whose catalog is empty for the active system hides**, rather than reading zero. Advantages and Modifiers exist only for M&M; six systems should not grow two permanently-dead tabs so the seventh can have them. `src/dock/__tests__/Dock.test.tsx` asserts both directions — five tabs for 5e, seven for a system with those catalogs.
+
+   `SheetDispatchParity` earned its keep: it pins *a doc id is published iff some handler is*, and went red the moment M&M began publishing `addAdvantage`. Its matrix was extended, not loosened. Original framing follows.
 
    Original: The Phase-5 spec assumed the Dock covered every catalog and it does not (the three capability gaps above). Keeping the wrappers was the right call *given* that, but it was made by the lane, not by you, and it leaves the product with two browse routes indefinitely. Either ratify the split as the shipped design or fund the Dock capability work that would close it.
 2. ~~**DECIDE — one string of user-facing copy is now orphaned.**~~ **RESOLVED 2026-07-28: deleted, not re-homed.** `DND5E_FEAT_COPY.browserSupport` is gone from `src/utils/documentationCopy.ts`.
@@ -683,11 +703,15 @@ Small, real, and each found while checking something else.
 
 ---
 
-## 8. Release — `p7.release` — **the licensing hold is LIFTED except for the four 5e-2024 backgrounds (2026-08-01)**
+## 8. Release — `p7.release` — **the licensing hold is FULLY LIFTED (2026-08-02)**
 
-Release engineering and launch. Should not begin while an open-content licensing question is unresolved. Both halves of the audit's licensing class are now empty: the self-authored content was deleted (`genuine-non-open-content` = 0, §17.3) and the 68 `wrong-edition-attribution` records were replaced or removed (§26). `check:provenance-over-inclusion` reports `licensing-class total: none`.
+Release engineering and launch. Should not begin while an open-content licensing question is unresolved. Nothing is now unresolved:
 
-What still holds release is the one finding a name diff structurally cannot reach: **the four 5e-2024 backgrounds** carry *Player's Handbook* text under legitimate SRD 5.2 names, so the reverse diff scores them 100% covered with zero over-inclusion (§18.5.4, §15(c)). That needs a field-level comparison, not a name comparison.
+- The self-authored content was deleted — `genuine-non-open-content` = 0 (§17.3).
+- The 68 `wrong-edition-attribution` records were replaced or removed (`GAPS` §26). `check:provenance-over-inclusion` reports `licensing-class total: none`.
+- The four 5e-2024 backgrounds — the one finding a name diff structurally *cannot* reach (§18.5.4, §15(c)) — are re-encoded from the real SRD 5.2 source (§0.1).
+
+Worth keeping in view rather than declaring solved: the backgrounds were closed by hand, not by a gate. **A name diff still cannot see content divergence under a legitimate name**, so the same defect can recur in any category the field-level comparison of `GAPS` §15 does not cover — which today is 5e monsters and backgrounds and nothing else. Prose fidelity is unaudited in all seven systems.
 
 ---
 

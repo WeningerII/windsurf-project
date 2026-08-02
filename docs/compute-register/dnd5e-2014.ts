@@ -628,7 +628,7 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       source: `${SRD}: Damage Types; Damage Resistance and Vulnerability`,
       status: 'verified',
       testRef: 'src/__tests__/rules/damageChannelSplit.test.ts :: collectDamageChannels',
-      note: 'The untyped channel is kept whole and separate on purpose: untyped damage is never mitigated, so folding it into a typed bucket would let resistance eat points it has no claim to. First-seen order is what makes the split\'s declaration-order tie-break a stable property of the input rather than of object key enumeration.',
+      note: "The untyped channel is kept whole and separate on purpose: untyped damage is never mitigated, so folding it into a typed bucket would let resistance eat points it has no claim to. First-seen order is what makes the split's declaration-order tie-break a stable property of the input rather than of object key enumeration.",
     },
     {
       id: 'dnd5e2014.L8.damage-channel-split',
