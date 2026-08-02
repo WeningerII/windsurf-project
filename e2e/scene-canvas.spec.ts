@@ -32,9 +32,17 @@ const FLAG_ON = process.env.VITE_SCENE_CANVAS_ENABLED === 'true';
 
 test.skip(!FLAG_ON, 'scene-canvas flag is off in this build (VITE_SCENE_CANVAS_ENABLED!=="true")');
 
-/** `DEFAULT_GRID` in src/scene/runtime.ts — a new scene is always this size. The
- *  assertions below pin it, so a change there fails here rather than silently
- *  re-aiming every cell click. */
+/**
+ * The grid this spec CREATES, typed into the New Scene form rather than
+ * inherited from any default.
+ *
+ * An earlier revision pinned `DEFAULT_GRID` from src/scene/runtime.ts (24x18)
+ * and commented that "a new scene is always this size". It is not:
+ * `SceneCreateForm` prefills its own 12x10 and passes that, so every cell click
+ * was aimed at a grid twice the real width and all four tests failed on the
+ * aria-label. Setting the size explicitly makes the spec independent of BOTH
+ * defaults — whichever one moves, this still addresses the grid it built.
+ */
 const GRID_COLS = 24;
 const GRID_ROWS = 18;
 
@@ -48,6 +56,8 @@ async function createScene(page: Page, name: string) {
   await page.getByRole('button', { name: 'Scenes', exact: true }).click();
   await page.getByRole('button', { name: 'New Scene' }).click();
   await page.getByPlaceholder('Scene name').fill(name);
+  await page.getByLabel('Scene width').fill(String(GRID_COLS));
+  await page.getByLabel('Scene height').fill(String(GRID_ROWS));
   await page.getByRole('button', { name: 'Create', exact: true }).click();
   // The scene surface is a lazily-loaded chunk; a cold CI fetch+parse can be slow.
   await expect(page.getByTestId('scene-canvas')).toBeVisible({ timeout: 30_000 });
@@ -56,7 +66,7 @@ async function createScene(page: Page, name: string) {
 /**
  * Click grid cell (x, y) on the canvas. Addressed as a FRACTION of the rendered
  * box rather than in backing-store pixels on purpose: `max-w-full` shrinks the
- * 1680x1260 canvas to its column, and `pointToCell` rescales the click by the
+ * canvas to its column, and `pointToCell` rescales the click by the
  * element's on-screen size — so the fraction is exact at any layout width and a
  * hardcoded pixel offset would not be.
  */
