@@ -1,4 +1,4 @@
-_Generated: 2026-08-02T00:55:28.435Z_
+_Generated: 2026-08-02T16:10:34.709Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -95,14 +95,14 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 ### Content Coverage (Denominator A — independent SRD reverse diff)
 _Per-system rollup of `docs/generated/srd-coverage.md`, which is the sole content denominator. Denominators are open-content SRD entry indexes fetched from OUTSIDE this repo and diffed against the loaders by normalized name, so `Covered / SRD Total` is genuine coverage — how much of each measured SRD category the product actually ships — and changing the product cannot move the denominator. Only wired (system × category) targets are counted; unwired and closed-by-no-source categories are listed in that file rather than folded in at an assumed 100%, so these percentages describe what is MEASURED, not the whole SRD._
 _Superseded the loader-derived `docs/srd-manifest/` catalogs (decision 2026-07-21, executed 2026-07-27 — `docs/GAPS.md` §6). Those manifests are generated FROM the loaders, so joining their ids against loaded ids put the same population on both sides of the ratio and could only ever read 100%. They are now provenance-only and no longer published as a denominator here; per-category coverage and the named missing entries live in `docs/generated/srd-coverage.md`._
-_Measured 2026-07-28T00:04:51.558Z by `npm run srd:coverage`; republished here, never recomputed._
+_Measured 2026-08-02T15:21:58.050Z by `npm run srd:coverage`; republished here, never recomputed._
 | System | Categories Measured | Covered | SRD Total | Coverage | Categories With Gaps |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | D&D 5e (2014) | 7 | 1274 | 1274 | 100% | 0 |
 | D&D 5e (2024) | 7 | 1154 | 1154 | 100% | 0 |
-| D&D 3.5e | 4 | 880 | 948 | 92.8% | 2 |
+| D&D 3.5e | 4 | 918 | 1073 | 85.6% | 1 |
 | Pathfinder 1e | 4 | 1545 | 1545 | 100% | 0 |
-| Pathfinder 2e | 7 | 1109 | 2284 | 48.6% | 3 |
+| Pathfinder 2e | 7 | 1111 | 2284 | 48.6% | 3 |
 | Mutants & Masterminds 3e | 4 | 242 | 242 | 100% | 0 |
 | Daggerheart | 8 | 586 | 589 | 99.5% | 2 |
 

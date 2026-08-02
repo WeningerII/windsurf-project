@@ -126,12 +126,12 @@ rollup.
   wrong-edition provenance defect that re-transcription fixed). PF1e Greater
   Teleport and 3.5e Greater Shadow Evocation were encoded earlier.
 - The genuine residual is now the 3.5e monster missing list, itemized in
-  `srd-coverage.md`. The container-like rows the first collapse pass missed
-  ("Chromatic Dragons", "Celestial Creature", then Ooze/Planetouched/Snake/
-  Sprite/Swarm and the stat-block-less Half-Celestial/Half-Fiend templates)
-  are now dropped; the confirmed individuals **Lich, Ghost, Salamander,
-  Hydra** remain counted as genuine misses, as do Vampire/Skeleton/Zombie/
-  Half-Dragon/Fungus/Horse (their sections do carry a stat block).
+  `srd-coverage.md`. **It is 155, not the 30 recorded here before 2026-08-02**:
+  the parse fix below raised the denominator 207 → 332, and the product ships
+  none of the 125 stat blocks that were added. The confirmed individuals
+  **Lich, Ghost, Salamander, Hydra** remain counted as genuine misses, as do
+  Vampire/Skeleton/Zombie/Half-Dragon/Fungus/Horse (their sections do carry a
+  stat block).
 - **Monster denominator shape-mismatch [CLOSED 2026-07-25]:**
   the 3.5e and PF1e monster denominators previously counted taxonomic CONTAINER
   entries — the SRD 3.5 category headers (Angel/Dragon/Elemental/…) and the PF1e
@@ -148,6 +148,27 @@ rollup.
   Half-Fiend as template headers carrying no stat table at all). Live
   percentages are in `docs/generated/srd-coverage.md` — do not restate them
   here.
+- **Monster denominator DEPTH defect [CLOSED 2026-08-02]:** the 2026-07-25
+  closure above was incomplete, and its own alibi text hid the hole. The parse
+  collected `## ` headings ONLY, so every member of the SRD's 26 taxonomic
+  groups — which have no `## ` heading at all — was absent from the
+  denominator: no demon, devil, angel, archon, dinosaur, dire animal,
+  elemental, genie, giant, golem, hag, inevitable, lycanthrope, mephit, naga,
+  nightshade, ooze, planetouched, sphinx, sprite, swarm or snake, and none of
+  the ten true dragons. Dropping the containers therefore removed the parents
+  of members that were never counted, and 85.5% was measuring a denominator
+  with them taken out. `Formian` was additionally wrong on the hand-maintained
+  container list — it owns its own combined 5-caste table — so the formians
+  left the denominator entirely. `parseSrd35eMonsterHeadings` now reads BOTH
+  depths and the container set is DERIVED (a `## ` with no stat table is a
+  container iff a `### ` child was counted under it), which is what makes the
+  hand-list drift unrepeatable. The age/size fold claimed above never matched
+  anything and is deleted — dragon ages and elemental sizes are table ROWS.
+  Denominator 207 → 332. This survived behind PASSING tests whose fixtures
+  described flat `## Astral Deva` / `## Young Black Dragon` headings the SRD
+  has never had; the fixture is now verbatim upstream text
+  (`src/__tests__/scripts/fixtures/srd35-monsters-excerpt.md`) and the pinned
+  `scripts/data/srd-overinclusion-manifest.json` is asserted against directly.
 - **M&M equipment coverage target [CLOSED — see §17]:** the `mam3e`/`equipment`
   `CoverageTarget` (frnprt EQUIPMENT vs the loader) was wired and run on
   2026-07-21, and the shortfall it exposed was then remediated by the Hero SRD
