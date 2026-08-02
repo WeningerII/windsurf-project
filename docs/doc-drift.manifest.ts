@@ -227,6 +227,18 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['path_ref_rule'],
   },
   {
+    // Phase-7 constraint set and seam catalogue of record (build-spec tasks
+    // 8-10). It states gate numbers inline for readers who will not open
+    // vitest.config.ts or hostSizeBudget.test.ts, which is precisely why every
+    // one of those numbers carries a count_rule: the build spec's own
+    // "corrected" runtime-copy count was already stale when this doc was
+    // written, so a retyped figure here would be drift documenting drift.
+    path: 'docs/design/ui-shell-constraint-set.md',
+    kind: 'live',
+    owner: 'ui-shell-redesign',
+    rules: ['count_rule', 'path_ref_rule'],
+  },
+  {
     path: 'docs/srd-sources.md',
     kind: 'plan',
     owner: 'srd-sources',

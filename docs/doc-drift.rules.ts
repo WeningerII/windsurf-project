@@ -29,6 +29,26 @@ export interface DocDriftTruth {
   dataFileCount: number;
   /** `&&`-joined segments of `scripts.verify` in package.json. */
   verifyGateCount: number;
+  /**
+   * `RUNTIME_COPY_RULES.length` — the file-path-keyed token guard.
+   *
+   * Derived rather than transcribed because this specific number has now drifted
+   * TWICE. `ui-redesign-phase-build-specs.md` task 8 corrected the plan's stale
+   * "13" to "15" and instructed the constraint doc not to hardcode 13; by
+   * 2026-08-02 the real count was 14, so the correction had itself gone stale.
+   * A doc that states this figure must read it from here.
+   */
+  runtimeCopyRuleCount: number;
+  /** `HOST_BUDGET_LOC` and the host list the budget test enforces. */
+  hostSizeBudgetLoc: number;
+  hostSizeBudgetFileCount: number;
+  /** vitest coverage thresholds, read from vitest.config.ts. */
+  coverageThresholds: {
+    lines: number;
+    functions: number;
+    branches: number;
+    statements: number;
+  };
   nvmVersion: string;
   nodeVersionFileVersion: string | null;
   pinnedNodeVersion: string;
@@ -143,6 +163,35 @@ export const COUNT_RULES: ExpectedTextRule[] = [
     path: 'docs/history/EVIDENCE_LINKED_PARITY_AUDIT.md',
     description: 'historical current-truth PF2e spell count',
     expectedText: (truth) => `${truth.spellCounts.pf2e} loader-backed PF2e spells`,
+  },
+  // The constraint-set-of-record (Phase 7 tasks 8-10). Every figure it restates
+  // is pinned here, because that document exists to state numbers a reader will
+  // NOT look up — exactly the shape that goes stale. Its own history is the
+  // argument: the build spec corrected a stale "13" to "15" while instructing
+  // the author not to hardcode 13, and the real count was 14 by the time the
+  // document was written. The correction went stale inside the warning.
+  {
+    path: 'docs/design/ui-shell-constraint-set.md',
+    description: 'constraint set — runtime-copy rule count',
+    expectedText: (truth) =>
+      `**${truth.runtimeCopyRuleCount} file-path-keyed entries** in \`RUNTIME_COPY_RULES\``,
+  },
+  {
+    path: 'docs/design/ui-shell-constraint-set.md',
+    description: 'constraint set — host size budget',
+    expectedText: (truth) =>
+      `**${truth.hostSizeBudgetLoc} LOC per file, across ${truth.hostSizeBudgetFileCount} named hosts**`,
+  },
+  {
+    path: 'docs/design/ui-shell-constraint-set.md',
+    description: 'constraint set — coverage lines threshold',
+    expectedText: (truth) => `| lines | ${truth.coverageThresholds.lines} |`,
+  },
+  {
+    path: 'docs/design/ui-shell-constraint-set.md',
+    description: 'constraint set — tightest coverage threshold',
+    expectedText: (truth) =>
+      `**Branches at ${truth.coverageThresholds.branches} is the tightest of the four**`,
   },
 ];
 
