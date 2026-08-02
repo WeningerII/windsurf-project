@@ -42,7 +42,9 @@ const VERDICT_LABEL: Record<NarrationCritiqueVerdict, string> = {
 
 const VERDICT_CLASS: Record<NarrationCritiqueVerdict, string> = {
   supported: 'text-emerald-600 dark:text-emerald-400',
-  'needs-review': 'text-amber-600 dark:text-amber-400',
+  // amber-700, not -600: the -600 pair measured 3.19:1 against the light
+  // surface and the contrast gate rejected it. The dark half was already fine.
+  'needs-review': 'text-amber-700 dark:text-amber-400',
   refuted: 'text-destructive',
 };
 
