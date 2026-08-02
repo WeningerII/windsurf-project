@@ -65,7 +65,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
     "check:ci-parity": "npm run node:check && node scripts/check-ci-parity.mjs",
     "check:graph-staleness": "npm run node:check && node scripts/check-graph-staleness.mjs",
-    "verify": "npm run node:check && npm run check:ci-parity && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run check:repo-hygiene && npm run check:legal-notices && npm run check:secret-exposure && npm run check:mam-equipment && npm run validate && npm run check:generated-docs && npm run check:doc-drift && npm run check:rules-provenance && npm run check:srd-fidelity && npm run check:provenance-over-inclusion && npm run check:dead-code && npm run test:coverage -- --run && npm run check:keepalive-budget && npm run check:compute-register && npm run build && npm run check:bundle-size && npm run test:e2e"
+    "verify": "npm run node:check && npm run check:ci-parity && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run check:repo-hygiene && npm run check:a11y-contrast && npm run check:legal-notices && npm run check:secret-exposure && npm run check:mam-equipment && npm run validate && npm run check:generated-docs && npm run check:doc-drift && npm run check:rules-provenance && npm run check:srd-fidelity && npm run check:provenance-over-inclusion && npm run check:dead-code && npm run test:coverage -- --run && npm run check:keepalive-budget && npm run check:compute-register && npm run build && npm run check:bundle-size && npm run test:e2e"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "3.0.86",

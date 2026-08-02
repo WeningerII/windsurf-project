@@ -114,6 +114,9 @@ jobs:
       - name: Repo hygiene
         run: npm run check:repo-hygiene
 
+      - name: Dark-mode contrast
+        run: npm run check:a11y-contrast
+
       - name: Legal notices
         run: npm run check:legal-notices
 
