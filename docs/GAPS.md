@@ -2977,18 +2977,38 @@ Not a section — a reading aid, kept last so it stays out of the numbering. It 
 re-derived each time this file is audited, and it says what the numbered sections
 above already say.
 
-1. **§15(b) and §15(c) — content integrity.** Hand-written 5e-2024 monsters and
-   backgrounds carrying content the source they cite does not contain.
-   §15(c) is a licensing exposure of the same class as §11's OC-1, and neither
-   the name-based reverse diff nor the scalar fidelity gate can see it. Largest
-   single body of genuine work in the repo.
-2. **§11 OC-1 — the owner decision.** Cheap to make, and it is blocking a
-   self-expiring quarantine that otherwise sits indefinitely.
-3. **§2 — compute.** Expand the registers toward the full L1–L10 set, and give
-   the build-legality layer a user-facing surface.
-4. **§19 — M&M adversaries.** The only system with no creature catalog, and the
-   one thing keeping the 7×N parity matrix from closing honestly. The source
-   exists and is open; the obstacle is that this sandbox cannot reach it.
+**Re-derived 2026-08-02.** Three of the four entries that stood here are closed;
+what replaced them is smaller and differently shaped.
+
+1. **§11 OC-1 — the owner decision, and now the ONLY open licensing item.**
+   Great Weapon Master and Sharpshooter cite SRD 5.1, which opens exactly one
+   feat (Grappler). The feat *entries* are gone with the rest of the deleted
+   content, but the **rider mechanics** still ship in
+   `src/rules/conditions/dnd5eRiders.ts`. That is outside `src/data/`, so
+   `check:provenance-over-inclusion` — which reports `licensing-class total:
+   none` — structurally cannot see it; `check:rules-provenance` is the gate that
+   holds it.
+2. **§2 — compute.** The registers now carry 276 verified entries across
+   L1–L10, Tier A **and** Tier B. What remains is the other half of this entry,
+   untouched: **the build-legality layer still has no user-facing surface.**
+   `makeMeAGameFlow` is the only non-test caller of
+   `systemRegistry.validateDocument`, so nothing a user can click invokes build
+   legality (`WORK_PLAN` §5.1).
+3. **Prose fidelity, unaudited in all seven systems.** Every fidelity finding so
+   far is scalar. §27.2 is the reason this is now the largest body of unknown:
+   the 5e-2024 backgrounds proved a legitimate NAME can carry the wrong
+   edition's text invisibly, and field-level comparison covers 5e monsters and
+   backgrounds and nothing else.
+
+~~1. §15(b) and §15(c) — content integrity.~~ **CLOSED 2026-08-02** (§27.2). The
+2024 monsters were reconciled 2026-07-28 and the four backgrounds re-encoded from
+the real SRD 5.2 source. Closed by hand, not by a gate — see item 3.
+
+~~4. §19 — M&M adversaries.~~ **CLOSED 2026-08-01** as a recorded source
+limitation (§19.5). Not "the sandbox cannot reach it": the data WAS found, and
+refused, because the only reachable copy is an unlicensed scrape with named
+Product Identity interleaved. The 7×N matrix closes at 6 of 7 with that reason
+attached (`WORK_PLAN` §4.1).
 
 **Corrected 2026-07-28.** Item 3 used to read *"§6 — execute the Denominator-A
 demotion"*. It was executed on 2026-07-27 and merged in `62ac50a`; PF2e content%
