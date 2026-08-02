@@ -90,7 +90,6 @@ describe('d20 legacy spellcasting options', () => {
 
     render(
       <D20SpellsTab
-        spellsLoaded
         spells={[cureLightWounds, inflictLightWounds]}
         spellListIds={['cleric']}
         trackedSpellIds={[]}
@@ -102,7 +101,6 @@ describe('d20 legacy spellcasting options', () => {
         arcaneSpecialtySchool="evocation"
         canUpdate
         onAddSpellLevel={vi.fn()}
-        onAddKnownSpell={vi.fn()}
         onRemoveKnownSpell={vi.fn()}
         onSetPreparedSpell={vi.fn()}
         onUseSpellSlot={vi.fn()}
@@ -138,7 +136,6 @@ describe('d20 legacy spellcasting options', () => {
     // full loaded spell list instead of rendering an "Unresolved" badge.
     render(
       <D20SpellsTab
-        spellsLoaded
         spells={[cureLightWounds, inflictLightWounds, magicMissile]}
         spellListIds={['cleric']}
         trackedSpellIds={[magicMissile.id]}
@@ -150,7 +147,6 @@ describe('d20 legacy spellcasting options', () => {
         arcaneSpecialtySchool={undefined}
         canUpdate
         onAddSpellLevel={vi.fn()}
-        onAddKnownSpell={vi.fn()}
         onRemoveKnownSpell={vi.fn()}
         onSetPreparedSpell={vi.fn()}
         onUseSpellSlot={vi.fn()}
