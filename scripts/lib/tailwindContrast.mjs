@@ -1,6 +1,7 @@
 /**
  * Static WCAG-AA contrast lint over the Tailwind colour classes written into
- * `src/components/**` and `src/dock/**` (WORK_PLAN §6.4).
+ * `src/**` — every tree, including `src/systems/**`, which holds 5 of the ~17
+ * files the 2026-07-31 contrast fix touched (WORK_PLAN §6.4).
  *
  * WHY THIS EXISTS — the rendered gate provably cannot see most of the surface.
  * `e2e/a11y.spec.ts` runs axe over 8 surfaces in both themes, which judges real

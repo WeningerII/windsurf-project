@@ -5,7 +5,7 @@
  * (WORK_PLAN §6.4, the half of the a11y gate the rendered scan cannot reach).
  *
  * `e2e/a11y.spec.ts` judges computed styles on 8 surfaces; this judges the
- * source on every file. The two are complements, and the reason both are needed
+ * source of every `.ts`/`.tsx` under `src`. The two are complements, and the reason both are needed
  * is recorded in `scripts/lib/tailwindContrast.mjs` — including the measurement
  * that the rendered scan stayed green while a 1.79:1 badge shipped.
  *
@@ -26,8 +26,24 @@ const ROOT = path.resolve(HERE, '..');
 const BASELINE_PATH = path.join(HERE, 'data', 'a11y-contrast-baseline.json');
 const THEME_CSS = 'src/index.css';
 
-/** The two trees §6.4 scoped this to: the shared shell and the dock. */
-const SCAN_DIRS = ['src/components', 'src/dock'];
+/**
+ * The whole of `src`, deliberately — not a curated list of UI trees.
+ *
+ * This started as `['src/components', 'src/dock']`, which reads like the right
+ * scope and is not: **5 of the ~17 files the 2026-07-31 contrast fix touched
+ * live under `src/systems/`** (`DaggerheartInventorySection`,
+ * `FeatureOptionBrowser`, `MamArchetypeBrowser`, `MamComplicationBrowser`,
+ * `Pf2eSpellsTab` — see commit 5b3ed83), as does the app shell's own
+ * `src/App.tsx`. A gate built to cover that defect population while skipping
+ * 5/17 of it would be the fourth instance of §6.4's recorded pattern: "the code
+ * was fine by the measure applied and broken by the measure that mattered".
+ *
+ * Scanning everything also removes the judgement call — there is no curated list
+ * to go stale when a tree is added. `src/data` is 505 generated SRD files with
+ * no colour class in them; including it costs ~0.2s and means a colour class
+ * appearing there would be seen rather than assumed away.
+ */
+const SCAN_DIRS = ['src'];
 
 /**
  * Renamed in Tailwind v2/v3 and kept as warning getters. Reading them prints

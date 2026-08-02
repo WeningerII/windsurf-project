@@ -507,7 +507,16 @@ for (const file of workflowFiles) {
 
       const via = parsed.script === ROOT_SCRIPT ? ` (via \`npm run ${ROOT_SCRIPT}\`)` : '';
       for (const leaf of expand(command, new Set())) {
-        ciOccurrences.push({ command: leaf, where: `${jobKey}${via}` });
+        // `job` and `order` are provenance the ORDERING_CONSTRAINTS pass needs:
+        // `where` carries the `via` suffix and so cannot be compared for job
+        // identity, and artifact couplings are only preserved when producer and
+        // consumer sit in the SAME job, earlier step first.
+        ciOccurrences.push({
+          command: leaf,
+          where: `${jobKey}${via}`,
+          job: jobKey,
+          order: ciOccurrences.length,
+        });
       }
     }
   }
@@ -569,6 +578,28 @@ for (const constraint of ORDERING_CONSTRAINTS) {
     violations.push(
       `Verify chain order broken: \`${constraint.step}\` runs before \`${constraint.mustRunAfter}\`, but ${constraint.reason}`
     );
+  }
+
+  // CI side. Chain order binds `npm run verify` because the chain is sequential,
+  // but CI runs the chain as PARALLEL jobs, and two parallel jobs have no
+  // relative order at all. So a coupling is only preserved when both steps land
+  // in the same job with the producer first; split across jobs, the consumer
+  // reads a missing or stale artifact while this gate still reports full
+  // coverage — the multiset it compares is order-blind and job-blind.
+  const consumers = ciOccurrences.filter((entry) => entry.command === chainSteps[stepIndex]);
+  const producers = ciOccurrences.filter((entry) => entry.command === chainSteps[afterIndex]);
+
+  for (const consumer of consumers) {
+    const inSameJob = producers.filter((producer) => producer.job === consumer.job);
+    if (inSameJob.length === 0) {
+      violations.push(
+        `CI ordering broken: ${consumer.job} runs \`${constraint.step}\` but not \`${constraint.mustRunAfter}\`, and jobs run in parallel — ${constraint.reason} Move both into one job.`
+      );
+    } else if (!inSameJob.some((producer) => producer.order < consumer.order)) {
+      violations.push(
+        `CI ordering broken: ${consumer.job} runs \`${constraint.step}\` before \`${constraint.mustRunAfter}\`, but ${constraint.reason}`
+      );
+    }
   }
 }
 
